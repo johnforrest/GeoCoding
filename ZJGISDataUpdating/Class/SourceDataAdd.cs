@@ -17,7 +17,7 @@ using ZJGISCommon;
 using ESRI.ArcGIS.esriSystem;
 using ZJGISDataUpdating.Class;
 
-namespace ZJGISDataUpdating
+namespace ZJGISDataUpdating.Class
 {
     class SourceDataAdd
     {
@@ -97,6 +97,7 @@ namespace ZJGISDataUpdating
 
                 }
             }
+            #region comments
             //if (dataGridViewX1.Rows.Count > 0)
             //{
             //    for (int i = 0; i < dataGridViewX1.Rows.Count; i++)
@@ -123,11 +124,9 @@ namespace ZJGISDataUpdating
             //}
 
             //ClsDeclare.g_WorkspacePath = textBoxX1.Text;
+            #endregion
         }
-        public void FrmConfigMatchEnv_Load()
-        {
-
-        }
+   
 
         /// <summary>
         /// 删除添加的数据

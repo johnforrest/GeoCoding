@@ -24,6 +24,8 @@ namespace ZJGISDataUpdating
         {
             InitializeComponent();
         }
+        //记住临时路径
+        string temppath = string.Empty;
 
         SourceDataAdd sourceDataAdd;
         UpdataDataAdd targetDataAdd;
@@ -99,58 +101,60 @@ namespace ZJGISDataUpdating
 
                 if (workspace.Type != esriWorkspaceType.esriRemoteDatabaseWorkspace)
                 {
-                    string fileName = featureClass.AliasName;
+                    //string fileName = featureClass.AliasName;
+                    //string fileName = featureClass.;
+                    string fileName = (featureClass as IDataset).Name;
 
-                    DataGridViewRow dgvRow = new DataGridViewRow();
-                    DataGridViewRow dgvRowUpdata = new DataGridViewRow();
-                    dgvRow = dgvSource.Rows[dgvSource.Rows.Add()];
-                    dgvRowUpdata = dgvTarget.Rows[dgvTarget.Rows.Add()];
+                    DataGridViewRow dgvRowSource = new DataGridViewRow();
+                    DataGridViewRow dgvRowTarget = new DataGridViewRow();
+                    dgvRowSource = dgvSource.Rows[dgvSource.Rows.Add()];
+                    dgvRowTarget = dgvTarget.Rows[dgvTarget.Rows.Add()];
                     if (featureClass.ShapeType == esriGeometryType.esriGeometryPolygon)
                     {
-                        dgvRow.Cells[2].Value = (Bitmap)rm.GetObject("polygon");
-                        dgvRow.Cells[2].Tag = "面";
+                        dgvRowSource.Cells[2].Value = (Bitmap)rm.GetObject("polygon");
+                        dgvRowSource.Cells[2].Tag = "面";
 
-                        dgvRowUpdata.Cells[2].Value = (Bitmap)rm.GetObject("polygon");
-                        dgvRowUpdata.Cells[2].Tag = "面";
+                        dgvRowTarget.Cells[2].Value = (Bitmap)rm.GetObject("polygon");
+                        dgvRowTarget.Cells[2].Tag = "面";
                     }
                     else if (featureClass.ShapeType == esriGeometryType.esriGeometryPolyline || featureClass.ShapeType == esriGeometryType.esriGeometryLine)
                     {
-                        dgvRow.Cells[2].Value = (Bitmap)rm.GetObject("line");
-                        dgvRow.Cells[2].Tag = "线";
+                        dgvRowSource.Cells[2].Value = (Bitmap)rm.GetObject("line");
+                        dgvRowSource.Cells[2].Tag = "线";
 
-                        dgvRowUpdata.Cells[2].Value = (Bitmap)rm.GetObject("line");
-                        dgvRowUpdata.Cells[2].Tag = "线";
+                        dgvRowTarget.Cells[2].Value = (Bitmap)rm.GetObject("line");
+                        dgvRowTarget.Cells[2].Tag = "线";
                     }
                     else if (featureClass.ShapeType == esriGeometryType.esriGeometryMultipoint || featureClass.ShapeType == esriGeometryType.esriGeometryPoint)
                     {
-                        dgvRow.Cells[2].Value = (Bitmap)rm.GetObject("point");
-                        dgvRow.Cells[2].Tag = "点";
-                        dgvRowUpdata.Cells[2].Value = (Bitmap)rm.GetObject("point");
-                        dgvRowUpdata.Cells[2].Tag = "点";
+                        dgvRowSource.Cells[2].Value = (Bitmap)rm.GetObject("point");
+                        dgvRowSource.Cells[2].Tag = "点";
+                        dgvRowTarget.Cells[2].Value = (Bitmap)rm.GetObject("point");
+                        dgvRowTarget.Cells[2].Tag = "点";
                     }
                     else
                     {
                         MessageBoxEx.Show("请加载正确格式的数据！", "提示", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                        dgvSource.Rows.Remove(dgvRow);
-                        dgvTarget.Rows.Remove(dgvRow);
+                        dgvSource.Rows.Remove(dgvRowSource);
+                        dgvTarget.Rows.Remove(dgvRowSource);
                         return;
                     }
 
                     DataGridViewCheckBoxCell dgvCheckBoxCell = new DataGridViewCheckBoxCell();
-                    dgvCheckBoxCell = dgvRow.Cells[0] as DataGridViewCheckBoxCell;
+                    dgvCheckBoxCell = dgvRowSource.Cells[0] as DataGridViewCheckBoxCell;
                     dgvCheckBoxCell.Value = false;
 
-                    dgvRow.Cells[1].Value = fileName;
-                    dgvRow.Cells[1].Tag = featureClass;
-                    dgvRow.Cells[3].Value = workspace.PathName;
+                    dgvRowSource.Cells[1].Value = fileName;
+                    dgvRowSource.Cells[1].Tag = featureClass;
+                    dgvRowSource.Cells[3].Value = workspace.PathName;
 
                     DataGridViewCheckBoxCell dgvCheckBoxCellUpdata = new DataGridViewCheckBoxCell();
-                    dgvCheckBoxCellUpdata = dgvRow.Cells[0] as DataGridViewCheckBoxCell;
+                    dgvCheckBoxCellUpdata = dgvRowSource.Cells[0] as DataGridViewCheckBoxCell;
                     dgvCheckBoxCellUpdata.Value = false;
 
-                    dgvRowUpdata.Cells[1].Value = fileName;
-                    dgvRowUpdata.Cells[1].Tag = featureClass;
-                    dgvRowUpdata.Cells[3].Value = workspace.PathName;
+                    dgvRowTarget.Cells[1].Value = fileName;
+                    dgvRowTarget.Cells[1].Tag = featureClass;
+                    dgvRowTarget.Cells[3].Value = workspace.PathName;
                 }
             }
 
@@ -363,7 +367,7 @@ namespace ZJGISDataUpdating
                 //}
                 #endregion
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 this.Visible = true;
                 MessageBox.Show(ex.StackTrace);

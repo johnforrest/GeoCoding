@@ -66,7 +66,7 @@ namespace ZJGISDataUpdating
             this.dataGridViewX1.Columns[1].Width = Convert.ToInt32(width * 0.25);
             this.dataGridViewX1.Columns[1].ReadOnly = true;
 
-            this.dataGridViewX1.Columns.Add("workspaceFileName", "工作层名称");
+            this.dataGridViewX1.Columns.Add("workspaceFileName", "待匹配图层名称");
             this.dataGridViewX1.Columns[2].Width = Convert.ToInt32(width * 0.25);
             this.dataGridViewX1.Columns[2].ReadOnly = true;
 
@@ -480,15 +480,15 @@ namespace ZJGISDataUpdating
         {
             this.Cursor = System.Windows.Forms.Cursors.WaitCursor;
             IWorkspaceFactory2 pWorkspaceFactory = new FileGDBWorkspaceFactoryClass() as IWorkspaceFactory2;
-            string path = ClsDeclare.g_WorkspacePath;
-            IWorkspace2 pWorkspace = pWorkspaceFactory.OpenFromFile(path, 0) as IWorkspace2;
+            string gdbPath = ClsDeclare.g_WorkspacePath;
+            IWorkspace2 pWorkspace = pWorkspaceFactory.OpenFromFile(gdbPath, 0) as IWorkspace2;
             IFeatureWorkspace featureWorkspace = pWorkspace as IFeatureWorkspace;
 
             IFeatureClass pSourceFeatCls2 = this.dataGridViewX1[1, 0].Tag as IFeatureClass;
             string targetFeatureName = this.dataGridViewX1[2, 0].Value.ToString();
 
             //创建并填充数据到表MatchedPointFCSetting、并进行属性匹配
-            loadFeatSetting(path, targetFeatureName, pSourceFeatCls2);
+            loadFeatSetting(gdbPath, targetFeatureName, pSourceFeatCls2);
 
             ITable table = null;
             IFields fileds = null;
@@ -530,20 +530,22 @@ namespace ZJGISDataUpdating
                 //如果表存在，就删除表
                 if (pWorkspace.get_NameExists(esriDatasetType.esriDTTable, this.dataGridViewX1.Rows[i].Cells[3].Value.ToString()))
                 {
-                    table = featureWorkspace.OpenTable(this.dataGridViewX1.Rows[i].Cells[3].Value.ToString());
-                    IWorkspaceEdit workspaceEdit = pWorkspace as IWorkspaceEdit;
-                    workspaceEdit.StartEditing(true);
-                    workspaceEdit.StartEditOperation();
+                    //table = featureWorkspace.OpenTable(this.dataGridViewX1.Rows[i].Cells[3].Value.ToString());
+                    ClsDeleteTables.DeleteFeatureClass(gdbPath, this.dataGridViewX1.Rows[i].Cells[3].Value.ToString());
+                    table = CreateTable(pWorkspace, this.dataGridViewX1.Rows[i].Cells[3].Value.ToString(), fileds);
+                    //IWorkspaceEdit workspaceEdit = pWorkspace as IWorkspaceEdit;
+                    //workspaceEdit.StartEditing(true);
+                    //workspaceEdit.StartEditOperation();
 
-                    ICursor cursor = table.Search(null, false);
-                    IRow r = cursor.NextRow();
-                    while (r != null)
-                    {
-                        r.Delete();
-                        r = cursor.NextRow();
-                    }
-                    workspaceEdit.StopEditOperation();
-                    workspaceEdit.StopEditing(true);
+                    //ICursor cursor = table.Search(null, false);
+                    //IRow r = cursor.NextRow();
+                    //while (r != null)
+                    //{
+                    //    r.Delete();
+                    //    r = cursor.NextRow();
+                    //}
+                    //workspaceEdit.StopEditOperation();
+                    //workspaceEdit.StopEditing(true);
                 }
                 //如果表不存在，就创建表
                 else

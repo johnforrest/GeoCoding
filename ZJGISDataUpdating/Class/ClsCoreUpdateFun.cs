@@ -521,14 +521,16 @@ namespace ZJGISDataUpdating
                                             //string pTarStrName = pTarFeature.get_Value(pTarFeature.Fields.FindField(ClsConfig.LayerConfigs[pTarFcls.AliasName].NameField)).ToString();
                                             //string pTarStrName = pTarFeature.get_Value(pTarFeature.Fields.FindFieldByAliasName(array[0])).ToString();
                                             string pTarfield = pTarFeature.get_Value(pTarFeature.Fields.FindFieldByAliasName(array[k])).ToString();
-                                            //test
-                                            //int test0 = StringSameOrNot(pSrcStrName, pTarStrName);
-                                            int test0 = StringSameOrNot2(pSrcfield, pTarfield);
+                                           
 
 
                                             //if (StringSameOrNot(pSrcStr, pTarStr) > 0)
                                             if (pSrcfield.Length > 0 && pTarfield.Length > 0)
                                             {
+                                                //test
+                                                //int test0 = StringSameOrNot(pSrcStrName, pTarStrName);
+                                                int test0 = StringSameOrNot2(pSrcfield, pTarfield);
+
                                                 string tempSrc = "";
                                                 string tempTar = "";
                                                 for (int j = 0; j < resultTable.Fields.FieldCount; j++)
@@ -546,8 +548,11 @@ namespace ZJGISDataUpdating
                                                 //设置表TRA_PT_I_PtTabl的（待匹配编码）字段的值——cell[5]
                                                 //rowBuffer.set_Value(rowBuffer.Fields.FindField("源图层名称"), pSrcfield);
                                                 rowBuffer.set_Value(rowBuffer.Fields.FindField(tempSrc), pSrcfield);
+                                                double Similarity = ClsCosine.getSimilarity(pSrcfield, pTarfield);
 
-                                                if (StringSameOrNot2(pSrcfield, pTarfield) > 2)
+                                                //if (StringSameOrNot2(pSrcfield, pTarfield) > 2)
+                                                //if (StringSameOrNot2(pSrcfield, pTarfield) > 2)
+                                                if (Similarity > 0.7)
                                                 {
                                                     //设置表TRA_PT_I_PtTabl的（待匹配编码）字段的值——cell[5]
                                                     //rowBuffer.set_Value(rowBuffer.Fields.FindField("待匹配图层名称"), pTarfield);

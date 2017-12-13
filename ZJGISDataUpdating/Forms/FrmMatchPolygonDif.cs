@@ -67,7 +67,7 @@ namespace ZJGISDataUpdating
             this.dataGridViewX1.Columns[1].Width = Convert.ToInt32(width * 0.25);
             this.dataGridViewX1.Columns[1].ReadOnly = true;
 
-            this.dataGridViewX1.Columns.Add("workspaceFileName", "工作层名称");
+            this.dataGridViewX1.Columns.Add("workspaceFileName", "待匹配图层名称");
             this.dataGridViewX1.Columns[2].Width = Convert.ToInt32(width * 0.25);
             this.dataGridViewX1.Columns[2].ReadOnly = true;
 
@@ -143,20 +143,23 @@ namespace ZJGISDataUpdating
                 ITable table = null;
                 if (pWorkspace.get_NameExists(esriDatasetType.esriDTTable, this.dataGridViewX1.Rows[j].Cells[3].Value.ToString()))
                 {
-                    table = featureWorkspace.OpenTable(this.dataGridViewX1.Rows[j].Cells[3].Value.ToString());
+                    ClsDeleteTables.DeleteFeatureClass(gdbPath, this.dataGridViewX1.Rows[j].Cells[3].Value.ToString());
+                    table = CreateTable(pWorkspace, this.dataGridViewX1.Rows[j].Cells[3].Value.ToString(), fileds);
 
-                    IWorkspaceEdit workspaceEdit = pWorkspace as IWorkspaceEdit;
-                    workspaceEdit.StartEditing(true);
-                    workspaceEdit.StartEditOperation();
-                    ICursor cursor = table.Search(null, false);
-                    IRow r = cursor.NextRow();
-                    while (r != null)
-                    {
-                        r.Delete();
-                        r = cursor.NextRow();
-                    }
-                    workspaceEdit.StopEditOperation();
-                    workspaceEdit.StopEditing(true);
+                    //table = featureWorkspace.OpenTable(this.dataGridViewX1.Rows[j].Cells[3].Value.ToString());
+
+                    //IWorkspaceEdit workspaceEdit = pWorkspace as IWorkspaceEdit;
+                    //workspaceEdit.StartEditing(true);
+                    //workspaceEdit.StartEditOperation();
+                    //ICursor cursor = table.Search(null, false);
+                    //IRow r = cursor.NextRow();
+                    //while (r != null)
+                    //{
+                    //    r.Delete();
+                    //    r = cursor.NextRow();
+                    //}
+                    //workspaceEdit.StopEditOperation();
+                    //workspaceEdit.StopEditing(true);
                 }
                 else
                 {
