@@ -1,0 +1,214 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<LayerConfig>
+  <layer name="poi">
+    <layerName>poi</layerName>
+    <nameField>biaozhunmi</nameField>
+    <startVersion>
+    </startVersion>
+    <endVersion>
+    </endVersion>
+    <guid>ELEMID</guid>
+    <sourceName>地名地址库</sourceName>
+    <sourceType>p</sourceType>
+    <entiID>ENTIID</entiID>
+    <shapeType>点</shapeType>
+  </layer>
+  <layer name="RES_BUD_PY_G">
+    <layerName>RES_BUD_PY_G</layerName>
+    <nameField>NULL</nameField>
+    <startVersion>FROMVERSION</startVersion>
+    <endVersion>TOVERSION</endVersion>
+    <guid>ELEMID</guid>
+    <sourceName>10000</sourceName>
+    <sourceType>G</sourceType>
+    <entiID>ENTIID</entiID>
+    <shapeType>面</shapeType>
+  </layer>
+  <layer name="RES_BUD_PY_G2">
+    <layerName>RES_BUD_PY_G2</layerName>
+    <nameField>Name</nameField>
+    <startVersion>FROMVERSION</startVersion>
+    <endVersion>TOVERSION</endVersion>
+    <guid>ELEMID</guid>
+    <sourceName>10000</sourceName>
+    <sourceType>G</sourceType>
+    <entiID>ENTIID</entiID>
+    <shapeType>面</shapeType>
+  </layer>
+  <layer name="RES_PY_I_G">
+    <layerName>RES_PY_I_G</layerName>
+    <nameField>null</nameField>
+    <startVersion>FROMVERSION</startVersion>
+    <endVersion>TOVERSION</endVersion>
+    <guid>ELEMID</guid>
+    <sourceName>2000</sourceName>
+    <sourceType>I</sourceType>
+    <entiID>ENTIID</entiID>
+    <shapeType>面</shapeType>
+  </layer>
+  <layer name="PN_DM_G2">
+    <layerName>PN_DM_G2</layerName>
+    <nameField>兴趣点名称</nameField>
+    <startVersion>FROMVERSION</startVersion>
+    <endVersion>TOVERSION</endVersion>
+    <guid>ELEMID</guid>
+    <sourceName>地名地址库</sourceName>
+    <sourceType>P</sourceType>
+    <entiID>ENTIID</entiID>
+    <shapeType>点</shapeType>
+  </layer>
+  <layer name="Poi_jwd">
+    <layerName>Poi_jwd</layerName>
+    <nameField>兴趣点名称</nameField>
+    <startVersion>FROMVERSIO</startVersion>
+    <endVersion>TOVERSION</endVersion>
+    <guid>ELEMID</guid>
+    <sourceName>地名地址库</sourceName>
+    <sourceType>P</sourceType>
+    <entiID>ENTIID</entiID>
+    <shapeType>点</shapeType>
+  </layer>
+  <layer name="PN_DM_G5">
+    <layerName>PN_DM_G5</layerName>
+    <nameField>兴趣点名称</nameField>
+    <startVersion>FROMVERSION</startVersion>
+    <endVersion>TOVERSION</endVersion>
+    <guid>ELEMID</guid>
+    <sourceName>POI</sourceName>
+    <sourceType>P</sourceType>
+    <entiID>ENTIID</entiID>
+    <shapeType>点</shapeType>
+  </layer>
+  <layer name="RES_CMU_PT_G2">
+    <layerName>RES_CMU_PT_G2</layerName>
+    <nameField>FNAME</nameField>
+    <startVersion>FROM_VERSION</startVersion>
+    <endVersion>TO_VERSION</endVersion>
+    <guid>ELEMID</guid>
+    <sourceName>10000</sourceName>
+    <sourceType>G</sourceType>
+    <entiID>ENTIID</entiID>
+    <shapeType>点</shapeType>
+  </layer>
+  <layer name="RES_PT_I_G2_update">
+    <layerName>RES_PT_I_G2_update</layerName>
+    <nameField>NAME</nameField>
+    <startVersion>FROMVERSION</startVersion>
+    <endVersion>TOVERSION</endVersion>
+    <guid>ELEMID</guid>
+    <sourceName>2000</sourceName>
+    <sourceType>I</sourceType>
+    <entiID>ENTIID</entiID>
+    <shapeType>点</shapeType>
+  </layer>
+  <layer name="RES_PT_I_G2">
+    <layerName>RES_PT_I_G2</layerName>
+    <nameField>NAME</nameField>
+    <startVersion>FROMVERSION</startVersion>
+    <endVersion>TOVERSION</endVersion>
+    <guid>ELEMID</guid>
+    <sourceName>2000</sourceName>
+    <sourceType>I</sourceType>
+    <entiID>ENTIID</entiID>
+    <shapeType>点</shapeType>
+  </layer>
+  <layer name="RES_PT_I">
+    <layerName>RES_PT_I</layerName>
+    <nameField>NAME</nameField>
+    <startVersion>FROMVERSION</startVersion>
+    <endVersion>TOVERSION</endVersion>
+    <guid>ELEMID</guid>
+    <sourceName>2000</sourceName>
+    <sourceType>I</sourceType>
+    <entiID>ENTIID</entiID>
+    <shapeType>点</shapeType>
+  </layer>
+  <layer name="TRA_LN_I_G2">
+    <layerName>TRA_LN_I_G2</layerName>
+    <nameField>NAME</nameField>
+    <startVersion>FROMVERSION</startVersion>
+    <endVersion>TOVERSION</endVersion>
+    <guid>ELEMID</guid>
+    <sourceName>2000</sourceName>
+    <sourceType>I</sourceType>
+    <entiID>ENTIID</entiID>
+    <shapeType>线</shapeType>
+  </layer>
+  <layer name="TRA_ROD_LN_G2">
+    <layerName>TRA_ROD_LN_G2</layerName>
+    <nameField>FNAME</nameField>
+    <startVersion>FROMVERSION</startVersion>
+    <endVersion>TOVERSION</endVersion>
+    <guid>ELEMID</guid>
+    <sourceName>10000</sourceName>
+    <sourceType>G</sourceType>
+    <entiID>ENTIID</entiID>
+    <shapeType>线</shapeType>
+  </layer>
+  <layer name="TRA_NET_LN_G2">
+    <layerName>TRA_NET_LN_G2</layerName>
+    <nameField>FNAME</nameField>
+    <startVersion>FROM_VERSION</startVersion>
+    <endVersion>TO_VERSION</endVersion>
+    <guid>ELEMID</guid>
+    <sourceName>10000</sourceName>
+    <sourceType>G</sourceType>
+    <entiID>ENTIID</entiID>
+    <shapeType>线</shapeType>
+  </layer>
+  <layer name="TRA_LN_I_G2_update">
+    <layerName>TRA_LN_I_G2_update</layerName>
+    <nameField>NAME</nameField>
+    <startVersion>FROMVERSION</startVersion>
+    <endVersion>TOVERSION</endVersion>
+    <guid>ELEMID</guid>
+    <sourceName>2000</sourceName>
+    <sourceType>I</sourceType>
+    <entiID>ENTIID</entiID>
+    <shapeType>线</shapeType>
+  </layer>
+  <layer name="POI">
+    <layerName>POI</layerName>
+    <nameField>NAME</nameField>
+    <startVersion>FROMVERSION</startVersion>
+    <endVersion>TOVERSION</endVersion>
+    <guid>ELEMID</guid>
+    <sourceName>地名地址库</sourceName>
+    <sourceType>P</sourceType>
+    <entiID>ENTIID</entiID>
+    <shapeType>点</shapeType>
+  </layer>
+  <layer name="RES_PY_I_G">
+    <layerName>RES_PY_I_G</layerName>
+    <nameField>NAME</nameField>
+    <startVersion>FROMVERSION</startVersion>
+    <endVersion>TOVERSION</endVersion>
+    <guid>ELEMID</guid>
+    <sourceName>2000</sourceName>
+    <sourceType>I</sourceType>
+    <entiID>ENTIID</entiID>
+    <shapeType>面</shapeType>
+  </layer>
+  <layer name="HYD_PY_I_G">
+    <layerName>HYD_PY_I_G</layerName>
+    <nameField>NAME</nameField>
+    <startVersion>FROMVERSION</startVersion>
+    <endVersion>TOVERSION</endVersion>
+    <guid>ELEMID</guid>
+    <sourceName>2000</sourceName>
+    <sourceType>I</sourceType>
+    <entiID>ENTIID</entiID>
+    <shapeType>面</shapeType>
+  </layer>
+  <layer name="TRA_PT_I_G">
+    <layerName>TRA_PT_I_G</layerName>
+    <nameField>NAME</nameField>
+    <startVersion>FROMVERSION</startVersion>
+    <endVersion>TOVERSION</endVersion>
+    <guid>ELEMID</guid>
+    <sourceName>2000</sourceName>
+    <sourceType>I</sourceType>
+    <entiID>ENTIID</entiID>
+    <shapeType>点</shapeType>
+  </layer>
+</LayerConfig>
