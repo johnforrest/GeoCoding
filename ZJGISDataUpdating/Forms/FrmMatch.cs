@@ -443,7 +443,7 @@ namespace ZJGISDataUpdating
                         }
                         else if (pTEFeatCls.ShapeType == esriGeometryType.esriGeometryPolyline)
                         {
-                            tableSetting = featureWorkspace.OpenTable("MatchedPolylineFCSetting");
+                            tableSetting = featureWorkspace.OpenTable(ClsConstant.lineSettingTable);
                             ICursor cursor = tableSetting.Search(null, false);
                             IRow row = cursor.NextRow();
                             while (row != null)

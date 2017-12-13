@@ -111,6 +111,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Class\ClsConstant.cs" />
+    <Compile Include="Class\ClsDeleteTables.cs" />
     <Compile Include="Class\ClsStatic.cs" />
     <Compile Include="Class\ClsCosine.cs" />
     <Compile Include="Class\StrRowAndCol.cs" />

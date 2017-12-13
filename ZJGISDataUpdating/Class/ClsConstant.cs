@@ -5,7 +5,7 @@ using System.Text;
 
 namespace ZJGISDataUpdating.Class
 {
-    class ClsConstant
+    public class ClsConstant
     {
         //public const int compiletimeConstant = 1;
         public const string One2Zero = "未匹配";
@@ -14,5 +14,11 @@ namespace ZJGISDataUpdating.Class
 
         public const string More2One = "多对一";
         public const string More2More = "多对多";
+
+
+
+        public const string pointSettingTable = "MatchedPointFCSetting";
+        public const string lineSettingTable = "MatchedPolylineFCSetting";
+        public const string polygonSettingTable = "MatchedPolygonFCSettingDif";
     }
 }

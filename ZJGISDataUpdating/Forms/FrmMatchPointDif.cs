@@ -485,10 +485,10 @@ namespace ZJGISDataUpdating
             IFeatureWorkspace featureWorkspace = pWorkspace as IFeatureWorkspace;
 
             IFeatureClass pSourceFeatCls2 = this.dataGridViewX1[1, 0].Tag as IFeatureClass;
-            string fileName = this.dataGridViewX1[2, 0].Value.ToString();
+            string targetFeatureName = this.dataGridViewX1[2, 0].Value.ToString();
 
             //创建并填充数据到表MatchedPointFCSetting、并进行属性匹配
-            loadFeatSetting(path, fileName, pSourceFeatCls2);
+            loadFeatSetting(path, targetFeatureName, pSourceFeatCls2);
 
             ITable table = null;
             IFields fileds = null;
@@ -570,7 +570,7 @@ namespace ZJGISDataUpdating
                 ////如果为点匹配
                 //if (pTargetFeatCls.ShapeType == esriGeometryType.esriGeometryPoint)
                 //{
-                //    tableSetting = featureWorkspace.OpenTable("MatchedPointFCSetting");
+                //    tableSetting = featureWorkspace.OpenTable(ClsConstant.pointSettingTable);
                 //    ICursor cursor = tableSetting.Search(null, false);
                 //    IRow row = cursor.NextRow();
                 //    while (row != null)
@@ -648,7 +648,7 @@ namespace ZJGISDataUpdating
                 //{
                 //    if (pTEFeatCls.ShapeType == esriGeometryType.esriGeometryPoint)
                 //    {
-                //        tableSetting = featureWorkspace.OpenTable("MatchedPointFCSetting");
+                //        tableSetting = featureWorkspace.OpenTable(ClsConstant.pointSettingTable);
                 //        ICursor cursor = tableSetting.Search(null, false);
                 //        IRow row = cursor.NextRow();
                 //        while (row != null)
@@ -681,7 +681,7 @@ namespace ZJGISDataUpdating
                 //{
                 //    if (pTEFeatCls.ShapeType == esriGeometryType.esriGeometryPoint)
                 //    {
-                //        tableSetting = featureWorkspace.OpenTable("MatchedPointFCSetting");
+                //        tableSetting = featureWorkspace.OpenTable(ClsConstant.pointSettingTable);
                 //        ICursor cursor = tableSetting.Search(null, false);
                 //        IRow row = cursor.NextRow();
                 //        while (row != null)
@@ -720,7 +720,7 @@ namespace ZJGISDataUpdating
                 //如果为点匹配
                 if (pTargetFeatCls.ShapeType == esriGeometryType.esriGeometryPoint)
                 {
-                    tableSetting = featureWorkspace.OpenTable("MatchedPointFCSetting");
+                    tableSetting = featureWorkspace.OpenTable(ClsConstant.pointSettingTable);
                     ICursor cursor = tableSetting.Search(null, false);
                     IRow row = cursor.NextRow();
                     while (row != null)
@@ -1015,12 +1015,12 @@ namespace ZJGISDataUpdating
         /// <summary>
         /// 加载匹配参数
         /// </summary>
-        /// <param name="m_WorkspacePath">表的存放路径</param>
-        /// <param name="m_MatchedFCName">待匹配图层名称</param>
-        /// <param name="m_TUFeatCls">源图层</param>
-        private void loadFeatSetting(string m_WorkspacePath, string m_MatchedFCName, IFeatureClass m_TUFeatCls)
+        /// <param name="gdbPath">表的存放路径</param>
+        /// <param name="targetFeatureName">待匹配图层名称</param>
+        /// <param name="sourceFeatCls">源图层</param>
+        private void loadFeatSetting(string gdbPath, string targetFeatureName, IFeatureClass sourceFeatCls)
         {
-            if ((m_MatchedFCName != "") && (ClsDeclare.g_WorkspacePath != ""))
+            if ((targetFeatureName != "") && (ClsDeclare.g_WorkspacePath != ""))
             {
                 //属性匹配
                 //20170612注释掉
@@ -1033,7 +1033,7 @@ namespace ZJGISDataUpdating
                     {
                         if (this.dataGridViewX2[2, i].Value == null)
                         {
-                            MessageBoxEx.Show("所选字段没有完全对应，请重新检查！", "提示", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            MessageBoxEx.Show("没有选择属性匹配字段，请选择一个属性匹配字段！", "提示", MessageBoxButtons.OK, MessageBoxIcon.Error);
                             return;
                         }
                     }
@@ -1043,17 +1043,17 @@ namespace ZJGISDataUpdating
 
                 //创建表MatchedPointFCSetting
                 IWorkspaceFactory pWorkspaceFactory = new FileGDBWorkspaceFactory();
-                IWorkspace2 workspace = pWorkspaceFactory.OpenFromFile(m_WorkspacePath, 0) as IWorkspace2;
+                IWorkspace2 workspace = pWorkspaceFactory.OpenFromFile(gdbPath, 0) as IWorkspace2;
                 IFeatureWorkspace featureWorkspace = workspace as IFeatureWorkspace;
                 ITable table = null;
                 IFields fields = null;
 
-                if (m_TUFeatCls.ShapeType == esriGeometryType.esriGeometryPoint)
+                if (sourceFeatCls.ShapeType == esriGeometryType.esriGeometryPoint)
                 {
                     //表MatchedPointFCSetting是否存在，存在就打开表
-                    if (workspace.get_NameExists(esriDatasetType.esriDTTable, "MatchedPointFCSetting"))
+                    if (workspace.get_NameExists(esriDatasetType.esriDTTable, ClsConstant.pointSettingTable))
                     {
-                        table = featureWorkspace.OpenTable("MatchedPointFCSetting");
+                        table = featureWorkspace.OpenTable(ClsConstant.pointSettingTable);
                     }
                     else
                     {
@@ -1068,7 +1068,7 @@ namespace ZJGISDataUpdating
                         fieldChecker.ValidateWorkspace = (IWorkspace)workspace;
                         fieldChecker.Validate(fields, out enumFieldError, out validatedFields);
 
-                        table = featureWorkspace.CreateTable("MatchedPointFCSetting", validatedFields, uid, null, "");
+                        table = featureWorkspace.CreateTable(ClsConstant.pointSettingTable, validatedFields, uid, null, "");
                     }
                 }
                 else
@@ -1085,7 +1085,8 @@ namespace ZJGISDataUpdating
                 string tempFieldsName = "";
                 DataGridViewCheckBoxCell dgvCheckBoxCell = new DataGridViewCheckBoxCell();
 
-                //查看MatchedFCName字段（待匹配图层名）是否存在，存在则添加到字典pDic中
+                //遍历并判断表MatchedPointFCSetting的MatchedFCName（待匹配图层名）字段是否有值
+                //有值就把值写入pDic字段中
                 int index = table.FindField("MatchedFCName");
                 ICursor pCursor = table.Search(null, false);
                 IRow pRow = pCursor.NextRow();
@@ -1103,13 +1104,14 @@ namespace ZJGISDataUpdating
                 //几何+属性匹配
                 if (this.tabControl1.Tabs[0].Visible)
                 {
-                    //字典中不包含待匹配图层名称m_MatchedFCName这个键
-                    if (!pDic.ContainsKey(m_MatchedFCName))
+                    //字典中不包含待匹配图层名称m_MatchedFCName
+                    //说明MatchedPointFCSetting表中没有任何记录
+                    if (!pDic.ContainsKey(targetFeatureName))
                     {
 
                         IRow tempRow = table.CreateRow();
 
-                        IDataset dataset = m_TUFeatCls as IDataset;
+                        IDataset dataset = sourceFeatCls as IDataset;
                         if (ClsDeclare.g_SourceFeatClsPathDic.ContainsKey(dataset.Name))
                         {
                             //设置源图层名称——cell[1]
@@ -1121,7 +1123,7 @@ namespace ZJGISDataUpdating
                         }
 
                         //由传入的待匹配图层名设置（待匹配图层名）m_MatchedFCName字段——cell[3]列
-                        tempRow.set_Value(index, m_MatchedFCName);
+                        tempRow.set_Value(index, targetFeatureName);
                         //由MatchedPointFCSetting的行数设置参数ID_cell[5]
                         tempRow.set_Value(tempRow.Fields.FindField("FCSettingID"), table.RowCount(null) - 1);
                         //由labelBuffer设置位置相似度——cell[6]
@@ -1137,7 +1139,7 @@ namespace ZJGISDataUpdating
                             {
                                 temStr = temStr.Substring(0, temStr.LastIndexOf("米"));
                             }
-                            IDataset dataset1 = m_TUFeatCls as IDataset;
+                            IDataset dataset1 = sourceFeatCls as IDataset;
                             IGeoDataset geoDataset = dataset1 as IGeoDataset;
                             ClsConvertUnit clsConvertUnit = new ClsConvertUnit();
                             double a = clsConvertUnit.GetBufferValueByUnit(geoDataset.SpatialReference, Convert.ToDouble(temStr));
@@ -1156,7 +1158,7 @@ namespace ZJGISDataUpdating
                             {
                                 tempBuffer = tempBuffer.Substring(0, tempBuffer.LastIndexOf("米"));
                             }
-                            IDataset dataset1 = m_TUFeatCls as IDataset;
+                            IDataset dataset1 = sourceFeatCls as IDataset;
                             IGeoDataset geoDataset = dataset1 as IGeoDataset;
 
                             ClsConvertUnit clsConvertUnit = new ClsConvertUnit();
@@ -1182,7 +1184,7 @@ namespace ZJGISDataUpdating
                             {
                                 tempBuffer = tempBuffer.Substring(0, tempBuffer.LastIndexOf("米"));
                             }
-                            IDataset dataset1 = m_TUFeatCls as IDataset;
+                            IDataset dataset1 = sourceFeatCls as IDataset;
                             IGeoDataset geoDataset = dataset1 as IGeoDataset;
                             ClsConvertUnit clsConvertUnit = new ClsConvertUnit();
                             double b = clsConvertUnit.GetBufferValueByUnit(geoDataset.SpatialReference, Convert.ToDouble(tempBuffer));
@@ -1230,10 +1232,11 @@ namespace ZJGISDataUpdating
                         tempRow.Store();
                     }
                     //字典中包含待匹配图层名称m_MatchedFCName这个键
+                    //说明MatchedPointFCSetting含有数据
                     else
                     {
-                        IRow tRow = table.GetRow(pDic[m_MatchedFCName]);
-                        IDataset dataset = m_TUFeatCls as IDataset;
+                        IRow tRow = table.GetRow(pDic[targetFeatureName]);
+                        IDataset dataset = sourceFeatCls as IDataset;
                         if (ClsDeclare.g_SourceFeatClsPathDic.ContainsKey(dataset.Name))
                         {
                             //设置源图层名称——cell[1]
@@ -1245,7 +1248,7 @@ namespace ZJGISDataUpdating
                         }
 
                         //由传入的待匹配图层名设置（待匹配图层名）m_MatchedFCName字段——cell[3]列
-                        tRow.set_Value(index, m_MatchedFCName);
+                        tRow.set_Value(index, targetFeatureName);
                         //由MatchedPointFCSetting的行数设置参数ID_cell[5]
                         tRow.set_Value(tRow.Fields.FindField("FCSettingID"), table.RowCount(null) - 1);
                         //由labelBuffer设置位置相似度——cell[6]
@@ -1264,7 +1267,7 @@ namespace ZJGISDataUpdating
                             {
                                 tempBuffer = tempBuffer.Substring(0, tempBuffer.LastIndexOf("米"));
                             }
-                            IDataset dataset1 = m_TUFeatCls as IDataset;
+                            IDataset dataset1 = sourceFeatCls as IDataset;
                             IGeoDataset geoDataset = dataset1 as IGeoDataset;
 
                             ClsConvertUnit clsConvertUnit = new ClsConvertUnit();
@@ -1290,7 +1293,7 @@ namespace ZJGISDataUpdating
                             {
                                 tempBuffer = tempBuffer.Substring(0, tempBuffer.LastIndexOf("米"));
                             }
-                            IDataset dataset1 = m_TUFeatCls as IDataset;
+                            IDataset dataset1 = sourceFeatCls as IDataset;
                             IGeoDataset geoDataset = dataset1 as IGeoDataset;
 
                             ClsConvertUnit clsConvertUnit = new ClsConvertUnit();

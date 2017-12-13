@@ -763,15 +763,15 @@ namespace ZJGISDataUpdating
 
             this.Cursor = System.Windows.Forms.Cursors.WaitCursor;
             IWorkspaceFactory2 pWorkspaceFactory = new FileGDBWorkspaceFactoryClass() as IWorkspaceFactory2;
-            string path = ClsDeclare.g_WorkspacePath;
-            IWorkspace2 pWorkspace = pWorkspaceFactory.OpenFromFile(path, 0) as IWorkspace2;
+            string gdbPath = ClsDeclare.g_WorkspacePath;
+            IWorkspace2 pWorkspace = pWorkspaceFactory.OpenFromFile(gdbPath, 0) as IWorkspace2;
             IFeatureWorkspace featureWorkspace = pWorkspace as IFeatureWorkspace;
 
-            IFeatureClass pTUFeatCls2 = this.dataGridViewX1[1, 0].Tag as IFeatureClass;
-            string fileName = this.dataGridViewX1[2, 0].Value.ToString();
+            IFeatureClass pSourceFeatCls2 = this.dataGridViewX1[1, 0].Tag as IFeatureClass;
+            string targetFeatureName = this.dataGridViewX1[2, 0].Value.ToString();
 
             //创建设置表
-            loadFeatSetting(path, fileName, pTUFeatCls2);
+            loadFeatSetting(gdbPath, targetFeatureName, pSourceFeatCls2);
 
             ITable table = null;
             IFields fileds = null;
@@ -848,7 +848,7 @@ namespace ZJGISDataUpdating
                 ////设置匹配选择方式，matchedMay为0 代表几何匹配  为1代表拓扑匹配  为2代表属性匹配 
                 //if (pTEFeatCls.ShapeType == esriGeometryType.esriGeometryPolyline)
                 //{
-                //    tableSetting = featureWorkspace.OpenTable("MatchedPolylineFCSetting");
+                //    tableSetting = featureWorkspace.OpenTable(ClsConstant.lineSettingTable);
                 //    ICursor cursor = tableSetting.Search(null, false);
                 //    IRow row = cursor.NextRow();
                 //    while (row != null)
@@ -960,7 +960,7 @@ namespace ZJGISDataUpdating
                 //{
                 //    if (pTEFeatCls.ShapeType == esriGeometryType.esriGeometryLine || pTEFeatCls.ShapeType == esriGeometryType.esriGeometryPolyline)
                 //    {
-                //        tableSetting = featureWorkspace.OpenTable("MatchedPolylineFCSetting");
+                //        tableSetting = featureWorkspace.OpenTable(ClsConstant.lineSettingTable);
                 //        ICursor cursor = tableSetting.Search(null, false);
                 //        IRow row = cursor.NextRow();
                 //        while (row != null)
@@ -1041,7 +1041,7 @@ namespace ZJGISDataUpdating
                 //    if (pTEFeatCls.ShapeType == esriGeometryType.esriGeometryLine || pTEFeatCls.ShapeType == esriGeometryType.esriGeometryPolyline)
                 //    {
 
-                //        tableSetting = featureWorkspace.OpenTable("MatchedPolylineFCSetting");
+                //        tableSetting = featureWorkspace.OpenTable(ClsConstant.lineSettingTable);
                 //        ICursor cursor = tableSetting.Search(null, false);
                 //        IRow row = cursor.NextRow();
                 //        while (row != null)
@@ -1077,7 +1077,7 @@ namespace ZJGISDataUpdating
                 //设置匹配选择方式，matchedMay为0 代表几何匹配  为1代表拓扑匹配  为2代表属性匹配 
                 if (pTEFeatCls.ShapeType == esriGeometryType.esriGeometryPolyline)
                 {
-                    tableSetting = featureWorkspace.OpenTable("MatchedPolylineFCSetting");
+                    tableSetting = featureWorkspace.OpenTable(ClsConstant.lineSettingTable);
                     ICursor cursor = tableSetting.Search(null, false);
                     IRow row = cursor.NextRow();
                     while (row != null)
@@ -1208,12 +1208,12 @@ namespace ZJGISDataUpdating
         /// <summary>
         /// 设置匹配参数
         /// </summary>
-        /// <param name="m_WorkspacePath"></param>
-        /// <param name="m_MatchedFCName"></param>
-        /// <param name="m_TUFeatCls"></param>
-        private void loadFeatSetting(string m_WorkspacePath, string m_MatchedFCName, IFeatureClass m_TUFeatCls)
+        /// <param name="gdbPath"></param>
+        /// <param name="targetFeatureName"></param>
+        /// <param name="sourceFeatCls"></param>
+        private void loadFeatSetting(string gdbPath, string targetFeatureName, IFeatureClass sourceFeatCls)
         {
-            if ((m_MatchedFCName != "") && (m_WorkspacePath != ""))
+            if ((targetFeatureName != "") && (gdbPath != ""))
             {
                 //判断选择字段是否对应
                 for (int i = 0; i < dataGridViewX2.RowCount; i++)
@@ -1224,7 +1224,7 @@ namespace ZJGISDataUpdating
                         if (this.dataGridViewX2[2, i].Value == null)
                         {
                             //MessageBox.Show("所选字段没有完全对应，请重新检查！", "提示", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                            MessageBox.Show("所选字段没有完全对应，请选择对应的字段！", "提示", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            MessageBox.Show("没有选择属性匹配字段，请选择一个属性字段！", "提示", MessageBoxButtons.OK, MessageBoxIcon.Error);
                             return;
                         }
                     }
@@ -1232,17 +1232,17 @@ namespace ZJGISDataUpdating
                 }
 
                 IWorkspaceFactory pWorkspaceFactory = new FileGDBWorkspaceFactory();
-                IWorkspace2 workspace = pWorkspaceFactory.OpenFromFile(m_WorkspacePath, 0) as IWorkspace2;
+                IWorkspace2 workspace = pWorkspaceFactory.OpenFromFile(gdbPath, 0) as IWorkspace2;
                 IFeatureWorkspace featureWorkspace = workspace as IFeatureWorkspace;
                 ITable table = null;
                 IFields fields = null;
 
-                if (m_TUFeatCls.ShapeType == esriGeometryType.esriGeometryPolyline || m_TUFeatCls.ShapeType == esriGeometryType.esriGeometryLine)
+                if (sourceFeatCls.ShapeType == esriGeometryType.esriGeometryPolyline || sourceFeatCls.ShapeType == esriGeometryType.esriGeometryLine)
                 {
                     //如果表存在，那么清空表
-                    if (workspace.get_NameExists(esriDatasetType.esriDTTable, "MatchedPolylineFCSetting"))
+                    if (workspace.get_NameExists(esriDatasetType.esriDTTable, ClsConstant.lineSettingTable))
                     {
-                        table = featureWorkspace.OpenTable("MatchedPolylineFCSetting");
+                        table = featureWorkspace.OpenTable(ClsConstant.lineSettingTable);
                         //table = featureWorkspace.OpenTable(this.dataGridViewX1.Rows[i].Cells[3].Value.ToString());
                         IWorkspaceEdit workspaceEdit = workspace as IWorkspaceEdit;
                         workspaceEdit.StartEditing(true);
@@ -1269,7 +1269,7 @@ namespace ZJGISDataUpdating
                         fieldChecker.ValidateWorkspace = (IWorkspace)workspace;
                         fieldChecker.Validate(fields, out enumFieldError, out validatedFields);
 
-                        table = featureWorkspace.CreateTable("MatchedPolylineFCSetting", validatedFields, uid, null, "");
+                        table = featureWorkspace.CreateTable(ClsConstant.lineSettingTable, validatedFields, uid, null, "");
                     }
                 }
 
@@ -1299,12 +1299,12 @@ namespace ZJGISDataUpdating
                 //几何匹配
                 if (this.tabControl1.Tabs[0].Visible)
                 {
-                    if (!pDic.ContainsKey(m_MatchedFCName))
+                    if (!pDic.ContainsKey(targetFeatureName))
                     {
 
                         IRow tempRow = table.CreateRow();
 
-                        IDataset dataset = m_TUFeatCls as IDataset;
+                        IDataset dataset = sourceFeatCls as IDataset;
                         if (ClsDeclare.g_SourceFeatClsPathDic.ContainsKey(dataset.Name))
                         {
                             tempRow.set_Value(tempRow.Fields.FindField("SourceFCName"), dataset.Name);
@@ -1312,7 +1312,7 @@ namespace ZJGISDataUpdating
                             tempRow.set_Value(tempRow.Fields.FindField("WorkspacePath"), ClsDeclare.g_WorkspacePath);
                         }
 
-                        tempRow.set_Value(index, m_MatchedFCName);
+                        tempRow.set_Value(index, targetFeatureName);
                         tempRow.set_Value(tempRow.Fields.FindField("FCSettingID"), table.RowCount(null) - 1);
                         //权重
                         tempRow.set_Value(tempRow.Fields.FindField("MatchedPoints"), Convert.ToDouble(labelCenterNum.Text));
@@ -1329,7 +1329,7 @@ namespace ZJGISDataUpdating
                             {
                                 tempBuffer = tempBuffer.Substring(0, tempBuffer.LastIndexOf("米"));
                             }
-                            IDataset dataset1 = m_TUFeatCls as IDataset;
+                            IDataset dataset1 = sourceFeatCls as IDataset;
                             IGeoDataset geoDataset = dataset1 as IGeoDataset;
 
                             ClsConvertUnit clsConvertUnit = new ClsConvertUnit();
@@ -1379,9 +1379,9 @@ namespace ZJGISDataUpdating
                     }
                     else
                     {
-                        IRow tRow = table.GetRow(pDic[m_MatchedFCName]);
+                        IRow tRow = table.GetRow(pDic[targetFeatureName]);
 
-                        IDataset dataset = m_TUFeatCls as IDataset;
+                        IDataset dataset = sourceFeatCls as IDataset;
                         if (ClsDeclare.g_SourceFeatClsPathDic.ContainsKey(dataset.Name))
                         {
 
@@ -1390,7 +1390,7 @@ namespace ZJGISDataUpdating
                             tRow.set_Value(tRow.Fields.FindField("WorkspacePath"), ClsDeclare.g_WorkspacePath);
                         }
 
-                        tRow.set_Value(index, m_MatchedFCName);
+                        tRow.set_Value(index, targetFeatureName);
                         tRow.set_Value(tRow.Fields.FindField("FCSettingID"), table.RowCount(null) - 1);
                         //权重
                         tRow.set_Value(tRow.Fields.FindField("MatchedPoints"), Convert.ToDouble(labelCenterNum.Text));
@@ -1407,7 +1407,7 @@ namespace ZJGISDataUpdating
                             {
                                 tempBuffer = tempBuffer.Substring(0, tempBuffer.LastIndexOf("米"));
                             }
-                            IDataset dataset1 = m_TUFeatCls as IDataset;
+                            IDataset dataset1 = sourceFeatCls as IDataset;
                             IGeoDataset geoDataset = dataset1 as IGeoDataset;
 
                             ClsConvertUnit clsConvertUnit = new ClsConvertUnit();
@@ -1457,11 +1457,11 @@ namespace ZJGISDataUpdating
                 //拓扑匹配
                 else if (this.tabControl1.Tabs[1].Visible)
                 {
-                    if (!pDic.ContainsKey(m_MatchedFCName))
+                    if (!pDic.ContainsKey(targetFeatureName))
                     {
                         IRow tempRow = table.CreateRow();
 
-                        tempRow.set_Value(index, m_MatchedFCName);
+                        tempRow.set_Value(index, targetFeatureName);
                         tempRow.set_Value(tempRow.Fields.FindField("FCSettingID"), table.RowCount(null) - 1);
                         tempRow.set_Value(tempRow.Fields.FindField("Top"), 1);
 
@@ -1472,7 +1472,7 @@ namespace ZJGISDataUpdating
                             {
                                 tempBuffer = tempBuffer.Substring(0, tempBuffer.LastIndexOf("米"));
                             }
-                            IDataset dataset1 = m_TUFeatCls as IDataset;
+                            IDataset dataset1 = sourceFeatCls as IDataset;
                             IGeoDataset geoDataset = dataset1 as IGeoDataset;
 
                             ClsConvertUnit clsConvertUnit = new ClsConvertUnit();
@@ -1516,7 +1516,7 @@ namespace ZJGISDataUpdating
                             tempRow.set_Value(tempRow.Fields.FindField("MatchedFields"), tempFieldsName.Trim());
                         }
 
-                        IDataset dataset = m_TUFeatCls as IDataset;
+                        IDataset dataset = sourceFeatCls as IDataset;
                         if (ClsDeclare.g_SourceFeatClsPathDic.ContainsKey(dataset.Name))
                         {
 
@@ -1528,7 +1528,7 @@ namespace ZJGISDataUpdating
                     }
                     else
                     {
-                        IRow tRow = table.GetRow(pDic[m_MatchedFCName]);
+                        IRow tRow = table.GetRow(pDic[targetFeatureName]);
                         tRow.set_Value(tRow.Fields.FindField("Top"), 1);
                         if (this.comboBoxExBuffer.Text != "")
                         {
@@ -1537,7 +1537,7 @@ namespace ZJGISDataUpdating
                             {
                                 tempBuffer = tempBuffer.Substring(0, tempBuffer.LastIndexOf("米"));
                             }
-                            IDataset dataset1 = m_TUFeatCls as IDataset;
+                            IDataset dataset1 = sourceFeatCls as IDataset;
                             IGeoDataset geoDataset = dataset1 as IGeoDataset;
 
                             ClsConvertUnit clsConvertUnit = new ClsConvertUnit();
@@ -1580,7 +1580,7 @@ namespace ZJGISDataUpdating
                             //tRow.set_Value(tRow.Fields.FindField("Attribute"), 1);
                             tRow.set_Value(tRow.Fields.FindField("MatchedFields"), tempFieldsName.Trim());
                         }
-                        IDataset dataset = m_TUFeatCls as IDataset;
+                        IDataset dataset = sourceFeatCls as IDataset;
                         if (ClsDeclare.g_SourceFeatClsPathDic.ContainsKey(dataset.Name))
                         {
 

@@ -121,14 +121,14 @@ namespace ZJGISDataUpdating
         {
             this.Cursor = System.Windows.Forms.Cursors.WaitCursor;
             IWorkspaceFactory2 pWorkspaceFactory = new FileGDBWorkspaceFactoryClass() as IWorkspaceFactory2;
-            string path = ClsDeclare.g_WorkspacePath;
-            IWorkspace2 pWorkspace = pWorkspaceFactory.OpenFromFile(path, 0) as IWorkspace2;
+            string gdbPath = ClsDeclare.g_WorkspacePath;
+            IWorkspace2 pWorkspace = pWorkspaceFactory.OpenFromFile(gdbPath, 0) as IWorkspace2;
             IFeatureWorkspace featureWorkspace = pWorkspace as IFeatureWorkspace;
 
-            IFeatureClass pTUFeatCls2 = this.dataGridViewX1[1, 0].Tag as IFeatureClass;
-            string fileName = this.dataGridViewX1[2, 0].Value.ToString();
+            IFeatureClass pSourceFeatCls2 = this.dataGridViewX1[1, 0].Tag as IFeatureClass;
+            string targetFeatureName = this.dataGridViewX1[2, 0].Value.ToString();
             //创建填充表MatchedPolygonFCSettingDif
-            loadFeatSetting(path, fileName, pTUFeatCls2);
+            loadFeatSetting(gdbPath, targetFeatureName, pSourceFeatCls2);
 
             for (int j = 0; j < this.dataGridViewX1.RowCount; j++)
             {
@@ -522,24 +522,24 @@ namespace ZJGISDataUpdating
         /// <summary>
         /// 设置匹配参数
         /// </summary>
-        /// <param name="m_WorkspacePath">待更新数据的存放路径</param>
-        /// <param name="m_MatchedFCName">工作图层的名称（待更新图层的名称）</param>
-        /// <param name="m_TUFeatCls">源数据</param>
-        private void loadFeatSetting(string m_WorkspacePath, string m_MatchedFCName, IFeatureClass m_TUFeatCls)
+        /// <param name="gdbPath">待更新数据的存放路径</param>
+        /// <param name="targetFeatureName">工作图层的名称（待更新图层的名称）</param>
+        /// <param name="sourceFeatCls">源数据</param>
+        private void loadFeatSetting(string gdbPath, string targetFeatureName, IFeatureClass sourceFeatCls)
         {
-            if ((m_MatchedFCName != "") && (m_WorkspacePath != ""))
+            if ((targetFeatureName != "") && (gdbPath != ""))
             {
                 IWorkspaceFactory pWorkspaceFactory = new FileGDBWorkspaceFactory();
-                IWorkspace2 workspace = pWorkspaceFactory.OpenFromFile(m_WorkspacePath, 0) as IWorkspace2;
+                IWorkspace2 workspace = pWorkspaceFactory.OpenFromFile(gdbPath, 0) as IWorkspace2;
                 IFeatureWorkspace featureWorkspace = workspace as IFeatureWorkspace;
                 ITable table = null;
                 IFields fields = null;
 
-                if (m_TUFeatCls.ShapeType == esriGeometryType.esriGeometryPolygon)
+                if (sourceFeatCls.ShapeType == esriGeometryType.esriGeometryPolygon)
                 {
-                    if (workspace.get_NameExists(esriDatasetType.esriDTTable, "MatchedPolygonFCSettingDif"))
+                    if (workspace.get_NameExists(esriDatasetType.esriDTTable, ClsConstant.polygonSettingTable))
                     {
-                        table = featureWorkspace.OpenTable("MatchedPolygonFCSettingDif");
+                        table = featureWorkspace.OpenTable(ClsConstant.polygonSettingTable);
                     }
                     else
                     {
@@ -554,7 +554,7 @@ namespace ZJGISDataUpdating
                         fieldChecker.Validate(fields, out enumFieldError, out validatedFields);
 
                         //创建表MatchedPolygonFCSettingDif
-                        table = featureWorkspace.CreateTable("MatchedPolygonFCSettingDif", validatedFields, uid, null, "");
+                        table = featureWorkspace.CreateTable(ClsConstant.polygonSettingTable, validatedFields, uid, null, "");
                     }
 
                     IWorkspaceEdit pWorkspaceEdit = featureWorkspace as IWorkspaceEdit;
@@ -591,14 +591,14 @@ namespace ZJGISDataUpdating
                         minArea = Convert.ToDouble(text);
                     }
                     //填充表MatchedPolygonFCSettingDif
-                    if (!pDic.ContainsKey(m_MatchedFCName))
+                    if (!pDic.ContainsKey(targetFeatureName))
                     {
                         IRow tempRow = table.CreateRow();
-                        tempRow.set_Value(index, m_MatchedFCName);
+                        tempRow.set_Value(index, targetFeatureName);
                         tempRow.set_Value(tempRow.Fields.FindField("FCSettingID"), table.RowCount(null) - 1);
                         tempRow.set_Value(tempRow.Fields.FindField("Voronoi"), 0);
                         tempRow.set_Value(tempRow.Fields.FindField("MinArea"), minArea);
-                        IDataset dataset = m_TUFeatCls as IDataset;
+                        IDataset dataset = sourceFeatCls as IDataset;
                         if (ClsDeclare.g_SourceFeatClsPathDic.ContainsKey(dataset.Name))
                         {
                             tempRow.set_Value(tempRow.Fields.FindField("SourceFCName"), dataset.Name);
@@ -609,10 +609,10 @@ namespace ZJGISDataUpdating
                     }
                     else
                     {
-                        IRow tRow = table.GetRow(pDic[m_MatchedFCName]);
+                        IRow tRow = table.GetRow(pDic[targetFeatureName]);
                         tRow.set_Value(tRow.Fields.FindField("Voronoi"), 0);
                         tRow.set_Value(tRow.Fields.FindField("MinArea"), minArea);
-                        IDataset dataset = m_TUFeatCls as IDataset;
+                        IDataset dataset = sourceFeatCls as IDataset;
                         if (ClsDeclare.g_SourceFeatClsPathDic.ContainsKey(dataset.Name))
                         {
 

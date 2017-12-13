@@ -530,7 +530,7 @@ namespace ZJGISDataUpdating
                 ////如果为点匹配
                 //if (pTargetFeatCls.ShapeType == esriGeometryType.esriGeometryPoint)
                 //{
-                //    tableSetting = featureWorkspace.OpenTable("MatchedPointFCSetting");
+                //    tableSetting = featureWorkspace.OpenTable(ClsConstant.pointSettingTable);
                 //    ICursor cursor = tableSetting.Search(null, false);
                 //    IRow row = cursor.NextRow();
                 //    while (row != null)
@@ -608,7 +608,7 @@ namespace ZJGISDataUpdating
                 //{
                 //    if (pTEFeatCls.ShapeType == esriGeometryType.esriGeometryPoint)
                 //    {
-                //        tableSetting = featureWorkspace.OpenTable("MatchedPointFCSetting");
+                //        tableSetting = featureWorkspace.OpenTable(ClsConstant.pointSettingTable);
                 //        ICursor cursor = tableSetting.Search(null, false);
                 //        IRow row = cursor.NextRow();
                 //        while (row != null)
@@ -641,7 +641,7 @@ namespace ZJGISDataUpdating
                 //{
                 //    if (pTEFeatCls.ShapeType == esriGeometryType.esriGeometryPoint)
                 //    {
-                //        tableSetting = featureWorkspace.OpenTable("MatchedPointFCSetting");
+                //        tableSetting = featureWorkspace.OpenTable(ClsConstant.pointSettingTable);
                 //        ICursor cursor = tableSetting.Search(null, false);
                 //        IRow row = cursor.NextRow();
                 //        while (row != null)
@@ -680,7 +680,7 @@ namespace ZJGISDataUpdating
                 //如果为点匹配
                 if (pTargetFeatCls.ShapeType == esriGeometryType.esriGeometryPoint)
                 {
-                    tableSetting = featureWorkspace.OpenTable("MatchedPointFCSetting");
+                    tableSetting = featureWorkspace.OpenTable(ClsConstant.pointSettingTable);
                     ICursor cursor = tableSetting.Search(null, false);
                     IRow row = cursor.NextRow();
                     while (row != null)
@@ -1011,9 +1011,9 @@ namespace ZJGISDataUpdating
                 //if (pSourceFeatCls.ShapeType == esriGeometryType.esriGeometryPoint)
                 //{
                 //表MatchedPointFCSetting是否存在，存在就打开表
-                if (workspace.get_NameExists(esriDatasetType.esriDTTable, "MatchedPointFCSetting"))
+                if (workspace.get_NameExists(esriDatasetType.esriDTTable, ClsConstant.pointSettingTable))
                 {
-                    table = featureWorkspace.OpenTable("MatchedPointFCSetting");
+                    table = featureWorkspace.OpenTable(ClsConstant.pointSettingTable);
                 }
                 else
                 {
@@ -1028,7 +1028,7 @@ namespace ZJGISDataUpdating
                     fieldChecker.ValidateWorkspace = (IWorkspace)workspace;
                     fieldChecker.Validate(fields, out enumFieldError, out validatedFields);
 
-                    table = featureWorkspace.CreateTable("MatchedPointFCSetting", validatedFields, uid, null, "");
+                    table = featureWorkspace.CreateTable(ClsConstant.pointSettingTable, validatedFields, uid, null, "");
                 }
                 //}
                 //else

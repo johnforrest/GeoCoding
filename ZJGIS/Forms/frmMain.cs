@@ -1466,10 +1466,10 @@ namespace ZJGIS
                 }
                 else if (tableName.Contains("_LnTable") || tableName.Contains("_ln") || tableName.Contains("_Ln") || tableName.Contains("_lN"))
                 {
-                    if (workspace.get_NameExists(esriDatasetType.esriDTTable, "MatchedPolylineFCSetting"))
+                    if (workspace.get_NameExists(esriDatasetType.esriDTTable, ClsConstant.lineSettingTable))
                     {
                         featureWorkspace = workspace as IFeatureWorkspace;
-                        tableSetting = featureWorkspace.OpenTable("MatchedPolylineFCSetting");
+                        tableSetting = featureWorkspace.OpenTable(ClsConstant.lineSettingTable);
                     }
                     else
                     {
@@ -1583,10 +1583,10 @@ namespace ZJGIS
                 }
                 else if (tableName.Contains("_PtTable") || tableName.Contains("_ln") || tableName.Contains("_Ln") || tableName.Contains("_lN"))
                 {
-                    if (workspace.get_NameExists(esriDatasetType.esriDTTable, "MatchedPointFCSetting"))
+                    if (workspace.get_NameExists(esriDatasetType.esriDTTable, ClsConstant.pointSettingTable))
                     {
                         featureWorkspace = workspace as IFeatureWorkspace;
-                        tableSetting = featureWorkspace.OpenTable("MatchedPointFCSetting");
+                        tableSetting = featureWorkspace.OpenTable(ClsConstant.pointSettingTable);
                     }
                     else
                     {
@@ -1826,10 +1826,10 @@ namespace ZJGIS
                     //如果为面匹配结果表
                     if (tableName.Contains("_DifPyTable") || tableName.Contains("_py") || tableName.Contains("_Py") || tableName.Contains("_pY"))
                     {
-                        if (workspace.get_NameExists(esriDatasetType.esriDTTable, "MatchedPolygonFCSettingDif"))
+                        if (workspace.get_NameExists(esriDatasetType.esriDTTable, ClsConstant.polygonSettingTable))
                         {
                             featureWorkspace = workspace as IFeatureWorkspace;
-                            tableSetting = featureWorkspace.OpenTable("MatchedPolygonFCSettingDif");
+                            tableSetting = featureWorkspace.OpenTable(ClsConstant.polygonSettingTable);
                         }
                         else
                         {
@@ -1943,10 +1943,10 @@ namespace ZJGIS
                     else if (tableName.Contains("_DifLnTable") || tableName.Contains("_ln") || tableName.Contains("_Ln") || tableName.Contains("_lN"))
                     {
                         //必须存在表——MatchedPolylineFCSetting，还要遍历这个表呢
-                        if (workspace.get_NameExists(esriDatasetType.esriDTTable, "MatchedPolylineFCSetting"))
+                        if (workspace.get_NameExists(esriDatasetType.esriDTTable, ClsConstant.lineSettingTable))
                         {
                             featureWorkspace = workspace as IFeatureWorkspace;
-                            tableSetting = featureWorkspace.OpenTable("MatchedPolylineFCSetting");
+                            tableSetting = featureWorkspace.OpenTable(ClsConstant.lineSettingTable);
                         }
                         else
                         {
@@ -2064,12 +2064,12 @@ namespace ZJGIS
                     else if (tableName.Contains("_PtTable") || tableName.Contains("_pt") || tableName.Contains("_Pt") || tableName.Contains("_pT"))
                     {
                         //必须存在表——MatchedPointFCSetting，还要遍历这个表呢
-                        //if (workspace.get_NameExists(esriDatasetType.esriDTTable, "MatchedPolylineFCSetting"))
-                        if (workspace.get_NameExists(esriDatasetType.esriDTTable, "MatchedPointFCSetting"))
+                        //if (workspace.get_NameExists(esriDatasetType.esriDTTable, ClsConstant.lineSettingTable))
+                        if (workspace.get_NameExists(esriDatasetType.esriDTTable, ClsConstant.pointSettingTable))
                         {
                             featureWorkspace = workspace as IFeatureWorkspace;
-                            //tableSetting = featureWorkspace.OpenTable("MatchedPolylineFCSetting");
-                            tableSetting = featureWorkspace.OpenTable("MatchedPointFCSetting");
+                            //tableSetting = featureWorkspace.OpenTable(ClsConstant.lineSettingTable);
+                            tableSetting = featureWorkspace.OpenTable(ClsConstant.pointSettingTable);
                         }
                         else
                         {
