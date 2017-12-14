@@ -223,7 +223,7 @@ namespace ZJGISDataUpdating
                     //查找匹配与待匹配的要素
                     IFeature targetFeature = null;
                     //点和线匹配名称
-                    string pSourceName = sourceFeature.get_Value(sourceFeature.Fields.FindField(ClsConfig.LayerConfigs[sourceFcls.AliasName].NameField)).ToString();
+                    string pSourceName = sourceFeature.get_Value(sourceFeature.Fields.FindField(ClsConfig.LayerConfigs[(sourceFcls  as IDataset).Name].NameField)).ToString();
                     string pTargetName = string.Empty;
                     //面匹配分类码
                     //string pSourceFCODE = sourceFeature.get_Value(sourceFeature.Fields.FindField("FCODE")).ToString().Trim();
@@ -246,14 +246,14 @@ namespace ZJGISDataUpdating
                                     //plistString.Add(sourceFeature.get_Value(sourceFeature.Fields.FindField("ENTIID")).ToString());
                                     //test
                                     targetFeature = targetFcls.GetFeature(Convert.ToInt32(tempRow.get_Value(pTarOIDIndex)));
-                                    string test3 = ClsConfig.LayerConfigs[targetFcls.AliasName].NameField;
-                                    pTargetName = targetFeature.get_Value(targetFeature.Fields.FindField(ClsConfig.LayerConfigs[targetFcls.AliasName].NameField)).ToString();
+                                    string test3 = ClsConfig.LayerConfigs[(targetFcls  as IDataset).Name].NameField;
+                                    pTargetName = targetFeature.get_Value(targetFeature.Fields.FindField(ClsConfig.LayerConfigs[(targetFcls  as IDataset).Name].NameField)).ToString();
                                     //test
-                                    string test1 = targetFeature.get_Value(targetFeature.Fields.FindField(ClsConfig.LayerConfigs[targetFcls.AliasName].EntityID)).ToString();
-                                    string test2 = sourceFeature.get_Value(sourceFeature.Fields.FindField(ClsConfig.LayerConfigs[sourceFcls.AliasName].EntityID)).ToString();
+                                    string test1 = targetFeature.get_Value(targetFeature.Fields.FindField(ClsConfig.LayerConfigs[(targetFcls  as IDataset).Name].EntityID)).ToString();
+                                    string test2 = sourceFeature.get_Value(sourceFeature.Fields.FindField(ClsConfig.LayerConfigs[(sourceFcls  as IDataset).Name].EntityID)).ToString();
                                     if (pClsCom.StringSameOrNot(pSourceName, pTargetName) > 1)
                                     {
-                                        targetFeature.set_Value(targetFeature.Fields.FindField(ClsConfig.LayerConfigs[targetFcls.AliasName].EntityID), sourceFeature.get_Value(sourceFeature.Fields.FindField(ClsConfig.LayerConfigs[sourceFcls.AliasName].EntityID)));
+                                        targetFeature.set_Value(targetFeature.Fields.FindField(ClsConfig.LayerConfigs[(targetFcls  as IDataset).Name].EntityID), sourceFeature.get_Value(sourceFeature.Fields.FindField(ClsConfig.LayerConfigs[(sourceFcls  as IDataset).Name].EntityID)));
                                         targetFeature.Store();
                                     }
                                     //sourceFeature.set_Value(sourceFeature.Fields.FindField("ENTIID"), targetFeature.get_Value(targetFeature.Fields.FindField("ENTIID")));
@@ -310,11 +310,11 @@ namespace ZJGISDataUpdating
                                 //case "一对一":
                                 case ClsConstant.One2One:
                                     targetFeature = targetFcls.GetFeature(Convert.ToInt32(tempRow.get_Value(pTarOIDIndex)));
-                                    pTargetName = targetFeature.get_Value(targetFeature.Fields.FindField(ClsConfig.LayerConfigs[targetFcls.AliasName].NameField)).ToString();
+                                    pTargetName = targetFeature.get_Value(targetFeature.Fields.FindField(ClsConfig.LayerConfigs[(targetFcls  as IDataset).Name].NameField)).ToString();
                                     //targetFeature.Shape = sourceFeature.Shape;
                                     if (pSourceName == pTargetName)
                                     {
-                                        targetFeature.set_Value(targetFeature.Fields.FindField(ClsConfig.LayerConfigs[targetFcls.AliasName].EntityID), sourceFeature.get_Value(sourceFeature.Fields.FindField(ClsConfig.LayerConfigs[sourceFcls.AliasName].EntityID)));
+                                        targetFeature.set_Value(targetFeature.Fields.FindField(ClsConfig.LayerConfigs[(targetFcls  as IDataset).Name].EntityID), sourceFeature.get_Value(sourceFeature.Fields.FindField(ClsConfig.LayerConfigs[(sourceFcls  as IDataset).Name].EntityID)));
                                         targetFeature.Store();
                                     }
                                     //sourceFeature.set_Value(sourceFeature.Fields.FindField("ENTIID"), targetFeature.get_Value(targetFeature.Fields.FindField("ENTIID")));
@@ -335,13 +335,13 @@ namespace ZJGISDataUpdating
                                         int test2 = Convert.ToInt32(fromids[i]);
 
                                         targetFeature = targetFcls.GetFeature(Convert.ToInt32(fromids[i]));
-                                        pTargetName = targetFeature.get_Value(targetFeature.Fields.FindField(ClsConfig.LayerConfigs[targetFcls.AliasName].NameField)).ToString();
+                                        pTargetName = targetFeature.get_Value(targetFeature.Fields.FindField(ClsConfig.LayerConfigs[(targetFcls  as IDataset).Name].NameField)).ToString();
                                         //targetFeature.Shape = sourceFeature.Shape;
                                         if (pSourceName == pTargetName)
                                         {
-                                            if (targetFeature.get_Value(targetFeature.Fields.FindField(ClsConfig.LayerConfigs[targetFcls.AliasName].EntityID)).ToString().Trim().Length == 0)
+                                            if (targetFeature.get_Value(targetFeature.Fields.FindField(ClsConfig.LayerConfigs[(targetFcls  as IDataset).Name].EntityID)).ToString().Trim().Length == 0)
                                             {
-                                                targetFeature.set_Value(targetFeature.Fields.FindField(ClsConfig.LayerConfigs[targetFcls.AliasName].EntityID), sourceFeature.get_Value(sourceFeature.Fields.FindField(ClsConfig.LayerConfigs[sourceFcls.AliasName].EntityID)));
+                                                targetFeature.set_Value(targetFeature.Fields.FindField(ClsConfig.LayerConfigs[(targetFcls  as IDataset).Name].EntityID), sourceFeature.get_Value(sourceFeature.Fields.FindField(ClsConfig.LayerConfigs[(sourceFcls  as IDataset).Name].EntityID)));
                                                 targetFeature.Store();
                                             }
                                         }
@@ -376,7 +376,7 @@ namespace ZJGISDataUpdating
                                     //targetFeature.Shape = sourceFeature.Shape;
                                     //if (pSourceFCODE == pTargetFCODE)
                                     //{
-                                    targetFeature.set_Value(targetFeature.Fields.FindField(ClsConfig.LayerConfigs[targetFcls.AliasName].EntityID), sourceFeature.get_Value(sourceFeature.Fields.FindField(ClsConfig.LayerConfigs[sourceFcls.AliasName].EntityID)));
+                                    targetFeature.set_Value(targetFeature.Fields.FindField(ClsConfig.LayerConfigs[(targetFcls  as IDataset).Name].EntityID), sourceFeature.get_Value(sourceFeature.Fields.FindField(ClsConfig.LayerConfigs[(sourceFcls  as IDataset).Name].EntityID)));
                                     targetFeature.Store();
                                     //}
                                     //sourceFeature.set_Value(sourceFeature.Fields.FindField("ENTIID"), targetFeature.get_Value(targetFeature.Fields.FindField("ENTIID")));
@@ -397,13 +397,13 @@ namespace ZJGISDataUpdating
                                     //    string test = fromids[i];
                                     //    int test2 = Convert.ToInt32(fromids[i]);
                                     //    targetFeature = targetFcls.GetFeature(Convert.ToInt32(fromids[i]));
-                                    //    pTargetName = targetFeature.get_Value(targetFeature.Fields.FindField(ClsConfig.LayerConfigs[targetFcls.AliasName].NameField)).ToString();
+                                    //    pTargetName = targetFeature.get_Value(targetFeature.Fields.FindField(ClsConfig.LayerConfigs[(targetFcls  as IDataset).Name].NameField)).ToString();
                                     //    //targetFeature.Shape = sourceFeature.Shape;
                                     //    if (pSourceName == pTargetName)
                                     //    {
-                                    //        if (targetFeature.get_Value(targetFeature.Fields.FindField(ClsConfig.LayerConfigs[targetFcls.AliasName].EntityID)).ToString().Trim().Length == 0)
+                                    //        if (targetFeature.get_Value(targetFeature.Fields.FindField(ClsConfig.LayerConfigs[(targetFcls  as IDataset).Name].EntityID)).ToString().Trim().Length == 0)
                                     //        {
-                                    //            targetFeature.set_Value(targetFeature.Fields.FindField(ClsConfig.LayerConfigs[targetFcls.AliasName].EntityID), sourceFeature.get_Value(sourceFeature.Fields.FindField(ClsConfig.LayerConfigs[sourceFcls.AliasName].EntityID)));
+                                    //            targetFeature.set_Value(targetFeature.Fields.FindField(ClsConfig.LayerConfigs[(targetFcls  as IDataset).Name].EntityID), sourceFeature.get_Value(sourceFeature.Fields.FindField(ClsConfig.LayerConfigs[(sourceFcls  as IDataset).Name].EntityID)));
                                     //            targetFeature.Store();
                                     //        }
                                     //    }
@@ -443,14 +443,15 @@ namespace ZJGISDataUpdating
                                     //plistString.Add(sourceFeature.get_Value(sourceFeature.Fields.FindField("ENTIID")).ToString());
                                     //test
                                     targetFeature = targetFcls.GetFeature(Convert.ToInt32(tempRow.get_Value(pTarOIDIndex)));
-                                    string test3 = ClsConfig.LayerConfigs[targetFcls.AliasName].NameField;
-                                    pTargetName = targetFeature.get_Value(targetFeature.Fields.FindField(ClsConfig.LayerConfigs[targetFcls.AliasName].NameField)).ToString();
+                                    //string test3 = ClsConfig.LayerConfigs[(targetFcls  as IDataset).Name].NameField;
+                                    string test3 = ClsConfig.LayerConfigs[(targetFcls  as IDataset).Name].NameField;
+                                    pTargetName = targetFeature.get_Value(targetFeature.Fields.FindField(ClsConfig.LayerConfigs[(targetFcls  as IDataset).Name].NameField)).ToString();
                                     //test
-                                    string test1 = targetFeature.get_Value(targetFeature.Fields.FindField(ClsConfig.LayerConfigs[targetFcls.AliasName].EntityID)).ToString();
-                                    string test2 = sourceFeature.get_Value(sourceFeature.Fields.FindField(ClsConfig.LayerConfigs[sourceFcls.AliasName].EntityID)).ToString();
+                                    string test1 = targetFeature.get_Value(targetFeature.Fields.FindField(ClsConfig.LayerConfigs[(targetFcls  as IDataset).Name].EntityID)).ToString();
+                                    string test2 = sourceFeature.get_Value(sourceFeature.Fields.FindField(ClsConfig.LayerConfigs[(sourceFcls  as IDataset).Name].EntityID)).ToString();
                                     //if (pClsCom.StringSameOrNot(pSourceName, pTargetName) > 1)
                                     //{
-                                    targetFeature.set_Value(targetFeature.Fields.FindField(ClsConfig.LayerConfigs[targetFcls.AliasName].EntityID), sourceFeature.get_Value(sourceFeature.Fields.FindField(ClsConfig.LayerConfigs[sourceFcls.AliasName].EntityID)));
+                                    targetFeature.set_Value(targetFeature.Fields.FindField(ClsConfig.LayerConfigs[(targetFcls  as IDataset).Name].EntityID), sourceFeature.get_Value(sourceFeature.Fields.FindField(ClsConfig.LayerConfigs[(sourceFcls  as IDataset).Name].EntityID)));
                                     targetFeature.Store();
                                     //}
                                     //sourceFeature.set_Value(sourceFeature.Fields.FindField("ENTIID"), targetFeature.get_Value(targetFeature.Fields.FindField("ENTIID")));
@@ -507,11 +508,11 @@ namespace ZJGISDataUpdating
                                 //case "一对一":
                                 case ClsConstant.One2One:
                                     targetFeature = targetFcls.GetFeature(Convert.ToInt32(tempRow.get_Value(pTarOIDIndex)));
-                                    pTargetName = targetFeature.get_Value(targetFeature.Fields.FindField(ClsConfig.LayerConfigs[targetFcls.AliasName].NameField)).ToString();
+                                    pTargetName = targetFeature.get_Value(targetFeature.Fields.FindField(ClsConfig.LayerConfigs[(targetFcls  as IDataset).Name].NameField)).ToString();
                                     //targetFeature.Shape = sourceFeature.Shape;
                                     //if (pSourceName == pTargetName)
                                     //{
-                                    targetFeature.set_Value(targetFeature.Fields.FindField(ClsConfig.LayerConfigs[targetFcls.AliasName].EntityID), sourceFeature.get_Value(sourceFeature.Fields.FindField(ClsConfig.LayerConfigs[sourceFcls.AliasName].EntityID)));
+                                    targetFeature.set_Value(targetFeature.Fields.FindField(ClsConfig.LayerConfigs[(targetFcls  as IDataset).Name].EntityID), sourceFeature.get_Value(sourceFeature.Fields.FindField(ClsConfig.LayerConfigs[(sourceFcls  as IDataset).Name].EntityID)));
                                     targetFeature.Store();
                                     //}
                                     //sourceFeature.set_Value(sourceFeature.Fields.FindField("ENTIID"), targetFeature.get_Value(targetFeature.Fields.FindField("ENTIID")));
@@ -532,13 +533,13 @@ namespace ZJGISDataUpdating
                                         int test2 = Convert.ToInt32(fromids[i]);
 
                                         targetFeature = targetFcls.GetFeature(Convert.ToInt32(fromids[i]));
-                                        pTargetName = targetFeature.get_Value(targetFeature.Fields.FindField(ClsConfig.LayerConfigs[targetFcls.AliasName].NameField)).ToString();
+                                        pTargetName = targetFeature.get_Value(targetFeature.Fields.FindField(ClsConfig.LayerConfigs[(targetFcls  as IDataset).Name].NameField)).ToString();
                                         //targetFeature.Shape = sourceFeature.Shape;
                                         if (pSourceName == pTargetName)
                                         {
-                                            if (targetFeature.get_Value(targetFeature.Fields.FindField(ClsConfig.LayerConfigs[targetFcls.AliasName].EntityID)).ToString().Trim().Length == 0)
+                                            if (targetFeature.get_Value(targetFeature.Fields.FindField(ClsConfig.LayerConfigs[(targetFcls  as IDataset).Name].EntityID)).ToString().Trim().Length == 0)
                                             {
-                                                targetFeature.set_Value(targetFeature.Fields.FindField(ClsConfig.LayerConfigs[targetFcls.AliasName].EntityID), sourceFeature.get_Value(sourceFeature.Fields.FindField(ClsConfig.LayerConfigs[sourceFcls.AliasName].EntityID)));
+                                                targetFeature.set_Value(targetFeature.Fields.FindField(ClsConfig.LayerConfigs[(targetFcls  as IDataset).Name].EntityID), sourceFeature.get_Value(sourceFeature.Fields.FindField(ClsConfig.LayerConfigs[(sourceFcls  as IDataset).Name].EntityID)));
                                                 targetFeature.Store();
                                             }
                                         }
@@ -573,7 +574,7 @@ namespace ZJGISDataUpdating
                                     //targetFeature.Shape = sourceFeature.Shape;
                                     //if (pSourceFCODE == pTargetFCODE)
                                     //{
-                                    targetFeature.set_Value(targetFeature.Fields.FindField(ClsConfig.LayerConfigs[targetFcls.AliasName].EntityID), sourceFeature.get_Value(sourceFeature.Fields.FindField(ClsConfig.LayerConfigs[sourceFcls.AliasName].EntityID)));
+                                    targetFeature.set_Value(targetFeature.Fields.FindField(ClsConfig.LayerConfigs[(targetFcls  as IDataset).Name].EntityID), sourceFeature.get_Value(sourceFeature.Fields.FindField(ClsConfig.LayerConfigs[(sourceFcls  as IDataset).Name].EntityID)));
                                     targetFeature.Store();
                                     //}
                                     //sourceFeature.set_Value(sourceFeature.Fields.FindField("ENTIID"), targetFeature.get_Value(targetFeature.Fields.FindField("ENTIID")));
@@ -594,13 +595,13 @@ namespace ZJGISDataUpdating
                                     //    string test = fromids[i];
                                     //    int test2 = Convert.ToInt32(fromids[i]);
                                     //    targetFeature = targetFcls.GetFeature(Convert.ToInt32(fromids[i]));
-                                    //    pTargetName = targetFeature.get_Value(targetFeature.Fields.FindField(ClsConfig.LayerConfigs[targetFcls.AliasName].NameField)).ToString();
+                                    //    pTargetName = targetFeature.get_Value(targetFeature.Fields.FindField(ClsConfig.LayerConfigs[(targetFcls  as IDataset).Name].NameField)).ToString();
                                     //    //targetFeature.Shape = sourceFeature.Shape;
                                     //    if (pSourceName == pTargetName)
                                     //    {
-                                    //        if (targetFeature.get_Value(targetFeature.Fields.FindField(ClsConfig.LayerConfigs[targetFcls.AliasName].EntityID)).ToString().Trim().Length == 0)
+                                    //        if (targetFeature.get_Value(targetFeature.Fields.FindField(ClsConfig.LayerConfigs[(targetFcls  as IDataset).Name].EntityID)).ToString().Trim().Length == 0)
                                     //        {
-                                    //            targetFeature.set_Value(targetFeature.Fields.FindField(ClsConfig.LayerConfigs[targetFcls.AliasName].EntityID), sourceFeature.get_Value(sourceFeature.Fields.FindField(ClsConfig.LayerConfigs[sourceFcls.AliasName].EntityID)));
+                                    //            targetFeature.set_Value(targetFeature.Fields.FindField(ClsConfig.LayerConfigs[(targetFcls  as IDataset).Name].EntityID), sourceFeature.get_Value(sourceFeature.Fields.FindField(ClsConfig.LayerConfigs[(sourceFcls  as IDataset).Name].EntityID)));
                                     //            targetFeature.Store();
                                     //        }
                                     //    }

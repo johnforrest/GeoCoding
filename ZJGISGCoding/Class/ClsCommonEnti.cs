@@ -58,10 +58,11 @@ namespace ZJGISGCoding.Class
                     while (pFeature != null)
                     {
                         //对于名称为空的字段进行筛选
-                        //string pFeaEnti = pFeature.get_Value(pFeature.Fields.FindField(ClsConfig.LayerConfigs[pFeatureLayer.Name].NameField)).ToString();
-                        LayerConfig lyconfig = ClsConfig.LayerConfigs[pFeatureLayer.Name.ToString().Trim()];
-                        string test = ClsConfig.LayerConfigs[pFeatureLayer.Name].NameField;
-                        string pFeatureName = pFeature.get_Value(pFeature.Fields.FindField(ClsConfig.LayerConfigs[pFeatureLayer.Name].NameField)).ToString();
+                        //string pFeaEnti = pFeature.get_Value(pFeature.Fields.FindField(ClsConfig.LayerConfigs[(pFeatureLayer.FeatureClass  as IDataset).Name].NameField)).ToString();
+                        LayerConfig lyconfig = ClsConfig.LayerConfigs[(pFeatureLayer.FeatureClass  as IDataset).Name.ToString().Trim()];
+                        string test = ClsConfig.LayerConfigs[(pFeatureLayer.FeatureClass  as IDataset).Name].NameField;
+                        IFeatureClass pFeatureClass = pFeatureLayer.FeatureClass;
+                        string pFeatureName = pFeature.get_Value(pFeature.Fields.FindField(ClsConfig.LayerConfigs[(pFeatureLayer.FeatureClass  as IDataset).Name].NameField)).ToString();
 
                         if (pFeatureName.Trim().Length > 0)
                         {

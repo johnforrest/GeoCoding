@@ -74,8 +74,8 @@ namespace ZJGISGCoding.Class
                     IFeature pFeature = pFeatureCursor.NextFeature();
                     while (pFeature != null)
                     {
-                        string pFeatureName = pFeature.get_Value(pFeature.Fields.FindField(ClsConfig.LayerConfigs[pFeatureLayer.Name].NameField)).ToString();
-                        string pFeaEnti = pFeature.get_Value(pFeature.Fields.FindField(ClsConfig.LayerConfigs[pFeatureLayer.Name].EntityID)).ToString();//匹配名称
+                        string pFeatureName = pFeature.get_Value(pFeature.Fields.FindField(ClsConfig.LayerConfigs[(pFeatureLayer.FeatureClass as IDataset).Name].NameField)).ToString();
+                        string pFeaEnti = pFeature.get_Value(pFeature.Fields.FindField(ClsConfig.LayerConfigs[(pFeatureLayer.FeatureClass as IDataset).Name].EntityID)).ToString();//匹配名称
                         //名称不为空，地理编码为空
                         if (pFeatureName.Trim().Length > 0 && pFeaEnti.Trim().Length == 0)
                         {

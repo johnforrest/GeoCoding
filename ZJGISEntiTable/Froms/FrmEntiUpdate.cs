@@ -195,13 +195,13 @@ namespace ZJGISEntiTable.Froms
         /// <returns></returns>
         private List<ClsUpdateInfo> GetUpdateInfoDisposed(IFeatureLayer toUpdateLyr, IFeatureLayer updatedLyr)
         {
-            string guidFieldTo = ClsConfig.LayerConfigs[toUpdateLyr.Name].GUID;
-            string fromFieldTo = ClsConfig.LayerConfigs[toUpdateLyr.Name].StartVersion;
-            string endFieldTo = ClsConfig.LayerConfigs[toUpdateLyr.Name].EndVersion;
+            string guidFieldTo = ClsConfig.LayerConfigs[(toUpdateLyr.FeatureClass as IDataset).Name].GUID;
+            string fromFieldTo = ClsConfig.LayerConfigs[(toUpdateLyr.FeatureClass as IDataset).Name].StartVersion;
+            string endFieldTo = ClsConfig.LayerConfigs[(toUpdateLyr.FeatureClass as IDataset).Name].EndVersion;
 
-            string guidFieldEd = ClsConfig.LayerConfigs[updatedLyr.Name].GUID;
-            string fromFieldEd = ClsConfig.LayerConfigs[updatedLyr.Name].StartVersion;
-            string endFieldEd = ClsConfig.LayerConfigs[updatedLyr.Name].EndVersion;
+            string guidFieldEd = ClsConfig.LayerConfigs[(updatedLyr.FeatureClass as IDataset).Name].GUID;
+            string fromFieldEd = ClsConfig.LayerConfigs[(updatedLyr.FeatureClass as IDataset).Name].StartVersion;
+            string endFieldEd = ClsConfig.LayerConfigs[(updatedLyr.FeatureClass as IDataset).Name].EndVersion;
 
             List<ClsUpdateInfo> updateInfos = new List<ClsUpdateInfo>();
 
@@ -293,10 +293,10 @@ namespace ZJGISEntiTable.Froms
         {
             List<ClsUpdateInfo> updateInfos = new List<ClsUpdateInfo>();
 
-            string usourceField = ClsConfig.LayerConfigs[updatedLyr.Name].SourceName;
-            string fromVersionField = ClsConfig.LayerConfigs[updatedLyr.Name].StartVersion;
-            string toVersionField = ClsConfig.LayerConfigs[updatedLyr.Name].EndVersion;
-            string guidField = ClsConfig.LayerConfigs[updatedLyr.Name].GUID;
+            string usourceField = ClsConfig.LayerConfigs[(updatedLyr.FeatureClass as IDataset).Name].SourceName;
+            string fromVersionField = ClsConfig.LayerConfigs[(updatedLyr.FeatureClass as IDataset).Name].StartVersion;
+            string toVersionField = ClsConfig.LayerConfigs[(updatedLyr.FeatureClass as IDataset).Name].EndVersion;
+            string guidField = ClsConfig.LayerConfigs[(updatedLyr.FeatureClass as IDataset).Name].GUID;
             //只查询一个字段
             //获取更新数据的当前版本号
             IQueryFilter queryFilter = new QueryFilterClass();

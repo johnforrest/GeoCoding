@@ -80,7 +80,7 @@ namespace ZJGISGCoding.Class
 
                     while (pFeature != null)
                     {
-                        int test = pFeature.Fields.FindField(ClsConfig.LayerConfigs[pFeatureLayer.Name].NameField);
+                        int test = pFeature.Fields.FindField(ClsConfig.LayerConfigs[(pFeatureLayer.FeatureClass as IDataset).Name].NameField);
                         int test2 = pFeature.Fields.FindField("ROADCODE");
                         #region 注释掉
                         ////路线编码和名称都不为空
@@ -104,13 +104,13 @@ namespace ZJGISGCoding.Class
                         //}
                         #endregion
                         //名称不为空，路线编码为空
-                        if (pFeature.get_Value(pFeature.Fields.FindField(ClsConfig.LayerConfigs[pFeatureLayer.Name].NameField)).ToString().Trim().Length > 0)
+                        if (pFeature.get_Value(pFeature.Fields.FindField(ClsConfig.LayerConfigs[(pFeatureLayer.FeatureClass as IDataset).Name].NameField)).ToString().Trim().Length > 0)
                         {
-                            pNameNotNull.Add(pFeature, pFeature.get_Value(pFeature.Fields.FindField(ClsConfig.LayerConfigs[pFeatureLayer.Name].NameField)).ToString());
+                            pNameNotNull.Add(pFeature, pFeature.get_Value(pFeature.Fields.FindField(ClsConfig.LayerConfigs[(pFeatureLayer.FeatureClass as IDataset).Name].NameField)).ToString());
                             pOID.Add(pFeature.OID);
                         }
                         //路线编码不为空且一个道路字母除外（例如Q等）,名称为空
-                        if (pFeature.get_Value(pFeature.Fields.FindField("ROADCODE")).ToString().Trim().Length > 1 && pFeature.get_Value(pFeature.Fields.FindField(ClsConfig.LayerConfigs[pFeatureLayer.Name].NameField)).ToString().Trim().Length == 0)
+                        if (pFeature.get_Value(pFeature.Fields.FindField("ROADCODE")).ToString().Trim().Length > 1 && pFeature.get_Value(pFeature.Fields.FindField(ClsConfig.LayerConfigs[(pFeatureLayer.FeatureClass as IDataset).Name].NameField)).ToString().Trim().Length == 0)
                         {
                             pRoadNotNull.Add(pFeature, pFeature.get_Value(pFeature.Fields.FindField("ROADCODE")).ToString());
                             pOID.Add(pFeature.OID);
@@ -658,9 +658,9 @@ namespace ZJGISGCoding.Class
                         {
 
                             //名称不为空
-                            if (pFeature.get_Value(pFeature.Fields.FindField(ClsConfig.LayerConfigs[pFeatureLayer.Name].NameField)).ToString().Trim().Length > 0)
+                            if (pFeature.get_Value(pFeature.Fields.FindField(ClsConfig.LayerConfigs[(pFeatureLayer.FeatureClass as IDataset).Name].NameField)).ToString().Trim().Length > 0)
                             {
-                                string pFeatureName2 = pFeature.get_Value(pFeature.Fields.FindField(ClsConfig.LayerConfigs[pFeatureLayer.Name].NameField)).ToString();
+                                string pFeatureName2 = pFeature.get_Value(pFeature.Fields.FindField(ClsConfig.LayerConfigs[(pFeatureLayer.FeatureClass as IDataset).Name].NameField)).ToString();
                                 int flag2 = 0;
                                 foreach (string s in pNameNotNull.Values)
                                 {
@@ -736,7 +736,7 @@ namespace ZJGISGCoding.Class
                             }
 
                             //路线编码不为空,名称为空
-                            if (pFeature.get_Value(pFeature.Fields.FindField("ROADCODE")).ToString().Trim().Length > 1 && pFeature.get_Value(pFeature.Fields.FindField(ClsConfig.LayerConfigs[pFeatureLayer.Name].NameField)).ToString().Trim().Length == 0)
+                            if (pFeature.get_Value(pFeature.Fields.FindField("ROADCODE")).ToString().Trim().Length > 1 && pFeature.get_Value(pFeature.Fields.FindField(ClsConfig.LayerConfigs[(pFeatureLayer.FeatureClass as IDataset).Name].NameField)).ToString().Trim().Length == 0)
                             {
                                 string pRoadCode2 = pFeature.get_Value(pFeature.Fields.FindField("ROADCODE")).ToString();
 
@@ -1097,10 +1097,10 @@ namespace ZJGISGCoding.Class
                             //test
                             object testobj = pFeature.OID;
                             //顺序码
-                            string pFeatureName = pFeature.get_Value(pFeature.Fields.FindField(ClsConfig.LayerConfigs[pFeatureLayer.Name].NameField)).ToString().Trim();
+                            string pFeatureName = pFeature.get_Value(pFeature.Fields.FindField(ClsConfig.LayerConfigs[(pFeatureLayer.FeatureClass as IDataset).Name].NameField)).ToString().Trim();
                             for (int k = 0; k < keyListTotal.Count; k++)
                             {
-                                string pkeyListTotalNamek = keyListTotal[k].get_Value(keyListTotal[k].Fields.FindField(ClsConfig.LayerConfigs[pFeatureLayer.Name].NameField)).ToString().Trim();
+                                string pkeyListTotalNamek = keyListTotal[k].get_Value(keyListTotal[k].Fields.FindField(ClsConfig.LayerConfigs[(pFeatureLayer.FeatureClass as IDataset).Name].NameField)).ToString().Trim();
                                 if (pFeatureName == pkeyListTotalNamek)
                                 {
                                     pNum = "A" + string.Format("{0:00}", k + 1);
@@ -1359,10 +1359,10 @@ namespace ZJGISGCoding.Class
                     while (pFeature != null)
                     {
                         //名称不为空，地理编码为空
-                        if (pFeature.get_Value(pFeature.Fields.FindField(ClsConfig.LayerConfigs[pFeatureLayer.Name].NameField)).ToString().Trim().Length > 0 &&
-                            pFeature.get_Value(pFeature.Fields.FindField(ClsConfig.LayerConfigs[pFeatureLayer.Name].EntityID)).ToString().Trim().Length == 0)
+                        if (pFeature.get_Value(pFeature.Fields.FindField(ClsConfig.LayerConfigs[(pFeatureLayer.FeatureClass as IDataset).Name].NameField)).ToString().Trim().Length > 0 &&
+                            pFeature.get_Value(pFeature.Fields.FindField(ClsConfig.LayerConfigs[(pFeatureLayer.FeatureClass as IDataset).Name].EntityID)).ToString().Trim().Length == 0)
                         {
-                            pNameNotNull.Add(pFeature, pFeature.get_Value(pFeature.Fields.FindField(ClsConfig.LayerConfigs[pFeatureLayer.Name].NameField)).ToString());
+                            pNameNotNull.Add(pFeature, pFeature.get_Value(pFeature.Fields.FindField(ClsConfig.LayerConfigs[(pFeatureLayer.FeatureClass as IDataset).Name].NameField)).ToString());
                             pOID.Add(pFeature.OID);
                         }
 
@@ -1664,12 +1664,12 @@ namespace ZJGISGCoding.Class
                     {
                         //对于名称为空的字段进行筛选
                         //test
-                        string test = pFeature.get_Value(pFeature.Fields.FindField(ClsConfig.LayerConfigs[pFeatureLayer.Name].NameField)).ToString();
+                        string test = pFeature.get_Value(pFeature.Fields.FindField(ClsConfig.LayerConfigs[(pFeatureLayer.FeatureClass as IDataset).Name].NameField)).ToString();
 
                         //名称不为空，路线编码为空
                         if (pOID.Contains(pFeature.OID))
                         {
-                            string pFeatureName2 = pFeature.get_Value(pFeature.Fields.FindField(ClsConfig.LayerConfigs[pFeatureLayer.Name].NameField)).ToString();
+                            string pFeatureName2 = pFeature.get_Value(pFeature.Fields.FindField(ClsConfig.LayerConfigs[(pFeatureLayer.FeatureClass as IDataset).Name].NameField)).ToString();
                             int flag2 = 0;
                             foreach (string s in pNameNotNull.Values)
                             {
@@ -2007,10 +2007,10 @@ namespace ZJGISGCoding.Class
                             //test
                             object testobj = pFeature.OID;
                             //顺序码
-                            string pFeatureName = pFeature.get_Value(pFeature.Fields.FindField(ClsConfig.LayerConfigs[pFeatureLayer.Name].NameField)).ToString().Trim();
+                            string pFeatureName = pFeature.get_Value(pFeature.Fields.FindField(ClsConfig.LayerConfigs[(pFeatureLayer.FeatureClass as IDataset).Name].NameField)).ToString().Trim();
                             for (int k = 0; k < keyListTotal.Count; k++)
                             {
-                                string pkeyListTotalNamek = keyListTotal[k].get_Value(keyListTotal[k].Fields.FindField(ClsConfig.LayerConfigs[pFeatureLayer.Name].NameField)).ToString().Trim();
+                                string pkeyListTotalNamek = keyListTotal[k].get_Value(keyListTotal[k].Fields.FindField(ClsConfig.LayerConfigs[(pFeatureLayer.FeatureClass as IDataset).Name].NameField)).ToString().Trim();
                                 if (pFeatureName == pkeyListTotalNamek)
                                 {
                                     pNum = "A" + string.Format("{0:00}", k + 1);

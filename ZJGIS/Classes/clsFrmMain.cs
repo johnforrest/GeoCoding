@@ -15,21 +15,21 @@ namespace ZJGIS
 		
 		
 		private frmMain m_FrmActive; //传进来要处理的窗体
-      
+	  
 		private IMapControl3 m_MapControl;
 		private static string m_UserName;
 		////类的相关属性
 		////传递本类要处理的窗体，当然这个窗体就是frmMain
-        public frmMain FrmActive
+		public frmMain FrmActive
 		{
-            get
-            {
-                return m_FrmActive;
-            }
-            set
-            {
-                m_FrmActive = value;
-            }
+			get
+			{
+				return m_FrmActive;
+			}
+			set
+			{
+				m_FrmActive = value;
+			}
 		}
 		
 		public IMapControl3 MapControl
@@ -51,7 +51,7 @@ namespace ZJGIS
 				m_UserName = value;
 			}
 		}
-       
+	   
 		//构造函数
 		public clsFrmMain()
 		{

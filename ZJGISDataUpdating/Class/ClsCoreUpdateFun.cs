@@ -514,13 +514,13 @@ namespace ZJGISDataUpdating
                                         else
                                         {
                                             //string pSrcStrName = pSrcFeature.get_Value(pSrcFeature.Fields.FindFieldByAliasName("名称")).ToString();
-                                            //string pSrcStrName = pSrcFeature.get_Value(pSrcFeature.Fields.FindField(ClsConfig.LayerConfigs[pSrcFcls.AliasName].NameField)).ToString();
+                                            //string pSrcStrName = pSrcFeature.get_Value(pSrcFeature.Fields.FindField(ClsConfig.LayerConfigs[(pSrcFcls  as IDataset).Name].NameField)).ToString();
                                             //string pSrcStrName = pSrcFeature.get_Value(pSrcFeature.Fields.FindFieldByAliasName(array[0])).ToString();
-                                            string pSrcfield = pSrcFeature.get_Value(pSrcFeature.Fields.FindFieldByAliasName(array[k])).ToString();
+                                            string pSrcfield = pSrcFeature.get_Value(pSrcFeature.Fields.FindField(array[k])).ToString();
                                             //string pTarStrName = pTarFeature.get_Value(pTarFeature.Fields.FindFieldByAliasName("名称")).ToString();
-                                            //string pTarStrName = pTarFeature.get_Value(pTarFeature.Fields.FindField(ClsConfig.LayerConfigs[pTarFcls.AliasName].NameField)).ToString();
+                                            //string pTarStrName = pTarFeature.get_Value(pTarFeature.Fields.FindField(ClsConfig.LayerConfigs[(pTarFcls as IDataset).Name].NameField)).ToString();
                                             //string pTarStrName = pTarFeature.get_Value(pTarFeature.Fields.FindFieldByAliasName(array[0])).ToString();
-                                            string pTarfield = pTarFeature.get_Value(pTarFeature.Fields.FindFieldByAliasName(array[k])).ToString();
+                                            string pTarfield = pTarFeature.get_Value(pTarFeature.Fields.FindField(array[k])).ToString();
                                            
 
 
@@ -807,11 +807,11 @@ namespace ZJGISDataUpdating
                                         else
                                         {
                                             //string pSrcStrName = pSrcFeature.get_Value(pSrcFeature.Fields.FindFieldByAliasName("名称")).ToString();
-                                            //string pSrcStrName = pSrcFeature.get_Value(pSrcFeature.Fields.FindField(ClsConfig.LayerConfigs[pSrcFcls.AliasName].NameField)).ToString();
+                                            //string pSrcStrName = pSrcFeature.get_Value(pSrcFeature.Fields.FindField(ClsConfig.LayerConfigs[(pSrcFcls  as IDataset).Name].NameField)).ToString();
                                             //string pSrcStrName = pSrcFeature.get_Value(pSrcFeature.Fields.FindFieldByAliasName(array[0])).ToString();
                                             string pSrcfield = pSrcFeature.get_Value(pSrcFeature.Fields.FindField(array[k])).ToString();
                                             //string pTarStrName = pTarFeature.get_Value(pTarFeature.Fields.FindFieldByAliasName("名称")).ToString();
-                                            //string pTarStrName = pTarFeature.get_Value(pTarFeature.Fields.FindField(ClsConfig.LayerConfigs[pTarFcls.AliasName].NameField)).ToString();
+                                            //string pTarStrName = pTarFeature.get_Value(pTarFeature.Fields.FindField(ClsConfig.LayerConfigs[(pTarFcls as IDataset).Name].NameField)).ToString();
                                             //string pTarStrName = pTarFeature.get_Value(pTarFeature.Fields.FindFieldByAliasName(array[0])).ToString();
                                             string pTarfield = pTarFeature.get_Value(pTarFeature.Fields.FindField(array[k])).ToString();
                                             //test
@@ -1301,11 +1301,11 @@ namespace ZJGISDataUpdating
                                     if (array[k].Length > 0)
                                     {
                                         //string pSrcStrName = pSrcFeature.get_Value(pSrcFeature.Fields.FindFieldByAliasName("名称")).ToString();
-                                        //string pSrcStrName = pSrcFeature.get_Value(pSrcFeature.Fields.FindField(ClsConfig.LayerConfigs[pSrcFcls.AliasName].NameField)).ToString();
+                                        //string pSrcStrName = pSrcFeature.get_Value(pSrcFeature.Fields.FindField(ClsConfig.LayerConfigs[(pSrcFcls  as IDataset).Name].NameField)).ToString();
                                         //string pSrcStrName = pSrcFeature.get_Value(pSrcFeature.Fields.FindFieldByAliasName(array[0])).ToString();
                                         string pSrcfield = pSrcFeature.get_Value(pSrcFeature.Fields.FindFieldByAliasName(array[k])).ToString();
                                         //string pTarStrName = pTarFeature.get_Value(pTarFeature.Fields.FindFieldByAliasName("名称")).ToString();
-                                        //string pTarStrName = pTarFeature.get_Value(pTarFeature.Fields.FindField(ClsConfig.LayerConfigs[pTarFcls.AliasName].NameField)).ToString();
+                                        //string pTarStrName = pTarFeature.get_Value(pTarFeature.Fields.FindField(ClsConfig.LayerConfigs[(pTarFcls as IDataset).Name].NameField)).ToString();
                                         //string pTarStrName = pTarFeature.get_Value(pTarFeature.Fields.FindFieldByAliasName(array[0])).ToString();
                                         string pTarfield = pTarFeature.get_Value(pTarFeature.Fields.FindFieldByAliasName(array[k])).ToString();
                                         //test
@@ -1493,15 +1493,15 @@ namespace ZJGISDataUpdating
                                     if (array[k].Length > 0)
                                     {
                                         //string pSrcStrName = pSrcFeature.get_Value(pSrcFeature.Fields.FindFieldByAliasName("名称")).ToString();
-                                        //string pSrcStrName = pSrcFeature.get_Value(pSrcFeature.Fields.FindField(ClsConfig.LayerConfigs[pSrcFcls.AliasName].NameField)).ToString();
+                                        //string pSrcStrName = pSrcFeature.get_Value(pSrcFeature.Fields.FindField(ClsConfig.LayerConfigs[(pSrcFcls  as IDataset).Name].NameField)).ToString();
                                         //string pSrcStrName = pSrcFeature.get_Value(pSrcFeature.Fields.FindFieldByAliasName(array[0])).ToString();
                                         //string pSrcFeatureName = pSrcFeature.get_Value(pSrcFeature.Fields.FindFieldByAliasName(array[k])).ToString();
-                                        string pSrcFeatureName = pSrcFeature.get_Value(pSrcFeature.Fields.FindField(ClsConfig.LayerConfigs[pSrcFcls.AliasName].NameField)).ToString();
+                                        string pSrcFeatureName = pSrcFeature.get_Value(pSrcFeature.Fields.FindField(ClsConfig.LayerConfigs[(pSrcFcls  as IDataset).Name].NameField)).ToString();
                                         //string pTarStrName = pTarFeature.get_Value(pTarFeature.Fields.FindFieldByAliasName("名称")).ToString();
-                                        //string pTarStrName = pTarFeature.get_Value(pTarFeature.Fields.FindField(ClsConfig.LayerConfigs[pTarFcls.AliasName].NameField)).ToString();
+                                        //string pTarStrName = pTarFeature.get_Value(pTarFeature.Fields.FindField(ClsConfig.LayerConfigs[(pTarFcls as IDataset).Name].NameField)).ToString();
                                         //string pTarStrName = pTarFeature.get_Value(pTarFeature.Fields.FindFieldByAliasName(array[0])).ToString();
                                         //string pTarFeatureName = pTarFeature.get_Value(pTarFeature.Fields.FindFieldByAliasName(array[k])).ToString();
-                                        string pTarFeatureName = pTarFeature.get_Value(pTarFeature.Fields.FindField(ClsConfig.LayerConfigs[pTarFcls.AliasName].NameField)).ToString();
+                                        string pTarFeatureName = pTarFeature.get_Value(pTarFeature.Fields.FindField(ClsConfig.LayerConfigs[(pTarFcls as IDataset).Name].NameField)).ToString();
                                         //test
                                         //int test0 = StringSameOrNot(pSrcStrName, pTarStrName);
                                         int test0 = StringSameOrNot(pSrcFeatureName, pTarFeatureName);
@@ -2422,13 +2422,13 @@ namespace ZJGISDataUpdating
                         {
                             if (pTarFeature.Shape.GeometryType == esriGeometryType.esriGeometryPoint)
                             {
-                                //string testfieldName1 = ClsConfig.LayerConfigs[pSrcFcls.AliasName].NameField;
+                                //string testfieldName1 = ClsConfig.LayerConfigs[(pSrcFcls  as IDataset).Name].NameField;
                                 //string pSrcStrName = pSrcFeature.get_Value(pSrcFeature.Fields.FindFieldByAliasName("名称")).ToString();
-                                string pSrcStrName = pSrcFeature.get_Value(pSrcFeature.Fields.FindField(ClsConfig.LayerConfigs[pSrcFcls.AliasName].NameField)).ToString();
+                                string pSrcStrName = pSrcFeature.get_Value(pSrcFeature.Fields.FindField(ClsConfig.LayerConfigs[(pSrcFcls  as IDataset).Name].NameField)).ToString();
 
                                 //string pTarStrName = pTarFeature.get_Value(pTarFeature.Fields.FindFieldByAliasName("名称")).ToString();
-                                //string testfieldName = ClsConfig.LayerConfigs[pTarFcls.AliasName].NameField;
-                                string pTarStrName = pTarFeature.get_Value(pTarFeature.Fields.FindField(ClsConfig.LayerConfigs[pTarFcls.AliasName].NameField)).ToString();
+                                //string testfieldName = ClsConfig.LayerConfigs[(pTarFcls as IDataset).Name].NameField;
+                                string pTarStrName = pTarFeature.get_Value(pTarFeature.Fields.FindField(ClsConfig.LayerConfigs[(pTarFcls as IDataset).Name].NameField)).ToString();
 
                                 //test
                                 int test = StringSameOrNot(pSrcStrName, pTarStrName);

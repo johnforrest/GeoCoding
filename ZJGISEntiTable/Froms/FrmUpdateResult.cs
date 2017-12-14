@@ -90,11 +90,11 @@ namespace ZJGISEntiTable.Froms
         {
             int index = this.updateContent.Rows.Add();
 
-            string entiField = ClsConfig.LayerConfigs[updateInfo.UpdatedLyr.Name].EntityID;
-            string nameField = ClsConfig.LayerConfigs[updateInfo.UpdatedLyr.Name].NameField;
-            string fromField = ClsConfig.LayerConfigs[updateInfo.UpdatedLyr.Name].StartVersion;
-            string sourceName = ClsConfig.LayerConfigs[updateInfo.UpdatedLyr.Name].SourceName;
-            string sourceType = ClsConfig.LayerConfigs[updateInfo.UpdatedLyr.Name].SourceType;
+            string entiField = ClsConfig.LayerConfigs[(updateInfo.UpdatedLyr.FeatureClass as IDataset).Name].EntityID;
+            string nameField = ClsConfig.LayerConfigs[(updateInfo.UpdatedLyr.FeatureClass as IDataset).Name].NameField;
+            string fromField = ClsConfig.LayerConfigs[(updateInfo.UpdatedLyr.FeatureClass as IDataset).Name].StartVersion;
+            string sourceName = ClsConfig.LayerConfigs[(updateInfo.UpdatedLyr.FeatureClass as IDataset).Name].SourceName;
+            string sourceType = ClsConfig.LayerConfigs[(updateInfo.UpdatedLyr.FeatureClass as IDataset).Name].SourceType;
             IFeature feat = updateInfo.Feature;
 
             string entityID = feat.get_Value(feat.Fields.FindField(entiField)).ToString();
@@ -163,7 +163,7 @@ namespace ZJGISEntiTable.Froms
         /// <param name="updateInfo"></param>
         public void UpdateNewEntiData(ClsUpdateInfo updateInfo)
         {
-            string entiField = ClsConfig.LayerConfigs[updateInfo.UpdatedLyr.Name].EntityID;
+            string entiField = ClsConfig.LayerConfigs[(updateInfo.UpdatedLyr.FeatureClass as IDataset).Name].EntityID;
             IFeature feat = updateInfo.Feature;
 
             //刷新地理实体表
@@ -188,7 +188,7 @@ namespace ZJGISEntiTable.Froms
             {
                 rowBuffer = this._entityTable.CreateRowBuffer();
                 rowCursor = this._entityTable.Insert(true);
-                rowBuffer = InsertEntiData(rowBuffer, feat, this._versionTable, updateInfo.UpdatedLyr.Name);
+                rowBuffer = InsertEntiData(rowBuffer, feat, this._versionTable, (updateInfo.UpdatedLyr.FeatureClass as IDataset).Name);
                 rowCursor.InsertRow(rowBuffer);
 
             }
@@ -246,10 +246,10 @@ namespace ZJGISEntiTable.Froms
         {
             int index = this.updateContent.Rows.Add();
 
-            string entiField = ClsConfig.LayerConfigs[updateInfo.UpdatedLyr.Name].EntityID;
-            string fromField = ClsConfig.LayerConfigs[updateInfo.UpdatedLyr.Name].StartVersion;
-            string sourceName = ClsConfig.LayerConfigs[updateInfo.UpdatedLyr.Name].SourceName;
-            string sourceType = ClsConfig.LayerConfigs[updateInfo.UpdatedLyr.Name].SourceType;
+            string entiField = ClsConfig.LayerConfigs[(updateInfo.UpdatedLyr.FeatureClass as IDataset).Name].EntityID;
+            string fromField = ClsConfig.LayerConfigs[(updateInfo.UpdatedLyr.FeatureClass as IDataset).Name].StartVersion;
+            string sourceName = ClsConfig.LayerConfigs[(updateInfo.UpdatedLyr.FeatureClass as IDataset).Name].SourceName;
+            string sourceType = ClsConfig.LayerConfigs[(updateInfo.UpdatedLyr.FeatureClass as IDataset).Name].SourceType;
             IFeature feat = updateInfo.Feature;
 
             string entityID = feat.get_Value(feat.Fields.FindField(entiField)).ToString();
@@ -302,10 +302,10 @@ namespace ZJGISEntiTable.Froms
         {
             int index = this.updateContent.Rows.Add();
 
-            string entiField = ClsConfig.LayerConfigs[updateInfo.UpdatedLyr.Name].EntityID;
-            string fromField = ClsConfig.LayerConfigs[updateInfo.UpdatedLyr.Name].StartVersion;
-            string sourceName = ClsConfig.LayerConfigs[updateInfo.UpdatedLyr.Name].SourceName;
-            string sourceType = ClsConfig.LayerConfigs[updateInfo.UpdatedLyr.Name].SourceType;
+            string entiField = ClsConfig.LayerConfigs[(updateInfo.UpdatedLyr.FeatureClass as IDataset).Name].EntityID;
+            string fromField = ClsConfig.LayerConfigs[(updateInfo.UpdatedLyr.FeatureClass as IDataset).Name].StartVersion;
+            string sourceName = ClsConfig.LayerConfigs[(updateInfo.UpdatedLyr.FeatureClass as IDataset).Name].SourceName;
+            string sourceType = ClsConfig.LayerConfigs[(updateInfo.UpdatedLyr.FeatureClass as IDataset).Name].SourceType;
             IFeature feat = updateInfo.Feature;
 
             string entityID = feat.get_Value(feat.Fields.FindField(entiField)).ToString();

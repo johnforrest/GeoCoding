@@ -180,7 +180,7 @@ namespace ZJGISEntiTable.Froms
             IFeatureLayer selectLyr = null;
             foreach (IFeatureLayer pFeatureLay in pFeatlayerList)
             {
-                if (pFeatureLay.Name == name)
+                if ((pFeatureLay.FeatureClass as IDataset).Name == name)
                 {
                     selectLyr = pFeatureLay;
                     break;
@@ -214,10 +214,10 @@ namespace ZJGISEntiTable.Froms
 
             foreach (IFeatureLayer pFeatureLay in _pFeatlayerList)
             {
-                string sourceType = ClsConfig.LayerConfigs[pFeatureLay.Name].SourceType;
+                string sourceType = ClsConfig.LayerConfigs[(pFeatureLay.FeatureClass as IDataset).Name].SourceType;
                 if (source.Contains(sourceType))
                 {
-                    this.GetGraphElementsInLyr(selectEntityID, _pFeatlayerList, pFeatureLay.Name);
+                    this.GetGraphElementsInLyr(selectEntityID, _pFeatlayerList, (pFeatureLay.FeatureClass as IDataset).Name);
                 }
             }
             this.InitialTrackBar();

@@ -633,10 +633,16 @@ namespace SelectQuery
             {
                 for (int i = 0; i < ClsDeclare.g_pMap.LayerCount;i++ )
                 {
-                    string testlayer = ClsDeclare.g_pMap.get_Layer(i).Name;
-                    string test = ClsConfig.LayerConfigs[ClsDeclare.g_pMap.get_Layer(i).Name].SourceType;
+                    //string testlayer = (ClsDeclare.g_pMap.get_Layer(i) as IDataset).Name;
+                    //string test = ClsConfig.LayerConfigs[(ClsDeclare.g_pMap.get_Layer(i) as IDataset).Name].SourceType;
 
-                    if (uSource.Contains(ClsConfig.LayerConfigs[ClsDeclare.g_pMap.get_Layer(i).Name].SourceType))
+                    //if (uSource.Contains(ClsConfig.LayerConfigs[(ClsDeclare.g_pMap.get_Layer(i) as IDataset).Name].SourceType))
+                    //{
+                    //    list.Add(ClsDeclare.g_pMap.get_Layer(i));
+                    //}
+                    string test = ClsConfig.LayerConfigs[(ClsDeclare.g_pMap.get_Layer(i) as IDataset).Name].SourceType;
+
+                    if (uSource.Contains(ClsConfig.LayerConfigs[(ClsDeclare.g_pMap.get_Layer(i) as IDataset).Name].SourceType))
                     {
                         list.Add(ClsDeclare.g_pMap.get_Layer(i));
                     }

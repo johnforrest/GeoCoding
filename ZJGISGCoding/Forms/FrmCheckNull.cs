@@ -87,7 +87,7 @@ namespace ZJGISGCoding.Forms
             string strField = "ENTIID";
             string strFCODE = "FCODE";
             //匹配图层名称
-            string strName = ClsConfig.LayerConfigs[pFeatureLayer.Name].NameField.ToString();
+            string strName = ClsConfig.LayerConfigs[(pFeatureLayer.FeatureClass as IDataset).Name].NameField.ToString();
 
             if (pFeatureLayer == null)
             {

@@ -360,7 +360,7 @@ namespace ZJGISGCoding.Class
 
                     while (pFeature != null)
                     {
-                        bool entiidIsNull = pFeature.get_Value(pFeature.Fields.FindField(ClsConfig.LayerConfigs[pFeatureLayer.Name].EntityID)).ToString().Trim().Length == 0;
+                        bool entiidIsNull = pFeature.get_Value(pFeature.Fields.FindField(ClsConfig.LayerConfigs[(pFeatureLayer.FeatureClass as IDataset).Name].EntityID)).ToString().Trim().Length == 0;
                         //地理编码为空、且分类码为固定的几类
                         if (entiidIsNull)
                         {
