@@ -38,54 +38,61 @@ namespace ZJGISGCoding.Class
                 //检查格网字段是否存在，不存在就添加格网字段GridCode
                 pClsCom.CheckGridCode(pFeatureLayer, strField);
 
-                IDataset pDataset = pFeatureLayer.FeatureClass as IDataset;
-                IWorkspaceEdit pWorkspaceEdit = null;
-                if (pDataset != null)
+                if (pFeatureLayer.FeatureClass.Fields.FindField(ClsConfig.LayerConfigs[(pFeatureLayer.FeatureClass as IDataset).Name].NameField) != -1)
                 {
-                    pWorkspaceEdit = pDataset.Workspace as IWorkspaceEdit;
-                    if (pWorkspaceEdit != null || pWorkspaceEdit.IsBeingEdited() == false)
+                    IDataset pDataset = pFeatureLayer.FeatureClass as IDataset;
+                    IWorkspaceEdit pWorkspaceEdit = null;
+                    if (pDataset != null)
                     {
-                        pWorkspaceEdit.StartEditing(true);
-                        pWorkspaceEdit.StartEditOperation();
-                    }
-                    IFeatureCursor pFeatureCursor = pFeatureLayer.Search(null, false);
-
-                    int i = pFeatureLayer.FeatureClass.FeatureCount(null);
-                    int j = 0;
-
-                    IFeature pFeature = pFeatureCursor.NextFeature();
-
-                    while (pFeature != null)
-                    {
-                        //对于名称为空的字段进行筛选
-                        //string pFeaEnti = pFeature.get_Value(pFeature.Fields.FindField(ClsConfig.LayerConfigs[(pFeatureLayer.FeatureClass  as IDataset).Name].NameField)).ToString();
-                        LayerConfig lyconfig = ClsConfig.LayerConfigs[(pFeatureLayer.FeatureClass  as IDataset).Name.ToString().Trim()];
-                        string test = ClsConfig.LayerConfigs[(pFeatureLayer.FeatureClass  as IDataset).Name].NameField;
-                        IFeatureClass pFeatureClass = pFeatureLayer.FeatureClass;
-                        string pFeatureName = pFeature.get_Value(pFeature.Fields.FindField(ClsConfig.LayerConfigs[(pFeatureLayer.FeatureClass  as IDataset).Name].NameField)).ToString();
-
-                        if (pFeatureName.Trim().Length > 0)
+                        pWorkspaceEdit = pDataset.Workspace as IWorkspaceEdit;
+                        if (pWorkspaceEdit != null || pWorkspaceEdit.IsBeingEdited() == false)
                         {
-                            //获取格网信息
-                            string GridCode = pClsCom.GetCodeString(pFeature);
-                            if (GridCode != "")
-                            {
-                                pFeature.set_Value(pFeature.Fields.FindField(strField), GridCode);
-                                pFeature.Store();
-
-                                j++;
-                            }
-                            else
-                            {
-                                MessageBoxEx.Show("格网码生成失败，请转换成地理坐标！");
-                                return;
-                            }
+                            pWorkspaceEdit.StartEditing(true);
+                            pWorkspaceEdit.StartEditOperation();
                         }
-                        pFeature = pFeatureCursor.NextFeature();
+                        IFeatureCursor pFeatureCursor = pFeatureLayer.Search(null, false);
+
+                        int i = pFeatureLayer.FeatureClass.FeatureCount(null);
+                        int j = 0;
+
+                        IFeature pFeature = pFeatureCursor.NextFeature();
+
+                        while (pFeature != null)
+                        {
+                            //对于名称为空的字段进行筛选
+                            //string pFeaEnti = pFeature.get_Value(pFeature.Fields.FindField(ClsConfig.LayerConfigs[(pFeatureLayer.FeatureClass  as IDataset).Name].NameField)).ToString();
+                            LayerConfig lyconfig = ClsConfig.LayerConfigs[(pFeatureLayer.FeatureClass as IDataset).Name.ToString().Trim()];
+                            string test = ClsConfig.LayerConfigs[(pFeatureLayer.FeatureClass as IDataset).Name].NameField;
+                            IFeatureClass pFeatureClass = pFeatureLayer.FeatureClass;
+                            string pFeatureName = pFeature.get_Value(pFeature.Fields.FindField(ClsConfig.LayerConfigs[(pFeatureLayer.FeatureClass as IDataset).Name].NameField)).ToString();
+
+                            if (pFeatureName.Trim().Length > 0)
+                            {
+                                //获取格网信息
+                                string GridCode = pClsCom.GetCodeString(pFeature);
+                                if (GridCode != "")
+                                {
+                                    pFeature.set_Value(pFeature.Fields.FindField(strField), GridCode);
+                                    pFeature.Store();
+
+                                    j++;
+                                }
+                                else
+                                {
+                                    MessageBoxEx.Show("格网码生成失败，请转换成地理坐标！");
+                                    return;
+                                }
+                            }
+                            pFeature = pFeatureCursor.NextFeature();
+                        }
+                        pWorkspaceEdit.StopEditing(true);
+                        pWorkspaceEdit.StopEditOperation();
+                        MessageBoxEx.Show("格网生成成功！");
                     }
-                    pWorkspaceEdit.StopEditing(true);
-                    pWorkspaceEdit.StopEditOperation();
-                    MessageBoxEx.Show("格网生成成功！");
+                }
+                else
+                {
+                    MessageBox.Show("此图层不存在名称字段！");
                 }
             }
             else
@@ -144,7 +151,7 @@ namespace ZJGISGCoding.Class
                                 if (FCode.Length > 0)
                                 {
                                     //处理分类码
-                                    if (ClsFcode.pDicFcodeGlobal.ContainsKey(FCode))
+                                    if (ZJGISCommon.Classes.ClsFcode.pDicFcodeGlobal.ContainsKey(FCode))
                                     {
                                         FCode = ClsFcode.pDicFcodeGlobal[FCode];
                                         FCode = FCode.ToUpper();
@@ -168,13 +175,13 @@ namespace ZJGISGCoding.Class
                 {
                     MessageBox.Show("所选的数据集为空！");
                 }
+                Code2(pFeatureLayer, pGridFCode);
+
             }
             else
             {
                 MessageBoxEx.Show("没有选中任何图层！");
             }
-
-            Code2(pFeatureLayer, pGridFCode);
         }
 
 
@@ -239,7 +246,7 @@ namespace ZJGISGCoding.Class
 
                                     }
                                     // 确定分类码长度为3
-                                    if (FCode.Length==3)
+                                    if (FCode.Length == 3)
                                     {
                                         //格网代码和分类代码的组合
                                         pCode = pGridCode + FCode;
@@ -459,13 +466,10 @@ namespace ZJGISGCoding.Class
                         pWorkspaceEdit.StartEditOperation();
                     }
                     IFeatureCursor pFeatureCursor = pFeatureLayer.Search(null, false);
-
                     string pNum = string.Empty;
                     string pCode = string.Empty;
                     string pEntiidCode = string.Empty;
-
                     IFeature pFeature = pFeatureCursor.NextFeature();
-
                     while (pFeature != null)
                     {
                         //有格网码，没有实体编码
@@ -478,18 +482,15 @@ namespace ZJGISGCoding.Class
                         {
                             pDicEntiid.Add(pFeature, pFeature.get_Value(pFeature.Fields.FindField("ENTIID")).ToString());
                             //test
-                            string test = pFeature.get_Value(pFeature.Fields.FindField("ENTIID")).ToString().Substring(0, 11);
-                            string test1 = pFeature.get_Value(pFeature.Fields.FindField("ENTIID")).ToString().Substring(0, pFeature.get_Value(pFeature.Fields.FindField("ENTIID")).ToString().Length - 2);
-
+                            //string test = pFeature.get_Value(pFeature.Fields.FindField("ENTIID")).ToString().Substring(0, 11);
+                            //string test1 = pFeature.get_Value(pFeature.Fields.FindField("ENTIID")).ToString().Substring(0, pFeature.get_Value(pFeature.Fields.FindField("ENTIID")).ToString().Length - 2);
                             pDicGridCode.Add(pFeature, pFeature.get_Value(pFeature.Fields.FindField("ENTIID")).ToString().Substring(0, 11));
-
                             pDicGridFCode.Add(pFeature, pFeature.get_Value(pFeature.Fields.FindField("ENTIID")).ToString().Substring(0, pFeature.get_Value(pFeature.Fields.FindField("ENTIID")).ToString().Length - 2));
                         }
                         pFeature = pFeatureCursor.NextFeature();
                     }
                     pWorkspaceEdit.StopEditing(true);
                     pWorkspaceEdit.StopEditOperation();
-
                 }
                 else
                 {
@@ -500,7 +501,6 @@ namespace ZJGISGCoding.Class
             {
                 MessageBox.Show("没有选中任何图层！");
             }
-
             CodeRest2(pFeatureLayer, pDicEntiid, pDicGridFCode, pDicGridCode);
         }
 

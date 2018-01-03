@@ -191,81 +191,86 @@ namespace ZJGISGCoding.Class
                                     //处理分类码
                                     //ClsReturnFCode pReturnFcode = new ClsReturnFCode();
                                     //FCode = pReturnFcode.ReturnFeatureClass(FCode);
-                                    FCode = ZJGISCommon.Classes.ClsFcode.pDicFcodeGlobal[FCode];
-                                    if (FCode != null)
+                                    if (ZJGISCommon.Classes.ClsFcode.pDicFcodeGlobal.ContainsKey(FCode))
                                     {
-                                        //处理格网吗
-                                        string GridCode = pFeature.get_Value(pFeature.Fields.FindField("GridCode")).ToString();
-                                        //如果格网分类码不为空——即名称字段不为空且Feature不为空。
-                                        //（Feature和名称字段内容不为空，那么格网码就不为空，进而地理编码就不为空）
-                                        if (GridCode.Trim().Length > 0)
+                                        FCode = ZJGISCommon.Classes.ClsFcode.pDicFcodeGlobal[FCode];
+                                        if (FCode != null)
                                         {
-                                            //格网代码和分类代码的组合
-                                            pCode = GridCode + FCode;
-
-                                            if (j == 0)
+                                            //处理格网吗
+                                            string GridCode = pFeature.get_Value(pFeature.Fields.FindField("GridCode")).ToString();
+                                            //如果格网分类码不为空——即名称字段不为空且Feature不为空。
+                                            //（Feature和名称字段内容不为空，那么格网码就不为空，进而地理编码就不为空）
+                                            if (GridCode.Trim().Length > 0)
                                             {
-                                                //pNum = "001";
-                                                pNum = "A01";
-                                                pDic.Add(j, pCode);
-                                            }
-                                            else
-                                            {
-                                                if (pDic.ContainsValue(pCode) == true)  //字典中出现GridCode和Fcode的组合字段
-                                                {
+                                                //格网代码和分类代码的组合
+                                                pCode = GridCode + FCode;
 
-                                                    List<int> keyList = (from q in pDic
-                                                                         where q.Value == pCode
-                                                                         select q.Key).ToList<int>(); //get all keys
-
-                                                    keyList.Sort();
-                                                    int t = keyList.Max();
-                                                    object test = Convert.ToInt32(pDicAfter[keyList.Max()].Substring(pDicAfter[keyList.Max()].Length - 2));
-                                                    string test2 = string.Format("{0:00}", Convert.ToInt32(pDicAfter[keyList.Max()].Substring(pDicAfter[keyList.Max()].Length - 2)) + 1);
-
-                                                    string pCharacter = pDicAfter[keyList.Max()].Substring(pDicAfter[keyList.Max()].Length - 3, 1);
-                                                    //后三位都是数字的情况下
-                                                    //pNum = string.Format("{0:000}", Convert.ToInt32(pDicAfter[keyList.Max()].Substring(pDicAfter[keyList.Max()].Length - 3)) + 1);
-                                                    //后三位是1位字母加2位数字的情况下
-                                                    if (pCharacter == "A" && Convert.ToInt32(pDicAfter[keyList.Max()].Substring(pDicAfter[keyList.Max()].Length - 2)) < 99)
-                                                    {
-                                                        pNum = "A" + string.Format("{0:00}", Convert.ToInt32(pDicAfter[keyList.Max()].Substring(pDicAfter[keyList.Max()].Length - 2)) + 1);
-                                                    }
-                                                    else
-                                                    {
-                                                        if (Convert.ToInt32(pDicAfter[keyList.Max()].Substring(pDicAfter[keyList.Max()].Length - 2)) == 99)
-                                                        {
-                                                            pNum = "B01";
-                                                        }
-                                                        else
-                                                        {
-                                                            pNum = "B" + string.Format("{0:00}", Convert.ToInt32(pDicAfter[keyList.Max()].Substring(pDicAfter[keyList.Max()].Length - 2)) + 1);
-                                                        }
-                                                    }
-                                                }
-                                                else  //字典中没有出现GridCode和Fcode的组合字段
+                                                if (j == 0)
                                                 {
                                                     //pNum = "001";
                                                     pNum = "A01";
+                                                    pDic.Add(j, pCode);
                                                 }
+                                                else
+                                                {
+                                                    if (pDic.ContainsValue(pCode) == true)  //字典中出现GridCode和Fcode的组合字段
+                                                    {
 
-                                                pDic.Add(j, pCode);//20170310
+                                                        List<int> keyList = (from q in pDic
+                                                                             where q.Value == pCode
+                                                                             select q.Key).ToList<int>(); //get all keys
 
+                                                        keyList.Sort();
+                                                        int t = keyList.Max();
+                                                        object test = Convert.ToInt32(pDicAfter[keyList.Max()].Substring(pDicAfter[keyList.Max()].Length - 2));
+                                                        string test2 = string.Format("{0:00}", Convert.ToInt32(pDicAfter[keyList.Max()].Substring(pDicAfter[keyList.Max()].Length - 2)) + 1);
+
+                                                        string pCharacter = pDicAfter[keyList.Max()].Substring(pDicAfter[keyList.Max()].Length - 3, 1);
+                                                        //后三位都是数字的情况下
+                                                        //pNum = string.Format("{0:000}", Convert.ToInt32(pDicAfter[keyList.Max()].Substring(pDicAfter[keyList.Max()].Length - 3)) + 1);
+                                                        //后三位是1位字母加2位数字的情况下
+                                                        if (pCharacter == "A" && Convert.ToInt32(pDicAfter[keyList.Max()].Substring(pDicAfter[keyList.Max()].Length - 2)) < 99)
+                                                        {
+                                                            pNum = "A" + string.Format("{0:00}", Convert.ToInt32(pDicAfter[keyList.Max()].Substring(pDicAfter[keyList.Max()].Length - 2)) + 1);
+                                                        }
+                                                        else
+                                                        {
+                                                            if (Convert.ToInt32(pDicAfter[keyList.Max()].Substring(pDicAfter[keyList.Max()].Length - 2)) == 99)
+                                                            {
+                                                                pNum = "B01";
+                                                            }
+                                                            else
+                                                            {
+                                                                pNum = "B" + string.Format("{0:00}", Convert.ToInt32(pDicAfter[keyList.Max()].Substring(pDicAfter[keyList.Max()].Length - 2)) + 1);
+                                                            }
+                                                        }
+                                                    }
+                                                    else  //字典中没有出现GridCode和Fcode的组合字段
+                                                    {
+                                                        //pNum = "001";
+                                                        pNum = "A01";
+                                                    }
+
+                                                    pDic.Add(j, pCode);//20170310
+
+                                                }
+                                                //20170314
+                                                pEntiidCode = pCode + pNum;
+                                                if (!pDicAfter.Keys.Contains(j))
+                                                {
+                                                    pDicAfter.Add(j, pEntiidCode);
+                                                }
+                                                pFeature.set_Value(pFeature.Fields.FindField(strField), pEntiidCode);
+                                                pFeature.Store();
+                                                j++;
                                             }
-                                            //20170314
-                                            pEntiidCode = pCode + pNum;
-                                            if (!pDicAfter.Keys.Contains(j))
-                                            {
-                                                pDicAfter.Add(j, pEntiidCode);
-                                            }
-                                            pFeature.set_Value(pFeature.Fields.FindField(strField), pEntiidCode);
-                                            pFeature.Store();
-                                            j++;
-                                            //pFeature = pFeatureCursor.NextFeature();
+                                        }
+                                        else
+                                        {
+                                            MessageBox.Show("分类码" + FCode + "不存在对应的大类，请添加分类码和大类的映射关系！");
                                         }
 
                                     }
-                                    //pFeature = pFeatureCursor.NextFeature();
 
                                 }
                             }
@@ -462,13 +467,13 @@ namespace ZJGISGCoding.Class
                     while (pFeature != null)
                     {
                         //有格网码，没有实体编码
-                        if (pFeature.get_Value(pFeature.Fields.FindField("GridCode")).ToString().Trim().Length > 0 
+                        if (pFeature.get_Value(pFeature.Fields.FindField("GridCode")).ToString().Trim().Length > 0
                             && pFeature.get_Value(pFeature.Fields.FindField("ENTIID")).ToString().Trim().Length == 0)
                         {
                             pDicGridCode.Add(pFeature, pFeature.get_Value(pFeature.Fields.FindField("GridCode")).ToString());
                         }
                         //没有格网码,有实体编码
-                        if (pFeature.get_Value(pFeature.Fields.FindField("GridCode")).ToString().Trim().Length == 0 
+                        if (pFeature.get_Value(pFeature.Fields.FindField("GridCode")).ToString().Trim().Length == 0
                             && pFeature.get_Value(pFeature.Fields.FindField("ENTIID")).ToString().Trim().Length > 0)
                         {
                             pDicEntiid.Add(pFeature, pFeature.get_Value(pFeature.Fields.FindField("ENTIID")).ToString());
@@ -578,48 +583,55 @@ namespace ZJGISGCoding.Class
                                     //处理分类码
                                     //ClsReturnFCode pReturnFcode = new ClsReturnFCode();
                                     //pFcode = pReturnFcode.ReturnFeatureClass(pFcode);
-                                    pFcode = ZJGISCommon.Classes.ClsFcode.pDicFcodeGlobal[pFcode];
-                                    //分类码有对应的大类
-                                    if (pFcode != null)
+                                    if (ZJGISCommon.Classes.ClsFcode.pDicFcodeGlobal.ContainsKey(pFcode))
                                     {
-                                        foreach (string s in pDicGridCode.Values)
+                                        pFcode = ZJGISCommon.Classes.ClsFcode.pDicFcodeGlobal[pFcode];
+                                        //分类码有对应的大类
+                                        if (pFcode != null)
                                         {
-                                            if (s == pGrCode)
+                                            foreach (string s in pDicGridCode.Values)
                                             {
-                                                j++;
-                                            }
-                                        }
-
-                                        if (j == 1)
-                                        {
-                                            pNum = "A01";
-                                        }
-                                        else if (j > 1 && j < 100)
-                                        {
-                                            List<IFeature> keyList = (from q in pDicGridCode
-                                                                      where q.Value == pGrCode
-                                                                      select q.Key).ToList<IFeature>(); //get all keys
-
-                                            for (int k = 0; k < keyList.Count; k++)
-                                            {
-                                                if (pFeature.OID == keyList[k].OID)
+                                                if (s == pGrCode)
                                                 {
-                                                    pNum = "A" + string.Format("{0:00}", k + 1);
+                                                    j++;
                                                 }
                                             }
-                                        }
-                                        else
-                                        {
-                                            pNum = "B" + string.Format("{0:00}", j - 100);
-                                        }
-                                        //组合地理实体编码的第一、第二、第三个码段，形成最终的地理实体编码
-                                        pEntiidCode = pGrCode + pFcode + pNum;
 
-                                        pDicEntiid.Add(pFeature, pEntiidCode);
-                                        pDicGridFCode.Add(pFeature, pEntiidCode.Substring(0, pEntiidCode.Length - 2));
+                                            if (j == 1)
+                                            {
+                                                pNum = "A01";
+                                            }
+                                            else if (j > 1 && j < 100)
+                                            {
+                                                List<IFeature> keyList = (from q in pDicGridCode
+                                                                          where q.Value == pGrCode
+                                                                          select q.Key).ToList<IFeature>(); //get all keys
 
-                                        pFeature.set_Value(pFeature.Fields.FindField(strField), pEntiidCode);
-                                        pFeature.Store();
+                                                for (int k = 0; k < keyList.Count; k++)
+                                                {
+                                                    if (pFeature.OID == keyList[k].OID)
+                                                    {
+                                                        pNum = "A" + string.Format("{0:00}", k + 1);
+                                                    }
+                                                }
+                                            }
+                                            else
+                                            {
+                                                pNum = "B" + string.Format("{0:00}", j - 100);
+                                            }
+                                            //组合地理实体编码的第一、第二、第三个码段，形成最终的地理实体编码
+                                            pEntiidCode = pGrCode + pFcode + pNum;
+
+                                            pDicEntiid.Add(pFeature, pEntiidCode);
+                                            pDicGridFCode.Add(pFeature, pEntiidCode.Substring(0, pEntiidCode.Length - 2));
+
+                                            pFeature.set_Value(pFeature.Fields.FindField(strField), pEntiidCode);
+                                            pFeature.Store();
+                                        }
+                                    }
+                                    else
+                                    {
+                                        MessageBox.Show("分类码" + pFcode + "不存在对应的大类，请添加分类码和大类的映射关系！");
                                     }
                                 }
                             }

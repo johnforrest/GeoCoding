@@ -54,6 +54,7 @@ namespace ZJGIS
         private PluginService pluginService;
 
         private IAoInitialize m_AoInitialize = new AoInitializeClass();
+        ZJGISGCoding.Class.ClsCommon pClsCom = new ZJGISGCoding.Class.ClsCommon();
 
         #region mapbrowse tools
         private ESRI.ArcGIS.SystemUI.ICommand commandFixedZoomIn;
@@ -1078,7 +1079,7 @@ namespace ZJGIS
             pFrmDataCheck.ShowDialog();
 
         }
-
+        //TODO :20180103合并
         /// <summary>
         /// 生成格网（如果有GridCode就用GridCode，没有的话就新建一个GridCode字段，并加入格网信息）
         /// </summary>
@@ -1086,19 +1087,25 @@ namespace ZJGIS
         /// <param name="e"></param>
         private void btnCreatGrid_Click(object sender, EventArgs e)
         {
-            ClsCommonEnti pcommonEnti = new ClsCommonEnti();
-            pcommonEnti.CreatGridCode(mapMain.Map, cbxCodeLayer);
+            IFeatureLayer pFeatureLayer = (IFeatureLayer)pClsCom.GetLayerByName(this.mapMain.Map, this.cbxCodeLayer.Text);
+            if (pFeatureLayer.FeatureClass.ShapeType == esriGeometryType.esriGeometryPoint)
+            {
+                ClsCommonEnti pcommonEnti = new ClsCommonEnti();
+                pcommonEnti.CreatGridCode(mapMain.Map, cbxCodeLayer);
+            }
+            else if (pFeatureLayer.FeatureClass.ShapeType == esriGeometryType.esriGeometryPolyline)
+            {
+                ClsRoadEnti pRoadEnti = new ClsRoadEnti();
+                pRoadEnti.CreatGridCodeRoad(mapMain.Map, cbxCodeLayer);
+            }
+            else if (pFeatureLayer.FeatureClass.ShapeType == esriGeometryType.esriGeometryPolygon)
+            {
+                ClsResEnti pResEnti = new ClsResEnti();
+                pResEnti.CreatGridCodeRES(mapMain.Map, cbxCodeLayer);
+            }
+
         }
-        /// <summary>
-        /// 补全格网
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void btnRestGrid_Click(object sender, EventArgs e)
-        {
-            ClsCommonEnti pCommonEnti = new ClsCommonEnti();
-            pCommonEnti.CreatGridCodeRest(mapMain.Map, cbxCodeLayer);
-        }
+  
 
         /// <summary>
         /// 生成编码
@@ -1107,10 +1114,49 @@ namespace ZJGIS
         /// <param name="e"></param>
         private void btnStart_Click(object sender, EventArgs e)
         {
-            ClsCommonEnti pcommonEnti = new ClsCommonEnti();
-            pcommonEnti.Code(mapMain.Map, cbxCodeLayer);
-        }
+            IFeatureLayer pFeatureLayer = (IFeatureLayer)pClsCom.GetLayerByName(this.mapMain.Map, this.cbxCodeLayer.Text);
+            if (pFeatureLayer.FeatureClass.ShapeType == esriGeometryType.esriGeometryPoint)
+            {
+                ClsCommonEnti pcommonEnti = new ClsCommonEnti();
+                pcommonEnti.Code(mapMain.Map, cbxCodeLayer);
+            }
+            else if (pFeatureLayer.FeatureClass.ShapeType == esriGeometryType.esriGeometryPolyline)
+            {
+                ClsRoadEnti pRoadEnti = new ClsRoadEnti();
+                pRoadEnti.RoadCode(mapMain.Map, cbxCodeLayer);
+            }
+            else if (pFeatureLayer.FeatureClass.ShapeType == esriGeometryType.esriGeometryPolygon)
+            {
+                ClsResEnti pResEnti = new ClsResEnti();
+                pResEnti.RESCode(mapMain.Map, cbxCodeLayer);
+            }
 
+        }
+        /// <summary>
+        /// 补全格网
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void btnRestGrid_Click(object sender, EventArgs e)
+        {
+            IFeatureLayer pFeatureLayer = (IFeatureLayer)pClsCom.GetLayerByName(this.mapMain.Map, this.cbxCodeLayer.Text);
+            if (pFeatureLayer.FeatureClass.ShapeType == esriGeometryType.esriGeometryPoint)
+            {
+                ClsCommonEnti pCommonEnti = new ClsCommonEnti();
+                pCommonEnti.CreatGridCodeRest(mapMain.Map, cbxCodeLayer);
+            }
+            else if (pFeatureLayer.FeatureClass.ShapeType == esriGeometryType.esriGeometryPolyline)
+            {
+                ClsRoadEnti pRoadEnti = new ClsRoadEnti();
+                pRoadEnti.CreatRestRoadGrid(mapMain.Map, cbxCodeLayer);
+            }
+            else if (pFeatureLayer.FeatureClass.ShapeType == esriGeometryType.esriGeometryPolygon)
+            {
+                ClsResEnti pResEnti = new ClsResEnti();
+                pResEnti.CreatRestGridCodeRES(mapMain.Map, cbxCodeLayer);
+            }
+           
+        }
         /// <summary>
         /// 补全编码
         /// </summary>
@@ -1118,93 +1164,109 @@ namespace ZJGIS
         /// <param name="e"></param>
         private void btnRestCode_Click(object sender, EventArgs e)
         {
-            ClsCommonEnti pCommonEnti = new ClsCommonEnti();
-            pCommonEnti.CodeRest(mapMain.Map, cbxCodeLayer);
+            IFeatureLayer pFeatureLayer = (IFeatureLayer)pClsCom.GetLayerByName(this.mapMain.Map, this.cbxCodeLayer.Text);
+            if (pFeatureLayer.FeatureClass.ShapeType == esriGeometryType.esriGeometryPoint)
+            {
+                ClsCommonEnti pCommonEnti = new ClsCommonEnti();
+                pCommonEnti.CodeRest(mapMain.Map, cbxCodeLayer);
+            }
+            else if (pFeatureLayer.FeatureClass.ShapeType == esriGeometryType.esriGeometryPolyline)
+            {
+                ClsRoadEnti pRoadEnti = new ClsRoadEnti();
+                pRoadEnti.CreatRestRoadCode(mapMain.Map, cbxCodeLayer);
+            }
+            else if (pFeatureLayer.FeatureClass.ShapeType == esriGeometryType.esriGeometryPolygon)
+            {
+                ClsResEnti pResEnti = new ClsResEnti();
+                pResEnti.RestRESCode(mapMain.Map, cbxCodeLayer);
+            }
         }
 
-        /// <summary>
-        /// 道路编码
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void btnRoad_Click(object sender, EventArgs e)
-        {
-            ClsRoadEnti pRoadEnti = new ClsRoadEnti();
-            pRoadEnti.RoadCode(mapMain.Map, cbxCodeLayer);
-        }
-        /// <summary>
-        /// 道路格网
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void btnGridRoad_Click(object sender, EventArgs e)
-        {
-            ClsRoadEnti pRoadEnti = new ClsRoadEnti();
-            pRoadEnti.CreatGridCodeRoad(mapMain.Map, cbxCodeLayer);
-        }
-        /// <summary>
-        /// 补充道路格网
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void btnRestRoadGrid_Click(object sender, EventArgs e)
-        {
-            ClsRoadEnti pRoadEnti = new ClsRoadEnti();
-            pRoadEnti.CreatRestRoadGrid(mapMain.Map, cbxCodeLayer);
-        }
-        /// <summary>
-        /// 补充道路编码
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void btnRestRoadCode_Click(object sender, EventArgs e)
-        {
-            ClsRoadEnti pRoadEnti = new ClsRoadEnti();
-            pRoadEnti.CreatRestRoadCode(mapMain.Map, cbxCodeLayer);
-        }
+        #region 20180103注释
+        ///// <summary>
+        ///// 道路编码
+        ///// </summary>
+        ///// <param name="sender"></param>
+        ///// <param name="e"></param>
+        //private void btnRoad_Click(object sender, EventArgs e)
+        //{
+        //    ClsRoadEnti pRoadEnti = new ClsRoadEnti();
+        //    pRoadEnti.RoadCode(mapMain.Map, cbxCodeLayer);
+        //}
+        ///// <summary>
+        ///// 道路格网
+        ///// </summary>
+        ///// <param name="sender"></param>
+        ///// <param name="e"></param>
+        //private void btnGridRoad_Click(object sender, EventArgs e)
+        //{
+        //    ClsRoadEnti pRoadEnti = new ClsRoadEnti();
+        //    pRoadEnti.CreatGridCodeRoad(mapMain.Map, cbxCodeLayer);
+        //}
+        ///// <summary>
+        ///// 补充道路格网
+        ///// </summary>
+        ///// <param name="sender"></param>
+        ///// <param name="e"></param>
+        //private void btnRestRoadGrid_Click(object sender, EventArgs e)
+        //{
+        //    ClsRoadEnti pRoadEnti = new ClsRoadEnti();
+        //    pRoadEnti.CreatRestRoadGrid(mapMain.Map, cbxCodeLayer);
+        //}
+        ///// <summary>
+        ///// 补充道路编码
+        ///// </summary>
+        ///// <param name="sender"></param>
+        ///// <param name="e"></param>
+        //private void btnRestRoadCode_Click(object sender, EventArgs e)
+        //{
+        //    ClsRoadEnti pRoadEnti = new ClsRoadEnti();
+        //    pRoadEnti.CreatRestRoadCode(mapMain.Map, cbxCodeLayer);
+        //}
 
 
-        /// <summary>
-        /// 房屋编码
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void btnHouse_Click(object sender, EventArgs e)
-        {
-            ClsResEnti pResEnti = new ClsResEnti();
-            pResEnti.RESCode(mapMain.Map, cbxCodeLayer);
+        ///// <summary>
+        ///// 房屋编码
+        ///// </summary>
+        ///// <param name="sender"></param>
+        ///// <param name="e"></param>
+        //private void btnHouse_Click(object sender, EventArgs e)
+        //{
+        //    ClsResEnti pResEnti = new ClsResEnti();
+        //    pResEnti.RESCode(mapMain.Map, cbxCodeLayer);
 
-        }
-        /// <summary>
-        /// 房屋格网编码
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void btnRESGrid_Click(object sender, EventArgs e)
-        {
-            ClsResEnti pResEnti = new ClsResEnti();
-            pResEnti.CreatGridCodeRES(mapMain.Map, cbxCodeLayer);
-        }
-        /// <summary>
-        /// 补充房屋格网编码
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void btnRESPYGrid_Click(object sender, EventArgs e)
-        {
-            ClsResEnti pResEnti = new ClsResEnti();
-            pResEnti.CreatRestGridCodeRES(mapMain.Map, cbxCodeLayer);
-        }
-        /// <summary>
-        /// 补充房屋编码
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void btnRestHouse_Click(object sender, EventArgs e)
-        {
-            ClsResEnti pResEnti = new ClsResEnti();
-            pResEnti.RestRESCode(mapMain.Map, cbxCodeLayer);
-        }
+        //}
+        ///// <summary>
+        ///// 房屋格网编码
+        ///// </summary>
+        ///// <param name="sender"></param>
+        ///// <param name="e"></param>
+        //private void btnRESGrid_Click(object sender, EventArgs e)
+        //{
+        //    ClsResEnti pResEnti = new ClsResEnti();
+        //    pResEnti.CreatGridCodeRES(mapMain.Map, cbxCodeLayer);
+        //}
+        ///// <summary>
+        ///// 补充房屋格网编码
+        ///// </summary>
+        ///// <param name="sender"></param>
+        ///// <param name="e"></param>
+        //private void btnRESPYGrid_Click(object sender, EventArgs e)
+        //{
+        //    ClsResEnti pResEnti = new ClsResEnti();
+        //    pResEnti.CreatRestGridCodeRES(mapMain.Map, cbxCodeLayer);
+        //}
+        ///// <summary>
+        ///// 补充房屋编码
+        ///// </summary>
+        ///// <param name="sender"></param>
+        ///// <param name="e"></param>
+        //private void btnRestHouse_Click(object sender, EventArgs e)
+        //{
+        //    ClsResEnti pResEnti = new ClsResEnti();
+        //    pResEnti.RestRESCode(mapMain.Map, cbxCodeLayer);
+        //}
+        #endregion
 
         /// <summary>
         /// POI补充格网
@@ -2856,19 +2918,19 @@ namespace ZJGIS
             {
                 //ClsXmlOperation xmlop = new ClsXmlOperation("Layer.xml");
                 ClsXmlOperation xmlop = new ClsXmlOperation(ClsConfig.path);
-                FrmLayerConfig frmLayerConfig= new FrmLayerConfig(xmlop);
+                FrmLayerConfig frmLayerConfig = new FrmLayerConfig(xmlop);
                 frmLayerConfig.Show();
 
             }
         }
 
-       
-       
 
-       
-      
 
-      
+
+
+
+
+
 
 
 

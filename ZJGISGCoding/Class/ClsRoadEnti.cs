@@ -23,15 +23,16 @@ namespace ZJGISGCoding.Class
         /// <param name="cbxLayerName"></param>
         public void CreatGridCodeRoad(IMap pMapControl, ComboBoxEx cbxLayerName)
         {
-
             Dictionary<IFeature, string> pBothNotNull = new Dictionary<IFeature, string>();
             Dictionary<IFeature, string> pRoadNotNull = new Dictionary<IFeature, string>();
             Dictionary<IFeature, string> pNameNotNull = new Dictionary<IFeature, string>();
             //Dictionary<IFeature, string> pGridCode = new Dictionary<IFeature, string>();
             List<object> pOID = new List<object>();
 
-            string strField = "GridCode";
+            string gridField = "GridCode";
+            string roadField = "ROADCODE";
             IFeatureLayer pFeatureLayer = (IFeatureLayer)pClsCom.GetLayerByName(pMapControl, cbxLayerName.Text);
+            IFeatureClass pFeatureClass = null;
 
             IDataset cDataset = pFeatureLayer.FeatureClass as IDataset;
             IGeoDataset cGeoDataset = cDataset as IGeoDataset;
@@ -39,599 +40,326 @@ namespace ZJGISGCoding.Class
             if (cSpatialReference is IProjectedCoordinateSystem)
             {
                 MessageBox.Show("该图层为投影坐标，请转换为相应的地理坐标,再开始地理编码！");
-
             }
 
             if (pFeatureLayer != null)
             {
-                IClass pTable = pFeatureLayer.FeatureClass as IClass;
-                try
+                pFeatureClass = pFeatureLayer.FeatureClass;
+
+                //存在路网字段
+                if (pFeatureClass.Fields.FindField(roadField) != -1)
                 {
-                    if (pTable.Fields.FindField(strField) == -1)
+                    try
                     {
-                        IField pField = new FieldClass();
-                        IFieldEdit pFieldEdit = pField as IFieldEdit;
-                        pFieldEdit.Name_2 = strField;
-                        pFieldEdit.Type_2 = esriFieldType.esriFieldTypeString;
-                        pTable.AddField(pField);
+                        //没有GridCode字段就创建GridCode字段
+                        if (pFeatureClass.Fields.FindField(gridField) == -1)
+                        {
+                            IField pField = new FieldClass();
+                            IFieldEdit pFieldEdit = pField as IFieldEdit;
+                            pFieldEdit.Name_2 = gridField;
+                            pFieldEdit.Type_2 = esriFieldType.esriFieldTypeString;
+                            pFeatureClass.AddField(pField);
+                        }
                     }
-                }
-                catch
-                {
-                    MessageBoxEx.Show("添加字段有误,数据被占用！");
-                    return;
-                }
-
-                IDataset pDataset = pFeatureLayer.FeatureClass as IDataset;
-                IWorkspaceEdit pWorkspaceEdit = null;
-                if (pDataset != null)
-                {
-                    pWorkspaceEdit = pDataset.Workspace as IWorkspaceEdit;
-                    if (pWorkspaceEdit != null || pWorkspaceEdit.IsBeingEdited() == false)
+                    catch
                     {
-                        pWorkspaceEdit.StartEditing(true);
-                        pWorkspaceEdit.StartEditOperation();
+                        MessageBoxEx.Show("添加字段有误,数据被占用！");
+                        return;
                     }
-                    IFeatureCursor pFeatureCursor = pFeatureLayer.Search(null, false);
-                    //int i = pFeatureLayer.FeatureClass.FeatureCount(null);
-                    int j = 0, k = 0, m = 0;
 
-                    IFeature pFeature = pFeatureCursor.NextFeature();
 
-                    while (pFeature != null)
+                    IDataset pDataset = pFeatureLayer.FeatureClass as IDataset;
+                    IWorkspaceEdit pWorkspaceEdit = null;
+                    if (pDataset != null)
                     {
-                        int test = pFeature.Fields.FindField(ClsConfig.LayerConfigs[(pFeatureLayer.FeatureClass as IDataset).Name].NameField);
-                        int test2 = pFeature.Fields.FindField("ROADCODE");
-                        #region 注释掉
-                        ////路线编码和名称都不为空
-                        //if (pFeature.get_Value(pFeature.Fields.FindFieldByAliasName("名称")).ToString().Trim().Length > 0 && pFeature.get_Value(pFeature.Fields.FindField("ROADCODE")).ToString().Trim().Length > 0)
-                        //{
-                        //    pBothNotNull.Add(pFeature, pFeature.get_Value(pFeature.Fields.FindFieldByAliasName("名称")).ToString());
-                        //    pOID.Add(pFeature.OID);
-                        //}
-                        ////路线编码不为空且一个道路字母除外（例如Q等）,名称为空
-                        //if (pFeature.get_Value(pFeature.Fields.FindField("ROADCODE")).ToString().Trim().Length > 1 && pFeature.get_Value(pFeature.Fields.FindFieldByAliasName("名称")).ToString().Trim().Length == 0)
-                        //{
-                        //    pRoadNotNull.Add(pFeature, pFeature.get_Value(pFeature.Fields.FindField("ROADCODE")).ToString());
-                        //    pOID.Add(pFeature.OID);
+                        pWorkspaceEdit = pDataset.Workspace as IWorkspaceEdit;
+                        if (pWorkspaceEdit != null || pWorkspaceEdit.IsBeingEdited() == false)
+                        {
+                            pWorkspaceEdit.StartEditing(true);
+                            pWorkspaceEdit.StartEditOperation();
+                        }
+                        IFeatureCursor pFeatureCursor = pFeatureLayer.Search(null, false);
+                        //int i = pFeatureLayer.FeatureClass.FeatureCount(null);
+                        int j = 0, k = 0, m = 0;
 
-                        //}
-                        ////名称不为空，路线编码为空
-                        //if (pFeature.get_Value(pFeature.Fields.FindFieldByAliasName("名称")).ToString().Trim().Length > 0 && pFeature.get_Value(pFeature.Fields.FindField("ROADCODE")).ToString().Trim().Length == 0)
+                        IFeature pFeature = pFeatureCursor.NextFeature();
+                        //TODO :路线编码字段
+                        while (pFeature != null)
+                        {
+                            int test = pFeature.Fields.FindField(ClsConfig.LayerConfigs[(pFeatureLayer.FeatureClass as IDataset).Name].NameField);
+                            int test2 = pFeature.Fields.FindField(roadField);
+                            #region 注释掉
+                            ////路线编码和名称都不为空
+                            //if (pFeature.get_Value(pFeature.Fields.FindFieldByAliasName("名称")).ToString().Trim().Length > 0 && pFeature.get_Value(pFeature.Fields.FindField("ROADCODE")).ToString().Trim().Length > 0)
+                            //{
+                            //    pBothNotNull.Add(pFeature, pFeature.get_Value(pFeature.Fields.FindFieldByAliasName("名称")).ToString());
+                            //    pOID.Add(pFeature.OID);
+                            //}
+                            ////路线编码不为空且一个道路字母除外（例如Q等）,名称为空
+                            //if (pFeature.get_Value(pFeature.Fields.FindField("ROADCODE")).ToString().Trim().Length > 1 && pFeature.get_Value(pFeature.Fields.FindFieldByAliasName("名称")).ToString().Trim().Length == 0)
+                            //{
+                            //    pRoadNotNull.Add(pFeature, pFeature.get_Value(pFeature.Fields.FindField("ROADCODE")).ToString());
+                            //    pOID.Add(pFeature.OID);
+
+                            //}
+                            ////名称不为空，路线编码为空
+                            //if (pFeature.get_Value(pFeature.Fields.FindFieldByAliasName("名称")).ToString().Trim().Length > 0 && pFeature.get_Value(pFeature.Fields.FindField("ROADCODE")).ToString().Trim().Length == 0)
+                            //{
+                            //    pNameNotNull.Add(pFeature, pFeature.get_Value(pFeature.Fields.FindFieldByAliasName("名称")).ToString());
+                            //    pOID.Add(pFeature.OID);
+                            //}
+                            #endregion
+                            //名称不为空，路线编码为空
+                            if (pFeature.get_Value(pFeature.Fields.FindField(ClsConfig.LayerConfigs[(pFeatureLayer.FeatureClass as IDataset).Name].NameField)).ToString().Trim().Length > 0)
+                            {
+                                pNameNotNull.Add(pFeature, pFeature.get_Value(pFeature.Fields.FindField(ClsConfig.LayerConfigs[(pFeatureLayer.FeatureClass as IDataset).Name].NameField)).ToString());
+                                pOID.Add(pFeature.OID);
+                            }
+                            //路线编码不为空且一个道路字母除外（例如Q等）,名称为空
+                            if (pFeature.get_Value(pFeature.Fields.FindField(roadField)).ToString().Trim().Length > 1 &&
+                                pFeature.get_Value(pFeature.Fields.FindField(ClsConfig.LayerConfigs[(pFeatureLayer.FeatureClass as IDataset).Name].NameField)).ToString().Trim().Length == 0)
+                            {
+                                pRoadNotNull.Add(pFeature, pFeature.get_Value(pFeature.Fields.FindField(roadField)).ToString());
+                                pOID.Add(pFeature.OID);
+                            }
+                            pFeature = pFeatureCursor.NextFeature();
+
+                        }
+
+                        #region  遍历所有Feature，查找属于同一个地理实体的图元
+                        //遍历所有Feature，查找属于同一个地理实体的图元
+                        //while (pFeature != null)
                         //{
-                        //    pNameNotNull.Add(pFeature, pFeature.get_Value(pFeature.Fields.FindFieldByAliasName("名称")).ToString());
-                        //    pOID.Add(pFeature.OID);
+                        //    //路线编码和名称都不为空
+                        //    if (pFeature.get_Value(pFeature.Fields.FindField("NAME")).ToString().Trim().Length > 0 && pFeature.get_Value(pFeature.Fields.FindField("ROADCODE")).ToString().Trim().Length > 0)
+                        //    {
+                        //        if (j == 0)
+                        //        {
+                        //            //获取格网信息
+                        //            string GridCode = GetCodeString(pFeature);
+                        //            if (GridCode != "")
+                        //            {
+                        //                pFeature.set_Value(pFeature.Fields.FindField(strField), GridCode);
+                        //                pFeature.Store();
+                        //                j++;
+                        //                //pFeature = pFeatureCursor.NextFeature();
+                        //                //pBothNotNull.Add(pFeature,pFeature.get_Value(pFeature.Fields.FindField("NAME")).ToString());
+                        //            }
+                        //            else
+                        //            {
+                        //                MessageBoxEx.Show("格网码生成失败，请转换成地理坐标！");
+                        //                return;
+                        //            }
+                        //        }
+                        //        else
+                        //        {
+                        //            foreach (string s in pBothNotNull.Values)
+                        //            {
+                        //                if (s == pFeature.get_Value(pFeature.Fields.FindField("NAME")))
+                        //                {
+                        //                    IFeature pfirstKeyFeature = pBothNotNull.FirstOrDefault(q => q.Value == s).Key;  //get first key
+                        //                    if (pfirstKeyFeature.get_Value(pfirstKeyFeature.Fields.FindField("ROADCODE")).ToString() == pFeature.get_Value(pFeature.Fields.FindField("ROADCODE")).ToString())
+                        //                    {
+                        //                        pFeature.set_Value(pFeature.Fields.FindField(strField), pfirstKeyFeature.get_Value(pfirstKeyFeature.Fields.FindField("GridCode")));
+                        //                        pFeature.Store();
+                        //                        m++;
+                        //                        //pFeature = pFeatureCursor.NextFeature();
+                        //                        //pBothNotNull.Add(pFeature, pFeature.get_Value(pFeature.Fields.FindField("NAME")).ToString());
+                        //                    } 
+                        //                    else
+                        //                    {
+                        //                        string GridCode = GetCodeString(pFeature);
+                        //                        if (GridCode != "")
+                        //                        {
+                        //                            pFeature.set_Value(pFeature.Fields.FindField(strField), GridCode);
+                        //                            pFeature.Store();
+                        //                            j++;
+                        //                            //pFeature = pFeatureCursor.NextFeature();
+                        //                            //pBothNotNull.Add(pFeature, pFeature.get_Value(pFeature.Fields.FindField("NAME")).ToString());
+                        //                        }
+                        //                        else
+                        //                        {
+                        //                            MessageBoxEx.Show("格网码生成失败，请转换成地理坐标！");
+                        //                            return;
+                        //                        }
+                        //                    }
+
+                        //                }
+                        //                else
+                        //                {
+                        //                    string GridCode = GetCodeString(pFeature);
+                        //                    if (GridCode != "")
+                        //                    {
+                        //                        pFeature.set_Value(pFeature.Fields.FindField(strField), GridCode);
+                        //                        pFeature.Store();
+                        //                        j++;
+                        //                        //pFeature = pFeatureCursor.NextFeature();
+                        //                        //pBothNotNull.Add(pFeature, pFeature.get_Value(pFeature.Fields.FindField("NAME")).ToString());
+                        //                    }
+                        //                    else
+                        //                    {
+                        //                        MessageBoxEx.Show("格网码生成失败，请转换成地理坐标！");
+                        //                        return;
+                        //                    }
+                        //                }
+                        //            }
+                        //        }
+                        //    }
+
+
+                        //    //路线编码不为空,名称为空
+                        //    if (pFeature.get_Value(pFeature.Fields.FindField("ROADCODE")).ToString().Trim().Length > 0 && pFeature.get_Value(pFeature.Fields.FindField("NAME")).ToString().Trim().Length == 0)
+                        //    {
+                        //        if (k == 0)
+                        //        {
+                        //            //获取格网信息
+                        //            string GridCode = GetCodeString(pFeature);
+                        //            if (GridCode != "")
+                        //            {
+                        //                pFeature.set_Value(pFeature.Fields.FindField(strField), GridCode);
+                        //                pFeature.Store();
+                        //                k++;
+                        //                //pFeature = pFeatureCursor.NextFeature();
+                        //                //pNameNull.Add(pFeature, pFeature.get_Value(pFeature.Fields.FindField("ROADCODE")).ToString());
+
+                        //            }
+                        //            else
+                        //            {
+                        //                MessageBoxEx.Show("格网码生成失败，请转换成地理坐标！");
+                        //                return;
+                        //            }
+                        //        }
+                        //        else
+                        //        {
+                        //            foreach (string s in pNameNull.Values)
+                        //            {
+                        //                //test
+                        //                string test = pFeature.get_Value(pFeature.Fields.FindField("ROADCODE")).ToString();
+
+                        //                if (s == pFeature.get_Value(pFeature.Fields.FindField("ROADCODE")).ToString())
+                        //                {
+                        //                    IFeature pfirstKeyFeature = pEntiIDNull.FirstOrDefault(q => q.Value == s).Key;  //get first key
+                        //                    pFeature.set_Value(pFeature.Fields.FindField(strField), pfirstKeyFeature.get_Value(pfirstKeyFeature.Fields.FindField("ROADCODE")));
+                        //                    pFeature.Store();
+                        //                    k++;
+                        //                    //pFeature = pFeatureCursor.NextFeature();
+                        //                    //pNameNull.Add(pFeature, pFeature.get_Value(pFeature.Fields.FindField("ROADCODE")).ToString());
+                        //                }
+                        //                else
+                        //                {
+                        //                    //获取格网信息
+                        //                    string GridCode = GetCodeString(pFeature);
+                        //                    if (GridCode != "")
+                        //                    {
+                        //                        pFeature.set_Value(pFeature.Fields.FindField(strField), GridCode);
+                        //                        pFeature.Store();
+                        //                        k++;
+                        //                        //pFeature = pFeatureCursor.NextFeature();
+                        //                        //pNameNull.Add(pFeature, pFeature.get_Value(pFeature.Fields.FindField("ROADCODE")).ToString());
+
+                        //                    }
+                        //                    else
+                        //                    {
+                        //                        MessageBoxEx.Show("格网码生成失败，请转换成地理坐标！");
+                        //                        return;
+                        //                    }
+                        //                }
+                        //            }
+
+                        //        }
+
+                        //    }
+
+
+                        //    //名称不为空，路线编码为空
+                        //    if (pFeature.get_Value(pFeature.Fields.FindField("NAME")).ToString().Trim().Length > 0 && pFeature.get_Value(pFeature.Fields.FindField("ROADCODE")).ToString().Trim().Length == 0)
+                        //    {
+                        //        if (m == 0)
+                        //        {
+                        //            //获取格网信息
+                        //            string GridCode = GetCodeString(pFeature);
+                        //            if (GridCode != "")
+                        //            {
+                        //                pFeature.set_Value(pFeature.Fields.FindField(strField), GridCode);
+                        //                pFeature.Store();
+                        //                m++;
+                        //                //pFeature = pFeatureCursor.NextFeature();
+                        //                //pEntiIDNull.Add(pFeature, pFeature.get_Value(pFeature.Fields.FindField("NAME")).ToString());
+                        //            }
+                        //            else
+                        //            {
+                        //                MessageBoxEx.Show("格网码生成失败，请转换成地理坐标！");
+                        //                return;
+                        //            }
+                        //        }
+                        //        else
+                        //        {
+                        //            foreach (string s in pEntiIDNull.Values)
+                        //            {
+                        //                //test
+                        //                string test = pFeature.get_Value(pFeature.Fields.FindField("NAME")).ToString();
+
+                        //                if (s == pFeature.get_Value(pFeature.Fields.FindField("NAME")).ToString())
+                        //                {
+                        //                    IFeature pfirstKeyFeature = pEntiIDNull.FirstOrDefault(q => q.Value == s).Key;  //get first key
+
+                        //                    pFeature.set_Value(pFeature.Fields.FindField(strField), pfirstKeyFeature.get_Value(pfirstKeyFeature.Fields.FindField("GridCode")));
+                        //                    pFeature.Store();
+                        //                    m++;
+                        //                    //pFeature = pFeatureCursor.NextFeature();
+                        //                    //pEntiIDNull.Add(pFeature, pFeature.get_Value(pFeature.Fields.FindField("NAME")).ToString());
+                        //                }
+                        //                else
+                        //                {
+                        //                    //获取格网信息
+                        //                    string GridCode = GetCodeString(pFeature);
+                        //                    if (GridCode != "")
+                        //                    {
+                        //                        pFeature.set_Value(pFeature.Fields.FindField(strField), GridCode);
+                        //                        pFeature.Store();
+                        //                        m++;
+                        //                        //pFeature = pFeatureCursor.NextFeature();
+                        //                        //pEntiIDNull.Add(pFeature, pFeature.get_Value(pFeature.Fields.FindField("NAME")).ToString());
+
+                        //                    }
+                        //                    else
+                        //                    {
+                        //                        MessageBoxEx.Show("格网码生成失败，请转换成地理坐标！");
+                        //                        return;
+                        //                    }
+                        //                }
+                        //            }
+                        //        }
+                        //    }
+                        //    pFeature = pFeatureCursor.NextFeature();
                         //}
                         #endregion
-                        //名称不为空，路线编码为空
-                        if (pFeature.get_Value(pFeature.Fields.FindField(ClsConfig.LayerConfigs[(pFeatureLayer.FeatureClass as IDataset).Name].NameField)).ToString().Trim().Length > 0)
-                        {
-                            pNameNotNull.Add(pFeature, pFeature.get_Value(pFeature.Fields.FindField(ClsConfig.LayerConfigs[(pFeatureLayer.FeatureClass as IDataset).Name].NameField)).ToString());
-                            pOID.Add(pFeature.OID);
-                        }
-                        //路线编码不为空且一个道路字母除外（例如Q等）,名称为空
-                        if (pFeature.get_Value(pFeature.Fields.FindField("ROADCODE")).ToString().Trim().Length > 1 && pFeature.get_Value(pFeature.Fields.FindField(ClsConfig.LayerConfigs[(pFeatureLayer.FeatureClass as IDataset).Name].NameField)).ToString().Trim().Length == 0)
-                        {
-                            pRoadNotNull.Add(pFeature, pFeature.get_Value(pFeature.Fields.FindField("ROADCODE")).ToString());
-                            pOID.Add(pFeature.OID);
-                        }
-                        pFeature = pFeatureCursor.NextFeature();
+
+                        pWorkspaceEdit.StopEditing(true);
+                        pWorkspaceEdit.StopEditOperation();
 
                     }
 
-                    #region  遍历所有Feature，查找属于同一个地理实体的图元
-                    //遍历所有Feature，查找属于同一个地理实体的图元
-                    //while (pFeature != null)
-                    //{
-                    //    //路线编码和名称都不为空
-                    //    if (pFeature.get_Value(pFeature.Fields.FindField("NAME")).ToString().Trim().Length > 0 && pFeature.get_Value(pFeature.Fields.FindField("ROADCODE")).ToString().Trim().Length > 0)
-                    //    {
-                    //        if (j == 0)
-                    //        {
-                    //            //获取格网信息
-                    //            string GridCode = GetCodeString(pFeature);
-                    //            if (GridCode != "")
-                    //            {
-                    //                pFeature.set_Value(pFeature.Fields.FindField(strField), GridCode);
-                    //                pFeature.Store();
-                    //                j++;
-                    //                //pFeature = pFeatureCursor.NextFeature();
-                    //                //pBothNotNull.Add(pFeature,pFeature.get_Value(pFeature.Fields.FindField("NAME")).ToString());
-                    //            }
-                    //            else
-                    //            {
-                    //                MessageBoxEx.Show("格网码生成失败，请转换成地理坐标！");
-                    //                return;
-                    //            }
-                    //        }
-                    //        else
-                    //        {
-                    //            foreach (string s in pBothNotNull.Values)
-                    //            {
-                    //                if (s == pFeature.get_Value(pFeature.Fields.FindField("NAME")))
-                    //                {
-                    //                    IFeature pfirstKeyFeature = pBothNotNull.FirstOrDefault(q => q.Value == s).Key;  //get first key
-                    //                    if (pfirstKeyFeature.get_Value(pfirstKeyFeature.Fields.FindField("ROADCODE")).ToString() == pFeature.get_Value(pFeature.Fields.FindField("ROADCODE")).ToString())
-                    //                    {
-                    //                        pFeature.set_Value(pFeature.Fields.FindField(strField), pfirstKeyFeature.get_Value(pfirstKeyFeature.Fields.FindField("GridCode")));
-                    //                        pFeature.Store();
-                    //                        m++;
-                    //                        //pFeature = pFeatureCursor.NextFeature();
-                    //                        //pBothNotNull.Add(pFeature, pFeature.get_Value(pFeature.Fields.FindField("NAME")).ToString());
-                    //                    } 
-                    //                    else
-                    //                    {
-                    //                        string GridCode = GetCodeString(pFeature);
-                    //                        if (GridCode != "")
-                    //                        {
-                    //                            pFeature.set_Value(pFeature.Fields.FindField(strField), GridCode);
-                    //                            pFeature.Store();
-                    //                            j++;
-                    //                            //pFeature = pFeatureCursor.NextFeature();
-                    //                            //pBothNotNull.Add(pFeature, pFeature.get_Value(pFeature.Fields.FindField("NAME")).ToString());
-                    //                        }
-                    //                        else
-                    //                        {
-                    //                            MessageBoxEx.Show("格网码生成失败，请转换成地理坐标！");
-                    //                            return;
-                    //                        }
-                    //                    }
+                    CreatGridCodeRoad2(pFeatureLayer, pNameNotNull, pRoadNotNull, pOID);
 
-                    //                }
-                    //                else
-                    //                {
-                    //                    string GridCode = GetCodeString(pFeature);
-                    //                    if (GridCode != "")
-                    //                    {
-                    //                        pFeature.set_Value(pFeature.Fields.FindField(strField), GridCode);
-                    //                        pFeature.Store();
-                    //                        j++;
-                    //                        //pFeature = pFeatureCursor.NextFeature();
-                    //                        //pBothNotNull.Add(pFeature, pFeature.get_Value(pFeature.Fields.FindField("NAME")).ToString());
-                    //                    }
-                    //                    else
-                    //                    {
-                    //                        MessageBoxEx.Show("格网码生成失败，请转换成地理坐标！");
-                    //                        return;
-                    //                    }
-                    //                }
-                    //            }
-                    //        }
-                    //    }
-
-
-                    //    //路线编码不为空,名称为空
-                    //    if (pFeature.get_Value(pFeature.Fields.FindField("ROADCODE")).ToString().Trim().Length > 0 && pFeature.get_Value(pFeature.Fields.FindField("NAME")).ToString().Trim().Length == 0)
-                    //    {
-                    //        if (k == 0)
-                    //        {
-                    //            //获取格网信息
-                    //            string GridCode = GetCodeString(pFeature);
-                    //            if (GridCode != "")
-                    //            {
-                    //                pFeature.set_Value(pFeature.Fields.FindField(strField), GridCode);
-                    //                pFeature.Store();
-                    //                k++;
-                    //                //pFeature = pFeatureCursor.NextFeature();
-                    //                //pNameNull.Add(pFeature, pFeature.get_Value(pFeature.Fields.FindField("ROADCODE")).ToString());
-
-                    //            }
-                    //            else
-                    //            {
-                    //                MessageBoxEx.Show("格网码生成失败，请转换成地理坐标！");
-                    //                return;
-                    //            }
-                    //        }
-                    //        else
-                    //        {
-                    //            foreach (string s in pNameNull.Values)
-                    //            {
-                    //                //test
-                    //                string test = pFeature.get_Value(pFeature.Fields.FindField("ROADCODE")).ToString();
-
-                    //                if (s == pFeature.get_Value(pFeature.Fields.FindField("ROADCODE")).ToString())
-                    //                {
-                    //                    IFeature pfirstKeyFeature = pEntiIDNull.FirstOrDefault(q => q.Value == s).Key;  //get first key
-                    //                    pFeature.set_Value(pFeature.Fields.FindField(strField), pfirstKeyFeature.get_Value(pfirstKeyFeature.Fields.FindField("ROADCODE")));
-                    //                    pFeature.Store();
-                    //                    k++;
-                    //                    //pFeature = pFeatureCursor.NextFeature();
-                    //                    //pNameNull.Add(pFeature, pFeature.get_Value(pFeature.Fields.FindField("ROADCODE")).ToString());
-                    //                }
-                    //                else
-                    //                {
-                    //                    //获取格网信息
-                    //                    string GridCode = GetCodeString(pFeature);
-                    //                    if (GridCode != "")
-                    //                    {
-                    //                        pFeature.set_Value(pFeature.Fields.FindField(strField), GridCode);
-                    //                        pFeature.Store();
-                    //                        k++;
-                    //                        //pFeature = pFeatureCursor.NextFeature();
-                    //                        //pNameNull.Add(pFeature, pFeature.get_Value(pFeature.Fields.FindField("ROADCODE")).ToString());
-
-                    //                    }
-                    //                    else
-                    //                    {
-                    //                        MessageBoxEx.Show("格网码生成失败，请转换成地理坐标！");
-                    //                        return;
-                    //                    }
-                    //                }
-                    //            }
-
-                    //        }
-
-                    //    }
-
-
-                    //    //名称不为空，路线编码为空
-                    //    if (pFeature.get_Value(pFeature.Fields.FindField("NAME")).ToString().Trim().Length > 0 && pFeature.get_Value(pFeature.Fields.FindField("ROADCODE")).ToString().Trim().Length == 0)
-                    //    {
-                    //        if (m == 0)
-                    //        {
-                    //            //获取格网信息
-                    //            string GridCode = GetCodeString(pFeature);
-                    //            if (GridCode != "")
-                    //            {
-                    //                pFeature.set_Value(pFeature.Fields.FindField(strField), GridCode);
-                    //                pFeature.Store();
-                    //                m++;
-                    //                //pFeature = pFeatureCursor.NextFeature();
-                    //                //pEntiIDNull.Add(pFeature, pFeature.get_Value(pFeature.Fields.FindField("NAME")).ToString());
-                    //            }
-                    //            else
-                    //            {
-                    //                MessageBoxEx.Show("格网码生成失败，请转换成地理坐标！");
-                    //                return;
-                    //            }
-                    //        }
-                    //        else
-                    //        {
-                    //            foreach (string s in pEntiIDNull.Values)
-                    //            {
-                    //                //test
-                    //                string test = pFeature.get_Value(pFeature.Fields.FindField("NAME")).ToString();
-
-                    //                if (s == pFeature.get_Value(pFeature.Fields.FindField("NAME")).ToString())
-                    //                {
-                    //                    IFeature pfirstKeyFeature = pEntiIDNull.FirstOrDefault(q => q.Value == s).Key;  //get first key
-
-                    //                    pFeature.set_Value(pFeature.Fields.FindField(strField), pfirstKeyFeature.get_Value(pfirstKeyFeature.Fields.FindField("GridCode")));
-                    //                    pFeature.Store();
-                    //                    m++;
-                    //                    //pFeature = pFeatureCursor.NextFeature();
-                    //                    //pEntiIDNull.Add(pFeature, pFeature.get_Value(pFeature.Fields.FindField("NAME")).ToString());
-                    //                }
-                    //                else
-                    //                {
-                    //                    //获取格网信息
-                    //                    string GridCode = GetCodeString(pFeature);
-                    //                    if (GridCode != "")
-                    //                    {
-                    //                        pFeature.set_Value(pFeature.Fields.FindField(strField), GridCode);
-                    //                        pFeature.Store();
-                    //                        m++;
-                    //                        //pFeature = pFeatureCursor.NextFeature();
-                    //                        //pEntiIDNull.Add(pFeature, pFeature.get_Value(pFeature.Fields.FindField("NAME")).ToString());
-
-                    //                    }
-                    //                    else
-                    //                    {
-                    //                        MessageBoxEx.Show("格网码生成失败，请转换成地理坐标！");
-                    //                        return;
-                    //                    }
-                    //                }
-                    //            }
-                    //        }
-                    //    }
-                    //    pFeature = pFeatureCursor.NextFeature();
-                    //}
-                    #endregion
-
-                    pWorkspaceEdit.StopEditing(true);
-                    pWorkspaceEdit.StopEditOperation();
-
+                }
+                else
+                {
+                    MessageBox.Show("此图层不存在ROADCODE路网字段，请重新检查图层字段！");
                 }
             }
             else
             {
-                MessageBoxEx.Show("没有选中任何图层！");
+                MessageBox.Show("没有选中任何图层！");
             }
-            CreatGridCodeRoad2(pFeatureLayer, pNameNotNull, pRoadNotNull, pOID);
         }
-
-
-        ///// <summary>
-        ///// 生成格网码(道路)
-        ///// </summary>
-        ///// <param name="pMapControl"></param>
-        ///// <param name="cbxLayerName"></param>
-        //public void CreatGridCodeRoad2(IFeatureLayer pFeatureLayer, Dictionary<IFeature, string> pBothNotNull,
-        //    Dictionary<IFeature, string> pNameNotNull, Dictionary<IFeature, string> pRoadNotNull, List<object> pOID)
-        //{
-        //    string strField = "GridCode";
-        //    if (pFeatureLayer != null)
-        //    {
-        //        IDataset pDataset = pFeatureLayer.FeatureClass as IDataset;
-        //        IWorkspaceEdit pWorkspaceEdit = null;
-        //        if (pDataset != null)
-        //        {
-        //            pWorkspaceEdit = pDataset.Workspace as IWorkspaceEdit;
-        //            if (pWorkspaceEdit != null || pWorkspaceEdit.IsBeingEdited() == false)
-        //            {
-        //                pWorkspaceEdit.StartEditing(true);
-        //                pWorkspaceEdit.StartEditOperation();
-        //            }
-        //            IFeatureCursor pFeatureCursor = pFeatureLayer.Search(null, false);
-        //            //int i = pFeatureLayer.FeatureClass.FeatureCount(null);
-
-        //            IFeature pFeature = pFeatureCursor.NextFeature();
-
-        //            //遍历所有Feature，查找属于同一个地理实体的图元
-        //            while (pFeature != null)
-        //            {
-        //                if (pOID.Contains(pFeature.OID))
-        //                {
-        //                    //路线编码和名称都不为空
-        //                    if (pFeature.get_Value(pFeature.Fields.FindFieldByAliasName("名称")).ToString().Trim().Length > 0 && pFeature.get_Value(pFeature.Fields.FindField("ROADCODE")).ToString().Trim().Length > 0)
-        //                    {
-        //                        string pFeatureName1 = pFeature.get_Value(pFeature.Fields.FindFieldByAliasName("名称")).ToString();
-        //                        string pRoadCode1 = pFeature.get_Value(pFeature.Fields.FindField("ROADCODE")).ToString();
-        //                        int flag = 0;
-
-        //                        //获取格网信息
-        //                        foreach (string s in pBothNotNull.Values)
-        //                        {
-        //                            if (s == pFeatureName1)
-        //                            {
-        //                                flag++;
-        //                            }
-        //                        }
-
-        //                        if (flag == 1)
-        //                        {
-        //                            string pGridCode1 = pClsCom.GetCodeString(pFeature);
-        //                            if (pGridCode1 != "")
-        //                            {
-        //                                pFeature.set_Value(pFeature.Fields.FindField(strField), pGridCode1);
-        //                                pFeature.Store();
-        //                            }
-        //                            else
-        //                            {
-        //                                MessageBoxEx.Show("格网码生成失败，请转换成地理坐标！");
-        //                                return;
-        //                            }
-        //                        }
-        //                        else
-        //                        {
-        //                            List<IFeature> keyList = (from q in pBothNotNull
-        //                                                      where q.Value == pFeatureName1
-        //                                                      select q.Key).ToList<IFeature>(); //get all keys
-
-        //                            if (pFeature.OID == keyList[0].OID)
-        //                            {
-        //                                CreatGridCodeComm(pFeature, pFeature, strField);
-
-        //                                #region 注释2
-        //                                ////获取格网信息
-        //                                //string GridCode = GetCodeString(pFeature);
-        //                                //if (GridCode != "")
-        //                                //{
-        //                                //    pFeature.set_Value(pFeature.Fields.FindField(strField), GridCode);
-        //                                //    pFeature.Store();
-        //                                //}
-        //                                //else
-        //                                //{
-        //                                //    MessageBoxEx.Show("格网码生成失败，请转换成地理坐标！");
-        //                                //    return;
-        //                                //}
-        //                                #endregion
-        //                            }
-
-        //                            if (pFeature.OID != keyList[0].OID)
-        //                            {
-        //                                CreatGridCodeComm(pFeature, keyList[0], strField);
-
-        //                                #region 注释3
-        //                                ////获取格网信息
-        //                                //string GridCode = GetCodeString(keyList[0]);
-        //                                //if (GridCode != "")
-        //                                //{
-        //                                //    pFeature.set_Value(pFeature.Fields.FindField(strField), GridCode);
-        //                                //    pFeature.Store();
-        //                                //}
-        //                                //else
-        //                                //{
-        //                                //    MessageBoxEx.Show("格网码生成失败，请转换成地理坐标！");
-        //                                //    return;
-        //                                //}
-        //                                #endregion
-
-        //                            }
-        //                        }
-
-        //                    }
-
-
-        //                    //路线编码不为空,名称为空
-        //                    if (pFeature.get_Value(pFeature.Fields.FindField("ROADCODE")).ToString().Trim().Length > 1 && pFeature.get_Value(pFeature.Fields.FindFieldByAliasName("名称")).ToString().Trim().Length == 0)
-        //                    {
-        //                        string pRoadCode2 = pFeature.get_Value(pFeature.Fields.FindField("ROADCODE")).ToString();
-
-        //                        int flag1 = 0;
-
-        //                        foreach (string s in pRoadNotNull.Values)
-        //                        {
-        //                            if (pRoadCode2 == s)
-        //                            {
-        //                                flag1++;
-        //                            }
-        //                        }
-        //                        //名字只出现一次的情况
-        //                        if (flag1 == 1)
-        //                        {
-        //                            //获取格网信息
-        //                            string pGridCode2 = pClsCom.GetCodeString(pFeature);
-        //                            if (pGridCode2 != "")
-        //                            {
-        //                                pFeature.set_Value(pFeature.Fields.FindField(strField), pGridCode2);
-        //                                pFeature.Store();
-        //                            }
-        //                            else
-        //                            {
-        //                                MessageBoxEx.Show("格网码生成失败，请转换成地理坐标！");
-        //                                return;
-        //                            }
-        //                        }
-        //                        //名字出现多次的情况
-        //                        else
-        //                        {
-        //                            List<IFeature> keyList = (from q in pRoadNotNull
-        //                                                      where q.Value == pRoadCode2
-        //                                                      select q.Key).ToList<IFeature>(); //get all keys
-        //                            if (pFeature.OID == keyList[0].OID)
-        //                            {
-        //                                CreatGridCodeComm(pFeature, pFeature, strField);
-
-        //                                #region 注释5
-        //                                //////test
-        //                                ////获取格网信息
-        //                                //string GridCode = GetCodeString(pFeature);
-        //                                //if (GridCode != "")
-        //                                //{
-        //                                //    pFeature.set_Value(pFeature.Fields.FindField(strField), GridCode);
-        //                                //    pFeature.Store();
-        //                                //}
-        //                                //else
-        //                                //{
-        //                                //    MessageBoxEx.Show("格网码生成失败，请转换成地理坐标！");
-        //                                //    return;
-        //                                //}
-        //                                #endregion
-        //                            }
-        //                            if (pFeature.OID != keyList[0].OID)
-        //                            {
-        //                                CreatGridCodeComm(pFeature, keyList[0], strField);
-
-        //                                #region 注释6
-        //                                ////获取格网信息
-        //                                //string GridCode = GetCodeString(keyList[0]);
-        //                                //if (GridCode != "")
-        //                                //{
-        //                                //    pFeature.set_Value(pFeature.Fields.FindField(strField), GridCode);
-        //                                //    pFeature.Store();
-        //                                //}
-        //                                //else
-        //                                //{
-        //                                //    MessageBoxEx.Show("格网码生成失败，请转换成地理坐标！");
-        //                                //    return;
-        //                                //}
-        //                                #endregion
-        //                            }
-        //                        }
-
-        //                    }
-
-
-        //                    //名称不为空，路线编码为空
-        //                    if (pFeature.get_Value(pFeature.Fields.FindFieldByAliasName("名称")).ToString().Trim().Length > 0 && pFeature.get_Value(pFeature.Fields.FindField("ROADCODE")).ToString().Trim().Length == 0)
-        //                    {
-        //                        string pFeatureName2 = pFeature.get_Value(pFeature.Fields.FindFieldByAliasName("名称")).ToString();
-        //                        int flag2 = 0;
-        //                        foreach (string s in pNameNotNull.Values)
-        //                        {
-        //                            if (pFeatureName2 == s)
-        //                            {
-        //                                flag2++;
-        //                            }
-        //                        }
-        //                        //名字没有相同的情况
-        //                        if (flag2 == 1)
-        //                        {
-        //                            //获取格网信息
-        //                            string pGridCode3 = pClsCom.GetCodeString(pFeature);
-        //                            if (pGridCode3 != "")
-        //                            {
-        //                                pFeature.set_Value(pFeature.Fields.FindField(strField), pGridCode3);
-        //                                pFeature.Store();
-        //                            }
-        //                            else
-        //                            {
-        //                                MessageBoxEx.Show("格网码生成失败，请转换成地理坐标！");
-        //                                return;
-        //                            }
-        //                        }
-        //                        //名字有相同的情况
-        //                        else
-        //                        {
-        //                            List<IFeature> keyList = (from q in pNameNotNull
-        //                                                      where q.Value == pFeatureName2
-        //                                                      select q.Key).ToList<IFeature>(); //get all keys
-        //                            //如果改要素就是第一条要素，则正常进行格网编码
-        //                            if (pFeature.OID == keyList[0].OID)
-        //                            {
-        //                                CreatGridCodeComm(pFeature, pFeature, strField);
-
-        //                                #region 注释8
-        //                                ////获取格网信息
-        //                                //string GridCode = GetCodeString(pFeature);
-        //                                //if (GridCode != "")
-        //                                //{
-        //                                //    pFeature.set_Value(pFeature.Fields.FindField(strField), GridCode);
-        //                                //    pFeature.Store();
-        //                                //}
-        //                                //else
-        //                                //{
-        //                                //    MessageBoxEx.Show("格网码生成失败，请转换成地理坐标！");
-        //                                //    return;
-        //                                //}
-        //                                #endregion
-        //                            }
-        //                            //如果改要素不是第一条要素，则按照第一条要素进行格网编码
-        //                            if (pFeature.OID != keyList[0].OID)
-        //                            {
-
-        //                                CreatGridCodeComm(pFeature, keyList[0], strField);
-        //                                #region 注释9
-        //                                ////获取格网信息
-        //                                //string GridCode = GetCodeString(keyList[0]);
-        //                                //if (GridCode != "")
-        //                                //{
-        //                                //    pFeature.set_Value(pFeature.Fields.FindField(strField), GridCode);
-        //                                //    pFeature.Store();
-        //                                //}
-        //                                //else
-        //                                //{
-        //                                //    MessageBoxEx.Show("格网码生成失败，请转换成地理坐标！");
-        //                                //    return;
-        //                                //}
-        //                                #endregion
-
-        //                            }
-        //                        }
-        //                    }
-        //                }
-        //                pFeature = pFeatureCursor.NextFeature();
-        //            }
-
-        //            pWorkspaceEdit.StopEditing(true);
-        //            pWorkspaceEdit.StopEditOperation();
-        //            MessageBoxEx.Show("格网生成成功！");
-
-        //        }
-        //    }
-        //    else
-        //    {
-        //        MessageBoxEx.Show("没有选中任何图层！");
-        //    }
-        //}
 
         /// <summary>
         /// 生成格网码(道路)
         /// </summary>
         /// <param name="pMapControl"></param>
         /// <param name="cbxLayerName"></param>
-        public void CreatGridCodeRoad2(IFeatureLayer pFeatureLayer,Dictionary<IFeature, string> pNameNotNull, Dictionary<IFeature, string> pRoadNotNull, List<object> pOID)
+        public void CreatGridCodeRoad2(IFeatureLayer pFeatureLayer, Dictionary<IFeature, string> pNameNotNull, Dictionary<IFeature, string> pRoadNotNull, List<object> pOID)
         {
             string strField = "GridCode";
             if (pFeatureLayer != null)
@@ -815,7 +543,7 @@ namespace ZJGISGCoding.Class
                             }
 
 
-                          
+
                         }
                         pFeature = pFeatureCursor.NextFeature();
                     }
@@ -831,6 +559,7 @@ namespace ZJGISGCoding.Class
                 MessageBoxEx.Show("没有选中任何图层！");
             }
         }
+
         public void CreatGridCodeComm(IFeature pFeature, IFeature pFeature2, string pGridCode)
         {
             //获取格网信息
@@ -1076,13 +805,20 @@ namespace ZJGISGCoding.Class
                                 //处理分类码
                                 //ClsReturnFCode pReturnFcode = new ClsReturnFCode();
                                 //pFCode = pReturnFcode.ReturnFeatureClass(pFCode);
-                                pFCode = ZJGISCommon.Classes.ClsFcode.pDicFcodeGlobal[pFCode];
-                                if (pFCode != null)
+                                if (ZJGISCommon.Classes.ClsFcode.pDicFcodeGlobal.ContainsKey(pFCode))
                                 {
-                                    pNum = "A01";
-                                    pEntiidCode = gridCode1 + pFCode + pNum;
-                                    pFeature.set_Value(pFeature.Fields.FindField(pENEIID), pEntiidCode);
-                                    pFeature.Store();
+                                    pFCode = ZJGISCommon.Classes.ClsFcode.pDicFcodeGlobal[pFCode];
+                                    if (pFCode != null)
+                                    {
+                                        pNum = "A01";
+                                        pEntiidCode = gridCode1 + pFCode + pNum;
+                                        pFeature.set_Value(pFeature.Fields.FindField(pENEIID), pEntiidCode);
+                                        pFeature.Store();
+                                    }
+                                }
+                                else
+                                {
+                                    MessageBox.Show("此分类码" + pFCode + "不存在字典中，请添加对应的分类码到字典中");
                                 }
                             }
                         }
@@ -1117,12 +853,19 @@ namespace ZJGISGCoding.Class
                                 //处理分类码
                                 //ClsReturnFCode pReturnFcode = new ClsReturnFCode();
                                 //pFCode = pReturnFcode.ReturnFeatureClass(pFCode);
-                                pFCode = ZJGISCommon.Classes.ClsFcode.pDicFcodeGlobal[pFCode];
-                                if (pFCode != null)
+                                if (ZJGISCommon.Classes.ClsFcode.pDicFcodeGlobal.ContainsKey(pFCode))
                                 {
-                                    pEntiidCode = gridCode1 + pFCode + pNum;
-                                    pFeature.set_Value(pFeature.Fields.FindField(pENEIID), pEntiidCode);
-                                    pFeature.Store();
+                                    pFCode = ZJGISCommon.Classes.ClsFcode.pDicFcodeGlobal[pFCode];
+                                    if (pFCode != null)
+                                    {
+                                        pEntiidCode = gridCode1 + pFCode + pNum;
+                                        pFeature.set_Value(pFeature.Fields.FindField(pENEIID), pEntiidCode);
+                                        pFeature.Store();
+                                    }
+                                }
+                                else
+                                {
+                                    MessageBox.Show("此分类码" + pFCode + "不存在字典中，请添加对应的分类码到字典中");
                                 }
                             }
 
@@ -1276,7 +1019,7 @@ namespace ZJGISGCoding.Class
             //Dictionary<IFeature, string> pGridCode = new Dictionary<IFeature, string>();
             List<object> pOID = new List<object>();
 
-            string strField = "GridCode";
+            string gridField = "GridCode";
             IFeatureLayer pFeatureLayer = (IFeatureLayer)pClsCom.GetLayerByName(pMapControl, cbxLayerName.Text);
 
             IDataset cDataset = pFeatureLayer.FeatureClass as IDataset;
@@ -1290,304 +1033,297 @@ namespace ZJGISGCoding.Class
 
             if (pFeatureLayer != null)
             {
-                IClass pTable = pFeatureLayer.FeatureClass as IClass;
-                try
+                pClsCom.CheckGridCode(pFeatureLayer, gridField);
+
+                if (pFeatureLayer.FeatureClass.Fields.FindField(ClsConfig.LayerConfigs[(pFeatureLayer.FeatureClass as IDataset).Name].NameField) != -1
+                    && pFeatureLayer.FeatureClass.Fields.FindField(ClsConfig.LayerConfigs[(pFeatureLayer.FeatureClass as IDataset).Name].NameField) != -1)
                 {
-                    if (pTable.Fields.FindField(strField) == -1)
+                    IDataset pDataset = pFeatureLayer.FeatureClass as IDataset;
+                    IWorkspaceEdit pWorkspaceEdit = null;
+                    if (pDataset != null)
                     {
-                        IField pField = new FieldClass();
-                        IFieldEdit pFieldEdit = pField as IFieldEdit;
-                        pFieldEdit.Name_2 = strField;
-                        pFieldEdit.Type_2 = esriFieldType.esriFieldTypeString;
-                        pTable.AddField(pField);
-                    }
-                }
-                catch
-                {
-                    MessageBoxEx.Show("添加字段有误,数据被占用！");
-                    return;
-                }
-
-                IDataset pDataset = pFeatureLayer.FeatureClass as IDataset;
-                IWorkspaceEdit pWorkspaceEdit = null;
-                if (pDataset != null)
-                {
-                    pWorkspaceEdit = pDataset.Workspace as IWorkspaceEdit;
-                    if (pWorkspaceEdit != null || pWorkspaceEdit.IsBeingEdited() == false)
-                    {
-                        pWorkspaceEdit.StartEditing(true);
-                        pWorkspaceEdit.StartEditOperation();
-                    }
-
-                    #region 注释掉
-                    ////设置查询条件，过滤名称为空的要素
-                    //IQueryFilter queryFilter = new QueryFilterClass();
-                    ////Setting the SubFields and WhereClause:
-                    ////if you are updating the geometry you must include the shapefield in the subfields.
-                    ////queryFilter.SubFields = "STATE_NAME,POPULATION";
-
-                    ////注意：此处的FNAME字段只针对于存在改字段的图层，否则此字段需要修改
-                    ////queryFilter.SubFields = "FNAME,ENTIID";
-                    //queryFilter.SubFields = "FNAME";
-
-                    //if (pDataset.Workspace.Type == esriWorkspaceType.esriFileSystemWorkspace)
-                    //{
-                    //    queryFilter.WhereClause = "\"" + "FNAME" + "\"" + " !=" + "null"; //shpfile
-                    //}
-                    //else
-                    //{
-                    //    queryFilter.WhereClause = "[" + "FNAME" + "]" + " !=" + "null"; //gdb
-                    //}
-
-
-
-                    ////queryFilter.WhereClause = "STATE_NAME ！= null";
-                    ////queryFilter.WhereClause = "FNAME!=null";
-                    ////Using a query filter to search a feature class:
-                    ////IFeatureCursor featureCursor = featureClass.Search(queryFilter, false);
-                    //IFeatureCursor pFeatureCursor = pFeatureLayer.Search(queryFilter, false);
-                    ////IFeatureCursor pFeatureCursor = pFeatureLayer.Search(null, false);
-                    #endregion
-
-                    IFeatureCursor pFeatureCursor = pFeatureLayer.Search(null, false);
-
-                    //int i = pFeatureLayer.FeatureClass.FeatureCount(null);
-                    //int j = 0, k = 0, m = 0;
-
-                    IFeature pFeature = pFeatureCursor.NextFeature();
-
-                    while (pFeature != null)
-                    {
-                        //名称不为空，地理编码为空
-                        if (pFeature.get_Value(pFeature.Fields.FindField(ClsConfig.LayerConfigs[(pFeatureLayer.FeatureClass as IDataset).Name].NameField)).ToString().Trim().Length > 0 &&
-                            pFeature.get_Value(pFeature.Fields.FindField(ClsConfig.LayerConfigs[(pFeatureLayer.FeatureClass as IDataset).Name].EntityID)).ToString().Trim().Length == 0)
+                        pWorkspaceEdit = pDataset.Workspace as IWorkspaceEdit;
+                        if (pWorkspaceEdit != null || pWorkspaceEdit.IsBeingEdited() == false)
                         {
-                            pNameNotNull.Add(pFeature, pFeature.get_Value(pFeature.Fields.FindField(ClsConfig.LayerConfigs[(pFeatureLayer.FeatureClass as IDataset).Name].NameField)).ToString());
-                            pOID.Add(pFeature.OID);
+                            pWorkspaceEdit.StartEditing(true);
+                            pWorkspaceEdit.StartEditOperation();
                         }
 
-                        pFeature = pFeatureCursor.NextFeature();
+                        #region 注释掉
+                        ////设置查询条件，过滤名称为空的要素
+                        //IQueryFilter queryFilter = new QueryFilterClass();
+                        ////Setting the SubFields and WhereClause:
+                        ////if you are updating the geometry you must include the shapefield in the subfields.
+                        ////queryFilter.SubFields = "STATE_NAME,POPULATION";
+
+                        ////注意：此处的FNAME字段只针对于存在改字段的图层，否则此字段需要修改
+                        ////queryFilter.SubFields = "FNAME,ENTIID";
+                        //queryFilter.SubFields = "FNAME";
+
+                        //if (pDataset.Workspace.Type == esriWorkspaceType.esriFileSystemWorkspace)
+                        //{
+                        //    queryFilter.WhereClause = "\"" + "FNAME" + "\"" + " !=" + "null"; //shpfile
+                        //}
+                        //else
+                        //{
+                        //    queryFilter.WhereClause = "[" + "FNAME" + "]" + " !=" + "null"; //gdb
+                        //}
+
+
+
+                        ////queryFilter.WhereClause = "STATE_NAME ！= null";
+                        ////queryFilter.WhereClause = "FNAME!=null";
+                        ////Using a query filter to search a feature class:
+                        ////IFeatureCursor featureCursor = featureClass.Search(queryFilter, false);
+                        //IFeatureCursor pFeatureCursor = pFeatureLayer.Search(queryFilter, false);
+                        ////IFeatureCursor pFeatureCursor = pFeatureLayer.Search(null, false);
+                        #endregion
+
+                        IFeatureCursor pFeatureCursor = pFeatureLayer.Search(null, false);
+
+                        //int i = pFeatureLayer.FeatureClass.FeatureCount(null);
+                        //int j = 0, k = 0, m = 0;
+
+                        IFeature pFeature = pFeatureCursor.NextFeature();
+
+                        while (pFeature != null)
+                        {
+                            //名称不为空，地理编码为空
+                            if (pFeature.get_Value(pFeature.Fields.FindField(ClsConfig.LayerConfigs[(pFeatureLayer.FeatureClass as IDataset).Name].NameField)).ToString().Trim().Length > 0 &&
+                                pFeature.get_Value(pFeature.Fields.FindField(ClsConfig.LayerConfigs[(pFeatureLayer.FeatureClass as IDataset).Name].EntityID)).ToString().Trim().Length == 0)
+                            {
+                                pNameNotNull.Add(pFeature, pFeature.get_Value(pFeature.Fields.FindField(ClsConfig.LayerConfigs[(pFeatureLayer.FeatureClass as IDataset).Name].NameField)).ToString());
+                                pOID.Add(pFeature.OID);
+                            }
+
+                            pFeature = pFeatureCursor.NextFeature();
+                        }
+
+                        #region  遍历所有Feature，查找属于同一个地理实体的图元
+                        //遍历所有Feature，查找属于同一个地理实体的图元
+                        //while (pFeature != null)
+                        //{
+                        //    //路线编码和名称都不为空
+                        //    if (pFeature.get_Value(pFeature.Fields.FindField("NAME")).ToString().Trim().Length > 0 && pFeature.get_Value(pFeature.Fields.FindField("ROADCODE")).ToString().Trim().Length > 0)
+                        //    {
+                        //        if (j == 0)
+                        //        {
+                        //            //获取格网信息
+                        //            string GridCode = GetCodeString(pFeature);
+                        //            if (GridCode != "")
+                        //            {
+                        //                pFeature.set_Value(pFeature.Fields.FindField(strField), GridCode);
+                        //                pFeature.Store();
+                        //                j++;
+                        //                //pFeature = pFeatureCursor.NextFeature();
+                        //                //pBothNotNull.Add(pFeature,pFeature.get_Value(pFeature.Fields.FindField("NAME")).ToString());
+                        //            }
+                        //            else
+                        //            {
+                        //                MessageBoxEx.Show("格网码生成失败，请转换成地理坐标！");
+                        //                return;
+                        //            }
+                        //        }
+                        //        else
+                        //        {
+                        //            foreach (string s in pBothNotNull.Values)
+                        //            {
+                        //                if (s == pFeature.get_Value(pFeature.Fields.FindField("NAME")))
+                        //                {
+                        //                    IFeature pfirstKeyFeature = pBothNotNull.FirstOrDefault(q => q.Value == s).Key;  //get first key
+                        //                    if (pfirstKeyFeature.get_Value(pfirstKeyFeature.Fields.FindField("ROADCODE")).ToString() == pFeature.get_Value(pFeature.Fields.FindField("ROADCODE")).ToString())
+                        //                    {
+                        //                        pFeature.set_Value(pFeature.Fields.FindField(strField), pfirstKeyFeature.get_Value(pfirstKeyFeature.Fields.FindField("GridCode")));
+                        //                        pFeature.Store();
+                        //                        m++;
+                        //                        //pFeature = pFeatureCursor.NextFeature();
+                        //                        //pBothNotNull.Add(pFeature, pFeature.get_Value(pFeature.Fields.FindField("NAME")).ToString());
+                        //                    } 
+                        //                    else
+                        //                    {
+                        //                        string GridCode = GetCodeString(pFeature);
+                        //                        if (GridCode != "")
+                        //                        {
+                        //                            pFeature.set_Value(pFeature.Fields.FindField(strField), GridCode);
+                        //                            pFeature.Store();
+                        //                            j++;
+                        //                            //pFeature = pFeatureCursor.NextFeature();
+                        //                            //pBothNotNull.Add(pFeature, pFeature.get_Value(pFeature.Fields.FindField("NAME")).ToString());
+                        //                        }
+                        //                        else
+                        //                        {
+                        //                            MessageBoxEx.Show("格网码生成失败，请转换成地理坐标！");
+                        //                            return;
+                        //                        }
+                        //                    }
+
+                        //                }
+                        //                else
+                        //                {
+                        //                    string GridCode = GetCodeString(pFeature);
+                        //                    if (GridCode != "")
+                        //                    {
+                        //                        pFeature.set_Value(pFeature.Fields.FindField(strField), GridCode);
+                        //                        pFeature.Store();
+                        //                        j++;
+                        //                        //pFeature = pFeatureCursor.NextFeature();
+                        //                        //pBothNotNull.Add(pFeature, pFeature.get_Value(pFeature.Fields.FindField("NAME")).ToString());
+                        //                    }
+                        //                    else
+                        //                    {
+                        //                        MessageBoxEx.Show("格网码生成失败，请转换成地理坐标！");
+                        //                        return;
+                        //                    }
+                        //                }
+                        //            }
+                        //        }
+                        //    }
+
+
+                        //    //路线编码不为空,名称为空
+                        //    if (pFeature.get_Value(pFeature.Fields.FindField("ROADCODE")).ToString().Trim().Length > 0 && pFeature.get_Value(pFeature.Fields.FindField("NAME")).ToString().Trim().Length == 0)
+                        //    {
+                        //        if (k == 0)
+                        //        {
+                        //            //获取格网信息
+                        //            string GridCode = GetCodeString(pFeature);
+                        //            if (GridCode != "")
+                        //            {
+                        //                pFeature.set_Value(pFeature.Fields.FindField(strField), GridCode);
+                        //                pFeature.Store();
+                        //                k++;
+                        //                //pFeature = pFeatureCursor.NextFeature();
+                        //                //pNameNull.Add(pFeature, pFeature.get_Value(pFeature.Fields.FindField("ROADCODE")).ToString());
+
+                        //            }
+                        //            else
+                        //            {
+                        //                MessageBoxEx.Show("格网码生成失败，请转换成地理坐标！");
+                        //                return;
+                        //            }
+                        //        }
+                        //        else
+                        //        {
+                        //            foreach (string s in pNameNull.Values)
+                        //            {
+                        //                //test
+                        //                string test = pFeature.get_Value(pFeature.Fields.FindField("ROADCODE")).ToString();
+
+                        //                if (s == pFeature.get_Value(pFeature.Fields.FindField("ROADCODE")).ToString())
+                        //                {
+                        //                    IFeature pfirstKeyFeature = pEntiIDNull.FirstOrDefault(q => q.Value == s).Key;  //get first key
+                        //                    pFeature.set_Value(pFeature.Fields.FindField(strField), pfirstKeyFeature.get_Value(pfirstKeyFeature.Fields.FindField("ROADCODE")));
+                        //                    pFeature.Store();
+                        //                    k++;
+                        //                    //pFeature = pFeatureCursor.NextFeature();
+                        //                    //pNameNull.Add(pFeature, pFeature.get_Value(pFeature.Fields.FindField("ROADCODE")).ToString());
+                        //                }
+                        //                else
+                        //                {
+                        //                    //获取格网信息
+                        //                    string GridCode = GetCodeString(pFeature);
+                        //                    if (GridCode != "")
+                        //                    {
+                        //                        pFeature.set_Value(pFeature.Fields.FindField(strField), GridCode);
+                        //                        pFeature.Store();
+                        //                        k++;
+                        //                        //pFeature = pFeatureCursor.NextFeature();
+                        //                        //pNameNull.Add(pFeature, pFeature.get_Value(pFeature.Fields.FindField("ROADCODE")).ToString());
+
+                        //                    }
+                        //                    else
+                        //                    {
+                        //                        MessageBoxEx.Show("格网码生成失败，请转换成地理坐标！");
+                        //                        return;
+                        //                    }
+                        //                }
+                        //            }
+
+                        //        }
+
+                        //    }
+
+
+                        //    //名称不为空，路线编码为空
+                        //    if (pFeature.get_Value(pFeature.Fields.FindField("NAME")).ToString().Trim().Length > 0 && pFeature.get_Value(pFeature.Fields.FindField("ROADCODE")).ToString().Trim().Length == 0)
+                        //    {
+                        //        if (m == 0)
+                        //        {
+                        //            //获取格网信息
+                        //            string GridCode = GetCodeString(pFeature);
+                        //            if (GridCode != "")
+                        //            {
+                        //                pFeature.set_Value(pFeature.Fields.FindField(strField), GridCode);
+                        //                pFeature.Store();
+                        //                m++;
+                        //                //pFeature = pFeatureCursor.NextFeature();
+                        //                //pEntiIDNull.Add(pFeature, pFeature.get_Value(pFeature.Fields.FindField("NAME")).ToString());
+                        //            }
+                        //            else
+                        //            {
+                        //                MessageBoxEx.Show("格网码生成失败，请转换成地理坐标！");
+                        //                return;
+                        //            }
+                        //        }
+                        //        else
+                        //        {
+                        //            foreach (string s in pEntiIDNull.Values)
+                        //            {
+                        //                //test
+                        //                string test = pFeature.get_Value(pFeature.Fields.FindField("NAME")).ToString();
+
+                        //                if (s == pFeature.get_Value(pFeature.Fields.FindField("NAME")).ToString())
+                        //                {
+                        //                    IFeature pfirstKeyFeature = pEntiIDNull.FirstOrDefault(q => q.Value == s).Key;  //get first key
+
+                        //                    pFeature.set_Value(pFeature.Fields.FindField(strField), pfirstKeyFeature.get_Value(pfirstKeyFeature.Fields.FindField("GridCode")));
+                        //                    pFeature.Store();
+                        //                    m++;
+                        //                    //pFeature = pFeatureCursor.NextFeature();
+                        //                    //pEntiIDNull.Add(pFeature, pFeature.get_Value(pFeature.Fields.FindField("NAME")).ToString());
+                        //                }
+                        //                else
+                        //                {
+                        //                    //获取格网信息
+                        //                    string GridCode = GetCodeString(pFeature);
+                        //                    if (GridCode != "")
+                        //                    {
+                        //                        pFeature.set_Value(pFeature.Fields.FindField(strField), GridCode);
+                        //                        pFeature.Store();
+                        //                        m++;
+                        //                        //pFeature = pFeatureCursor.NextFeature();
+                        //                        //pEntiIDNull.Add(pFeature, pFeature.get_Value(pFeature.Fields.FindField("NAME")).ToString());
+
+                        //                    }
+                        //                    else
+                        //                    {
+                        //                        MessageBoxEx.Show("格网码生成失败，请转换成地理坐标！");
+                        //                        return;
+                        //                    }
+                        //                }
+                        //            }
+                        //        }
+                        //    }
+                        //    pFeature = pFeatureCursor.NextFeature();
+                        //}
+                        #endregion
+
+                        pWorkspaceEdit.StopEditing(true);
+                        pWorkspaceEdit.StopEditOperation();
+
                     }
-
-                    #region  遍历所有Feature，查找属于同一个地理实体的图元
-                    //遍历所有Feature，查找属于同一个地理实体的图元
-                    //while (pFeature != null)
-                    //{
-                    //    //路线编码和名称都不为空
-                    //    if (pFeature.get_Value(pFeature.Fields.FindField("NAME")).ToString().Trim().Length > 0 && pFeature.get_Value(pFeature.Fields.FindField("ROADCODE")).ToString().Trim().Length > 0)
-                    //    {
-                    //        if (j == 0)
-                    //        {
-                    //            //获取格网信息
-                    //            string GridCode = GetCodeString(pFeature);
-                    //            if (GridCode != "")
-                    //            {
-                    //                pFeature.set_Value(pFeature.Fields.FindField(strField), GridCode);
-                    //                pFeature.Store();
-                    //                j++;
-                    //                //pFeature = pFeatureCursor.NextFeature();
-                    //                //pBothNotNull.Add(pFeature,pFeature.get_Value(pFeature.Fields.FindField("NAME")).ToString());
-                    //            }
-                    //            else
-                    //            {
-                    //                MessageBoxEx.Show("格网码生成失败，请转换成地理坐标！");
-                    //                return;
-                    //            }
-                    //        }
-                    //        else
-                    //        {
-                    //            foreach (string s in pBothNotNull.Values)
-                    //            {
-                    //                if (s == pFeature.get_Value(pFeature.Fields.FindField("NAME")))
-                    //                {
-                    //                    IFeature pfirstKeyFeature = pBothNotNull.FirstOrDefault(q => q.Value == s).Key;  //get first key
-                    //                    if (pfirstKeyFeature.get_Value(pfirstKeyFeature.Fields.FindField("ROADCODE")).ToString() == pFeature.get_Value(pFeature.Fields.FindField("ROADCODE")).ToString())
-                    //                    {
-                    //                        pFeature.set_Value(pFeature.Fields.FindField(strField), pfirstKeyFeature.get_Value(pfirstKeyFeature.Fields.FindField("GridCode")));
-                    //                        pFeature.Store();
-                    //                        m++;
-                    //                        //pFeature = pFeatureCursor.NextFeature();
-                    //                        //pBothNotNull.Add(pFeature, pFeature.get_Value(pFeature.Fields.FindField("NAME")).ToString());
-                    //                    } 
-                    //                    else
-                    //                    {
-                    //                        string GridCode = GetCodeString(pFeature);
-                    //                        if (GridCode != "")
-                    //                        {
-                    //                            pFeature.set_Value(pFeature.Fields.FindField(strField), GridCode);
-                    //                            pFeature.Store();
-                    //                            j++;
-                    //                            //pFeature = pFeatureCursor.NextFeature();
-                    //                            //pBothNotNull.Add(pFeature, pFeature.get_Value(pFeature.Fields.FindField("NAME")).ToString());
-                    //                        }
-                    //                        else
-                    //                        {
-                    //                            MessageBoxEx.Show("格网码生成失败，请转换成地理坐标！");
-                    //                            return;
-                    //                        }
-                    //                    }
-
-                    //                }
-                    //                else
-                    //                {
-                    //                    string GridCode = GetCodeString(pFeature);
-                    //                    if (GridCode != "")
-                    //                    {
-                    //                        pFeature.set_Value(pFeature.Fields.FindField(strField), GridCode);
-                    //                        pFeature.Store();
-                    //                        j++;
-                    //                        //pFeature = pFeatureCursor.NextFeature();
-                    //                        //pBothNotNull.Add(pFeature, pFeature.get_Value(pFeature.Fields.FindField("NAME")).ToString());
-                    //                    }
-                    //                    else
-                    //                    {
-                    //                        MessageBoxEx.Show("格网码生成失败，请转换成地理坐标！");
-                    //                        return;
-                    //                    }
-                    //                }
-                    //            }
-                    //        }
-                    //    }
-
-
-                    //    //路线编码不为空,名称为空
-                    //    if (pFeature.get_Value(pFeature.Fields.FindField("ROADCODE")).ToString().Trim().Length > 0 && pFeature.get_Value(pFeature.Fields.FindField("NAME")).ToString().Trim().Length == 0)
-                    //    {
-                    //        if (k == 0)
-                    //        {
-                    //            //获取格网信息
-                    //            string GridCode = GetCodeString(pFeature);
-                    //            if (GridCode != "")
-                    //            {
-                    //                pFeature.set_Value(pFeature.Fields.FindField(strField), GridCode);
-                    //                pFeature.Store();
-                    //                k++;
-                    //                //pFeature = pFeatureCursor.NextFeature();
-                    //                //pNameNull.Add(pFeature, pFeature.get_Value(pFeature.Fields.FindField("ROADCODE")).ToString());
-
-                    //            }
-                    //            else
-                    //            {
-                    //                MessageBoxEx.Show("格网码生成失败，请转换成地理坐标！");
-                    //                return;
-                    //            }
-                    //        }
-                    //        else
-                    //        {
-                    //            foreach (string s in pNameNull.Values)
-                    //            {
-                    //                //test
-                    //                string test = pFeature.get_Value(pFeature.Fields.FindField("ROADCODE")).ToString();
-
-                    //                if (s == pFeature.get_Value(pFeature.Fields.FindField("ROADCODE")).ToString())
-                    //                {
-                    //                    IFeature pfirstKeyFeature = pEntiIDNull.FirstOrDefault(q => q.Value == s).Key;  //get first key
-                    //                    pFeature.set_Value(pFeature.Fields.FindField(strField), pfirstKeyFeature.get_Value(pfirstKeyFeature.Fields.FindField("ROADCODE")));
-                    //                    pFeature.Store();
-                    //                    k++;
-                    //                    //pFeature = pFeatureCursor.NextFeature();
-                    //                    //pNameNull.Add(pFeature, pFeature.get_Value(pFeature.Fields.FindField("ROADCODE")).ToString());
-                    //                }
-                    //                else
-                    //                {
-                    //                    //获取格网信息
-                    //                    string GridCode = GetCodeString(pFeature);
-                    //                    if (GridCode != "")
-                    //                    {
-                    //                        pFeature.set_Value(pFeature.Fields.FindField(strField), GridCode);
-                    //                        pFeature.Store();
-                    //                        k++;
-                    //                        //pFeature = pFeatureCursor.NextFeature();
-                    //                        //pNameNull.Add(pFeature, pFeature.get_Value(pFeature.Fields.FindField("ROADCODE")).ToString());
-
-                    //                    }
-                    //                    else
-                    //                    {
-                    //                        MessageBoxEx.Show("格网码生成失败，请转换成地理坐标！");
-                    //                        return;
-                    //                    }
-                    //                }
-                    //            }
-
-                    //        }
-
-                    //    }
-
-
-                    //    //名称不为空，路线编码为空
-                    //    if (pFeature.get_Value(pFeature.Fields.FindField("NAME")).ToString().Trim().Length > 0 && pFeature.get_Value(pFeature.Fields.FindField("ROADCODE")).ToString().Trim().Length == 0)
-                    //    {
-                    //        if (m == 0)
-                    //        {
-                    //            //获取格网信息
-                    //            string GridCode = GetCodeString(pFeature);
-                    //            if (GridCode != "")
-                    //            {
-                    //                pFeature.set_Value(pFeature.Fields.FindField(strField), GridCode);
-                    //                pFeature.Store();
-                    //                m++;
-                    //                //pFeature = pFeatureCursor.NextFeature();
-                    //                //pEntiIDNull.Add(pFeature, pFeature.get_Value(pFeature.Fields.FindField("NAME")).ToString());
-                    //            }
-                    //            else
-                    //            {
-                    //                MessageBoxEx.Show("格网码生成失败，请转换成地理坐标！");
-                    //                return;
-                    //            }
-                    //        }
-                    //        else
-                    //        {
-                    //            foreach (string s in pEntiIDNull.Values)
-                    //            {
-                    //                //test
-                    //                string test = pFeature.get_Value(pFeature.Fields.FindField("NAME")).ToString();
-
-                    //                if (s == pFeature.get_Value(pFeature.Fields.FindField("NAME")).ToString())
-                    //                {
-                    //                    IFeature pfirstKeyFeature = pEntiIDNull.FirstOrDefault(q => q.Value == s).Key;  //get first key
-
-                    //                    pFeature.set_Value(pFeature.Fields.FindField(strField), pfirstKeyFeature.get_Value(pfirstKeyFeature.Fields.FindField("GridCode")));
-                    //                    pFeature.Store();
-                    //                    m++;
-                    //                    //pFeature = pFeatureCursor.NextFeature();
-                    //                    //pEntiIDNull.Add(pFeature, pFeature.get_Value(pFeature.Fields.FindField("NAME")).ToString());
-                    //                }
-                    //                else
-                    //                {
-                    //                    //获取格网信息
-                    //                    string GridCode = GetCodeString(pFeature);
-                    //                    if (GridCode != "")
-                    //                    {
-                    //                        pFeature.set_Value(pFeature.Fields.FindField(strField), GridCode);
-                    //                        pFeature.Store();
-                    //                        m++;
-                    //                        //pFeature = pFeatureCursor.NextFeature();
-                    //                        //pEntiIDNull.Add(pFeature, pFeature.get_Value(pFeature.Fields.FindField("NAME")).ToString());
-
-                    //                    }
-                    //                    else
-                    //                    {
-                    //                        MessageBoxEx.Show("格网码生成失败，请转换成地理坐标！");
-                    //                        return;
-                    //                    }
-                    //                }
-                    //            }
-                    //        }
-                    //    }
-                    //    pFeature = pFeatureCursor.NextFeature();
-                    //}
-                    #endregion
-
-                    pWorkspaceEdit.StopEditing(true);
-                    pWorkspaceEdit.StopEditOperation();
-
+                    CreatRestRoadGrid2(pFeatureLayer, pNameNotNull, pOID);
                 }
+                else
+                {
+                    MessageBox.Show("名称字段配置错误，请重新配置名称字段！");
+                }
+
             }
             else
             {
                 MessageBoxEx.Show("没有选中任何图层！");
             }
-            CreatRestRoadGrid2(pFeatureLayer, pNameNotNull, pOID);
         }
 
 
@@ -1792,9 +1528,9 @@ namespace ZJGISGCoding.Class
                 pWorkspaceEdit.StopEditing(true);
                 pWorkspaceEdit.StopEditOperation();
 
+                CreatRestRoadCode2(pFeatureLayer, pDicGridCode, "FCODE", "GridCode", "ENTIID");
             }
 
-            CreatRestRoadCode2(pFeatureLayer, pDicGridCode, "FCODE", "GridCode", "ENTIID");
 
             #region 20170609注释掉
             //for (int i = 0; i < pFields.FieldCount - 1; i++)
@@ -1929,7 +1665,6 @@ namespace ZJGISGCoding.Class
             //}
             #endregion
 
-            MessageBox.Show("道路编码成功！");
         }
 
 
@@ -1986,13 +1721,21 @@ namespace ZJGISGCoding.Class
                                 //处理分类码
                                 //ClsReturnFCode pReturnFcode = new ClsReturnFCode();
                                 //pFCode = pReturnFcode.ReturnFeatureClass(pFCode);
-                                pFCode = ZJGISCommon.Classes.ClsFcode.pDicFcodeGlobal[pFCode];
-                                if (pFCode != null)
+                                if (ZJGISCommon.Classes.ClsFcode.pDicFcodeGlobal.ContainsKey(pFCode))
                                 {
-                                    pNum = "A01";
-                                    pEntiidCode = gridCode1 + pFCode + pNum;
-                                    pFeature.set_Value(pFeature.Fields.FindField(pENEIID), pEntiidCode);
-                                    pFeature.Store();
+                                    pFCode = ZJGISCommon.Classes.ClsFcode.pDicFcodeGlobal[pFCode];
+                                    if (pFCode != null)
+                                    {
+                                        pNum = "A01";
+                                        pEntiidCode = gridCode1 + pFCode + pNum;
+                                        pFeature.set_Value(pFeature.Fields.FindField(pENEIID), pEntiidCode);
+                                        pFeature.Store();
+                                    }
+                                }
+                                else
+                                {
+                                    MessageBox.Show("字典中不存在" + pFCode + "的对应大类，请添加映射关系！");
+                                    break;
                                 }
                             }
                         }
@@ -2035,7 +1778,6 @@ namespace ZJGISGCoding.Class
                                     pFeature.Store();
                                 }
                             }
-
 
                             #region  20170614注释掉
                             //if (pFeature.OID == keyListTotal[0].OID)
@@ -2161,7 +1903,6 @@ namespace ZJGISGCoding.Class
 
                             //}
                             #endregion
-
                         }
                     }
 
@@ -2169,7 +1910,9 @@ namespace ZJGISGCoding.Class
                 }
                 pWorkspaceEdit.StopEditing(true);
                 pWorkspaceEdit.StopEditOperation();
+                MessageBox.Show("道路编码成功！");
             }
+
         }
 
 
