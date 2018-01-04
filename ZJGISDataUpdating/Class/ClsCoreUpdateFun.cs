@@ -460,21 +460,23 @@ namespace ZJGISDataUpdating
                                                     string test3 = pTarFeature.get_Value(index).ToString();
 
 
-                                                    //20170518注释掉
+                                                    //2010104注释掉
                                                     //形状相似度
-                                                    shape = clsMatching.PolylineShapeSimilarValue();
-                                                    //节点相似度
-                                                    matchedPoints = clsMatching.MatchedPointsSimilarValue(buffer);
-                                                    //综合相似度
-                                                    polylineRadio = shape * weight[0] + matchedPoints * weight[1];
+                                                    //shape = clsMatching.PolylineShapeSimilarValue();
+                                                    ////节点相似度
+                                                    //matchedPoints = clsMatching.MatchedPointsSimilarValue(buffer);
+                                                    ////综合相似度
+                                                    //polylineRadio = shape * weight[0] + matchedPoints * weight[1];
 
-                                                    string shape1 = string.Format("{0:0.00000000}", shape);
-                                                    string matchedPoints1 = string.Format("{0:0.00000000}", matchedPoints);
-                                                    string polygonRatio1 = string.Format("{0:0.00000000}", polylineRadio);
+                                                    //string shape1 = string.Format("{0:0.00000000}", shape);
+                                                    //string matchedPoints1 = string.Format("{0:0.00000000}", matchedPoints);
+                                                    //string polygonRatio1 = string.Format("{0:0.00000000}", polylineRadio);
 
-                                                    rowBuffer.set_Value(rowBuffer.Fields.FindField("形状相似度"), shape1);
-                                                    rowBuffer.set_Value(rowBuffer.Fields.FindField("节点相似度"), matchedPoints1);
-                                                    rowBuffer.set_Value(rowBuffer.Fields.FindField("综合相似度"), polygonRatio1);
+                                                    //rowBuffer.set_Value(rowBuffer.Fields.FindField("形状相似度"), shape1);
+                                                    //rowBuffer.set_Value(rowBuffer.Fields.FindField("节点相似度"), matchedPoints1);
+                                                    //rowBuffer.set_Value(rowBuffer.Fields.FindField("综合相似度"), polygonRatio1);
+
+
                                                     //if (polylineRadio > weight[2])
                                                     //{
                                                     //如果两个点之间的距离小于设置的综合相似度

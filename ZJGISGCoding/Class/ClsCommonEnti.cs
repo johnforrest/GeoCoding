@@ -578,55 +578,62 @@ namespace ZJGISGCoding.Class
                                 }
                                 else
                                 {
-                                    //如果分类码不为空——即名称字段不为空且Feature不为空。
-                                    //（Feature和名称字段内容不为空，那么格网码就不为空，进而地理编码就不为空）
-                                    //组合第一个码段（格网码）和第二个码段（分类码）
-
-                                    //处理分类码
-                                    //ClsReturnFCode pReturnFcode = new ClsReturnFCode();
-                                    //pFcode = pReturnFcode.ReturnFeatureClass(pFcode);
-                                    pFcode = ZJGISCommon.Classes.ClsFcode.pDicFcodeGlobal[pFcode];
-                                    //分类码有对应的大类
-                                    if (pFcode != null)
+                                    if (ZJGISCommon.Classes.ClsFcode.pDicFcodeGlobal.ContainsKey(pFcode))
                                     {
-                                        foreach (string s in pDicGridCode.Values)
-                                        {
-                                            if (s == pGrCode)
-                                            {
-                                                j++;
-                                            }
-                                        }
+                                        //如果分类码不为空——即名称字段不为空且Feature不为空。
+                                        //（Feature和名称字段内容不为空，那么格网码就不为空，进而地理编码就不为空）
+                                        //组合第一个码段（格网码）和第二个码段（分类码）
 
-                                        if (j == 1)
+                                        //处理分类码
+                                        //ClsReturnFCode pReturnFcode = new ClsReturnFCode();
+                                        //pFcode = pReturnFcode.ReturnFeatureClass(pFcode);
+                                        pFcode = ZJGISCommon.Classes.ClsFcode.pDicFcodeGlobal[pFcode];
+                                        //分类码有对应的大类
+                                        if (pFcode != null)
                                         {
-                                            pNum = "A01";
-                                        }
-                                        else if (j > 1 && j < 100)
-                                        {
-                                            List<IFeature> keyList = (from q in pDicGridCode
-                                                                      where q.Value == pGrCode
-                                                                      select q.Key).ToList<IFeature>(); //get all keys
-
-                                            for (int k = 0; k < keyList.Count; k++)
+                                            foreach (string s in pDicGridCode.Values)
                                             {
-                                                if (pFeature.OID == keyList[k].OID)
+                                                if (s == pGrCode)
                                                 {
-                                                    pNum = "A" + string.Format("{0:00}", k + 1);
+                                                    j++;
                                                 }
                                             }
-                                        }
-                                        else
-                                        {
-                                            pNum = "B" + string.Format("{0:00}", j - 1);
-                                        }
-                                        //组合地理实体编码的第一、第二、第三个码段，形成最终的地理实体编码
-                                        pEntiidCode = pGrCode + pFcode + pNum;
 
-                                        pDicEntiid.Add(pFeature, pEntiidCode);
-                                        pDicGridFCode.Add(pFeature, pEntiidCode.Substring(0, pEntiidCode.Length - 2));
+                                            if (j == 1)
+                                            {
+                                                pNum = "A01";
+                                            }
+                                            else if (j > 1 && j < 100)
+                                            {
+                                                List<IFeature> keyList = (from q in pDicGridCode
+                                                                          where q.Value == pGrCode
+                                                                          select q.Key).ToList<IFeature>(); //get all keys
 
-                                        pFeature.set_Value(pFeature.Fields.FindField(strField), pEntiidCode);
-                                        pFeature.Store();
+                                                for (int k = 0; k < keyList.Count; k++)
+                                                {
+                                                    if (pFeature.OID == keyList[k].OID)
+                                                    {
+                                                        pNum = "A" + string.Format("{0:00}", k + 1);
+                                                    }
+                                                }
+                                            }
+                                            else
+                                            {
+                                                pNum = "B" + string.Format("{0:00}", j - 1);
+                                            }
+                                            //组合地理实体编码的第一、第二、第三个码段，形成最终的地理实体编码
+                                            pEntiidCode = pGrCode + pFcode + pNum;
+
+                                            pDicEntiid.Add(pFeature, pEntiidCode);
+                                            pDicGridFCode.Add(pFeature, pEntiidCode.Substring(0, pEntiidCode.Length - 2));
+
+                                            pFeature.set_Value(pFeature.Fields.FindField(strField), pEntiidCode);
+                                            pFeature.Store();
+                                        }
+                                    }
+                                    else
+                                    {
+                                        MessageBox.Show("分类码" + pFcode + "不存在对应的大类，请添加分类码和大类的映射关系！");
                                     }
                                 }
                             }

@@ -1083,24 +1083,32 @@ namespace ZJGIS
         private void btnCreatGrid_Click(object sender, EventArgs e)
         {
             IFeatureLayer pFeatureLayer = (IFeatureLayer)pClsCom.GetLayerByName(this.mapMain.Map, this.cbxCodeLayer.Text);
-            if (pFeatureLayer.FeatureClass.ShapeType == esriGeometryType.esriGeometryPoint)
+
+            if (pFeatureLayer != null)
             {
-                ClsCommonEnti pcommonEnti = new ClsCommonEnti();
-                pcommonEnti.CreatGridCode(mapMain.Map, cbxCodeLayer);
+                if (pFeatureLayer.FeatureClass.ShapeType == esriGeometryType.esriGeometryPoint)
+                {
+                    ClsCommonEnti pcommonEnti = new ClsCommonEnti();
+                    pcommonEnti.CreatGridCode(mapMain.Map, cbxCodeLayer);
+                }
+                else if (pFeatureLayer.FeatureClass.ShapeType == esriGeometryType.esriGeometryPolyline)
+                {
+                    ClsRoadEnti pRoadEnti = new ClsRoadEnti();
+                    pRoadEnti.CreatGridCodeRoad(mapMain.Map, cbxCodeLayer);
+                }
+                else if (pFeatureLayer.FeatureClass.ShapeType == esriGeometryType.esriGeometryPolygon)
+                {
+                    ClsResEnti pResEnti = new ClsResEnti();
+                    pResEnti.CreatGridCodeRES(mapMain.Map, cbxCodeLayer);
+                }
             }
-            else if (pFeatureLayer.FeatureClass.ShapeType == esriGeometryType.esriGeometryPolyline)
+            else
             {
-                ClsRoadEnti pRoadEnti = new ClsRoadEnti();
-                pRoadEnti.CreatGridCodeRoad(mapMain.Map, cbxCodeLayer);
-            }
-            else if (pFeatureLayer.FeatureClass.ShapeType == esriGeometryType.esriGeometryPolygon)
-            {
-                ClsResEnti pResEnti = new ClsResEnti();
-                pResEnti.CreatGridCodeRES(mapMain.Map, cbxCodeLayer);
+                MessageBox.Show("没有选中任何图层，请选择图层！");
             }
 
         }
-  
+
 
         /// <summary>
         /// 生成编码
@@ -1110,20 +1118,27 @@ namespace ZJGIS
         private void btnStart_Click(object sender, EventArgs e)
         {
             IFeatureLayer pFeatureLayer = (IFeatureLayer)pClsCom.GetLayerByName(this.mapMain.Map, this.cbxCodeLayer.Text);
-            if (pFeatureLayer.FeatureClass.ShapeType == esriGeometryType.esriGeometryPoint)
+            if (pFeatureLayer != null)
             {
-                ClsCommonEnti pcommonEnti = new ClsCommonEnti();
-                pcommonEnti.Code(mapMain.Map, cbxCodeLayer);
+                if (pFeatureLayer.FeatureClass.ShapeType == esriGeometryType.esriGeometryPoint)
+                {
+                    ClsCommonEnti pcommonEnti = new ClsCommonEnti();
+                    pcommonEnti.Code(mapMain.Map, cbxCodeLayer);
+                }
+                else if (pFeatureLayer.FeatureClass.ShapeType == esriGeometryType.esriGeometryPolyline)
+                {
+                    ClsRoadEnti pRoadEnti = new ClsRoadEnti();
+                    pRoadEnti.RoadCode(mapMain.Map, cbxCodeLayer);
+                }
+                else if (pFeatureLayer.FeatureClass.ShapeType == esriGeometryType.esriGeometryPolygon)
+                {
+                    ClsResEnti pResEnti = new ClsResEnti();
+                    pResEnti.RESCode(mapMain.Map, cbxCodeLayer);
+                }
             }
-            else if (pFeatureLayer.FeatureClass.ShapeType == esriGeometryType.esriGeometryPolyline)
+            else
             {
-                ClsRoadEnti pRoadEnti = new ClsRoadEnti();
-                pRoadEnti.RoadCode(mapMain.Map, cbxCodeLayer);
-            }
-            else if (pFeatureLayer.FeatureClass.ShapeType == esriGeometryType.esriGeometryPolygon)
-            {
-                ClsResEnti pResEnti = new ClsResEnti();
-                pResEnti.RESCode(mapMain.Map, cbxCodeLayer);
+                MessageBox.Show("没有选中任何图层，请选择图层！");
             }
 
         }
@@ -1135,22 +1150,29 @@ namespace ZJGIS
         private void btnRestGrid_Click(object sender, EventArgs e)
         {
             IFeatureLayer pFeatureLayer = (IFeatureLayer)pClsCom.GetLayerByName(this.mapMain.Map, this.cbxCodeLayer.Text);
-            if (pFeatureLayer.FeatureClass.ShapeType == esriGeometryType.esriGeometryPoint)
+            if (pFeatureLayer!=null)
             {
-                ClsCommonEnti pCommonEnti = new ClsCommonEnti();
-                pCommonEnti.CreatGridCodeRest(mapMain.Map, cbxCodeLayer);
+                if (pFeatureLayer.FeatureClass.ShapeType == esriGeometryType.esriGeometryPoint)
+                {
+                    ClsCommonEnti pCommonEnti = new ClsCommonEnti();
+                    pCommonEnti.CreatGridCodeRest(mapMain.Map, cbxCodeLayer);
+                }
+                else if (pFeatureLayer.FeatureClass.ShapeType == esriGeometryType.esriGeometryPolyline)
+                {
+                    ClsRoadEnti pRoadEnti = new ClsRoadEnti();
+                    pRoadEnti.CreatRestRoadGrid(mapMain.Map, cbxCodeLayer);
+                }
+                else if (pFeatureLayer.FeatureClass.ShapeType == esriGeometryType.esriGeometryPolygon)
+                {
+                    ClsResEnti pResEnti = new ClsResEnti();
+                    pResEnti.CreatRestGridCodeRES(mapMain.Map, cbxCodeLayer);
+                }
             }
-            else if (pFeatureLayer.FeatureClass.ShapeType == esriGeometryType.esriGeometryPolyline)
+            else
             {
-                ClsRoadEnti pRoadEnti = new ClsRoadEnti();
-                pRoadEnti.CreatRestRoadGrid(mapMain.Map, cbxCodeLayer);
+                MessageBox.Show("没有选中任何图层，请选择图层！");
             }
-            else if (pFeatureLayer.FeatureClass.ShapeType == esriGeometryType.esriGeometryPolygon)
-            {
-                ClsResEnti pResEnti = new ClsResEnti();
-                pResEnti.CreatRestGridCodeRES(mapMain.Map, cbxCodeLayer);
-            }
-           
+
         }
         /// <summary>
         /// 补全编码
@@ -1160,20 +1182,27 @@ namespace ZJGIS
         private void btnRestCode_Click(object sender, EventArgs e)
         {
             IFeatureLayer pFeatureLayer = (IFeatureLayer)pClsCom.GetLayerByName(this.mapMain.Map, this.cbxCodeLayer.Text);
-            if (pFeatureLayer.FeatureClass.ShapeType == esriGeometryType.esriGeometryPoint)
+            if (pFeatureLayer != null)
             {
-                ClsCommonEnti pCommonEnti = new ClsCommonEnti();
-                pCommonEnti.CodeRest(mapMain.Map, cbxCodeLayer);
+                if (pFeatureLayer.FeatureClass.ShapeType == esriGeometryType.esriGeometryPoint)
+                {
+                    ClsCommonEnti pCommonEnti = new ClsCommonEnti();
+                    pCommonEnti.CodeRest(mapMain.Map, cbxCodeLayer);
+                }
+                else if (pFeatureLayer.FeatureClass.ShapeType == esriGeometryType.esriGeometryPolyline)
+                {
+                    ClsRoadEnti pRoadEnti = new ClsRoadEnti();
+                    pRoadEnti.CreatRestRoadCode(mapMain.Map, cbxCodeLayer);
+                }
+                else if (pFeatureLayer.FeatureClass.ShapeType == esriGeometryType.esriGeometryPolygon)
+                {
+                    ClsResEnti pResEnti = new ClsResEnti();
+                    pResEnti.RestRESCode(mapMain.Map, cbxCodeLayer);
+                }
             }
-            else if (pFeatureLayer.FeatureClass.ShapeType == esriGeometryType.esriGeometryPolyline)
+            else
             {
-                ClsRoadEnti pRoadEnti = new ClsRoadEnti();
-                pRoadEnti.CreatRestRoadCode(mapMain.Map, cbxCodeLayer);
-            }
-            else if (pFeatureLayer.FeatureClass.ShapeType == esriGeometryType.esriGeometryPolygon)
-            {
-                ClsResEnti pResEnti = new ClsResEnti();
-                pResEnti.RestRESCode(mapMain.Map, cbxCodeLayer);
+                MessageBox.Show("没有选中任何图层，请选择图层！");
             }
         }
 
@@ -2791,29 +2820,36 @@ namespace ZJGIS
         private void btnCommonNullCheck_Click(object sender, EventArgs e)
         {
             IFeatureLayer pFeatureLayer = (IFeatureLayer)pClsCom.GetLayerByName(this.mapMain.Map, this.comboBoxItemCheck.Text);
-            FrmResultDGV frmResult = new ZJGISGCoding.Forms.FrmResultDGV();
-            //BindingSource bs = new BindingSource();
-            if (pFeatureLayer.FeatureClass.ShapeType == esriGeometryType.esriGeometryPoint)
+            if (pFeatureLayer!=null)
             {
-                ClsCommonEnti pcommonEnti = new ClsCommonEnti();
-                //bs.DataSource = pcommonEnti.CheckCommonEnti(pFeatureLayer);
-                frmResult.LoadData(pcommonEnti.CheckCommonEnti(pFeatureLayer));
-            }
-            else if (pFeatureLayer.FeatureClass.ShapeType == esriGeometryType.esriGeometryPolyline)
-            {
-                ClsRoadEnti pRoadEnti = new ClsRoadEnti();
-                frmResult.LoadData(pRoadEnti.CheckRoadEnti(pFeatureLayer));
-                //pRoadEnti.CreatGridCodeRoad(mapMain.Map, cbxCodeLayer);
-            }
-            else if (pFeatureLayer.FeatureClass.ShapeType == esriGeometryType.esriGeometryPolygon)
-            {
-                ClsResEnti pResEnti = new ClsResEnti();
-                frmResult.LoadData(pResEnti.CheckRESEnti(pFeatureLayer));
-                //pResEnti.CreatGridCodeRES(mapMain.Map, cbxCodeLayer);
-            }
-            //frmResult.dataChild.DataSource = bs;
-            frmResult.ShowDialog();
+                FrmResultDGV frmResult = new ZJGISGCoding.Forms.FrmResultDGV();
+                //BindingSource bs = new BindingSource();
+                if (pFeatureLayer.FeatureClass.ShapeType == esriGeometryType.esriGeometryPoint)
+                {
+                    ClsCommonEnti pcommonEnti = new ClsCommonEnti();
+                    //bs.DataSource = pcommonEnti.CheckCommonEnti(pFeatureLayer);
+                    frmResult.LoadData(pcommonEnti.CheckCommonEnti(pFeatureLayer));
+                }
+                else if (pFeatureLayer.FeatureClass.ShapeType == esriGeometryType.esriGeometryPolyline)
+                {
+                    ClsRoadEnti pRoadEnti = new ClsRoadEnti();
+                    frmResult.LoadData(pRoadEnti.CheckRoadEnti(pFeatureLayer));
+                    //pRoadEnti.CreatGridCodeRoad(mapMain.Map, cbxCodeLayer);
+                }
+                else if (pFeatureLayer.FeatureClass.ShapeType == esriGeometryType.esriGeometryPolygon)
+                {
+                    ClsResEnti pResEnti = new ClsResEnti();
+                    frmResult.LoadData(pResEnti.CheckRESEnti(pFeatureLayer));
+                    //pResEnti.CreatGridCodeRES(mapMain.Map, cbxCodeLayer);
+                }
+                //frmResult.dataChild.DataSource = bs;
+                frmResult.ShowDialog();
 
+            }
+            else
+            {
+                MessageBox.Show("没有选中任何图层，请选择图层！");
+            }
         }
         /// <summary>
         /// 实体表唯一性检查

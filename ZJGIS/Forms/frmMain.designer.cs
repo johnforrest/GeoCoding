@@ -303,10 +303,10 @@
             // 
             this.ribbonControl1.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
             this.ribbonControl1.CaptionVisible = true;
-            this.ribbonControl1.Controls.Add(this.ribbonPanel4);
-            this.ribbonControl1.Controls.Add(this.ribbonPanel10);
             this.ribbonControl1.Controls.Add(this.ribbonPanel6);
+            this.ribbonControl1.Controls.Add(this.ribbonPanel10);
             this.ribbonControl1.Controls.Add(this.RibbonPanel3);
+            this.ribbonControl1.Controls.Add(this.ribbonPanel4);
             this.ribbonControl1.Controls.Add(this.ribbonPanel2);
             this.ribbonControl1.Controls.Add(this.ribbonPanel1);
             this.ribbonControl1.Controls.Add(this.RibbonPanel5);
@@ -608,7 +608,6 @@
             // 
             this.ribbonPanel6.StyleMouseOver.CornerType = DevComponents.DotNetBar.eCornerType.Square;
             this.ribbonPanel6.TabIndex = 7;
-            this.ribbonPanel6.Visible = false;
             // 
             // ribbonBar11
             // 
@@ -898,6 +897,7 @@
             // 
             this.ribbonPanel4.StyleMouseOver.CornerType = DevComponents.DotNetBar.eCornerType.Square;
             this.ribbonPanel4.TabIndex = 8;
+            this.ribbonPanel4.Visible = false;
             // 
             // ribbonBar18
             // 
@@ -2132,6 +2132,7 @@
             // 
             // RibbonTabItemSTBM
             // 
+            this.RibbonTabItemSTBM.Checked = true;
             this.RibbonTabItemSTBM.Name = "RibbonTabItemSTBM";
             this.RibbonTabItemSTBM.Panel = this.ribbonPanel6;
             this.RibbonTabItemSTBM.Text = "实体编码";
@@ -2144,7 +2145,6 @@
             // 
             // RibbonTabItemSTPP
             // 
-            this.RibbonTabItemSTPP.Checked = true;
             this.RibbonTabItemSTPP.Name = "RibbonTabItemSTPP";
             this.RibbonTabItemSTPP.Panel = this.ribbonPanel4;
             this.RibbonTabItemSTPP.Text = "匹配编码";

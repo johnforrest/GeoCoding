@@ -200,6 +200,28 @@
     <entiID>ENTIID</entiID>
     <shapeType>面</shapeType>
   </layer>
+  <layer name="HYD_LN_I">
+    <layerName>HYD_LN_I</layerName>
+    <nameField>NAME</nameField>
+    <startVersion>FROMVERSION</startVersion>
+    <endVersion>TOVERSION</endVersion>
+    <guid>ELEMID</guid>
+    <sourceName>2000</sourceName>
+    <sourceType>I</sourceType>
+    <entiID>ENTIID</entiID>
+    <shapeType>线</shapeType>
+  </layer>
+  <layer name="HYD_NET_LN_G">
+    <layerName>HYD_NET_LN_G</layerName>
+    <nameField>FNAME</nameField>
+    <startVersion>FROMVERSION</startVersion>
+    <endVersion>TOVERSION</endVersion>
+    <guid>ELEMID</guid>
+    <sourceName>10000</sourceName>
+    <sourceType>G</sourceType>
+    <entiID>ENTIID</entiID>
+    <shapeType>线</shapeType>
+  </layer>
   <layer name="TRA_PT_I_G">
     <layerName>TRA_PT_I_G</layerName>
     <nameField>NAME</nameField>

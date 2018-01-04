@@ -31,16 +31,18 @@ namespace ZJGISGCoding.Class
             string gridField = "GridCode";
             IFeatureLayer pFeatureLayer = (IFeatureLayer)pClsCom.GetLayerByName(pMapControl, cbxLayerName.Text);
 
-            IDataset cDataset = pFeatureLayer.FeatureClass as IDataset;
-            IGeoDataset cGeoDataset = cDataset as IGeoDataset;
-            ISpatialReference cSpatialReference = cGeoDataset.SpatialReference;
-            if (cSpatialReference is IProjectedCoordinateSystem)
-            {
-                MessageBox.Show("该图层为投影坐标，请转换为相应的地理坐标,再开始地理编码！");
-            }
+           
 
             if (pFeatureLayer != null)
             {
+                IDataset cDataset = pFeatureLayer.FeatureClass as IDataset;
+                IGeoDataset cGeoDataset = cDataset as IGeoDataset;
+                ISpatialReference cSpatialReference = cGeoDataset.SpatialReference;
+                if (cSpatialReference is IProjectedCoordinateSystem)
+                {
+                    MessageBox.Show("该图层为投影坐标，请转换为相应的地理坐标,再开始地理编码！");
+                }
+
                 pClsCom.CheckGridCode(pFeatureLayer, gridField);
 
                 if (pFeatureLayer.FeatureClass.Fields.FindField(ClsConfig.LayerConfigs[(pFeatureLayer.FeatureClass as IDataset).Name].NameField) != -1)
@@ -93,7 +95,7 @@ namespace ZJGISGCoding.Class
             }
             else
             {
-                MessageBoxEx.Show("没有选中任何图层！");
+                MessageBoxEx.Show("没有选中任何图层,请选择图层！");
             }
 
         }
@@ -106,81 +108,87 @@ namespace ZJGISGCoding.Class
         public void RestPOICode(IMap pMapControl, ComboBoxEx cbxLayerName)
         {
             IFeatureLayer pFeatureLayer = (IFeatureLayer)pClsCom.GetLayerByName(pMapControl, cbxLayerName.Text);
-            IFields pFields = pFeatureLayer.FeatureClass.Fields;
-
-            Dictionary<IFeature, string> pDicGridCode = new Dictionary<IFeature, string>();
-            Dictionary<IFeature, string> pEntiCode = new Dictionary<IFeature, string>();
-            //遍历Feature
-            IDataset pDataset = pFeatureLayer.FeatureClass as IDataset;
-            IFeatureClass pFeatureClass = pFeatureLayer.FeatureClass;
-            bool hasFOCDE = false;
-            string fCODE = string.Empty;
-            for (int i = 0; i < pFeatureClass.Fields.FieldCount; i++)
+            if (pFeatureLayer!=null)
             {
-                if (pFeatureClass.Fields.get_Field(i).Name == "FCODE")
+                IFields pFields = pFeatureLayer.FeatureClass.Fields;
+
+                Dictionary<IFeature, string> pDicGridCode = new Dictionary<IFeature, string>();
+                Dictionary<IFeature, string> pEntiCode = new Dictionary<IFeature, string>();
+                //遍历Feature
+                IDataset pDataset = pFeatureLayer.FeatureClass as IDataset;
+                IFeatureClass pFeatureClass = pFeatureLayer.FeatureClass;
+                bool hasFOCDE = false;
+                string fCODE = string.Empty;
+                for (int i = 0; i < pFeatureClass.Fields.FieldCount; i++)
                 {
-                    hasFOCDE = true;
+                    if (pFeatureClass.Fields.get_Field(i).Name == "FCODE")
+                    {
+                        hasFOCDE = true;
+                    }
                 }
-            }
 
-            if (hasFOCDE)
-            {
-                IWorkspaceEdit pWorkspaceEdit = null;
-                if (pDataset != null)
+                if (hasFOCDE)
                 {
-                    pWorkspaceEdit = pDataset.Workspace as IWorkspaceEdit;
-                    if (pWorkspaceEdit != null || pWorkspaceEdit.IsBeingEdited() == false)
+                    IWorkspaceEdit pWorkspaceEdit = null;
+                    if (pDataset != null)
                     {
-                        pWorkspaceEdit.StartEditing(true);
-                        pWorkspaceEdit.StartEditOperation();
-                    }
-                    IFeatureCursor pFeatureCursor = pFeatureLayer.Search(null, false);
-                    IFeature pFeature = pFeatureCursor.NextFeature();
-                    while (pFeature != null)
-                    {
-                        //格网不为空，记录格网
-                        if (pFeature.get_Value(pFeature.Fields.FindField("GridCode")).ToString().Length > 0)
+                        pWorkspaceEdit = pDataset.Workspace as IWorkspaceEdit;
+                        if (pWorkspaceEdit != null || pWorkspaceEdit.IsBeingEdited() == false)
                         {
-                            pDicGridCode.Add(pFeature, pFeature.get_Value(pFeature.Fields.FindField("GridCode")).ToString());
+                            pWorkspaceEdit.StartEditing(true);
+                            pWorkspaceEdit.StartEditOperation();
                         }
-                        //地理编码不为空，截取格网并记录下来
-                        if (pFeature.get_Value(pFeature.Fields.FindField("ENTIID")).ToString().Trim().Length > 0)
+                        IFeatureCursor pFeatureCursor = pFeatureLayer.Search(null, false);
+                        IFeature pFeature = pFeatureCursor.NextFeature();
+                        while (pFeature != null)
                         {
-                            string pgdCode = pFeature.get_Value(pFeature.Fields.FindField("ENTIID")).ToString().Substring(0, 11);
-                            if (!pDicGridCode.ContainsKey(pFeature))
+                            //格网不为空，记录格网
+                            if (pFeature.get_Value(pFeature.Fields.FindField("GridCode")).ToString().Length > 0)
                             {
-                                pDicGridCode.Add(pFeature, pgdCode);
+                                pDicGridCode.Add(pFeature, pFeature.get_Value(pFeature.Fields.FindField("GridCode")).ToString());
                             }
-
-                            if (!pEntiCode.ContainsKey(pFeature))
+                            //地理编码不为空，截取格网并记录下来
+                            if (pFeature.get_Value(pFeature.Fields.FindField("ENTIID")).ToString().Trim().Length > 0)
                             {
-                            	pEntiCode.Add(pFeature, pFeature.get_Value(pFeature.Fields.FindField("ENTIID")).ToString());
-                            } 
-                         
+                                string pgdCode = pFeature.get_Value(pFeature.Fields.FindField("ENTIID")).ToString().Substring(0, 11);
+                                if (!pDicGridCode.ContainsKey(pFeature))
+                                {
+                                    pDicGridCode.Add(pFeature, pgdCode);
+                                }
+
+                                if (!pEntiCode.ContainsKey(pFeature))
+                                {
+                                    pEntiCode.Add(pFeature, pFeature.get_Value(pFeature.Fields.FindField("ENTIID")).ToString());
+                                }
+
+                            }
+                            pFeature = pFeatureCursor.NextFeature();
                         }
-                        pFeature = pFeatureCursor.NextFeature();
+                        pWorkspaceEdit.StopEditing(true);
+                        pWorkspaceEdit.StopEditOperation();
+
+
+
+
+                        //RestPOICode2(pFeatureLayer, pEntiCode, pDicGridCode, "POI", "GridCode", "ENTIID");
+                        RestPOICode3(pFeatureLayer, pEntiCode, pDicGridCode, "GridCode", "ENTIID");
                     }
-                    pWorkspaceEdit.StopEditing(true);
-                    pWorkspaceEdit.StopEditOperation();
-
-
-
-
-                    //RestPOICode2(pFeatureLayer, pEntiCode, pDicGridCode, "POI", "GridCode", "ENTIID");
-                    RestPOICode3(pFeatureLayer, pEntiCode, pDicGridCode, "GridCode", "ENTIID");
+                    else
+                    {
+                        MessageBox.Show("该图层不存在分类码字段！分类码字段名称应该FCODE");
+                        return;
+                    }
+                    MessageBox.Show("剩余POI编码成功！");
                 }
                 else
                 {
-                    MessageBox.Show("该图层不存在分类码字段！分类码字段名称应该FCODE");
-                    return;
-                }
-                MessageBox.Show("剩余POI编码成功！");
+                    MessageBox.Show("没有分类码FCODE字段，请检查图层字段！");
+                } 
             }
             else
             {
-                MessageBox.Show("没有分类码FCODE字段，请检查图层字段！");
+                MessageBox.Show("没有选中任何图层，请选择图层！");
             }
-
         }
 
 

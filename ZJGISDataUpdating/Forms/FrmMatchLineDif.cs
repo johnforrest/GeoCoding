@@ -1136,51 +1136,54 @@ namespace ZJGISDataUpdating
                 if (this.tabControl1.Tabs[0].Visible == true)
                 {
                     clsCoreUpdateFun.SearchChangedFeatures(pTUFeatCls, pTEFeatCls, table, matchedMode, weight, buffer, fields, progressBarMain, progressBarSub, labelXStatus);
-                    if (ckbEachMatch.Checked)
-                    {
-                        //读取匹配改变的要素的ID
-                        ICursor cursor2 = table.Search(null, false);
-                        IRow row = cursor2.NextRow();
-                        List<int> UpdataDataID = new List<int>();
-                        while (row != null)
-                        {
-                            string strResult = row.get_Value(3).ToString();
-                            if (strResult != "未变化" && strResult != "新增要素")
-                            {
-                                string str = row.get_Value(2).ToString();//获得更新要素ID
-                                if (str != null && str != "")
-                                {
-                                    if (str.Contains(";"))
-                                    {
-                                        string[] strArray = str.Split(';');
-                                        foreach (string strID in strArray)
-                                            UpdataDataID.Add(Convert.ToInt32(strID));
-                                    }
-                                    else
-                                        UpdataDataID.Add(Convert.ToInt32(str));
-                                }
-                            }
-                            row = cursor2.NextRow();
-                        }
-                        if (UpdataDataID.Count == 0)
-                        {
-                            return;
-                        }
-                        //添加一行用于反向隔开
-                        IWorkspaceEdit workspaceEdit = pWorkspace as IWorkspaceEdit;
-                        workspaceEdit.StartEditing(true);
-                        workspaceEdit.StartEditOperation();
+                    //反向匹配
+                    #region 反向匹配
+                    //if (ckbEachMatch.Checked)
+                    //{
+                    //    //读取匹配改变的要素的ID
+                    //    ICursor cursor2 = table.Search(null, false);
+                    //    IRow row = cursor2.NextRow();
+                    //    List<int> UpdataDataID = new List<int>();
+                    //    while (row != null)
+                    //    {
+                    //        string strResult = row.get_Value(3).ToString();
+                    //        if (strResult != "未变化" && strResult != "新增要素")
+                    //        {
+                    //            string str = row.get_Value(2).ToString();//获得更新要素ID
+                    //            if (str != null && str != "")
+                    //            {
+                    //                if (str.Contains(";"))
+                    //                {
+                    //                    string[] strArray = str.Split(';');
+                    //                    foreach (string strID in strArray)
+                    //                        UpdataDataID.Add(Convert.ToInt32(strID));
+                    //                }
+                    //                else
+                    //                    UpdataDataID.Add(Convert.ToInt32(str));
+                    //            }
+                    //        }
+                    //        row = cursor2.NextRow();
+                    //    }
+                    //    if (UpdataDataID.Count == 0)
+                    //    {
+                    //        return;
+                    //    }
+                    //    //添加一行用于反向隔开
+                    //    IWorkspaceEdit workspaceEdit = pWorkspace as IWorkspaceEdit;
+                    //    workspaceEdit.StartEditing(true);
+                    //    workspaceEdit.StartEditOperation();
 
-                        IRowBuffer invalidRowBuffer = table.CreateRowBuffer();
-                        ICursor invalidRowCursor = table.Insert(true);
-                        //invalidRowBuffer.set_Value(1, "11111");
-                        invalidRowCursor.InsertRow(invalidRowBuffer);
+                    //    IRowBuffer invalidRowBuffer = table.CreateRowBuffer();
+                    //    ICursor invalidRowCursor = table.Insert(true);
+                    //    //invalidRowBuffer.set_Value(1, "11111");
+                    //    invalidRowCursor.InsertRow(invalidRowBuffer);
 
-                        workspaceEdit.StopEditOperation();
-                        workspaceEdit.StopEditing(true);
+                    //    workspaceEdit.StopEditOperation();
+                    //    workspaceEdit.StopEditing(true);
 
-                        clsCoreUpdateFun.ReverseSearchChangedFeatures(pTEFeatCls, UpdataDataID, pTUFeatCls, table, matchedMode, weight, buffer, fields, progressBarMain, progressBarSub, labelXStatus);
-                    }
+                    //    clsCoreUpdateFun.ReverseSearchChangedFeatures(pTEFeatCls, UpdataDataID, pTUFeatCls, table, matchedMode, weight, buffer, fields, progressBarMain, progressBarSub, labelXStatus);
+                    //} 
+                    #endregion
                     MessageBoxEx.Show("几何属性匹配已完成！", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
                 //拓扑匹配

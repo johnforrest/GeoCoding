@@ -24,30 +24,37 @@ namespace ZJGISGCoding.Class
 
             string elemid="ELEMID";
             //遍历字段
-            IField pField = null;
-            IFields pFields = pFeatureLayer.FeatureClass.Fields;
-
-            bool pPrimitiveCode = false;
-
-            for (int i = 0; i < pFields.FieldCount - 1; i++)
+            if (pFeatureLayer!=null)
             {
-                pField = pFields.get_Field(i);
-                if (pField.Name==elemid)
+                IField pField = null;
+                IFields pFields = pFeatureLayer.FeatureClass.Fields;
+
+                bool pPrimitiveCode = false;
+
+                for (int i = 0; i < pFields.FieldCount - 1; i++)
                 {
-                    pPrimitiveCode = true;
+                    pField = pFields.get_Field(i);
+                    if (pField.Name == elemid)
+                    {
+                        pPrimitiveCode = true;
+                    }
                 }
-            }
 
-            if (!pPrimitiveCode)
+                if (!pPrimitiveCode)
+                {
+                    MessageBox.Show("不存在图元标识码字段！");
+                }
+
+                //对图元进行编码
+                //CreatePrimitiveCode(pFeatureLayer, "图元标识码");
+                CreatePrimitiveCode(pFeatureLayer, elemid);
+
+                MessageBox.Show("图元编码成功！"); 
+            }
+            else
             {
-                MessageBox.Show("不存在图元标识码字段！");
+                MessageBox.Show("没有选中任何图层，请选择图层！");
             }
-
-            //对图元进行编码
-            //CreatePrimitiveCode(pFeatureLayer, "图元标识码");
-            CreatePrimitiveCode(pFeatureLayer, elemid);
-
-            MessageBox.Show("图元编码成功！");
         }
 
         /// <summary>
