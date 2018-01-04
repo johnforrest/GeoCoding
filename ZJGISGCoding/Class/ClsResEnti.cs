@@ -666,5 +666,67 @@ namespace ZJGISGCoding.Class
             }
         }
 
+        /// <summary>
+        /// 检查普通实体编码（有名称的实体才检查是否有编码）
+        /// </summary>
+        /// <param name="pMapControl"></param>
+        /// <param name="cbxLayerName"></param>
+        //public DataTable CheckCommonEnti(IMap pMapControl, ComboBoxEx cbxLayerName)
+        public List<IRow> CheckRESEnti(IFeatureLayer pFeatureLayer)
+        {
+            //ITable pTable = new ITable();
+            List<IRow> list = new List<IRow>();
+            IDataset cDataset = pFeatureLayer.FeatureClass as IDataset;
+            IGeoDataset cGeoDataset = cDataset as IGeoDataset;
+            ISpatialReference cSpatialReference = cGeoDataset.SpatialReference;
+            if (cSpatialReference is IProjectedCoordinateSystem)
+            {
+                MessageBox.Show("该图层为投影坐标，请转换为相应的地理坐标,再开始地理编码！");
+            }
+
+            if (pFeatureLayer != null)
+            {
+                //检查格网字段是否存在，不存在就添加格网字段GridCode
+                //pClsCom.CheckGridCode(pFeatureLayer, gridField);
+                IDataset pDataset = pFeatureLayer.FeatureClass as IDataset;
+                IWorkspaceEdit pWorkspaceEdit = null;
+                if (pDataset != null)
+                {
+                    pWorkspaceEdit = pDataset.Workspace as IWorkspaceEdit;
+                    if (pWorkspaceEdit != null || pWorkspaceEdit.IsBeingEdited() == false)
+                    {
+                        pWorkspaceEdit.StartEditing(true);
+                        pWorkspaceEdit.StartEditOperation();
+                    }
+                    IFeatureCursor pFeatureCursor = pFeatureLayer.Search(null, false);
+
+                    int i = pFeatureLayer.FeatureClass.FeatureCount(null);
+                    int j = 0;
+
+                    IFeature pFeature = pFeatureCursor.NextFeature();
+                    while (pFeature != null)
+                    {
+                        if (pFeature.get_Value(pFeature.Fields.FindField("FCODE")).ToString() == "3103011500" ||
+                            pFeature.get_Value(pFeature.Fields.FindField("FCODE")).ToString() == "3103012500" ||
+                            pFeature.get_Value(pFeature.Fields.FindField("FCODE")).ToString() == "3103013500" ||
+                            pFeature.get_Value(pFeature.Fields.FindField("FCODE")).ToString() == "3103020500" ||
+                            pFeature.get_Value(pFeature.Fields.FindField("FCODE")).ToString() == "3106000500" ||
+                            pFeature.get_Value(pFeature.Fields.FindField("FCODE")).ToString() == "3107000500" ||
+                            pFeature.get_Value(pFeature.Fields.FindField("FCODE")).ToString() == "3108000500")
+                        {
+                            list.Add((pFeature as IRow));
+                        }
+                        pFeature = pFeatureCursor.NextFeature();
+                    }
+                    pWorkspaceEdit.StopEditing(true);
+                    pWorkspaceEdit.StopEditOperation();
+                }
+            }
+            else
+            {
+                MessageBoxEx.Show("没有选中任何图层！");
+            }
+            return list;
+        }
     }
 }

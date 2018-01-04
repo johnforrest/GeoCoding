@@ -140,7 +140,7 @@ namespace ZJGISGCoding.Forms
                 FrmResultDGV frmResult = new ZJGISGCoding.Forms.FrmResultDGV();
                 BindingSource bs = new BindingSource();
                 bs.DataSource = dtresult;
-                frmResult.dataGridView1.DataSource = bs;
+                frmResult.dataChild.DataSource = bs;
                 frmResult.ShowDialog();
             }
             else

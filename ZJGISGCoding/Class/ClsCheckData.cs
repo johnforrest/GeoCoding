@@ -12,6 +12,7 @@ using ESRI.ArcGIS.Geometry;
 using Microsoft.VisualBasic;
 using ZJGISGCoding.Class;
 using ZJGISCommon.Classes;
+using System.Data;
 namespace ZJGISGCoding
 {
     public static class ClsCheckData
@@ -59,7 +60,7 @@ namespace ZJGISGCoding
         /// </summary>
         /// <param name="pMapControl"></param>
         /// <param name="cbxLayerName"></param>
-        public static void AddDataToCom2(IMap pMapControl, ComboBoxItem cbxLayerName)
+        public static void AddDataToCom(IMap pMapControl, ComboBoxItem cbxLayerName)
         {
             for (int i = 0; i < pMapControl.LayerCount; i++)
             {
@@ -182,9 +183,11 @@ namespace ZJGISGCoding
 
                 }
             }
-
-
         }
+
+
+
+
         /// <summary>
         /// 空值检查
         /// </summary>
@@ -245,10 +248,32 @@ namespace ZJGISGCoding
 
         }
 
-       
 
+        ///// <summary>
+        ///// 检查图层编码
+        ///// </summary>
+        ///// <param name="pFeatureLayer">待检查的图层</param>
+        //public static DataTable CheckLayers(IFeatureLayer pFeatureLayer)
+        //{
+        //    DataTable dt = null;
+        //    if (pFeatureLayer.FeatureClass.ShapeType == esriGeometryType.esriGeometryPoint)
+        //    {
+        //        ClsCommonEnti pcommonEnti = new ClsCommonEnti();
+        //        //pcommonEnti.CreatGridCode(mapMain.Map, cbxCodeLayer);
+        //    }
+        //    else if (pFeatureLayer.FeatureClass.ShapeType == esriGeometryType.esriGeometryPolyline)
+        //    {
+        //        ClsRoadEnti pRoadEnti = new ClsRoadEnti();
+        //        //pRoadEnti.CreatGridCodeRoad(mapMain.Map, cbxCodeLayer);
+        //    }
+        //    else if (pFeatureLayer.FeatureClass.ShapeType == esriGeometryType.esriGeometryPolygon)
+        //    {
+        //        ClsResEnti pResEnti = new ClsResEnti();
+        //        //pResEnti.CreatGridCodeRES(mapMain.Map, cbxCodeLayer);
+        //    }
+            
 
-
+        //}
 
 
         /// <summary>

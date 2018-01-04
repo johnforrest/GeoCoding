@@ -272,22 +272,15 @@ namespace ZJGIS
 
                 m_MapEvent = (Map)this.mapMain.ActiveView.FocusMap; //初始化Map事件
                 m_MapEvent.AfterDraw += new IActiveViewEvents_AfterDrawEventHandler(this.m_MapEvent_AfterDraw);
+                //初始化comboBox下拉菜单
                 m_MapEvent.ItemAdded += new IActiveViewEvents_ItemAddedEventHandler(this.m_MapEvent_ItemAdded);
-
                 m_MapEvent.ItemDeleted += new IActiveViewEvents_ItemDeletedEventHandler(m_MapEvent_ItemDeleted);
                 this.WindowState = FormWindowState.Maximized;
                 System.Windows.Forms.Application.DoEvents();
-
-
-
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message + "数据库未连接！");
-            }
-            finally
-            {
-
             }
 
             string startPath = System.Windows.Forms.Application.StartupPath;
@@ -310,21 +303,23 @@ namespace ZJGIS
             m_frmIdxMap.MapIndex.ActiveView.PartialRefresh(esriViewDrawPhase.esriViewGeography, null, null);
 
         }
+        /// <summary>
+        /// 初始化comboBox下拉菜单
+        /// </summary>
+        /// <param name="Item"></param>
         private void m_MapEvent_ItemAdded(object Item)
         {
             cbxCodeLayer.Items.Clear();
-
+            comboBoxItemCheck.Items.Clear();
             ClsCheckData.AddDataToCom(mapMain.Map, cbxCodeLayer);
-
-
+            ClsCheckData.AddDataToCom(mapMain.Map, comboBoxItemCheck);
         }
         private void m_MapEvent_ItemDeleted(object Item)
         {
             cbxCodeLayer.Items.Clear();
-
+            comboBoxItemCheck.Items.Clear();
             ClsCheckData.AddDataToCom(mapMain.Map, cbxCodeLayer);
-
-
+            ClsCheckData.AddDataToCom(mapMain.Map, comboBoxItemCheck);
         }
 
 
@@ -2594,11 +2589,14 @@ namespace ZJGIS
 
         private int i = 0;
         ButtonItem buttonItemFile;
+        /// <summary>
+        /// 打开txt文件路径
+        /// </summary>
+        /// <param name="path"></param>
         private void ReadText(string path)
         {
             string read;
             // int i = 0;
-
 
             if (File.Exists(path))
             {
@@ -2792,8 +2790,30 @@ namespace ZJGIS
         /// <param name="e"></param>
         private void btnCommonNullCheck_Click(object sender, EventArgs e)
         {
-            FrmCheckNull pfrm_CheckNull = new FrmCheckNull(this.mapMain.Map);
-            pfrm_CheckNull.ShowDialog();
+            IFeatureLayer pFeatureLayer = (IFeatureLayer)pClsCom.GetLayerByName(this.mapMain.Map, this.comboBoxItemCheck.Text);
+            FrmResultDGV frmResult = new ZJGISGCoding.Forms.FrmResultDGV();
+            //BindingSource bs = new BindingSource();
+            if (pFeatureLayer.FeatureClass.ShapeType == esriGeometryType.esriGeometryPoint)
+            {
+                ClsCommonEnti pcommonEnti = new ClsCommonEnti();
+                //bs.DataSource = pcommonEnti.CheckCommonEnti(pFeatureLayer);
+                frmResult.LoadData(pcommonEnti.CheckCommonEnti(pFeatureLayer));
+            }
+            else if (pFeatureLayer.FeatureClass.ShapeType == esriGeometryType.esriGeometryPolyline)
+            {
+                ClsRoadEnti pRoadEnti = new ClsRoadEnti();
+                frmResult.LoadData(pRoadEnti.CheckRoadEnti(pFeatureLayer));
+                //pRoadEnti.CreatGridCodeRoad(mapMain.Map, cbxCodeLayer);
+            }
+            else if (pFeatureLayer.FeatureClass.ShapeType == esriGeometryType.esriGeometryPolygon)
+            {
+                ClsResEnti pResEnti = new ClsResEnti();
+                frmResult.LoadData(pResEnti.CheckRESEnti(pFeatureLayer));
+                //pResEnti.CreatGridCodeRES(mapMain.Map, cbxCodeLayer);
+            }
+            //frmResult.dataChild.DataSource = bs;
+            frmResult.ShowDialog();
+
         }
         /// <summary>
         /// 实体表唯一性检查

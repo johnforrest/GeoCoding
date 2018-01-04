@@ -28,35 +28,36 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.dataGridView1 = new System.Windows.Forms.DataGridView();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
+            this.dataChild = new System.Windows.Forms.DataGridView();
+            ((System.ComponentModel.ISupportInitialize)(this.dataChild)).BeginInit();
             this.SuspendLayout();
             // 
-            // dataGridView1
+            // dataChild
             // 
-            this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridView1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.dataGridView1.Location = new System.Drawing.Point(0, 0);
-            this.dataGridView1.Name = "dataGridView1";
-            this.dataGridView1.RowTemplate.Height = 27;
-            this.dataGridView1.Size = new System.Drawing.Size(282, 253);
-            this.dataGridView1.TabIndex = 0;
+            this.dataChild.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataChild.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.dataChild.Location = new System.Drawing.Point(0, 0);
+            this.dataChild.Name = "dataChild";
+            this.dataChild.RowTemplate.Height = 27;
+            this.dataChild.Size = new System.Drawing.Size(282, 253);
+            this.dataChild.TabIndex = 0;
             // 
-            // FrmResult
+            // FrmResultDGV
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(282, 253);
-            this.Controls.Add(this.dataGridView1);
-            this.Name = "FrmResult";
+            this.Controls.Add(this.dataChild);
+            this.DoubleBuffered = true;
+            this.Name = "FrmResultDGV";
             this.Text = "重复的实体记录";
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dataChild)).EndInit();
             this.ResumeLayout(false);
 
         }
 
         #endregion
 
-        public System.Windows.Forms.DataGridView dataGridView1;
+        public System.Windows.Forms.DataGridView dataChild;
     }
 }

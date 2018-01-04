@@ -1915,6 +1915,81 @@ namespace ZJGISGCoding.Class
 
         }
 
+        /// <summary>
+        /// 检查普通道路编码（有名称的实体才检查是否有编码）
+        /// </summary>
+        /// <param name="pMapControl"></param>
+        /// <param name="cbxLayerName"></param>
+        //public DataTable CheckCommonEnti(IMap pMapControl, ComboBoxEx cbxLayerName)
+        public List<IRow> CheckRoadEnti(IFeatureLayer pFeatureLayer)
+        {
+            //ITable pTable = new ITable();
+            List<IRow> list = new List<IRow>();
+            string roadField = "ROADCODE";
+
+            IDataset cDataset = pFeatureLayer.FeatureClass as IDataset;
+            IGeoDataset cGeoDataset = cDataset as IGeoDataset;
+            ISpatialReference cSpatialReference = cGeoDataset.SpatialReference;
+            if (cSpatialReference is IProjectedCoordinateSystem)
+            {
+                MessageBox.Show("该图层为投影坐标，请转换为相应的地理坐标,再开始地理编码！");
+            }
+
+            if (pFeatureLayer != null)
+            {
+                //检查格网字段是否存在，不存在就添加格网字段GridCode
+                //pClsCom.CheckGridCode(pFeatureLayer, gridField);
+
+                if (pFeatureLayer.FeatureClass.Fields.FindField(ClsConfig.LayerConfigs[(pFeatureLayer.FeatureClass as IDataset).Name].NameField) != -1
+                    && pFeatureLayer.FeatureClass.Fields.FindField(ClsConfig.LayerConfigs[(pFeatureLayer.FeatureClass as IDataset).Name].EntityID) != -1
+                    && pFeatureLayer.FeatureClass.Fields.FindField(roadField) != -1)
+                {
+                    IDataset pDataset = pFeatureLayer.FeatureClass as IDataset;
+                    IWorkspaceEdit pWorkspaceEdit = null;
+                    if (pDataset != null)
+                    {
+                        pWorkspaceEdit = pDataset.Workspace as IWorkspaceEdit;
+                        if (pWorkspaceEdit != null || pWorkspaceEdit.IsBeingEdited() == false)
+                        {
+                            pWorkspaceEdit.StartEditing(true);
+                            pWorkspaceEdit.StartEditOperation();
+                        }
+                        IFeatureCursor pFeatureCursor = pFeatureLayer.Search(null, false);
+
+                        int i = pFeatureLayer.FeatureClass.FeatureCount(null);
+                        int j = 0;
+
+                        IFeature pFeature = pFeatureCursor.NextFeature();
+
+                        while (pFeature != null)
+                        {
+                            //对于名称为空的字段进行筛选
+                            string pFeatureName = pFeature.get_Value(pFeature.Fields.FindField(ClsConfig.LayerConfigs[(pFeatureLayer.FeatureClass as IDataset).Name].NameField)).ToString();
+                            string pRoadName = pFeature.get_Value(pFeature.Fields.FindField(roadField)).ToString();
+                            string pEntiID = pFeature.get_Value(pFeature.Fields.FindField(ClsConfig.LayerConfigs[(pFeatureLayer.FeatureClass as IDataset).Name].EntityID)).ToString();
+                            if ((pFeatureName.Trim().Length > 0 ||pRoadName.Trim().Length>0 )&& pEntiID.Trim().Length == 0)
+                            {
+                                list.Add((pFeature as IRow));
+                            }
+                            pFeature = pFeatureCursor.NextFeature();
+                        }
+                        pWorkspaceEdit.StopEditing(true);
+                        pWorkspaceEdit.StopEditOperation();
+                    }
+                }
+                else
+                {
+                    MessageBox.Show("此图层不存在名称或路线编码字段，请重新检查配置图层！");
+                }
+            }
+            else
+            {
+                MessageBoxEx.Show("没有选中任何图层！");
+            }
+
+            return list;
+        }
+
 
 
 
