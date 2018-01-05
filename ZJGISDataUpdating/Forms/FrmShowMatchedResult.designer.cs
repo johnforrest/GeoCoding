@@ -32,20 +32,20 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FrmShowMatchedResult));
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             this.bar3 = new DevComponents.DotNetBar.Bar();
-            this.buttonXSave = new DevComponents.DotNetBar.ButtonX();
             this.btnAll = new DevComponents.DotNetBar.ButtonItem();
             this.btnMatched = new DevComponents.DotNetBar.ButtonItem();
             this.btnNotMatched = new DevComponents.DotNetBar.ButtonItem();
             this.btnAttribute = new DevComponents.DotNetBar.ButtonItem();
             this.btnShape = new DevComponents.DotNetBar.ButtonItem();
             this.btnShapeAttribute = new DevComponents.DotNetBar.ButtonItem();
-            this.btnOneToMore = new DevComponents.DotNetBar.ButtonItem();
             this.btnDifScaleMatched = new DevComponents.DotNetBar.ButtonItem();
+            this.btnNew = new DevComponents.DotNetBar.ButtonItem();
             this.btnOneToOne = new DevComponents.DotNetBar.ButtonItem();
+            this.btnOneToMore = new DevComponents.DotNetBar.ButtonItem();
             this.btnMoreToOne = new DevComponents.DotNetBar.ButtonItem();
             this.btnMoreToMore = new DevComponents.DotNetBar.ButtonItem();
-            this.btnNew = new DevComponents.DotNetBar.ButtonItem();
             this.buttonItemDelRow = new DevComponents.DotNetBar.ButtonItem();
+            this.btnSave = new DevComponents.DotNetBar.ButtonItem();
             this.bindingSource1 = new System.Windows.Forms.BindingSource(this.components);
             this.bindingNavigator1 = new System.Windows.Forms.BindingNavigator(this.components);
             this.bindingNavigatorCountItem = new System.Windows.Forms.ToolStripLabel();
@@ -58,19 +58,20 @@
             this.bindingNavigatorMoveFirstItem = new System.Windows.Forms.ToolStripButton();
             this.dataGridViewX1 = new DevComponents.DotNetBar.Controls.DataGridViewX();
             this.comboBox1 = new System.Windows.Forms.ComboBox();
+            this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.cmMenuSave = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.bar3)).BeginInit();
-            this.bar3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.bindingSource1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.bindingNavigator1)).BeginInit();
             this.bindingNavigator1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewX1)).BeginInit();
             this.dataGridViewX1.SuspendLayout();
+            this.contextMenuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // bar3
             // 
             this.bar3.AntiAlias = true;
-            this.bar3.Controls.Add(this.buttonXSave);
             this.bar3.Dock = System.Windows.Forms.DockStyle.Top;
             this.bar3.Font = new System.Drawing.Font("Microsoft YaHei", 9F);
             this.bar3.Items.AddRange(new DevComponents.DotNetBar.BaseItem[] {
@@ -78,7 +79,8 @@
             this.btnMatched,
             this.btnNotMatched,
             this.btnDifScaleMatched,
-            this.buttonItemDelRow});
+            this.buttonItemDelRow,
+            this.btnSave});
             this.bar3.Location = new System.Drawing.Point(0, 0);
             this.bar3.Margin = new System.Windows.Forms.Padding(4);
             this.bar3.Name = "bar3";
@@ -88,18 +90,6 @@
             this.bar3.TabIndex = 22;
             this.bar3.TabStop = false;
             this.bar3.Text = "bar3";
-            // 
-            // buttonXSave
-            // 
-            this.buttonXSave.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
-            this.buttonXSave.ColorTable = DevComponents.DotNetBar.eButtonColor.OrangeWithBackground;
-            this.buttonXSave.Location = new System.Drawing.Point(779, 3);
-            this.buttonXSave.Name = "buttonXSave";
-            this.buttonXSave.Size = new System.Drawing.Size(75, 23);
-            this.buttonXSave.Style = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled;
-            this.buttonXSave.TabIndex = 0;
-            this.buttonXSave.Text = "保存";
-            this.buttonXSave.Click += new System.EventHandler(this.buttonXSave_Click);
             // 
             // btnAll
             // 
@@ -119,8 +109,7 @@
             this.btnNotMatched.SubItems.AddRange(new DevComponents.DotNetBar.BaseItem[] {
             this.btnAttribute,
             this.btnShape,
-            this.btnShapeAttribute,
-            this.btnOneToMore});
+            this.btnShapeAttribute});
             this.btnNotMatched.Text = "变化";
             // 
             // btnAttribute
@@ -141,27 +130,34 @@
             this.btnShapeAttribute.Text = "属性图形变化";
             this.btnShapeAttribute.Click += new System.EventHandler(this.btnShapeAttribute_Click);
             // 
-            // btnOneToMore
-            // 
-            this.btnOneToMore.Name = "btnOneToMore";
-            this.btnOneToMore.Text = "一对多";
-            this.btnOneToMore.Click += new System.EventHandler(this.btnOneToMore_Click);
-            // 
             // btnDifScaleMatched
             // 
             this.btnDifScaleMatched.Name = "btnDifScaleMatched";
             this.btnDifScaleMatched.SubItems.AddRange(new DevComponents.DotNetBar.BaseItem[] {
+            this.btnNew,
             this.btnOneToOne,
+            this.btnOneToMore,
             this.btnMoreToOne,
-            this.btnMoreToMore,
-            this.btnNew});
+            this.btnMoreToMore});
             this.btnDifScaleMatched.Text = "跨尺度变化";
+            // 
+            // btnNew
+            // 
+            this.btnNew.Name = "btnNew";
+            this.btnNew.Text = "一对零";
+            this.btnNew.Click += new System.EventHandler(this.btnNew_Click);
             // 
             // btnOneToOne
             // 
             this.btnOneToOne.Name = "btnOneToOne";
             this.btnOneToOne.Text = "一对一";
             this.btnOneToOne.Click += new System.EventHandler(this.btnOneToOne_Click);
+            // 
+            // btnOneToMore
+            // 
+            this.btnOneToMore.Name = "btnOneToMore";
+            this.btnOneToMore.Text = "一对多";
+            this.btnOneToMore.Click += new System.EventHandler(this.btnOneToMore_Click);
             // 
             // btnMoreToOne
             // 
@@ -175,18 +171,18 @@
             this.btnMoreToMore.Text = "多对多";
             this.btnMoreToMore.Click += new System.EventHandler(this.btnMoreToMore_Click);
             // 
-            // btnNew
-            // 
-            this.btnNew.Name = "btnNew";
-            this.btnNew.Text = "一对零";
-            this.btnNew.Click += new System.EventHandler(this.btnNew_Click);
-            // 
             // buttonItemDelRow
             // 
             this.buttonItemDelRow.ItemAlignment = DevComponents.DotNetBar.eItemAlignment.Far;
             this.buttonItemDelRow.Name = "buttonItemDelRow";
             this.buttonItemDelRow.Text = "删除";
             this.buttonItemDelRow.Click += new System.EventHandler(this.buttonItemDelRow_Click);
+            // 
+            // btnSave
+            // 
+            this.btnSave.Name = "btnSave";
+            this.btnSave.Text = "保存";
+            this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
             // 
             // bindingNavigator1
             // 
@@ -291,6 +287,7 @@
             this.dataGridViewX1.BackgroundColor = System.Drawing.SystemColors.ActiveCaptionText;
             this.dataGridViewX1.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.dataGridViewX1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridViewX1.ContextMenuStrip = this.contextMenuStrip1;
             this.dataGridViewX1.Controls.Add(this.comboBox1);
             dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Window;
@@ -310,9 +307,9 @@
             this.dataGridViewX1.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dataGridViewX1.Size = new System.Drawing.Size(897, 390);
             this.dataGridViewX1.TabIndex = 25;
+            this.dataGridViewX1.CellMouseDown += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.dataGridViewX1_CellMouseDown);
             this.dataGridViewX1.CurrentCellChanged += new System.EventHandler(this.dataGridViewX1_CurrentCellChanged);
             this.dataGridViewX1.RowHeaderMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.dataGridViewX1_RowHeaderMouseClick);
-            this.dataGridViewX1.SortCompare += new System.Windows.Forms.DataGridViewSortCompareEventHandler(this.dataGridViewX1_SortCompare);
             this.dataGridViewX1.MouseUp += new System.Windows.Forms.MouseEventHandler(this.dataGridViewX1_MouseUp);
             // 
             // comboBox1
@@ -331,6 +328,20 @@
             this.comboBox1.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.comboBox1_DrawItem);
             this.comboBox1.SelectedIndexChanged += new System.EventHandler(this.comboBox1_SelectedIndexChanged);
             // 
+            // contextMenuStrip1
+            // 
+            this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.cmMenuSave});
+            this.contextMenuStrip1.Name = "contextMenuStrip1";
+            this.contextMenuStrip1.Size = new System.Drawing.Size(109, 28);
+            // 
+            // cmMenuSave
+            // 
+            this.cmMenuSave.Name = "cmMenuSave";
+            this.cmMenuSave.Size = new System.Drawing.Size(108, 24);
+            this.cmMenuSave.Text = "保存";
+            this.cmMenuSave.Click += new System.EventHandler(this.cmMenuSave_Click);
+            // 
             // FrmShowMatchedResult
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
@@ -345,13 +356,13 @@
             this.Name = "FrmShowMatchedResult";
             this.Load += new System.EventHandler(this.FrmShowMatchedResult_Load);
             ((System.ComponentModel.ISupportInitialize)(this.bar3)).EndInit();
-            this.bar3.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.bindingSource1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.bindingNavigator1)).EndInit();
             this.bindingNavigator1.ResumeLayout(false);
             this.bindingNavigator1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewX1)).EndInit();
             this.dataGridViewX1.ResumeLayout(false);
+            this.contextMenuStrip1.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -377,7 +388,6 @@
         private System.Windows.Forms.ToolStripButton bindingNavigatorMoveLastItem;
         private System.Windows.Forms.ToolStripSeparator bindingNavigatorSeparator2;
         private DevComponents.DotNetBar.Controls.DataGridViewX dataGridViewX1;
-        private DevComponents.DotNetBar.ButtonItem btnOneToMore;
         private DevComponents.DotNetBar.ButtonItem btnMoreToOne;
         private DevComponents.DotNetBar.ButtonItem btnDifScaleMatched;
         private DevComponents.DotNetBar.ButtonItem btnOneToOne;
@@ -385,6 +395,9 @@
         private DevComponents.DotNetBar.ButtonItem btnNew;
         private DevComponents.DotNetBar.ButtonItem buttonItemDelRow;
         private System.Windows.Forms.ComboBox comboBox1;
-        private DevComponents.DotNetBar.ButtonX buttonXSave;
+        private DevComponents.DotNetBar.ButtonItem btnOneToMore;
+        private DevComponents.DotNetBar.ButtonItem btnSave;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
+        private System.Windows.Forms.ToolStripMenuItem cmMenuSave;
     }
 }

@@ -92,7 +92,7 @@ namespace ZJGISGCoding.Forms
                 MessageBox.Show("不存在实体编码字段！");
             }
 
-            DataTable dtentble = ToDataTable(entiTable);
+            DataTable dtentble = ZJGISCommon.Classes.ClsITableDataTable.ToDataTable(entiTable);
             DataTable dtresult = new DataTable();
             dtresult = dtentble.Clone();
             //dt.PrimaryKey = new System.Data.DataColumn[] { dt.Columns["OBJECTID"] };
@@ -151,41 +151,6 @@ namespace ZJGISGCoding.Forms
 
         }
 
-        /// <summary>
-        /// 将ITable转换为DataTable
-        /// </summary>
-        /// <param name="mTable"></param>
-        /// <returns></returns>
-        public DataTable ToDataTable(ITable mTable)
-        {
-            try
-            {
-                DataTable pTable = new DataTable();
-                for (int i = 0; i < mTable.Fields.FieldCount; i++)
-                {
-                    pTable.Columns.Add(mTable.Fields.get_Field(i).Name);
-                }
-                ICursor pCursor = mTable.Search(null, false);
-                IRow pRrow = pCursor.NextRow();
-                while (pRrow != null)
-                {
-                    DataRow pRow = pTable.NewRow();
-                    string[] StrRow = new string[pRrow.Fields.FieldCount];
-                    for (int i = 0; i < pRrow.Fields.FieldCount; i++)
-                    {
-                        StrRow[i] = pRrow.get_Value(i).ToString();
-                    }
-                    pRow.ItemArray = StrRow;
-                    pTable.Rows.Add(pRow);
-                    pRrow = pCursor.NextRow();
-                }
-                return pTable;
-            }
-            catch (Exception ex)
-            {
-                return null;
-            }
-        }
         /// <summary>
         /// 获取重复的行
         /// </summary>

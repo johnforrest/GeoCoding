@@ -159,11 +159,11 @@ namespace ZJGISLayerManager
 
         }
 
-        /// <summary>
-        /// 将ITable转换为DataTable
-        /// </summary>
-        /// <param name="mTable"></param>
-        /// <returns></returns>
+       /// <summary>
+       /// 将FeatureClass转换为DataTable
+       /// </summary>
+        /// <param name="pFeatClass">FeatureClass</param>
+       /// <returns></returns>
         public DataTable ToDataTable(IFeatureClass pFeatClass)
         {
             IField pField;

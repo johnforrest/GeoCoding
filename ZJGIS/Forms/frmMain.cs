@@ -39,6 +39,7 @@ using ZJGISGCoding.Forms;
 using ZJGISDataUpdating.Class;
 using ZJGISXMLOperation;
 using ZJGISXMLOperation.Forms;
+using ZJGIS.Class;
 namespace ZJGIS
 {
     public partial class frmMain
@@ -2362,26 +2363,31 @@ namespace ZJGIS
             }
         }
         /// <summary>
-        ///
+        ///分屏对比-放大
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void buttonItemZoomIn_Click(object sender, EventArgs e)
         {
-            ESRI.ArcGIS.SystemUI.ICommand pCmd = new ControlsMapZoomInToolClass();
+            //ESRI.ArcGIS.SystemUI.ICommand pCmd = new ControlsMapZoomInToolClass();
+            //ESRI.ArcGIS.SystemUI.ICommand pCmd = new ControlsMapZoomInFixedCommandClass();
             if (this.comboBoxItemToMapControl.SelectedItem != null)
             {
                 if (this.comboBoxItemToMapControl.SelectedItem.ToString() == "源图层")
                 {
-                    pCmd.OnCreate(this.MapFrom.Object);
-                    pCmd.OnClick();
-                    this.MapFrom.CurrentTool = pCmd as ESRI.ArcGIS.SystemUI.ITool;
+                    pMouseOperate = "ZoomIn";
+
+                    //pCmd.OnCreate(this.MapFrom.Object);
+                    //pCmd.OnClick();
+                    //this.MapFrom.CurrentTool = pCmd as ESRI.ArcGIS.SystemUI.ITool;
                 }
                 else if (this.comboBoxItemToMapControl.SelectedItem.ToString() == "待匹配图层")
                 {
-                    pCmd.OnCreate(this.MapTo.Object);
-                    pCmd.OnClick();
-                    this.MapTo.CurrentTool = pCmd as ESRI.ArcGIS.SystemUI.ITool;
+                    pMouseOperate = "ZoomIn";
+
+                    //pCmd.OnCreate(this.MapTo.Object);
+                    //pCmd.OnClick();
+                    //this.MapTo.CurrentTool = pCmd as ESRI.ArcGIS.SystemUI.ITool;
                 }
             }
             else
@@ -2389,23 +2395,32 @@ namespace ZJGIS
                 MessageBoxEx.Show("请选择图层！");
             }
         }
-
+        /// <summary>
+        /// 分屏对比-缩小
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void buttonItemZoomOut_Click(object sender, EventArgs e)
         {
-            ESRI.ArcGIS.SystemUI.ICommand pCmd = new ControlsMapZoomOutToolClass();
+            //ESRI.ArcGIS.SystemUI.ICommand pCmd = new ControlsMapZoomOutToolClass();
+            //ESRI.ArcGIS.SystemUI.ICommand pCmd = new ControlsMapZoomOutFixedCommandClass();
             if (this.comboBoxItemToMapControl.SelectedItem != null)
             {
                 if (this.comboBoxItemToMapControl.SelectedItem.ToString() == "源图层")
                 {
-                    pCmd.OnCreate(this.MapFrom.Object);
-                    pCmd.OnClick();
-                    this.MapFrom.CurrentTool = pCmd as ESRI.ArcGIS.SystemUI.ITool;
+                    pMouseOperate = "ZoomOut";
+
+                    //pCmd.OnCreate(this.MapFrom.Object);
+                    //pCmd.OnClick();
+                    //this.MapFrom.CurrentTool = pCmd as ESRI.ArcGIS.SystemUI.ITool;
                 }
-                else if (this.comboBoxItemToMapControl.SelectedItem.ToString() == "更新图层")
+                else if (this.comboBoxItemToMapControl.SelectedItem.ToString() == "待匹配图层")
                 {
-                    pCmd.OnCreate(this.MapTo.Object);
-                    pCmd.OnClick();
-                    this.MapTo.CurrentTool = pCmd as ESRI.ArcGIS.SystemUI.ITool;
+                    pMouseOperate = "ZoomOut";
+
+                    //pCmd.OnCreate(this.MapTo.Object);
+                    //pCmd.OnClick();
+                    //this.MapTo.CurrentTool = pCmd as ESRI.ArcGIS.SystemUI.ITool;
                 }
             }
             else
@@ -2413,23 +2428,31 @@ namespace ZJGIS
                 MessageBoxEx.Show("请选择图层！");
             }
         }
-
+        /// <summary>
+        /// 分屏对比-漫游
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void buttonItemPan_Click(object sender, EventArgs e)
         {
-            ESRI.ArcGIS.SystemUI.ICommand pCmd = new ControlsMapPanToolClass();
+            //ESRI.ArcGIS.SystemUI.ICommand pCmd = new ControlsMapPanToolClass();
             if (this.comboBoxItemToMapControl.SelectedItem != null)
             {
                 if (this.comboBoxItemToMapControl.SelectedItem.ToString() == "源图层")
                 {
-                    pCmd.OnCreate(this.MapFrom.Object);
-                    pCmd.OnClick();
-                    this.MapFrom.CurrentTool = pCmd as ESRI.ArcGIS.SystemUI.ITool;
+                    pMouseOperate = "Pan";
+
+                    //pCmd.OnCreate(this.MapFrom.Object);
+                    //pCmd.OnClick();
+                    //this.MapFrom.CurrentTool = pCmd as ESRI.ArcGIS.SystemUI.ITool;
                 }
-                else if (this.comboBoxItemToMapControl.SelectedItem.ToString() == "更新图层")
+                else if (this.comboBoxItemToMapControl.SelectedItem.ToString() == "待匹配图层")
                 {
-                    pCmd.OnCreate(this.MapTo.Object);
-                    pCmd.OnClick();
-                    this.MapTo.CurrentTool = pCmd as ESRI.ArcGIS.SystemUI.ITool;
+                    pMouseOperate = "Pan";
+
+                    //pCmd.OnCreate(this.MapTo.Object);
+                    //pCmd.OnClick();
+                    //this.MapTo.CurrentTool = pCmd as ESRI.ArcGIS.SystemUI.ITool;
                 }
             }
             else
@@ -2437,148 +2460,241 @@ namespace ZJGIS
                 MessageBoxEx.Show("请选择图层！");
             }
         }
-
+        /// <summary>
+        /// 分屏对比-选择图层
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void buttonItemSelectFeat_Click(object sender, EventArgs e)
         {
-            //ESRI.ArcGIS.SystemUI.ICommand pCmd = new ControlsSelectFeaturesToolClass();
+            pMouseOperate = "";
+            ESRI.ArcGIS.SystemUI.ICommand pCmd = new ControlsSelectFeaturesToolClass();
             if (this.comboBoxItemToMapControl.SelectedItem.ToString() == "源图层")
             {
-                //ClsSelectFeature clsSelectFeature = new ClsSelectFeature();
-                //clsSelectFeature.DGVMatchedResult = mainApplication.MatchedResultDGVX;
-                //clsSelectFeature.DGVFrom = this.dataGridViewXFrom;
-                //clsSelectFeature.DGVTo = this.dataGridViewXTo;
-
-                //clsSelectFeature.MapTo = this.MapTo.Object as IMapControl4;
-                //ESRI.ArcGIS.SystemUI.ICommand pCmd = clsSelectFeature as ESRI.ArcGIS.SystemUI.ICommand;
-
-                //pCmd.OnCreate(this.MapFrom.Object);
-                //pCmd.OnClick();
-                //this.MapFrom.CurrentTool = pCmd as ESRI.ArcGIS.SystemUI.ITool;
+                pCmd.OnCreate(this.MapFrom.Object);
+                pCmd.OnClick();
+                this.MapFrom.CurrentTool = pCmd as ESRI.ArcGIS.SystemUI.ITool;
             }
-            else if (this.comboBoxItemToMapControl.SelectedItem.ToString() == "更新图层")
+            else if (this.comboBoxItemToMapControl.SelectedItem.ToString() == "待匹配图层")
             {
-                //ClsSelectFeature clsSelectFeature = new ClsSelectFeature();
-                //clsSelectFeature.DGVMatchedResult = mainApplication.MatchedResultDGVX;
-                //clsSelectFeature.DGVFrom = this.dataGridViewXFrom;
-                //clsSelectFeature.DGVTo = this.dataGridViewXTo;
-
-                //clsSelectFeature.MapControlFrom = this.MapFrom.Object as IMapControl4;
-                //ESRI.ArcGIS.SystemUI.ICommand pCmd = clsSelectFeature as ESRI.ArcGIS.SystemUI.ICommand;
-
-                //pCmd.OnCreate(this.MapTo.Object);
-                //pCmd.OnClick();
-                //this.MapTo.CurrentTool = pCmd as ESRI.ArcGIS.SystemUI.ITool;
+                pCmd.OnCreate(this.MapTo.Object);
+                pCmd.OnClick();
+                this.MapTo.CurrentTool = pCmd as ESRI.ArcGIS.SystemUI.ITool;
             }
         }
+        /// <summary>
+        /// 叠加对比-放大
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btnOverlapZoomIn_Click(object sender, EventArgs e)
         {
-            ESRI.ArcGIS.SystemUI.ICommand pCmd = new ControlsMapZoomInToolClass();
-            pCmd.OnCreate(this.MapOverlapping.Object);
-            pCmd.OnClick();
-            this.MapOverlapping.CurrentTool = pCmd as ESRI.ArcGIS.SystemUI.ITool;
+            //ESRI.ArcGIS.SystemUI.ICommand pCmd = new ControlsMapZoomInToolClass();
+            ////ESRI.ArcGIS.SystemUI.ICommand pCmd = new ControlsMapZoomInFixedCommandClass();
+            //pCmd.OnCreate(this.MapOverlapping.Object);
+            //pCmd.OnClick();
+            //this.MapOverlapping.CurrentTool = pCmd as ESRI.ArcGIS.SystemUI.ITool;
+
+            pMouseOperate = "ZoomIn";
+
 
             this.btnOverlapZoomIn.Checked = true;
-        }
+            this.btnOverlapZoomOut.Checked = false;
+            this.btnOverlapPan.Checked = false;
+            this.btnOverlapSelectFeat.Checked = false;
 
+        }
+        /// <summary>
+        /// 叠加对比-缩小
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btnOverlapZoomOut_Click(object sender, EventArgs e)
         {
-            ESRI.ArcGIS.SystemUI.ICommand pCmd = new ControlsMapZoomOutToolClass();
+            //ESRI.ArcGIS.SystemUI.ICommand pCmd = new ControlsMapZoomOutToolClass();
+            ////ESRI.ArcGIS.SystemUI.ICommand pCmd = new ControlsMapZoomOutFixedCommandClass();
+            //pCmd.OnCreate(this.MapOverlapping.Object);
+            //pCmd.OnClick();
+            //this.MapOverlapping.CurrentTool = pCmd as ESRI.ArcGIS.SystemUI.ITool;
 
-            pCmd.OnCreate(this.MapOverlapping.Object);
-            pCmd.OnClick();
-            this.MapOverlapping.CurrentTool = pCmd as ESRI.ArcGIS.SystemUI.ITool;
+            pMouseOperate = "ZoomOut";
+
+            //pMouseOperate = "ZoomIn";
+
+            this.btnOverlapZoomIn.Checked = false;
+            this.btnOverlapZoomOut.Checked = true;
+            this.btnOverlapPan.Checked = false;
+            this.btnOverlapSelectFeat.Checked = false;
         }
 
+        /// <summary>
+        /// 叠加对比-漫游
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btnOverlapPan_Click(object sender, EventArgs e)
         {
-            ESRI.ArcGIS.SystemUI.ICommand pCmd = new ControlsMapPanToolClass();
 
-            pCmd.OnCreate(this.MapOverlapping.Object);
-            pCmd.OnClick();
-            this.MapOverlapping.CurrentTool = pCmd as ESRI.ArcGIS.SystemUI.ITool;
+            pMouseOperate = "Pan";
+
+            //ESRI.ArcGIS.SystemUI.ICommand pCmd = new ControlsMapPanToolClass();
+            //pCmd.OnCreate(this.MapOverlapping.Object);
+            //pCmd.OnClick();
+            //this.MapOverlapping.CurrentTool = pCmd as ESRI.ArcGIS.SystemUI.ITool;
+
+            this.btnOverlapZoomIn.Checked = false;
+            this.btnOverlapZoomOut.Checked = false;
+            this.btnOverlapPan.Checked = true; 
+            this.btnOverlapSelectFeat.Checked = false;
 
         }
-
+        /// <summary>
+        /// 叠加对比-选择要素
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btnOverlapSelectFeat_Click(object sender, EventArgs e)
         {
+            pMouseOperate = "";
             ESRI.ArcGIS.SystemUI.ICommand pCmd = new ControlsSelectFeaturesToolClass();
             //ESRI.ArcGIS.SystemUI.ICommand pCmd = new ClsSelectFeature();
             pCmd.OnCreate(this.MapOverlapping.Object);
             pCmd.OnClick();
             this.MapOverlapping.CurrentTool = pCmd as ESRI.ArcGIS.SystemUI.ITool;
+
+            this.btnOverlapZoomIn.Checked = false;
+            this.btnOverlapZoomOut.Checked = false;
+            this.btnOverlapPan.Checked = false;
+            this.btnOverlapSelectFeat.Checked = true;
+        }
+
+      
+        string mapName = "";
+        IPoint pPoint = null;
+        string pMouseOperate = "";
+        /// <summary>
+        /// 源图层鼠标移动事件
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void MapFrom_OnMouseMove(object sender, IMapControlEvents2_OnMouseMoveEvent e)
+        {
+            mapName = (sender as AxMapControl).Name;
+
+        }
+        /// <summary>
+        /// 待匹配图层鼠标移动事件
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void MapTo_OnMouseMove(object sender, IMapControlEvents2_OnMouseMoveEvent e)
+        {
+            mapName = (sender as AxMapControl).Name;
+        }
+
+        private void MapFrom_OnMouseDown(object sender, IMapControlEvents2_OnMouseDownEvent e)
+        {
+            mapName = (sender as AxMapControl).Name;
+
+            //pMouseOperate = "Pan";
+            //pMouseOperate = "ZoomOut";
+            //屏幕坐标点转化为地图坐标点
+            //pPoint = (MapFrom.Map as IActiveView).ScreenDisplay.DisplayTransformation.ToMapPoint(e.x, e.y);
+            if (e.button == 1)
+            {
+                switch (pMouseOperate)
+                {
+                    case "ZoomIn":
+                        ClsMapOperation zoomIn = new ClsMapOperation();
+                        zoomIn.ZoomIn(MapFrom, MapFrom.TrackRectangle());
+                        break;
+                    case "ZoomOut":
+                        ClsMapOperation zoomOut = new ClsMapOperation();
+                        zoomOut.ZoomOut(MapFrom, MapFrom.TrackRectangle());
+                        break;
+                    case "Pan":
+                        ClsMapOperation pan = new ClsMapOperation();
+                        pan.Pan(MapFrom);
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
+
+        private void MapTo_OnMouseDown(object sender, IMapControlEvents2_OnMouseDownEvent e)
+        {
+            mapName = (sender as AxMapControl).Name;
+
+            //pMouseOperate = "Pan";
+            //pMouseOperate = "ZoomIn";
+
+            //屏幕坐标点转化为地图坐标点
+            //pPoint = (MapTo.Map as IActiveView).ScreenDisplay.DisplayTransformation.ToMapPoint(e.x, e.y);
+            if (e.button == 1)
+            {
+                switch (pMouseOperate)
+                {
+                    case "ZoomIn":
+                        ClsMapOperation zoomIn = new ClsMapOperation();
+                        zoomIn.ZoomIn(MapTo, MapTo.TrackRectangle());
+                        break;
+                    case "ZoomOut":
+                        ClsMapOperation zoomOut = new ClsMapOperation();
+                        zoomOut.ZoomOut(MapTo, MapTo.TrackRectangle());
+                        break;
+                    case "Pan":
+                        ClsMapOperation pan = new ClsMapOperation();
+                        pan.Pan(MapTo);
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
+
+        private void MapOverlapping_OnMouseDown(object sender, IMapControlEvents2_OnMouseDownEvent e)
+        {
+            if (e.button == 1)
+            {
+                switch (pMouseOperate)
+                {
+                    case "ZoomIn":
+                        ClsMapOperation zoomIn = new ClsMapOperation();
+                        zoomIn.ZoomIn(MapOverlapping, MapOverlapping.TrackRectangle());
+                        break;
+                    case "ZoomOut":
+                        ClsMapOperation zoomOut = new ClsMapOperation();
+                        zoomOut.ZoomOut(MapOverlapping, MapOverlapping.TrackRectangle());
+                        break;
+                    case "Pan":
+                        ClsMapOperation pan = new ClsMapOperation();
+                        pan.Pan(MapOverlapping);
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
+        private void MapFrom_OnViewRefreshed(object sender, IMapControlEvents2_OnViewRefreshedEvent e)
+        {
+            if (mapName == "MapFrom")
+            {
+                MapTo.Extent = MapFrom.Extent;
+                MapTo.ActiveView.Refresh();
+            }
+        }
+
+        private void MapTo_OnViewRefreshed(object sender, IMapControlEvents2_OnViewRefreshedEvent e)
+        {
+            if (mapName == "MapTo")
+            {
+                MapFrom.Extent = MapTo.Extent;
+                MapFrom.ActiveView.Refresh();
+            }
         }
         #endregion
-        //private void dataGridViewXFrom_RowHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e)
-        //{
-        //    if (this.dataGridViewXFrom.SelectedRows.Count == 1)
-        //    {
-        //        IFeatureLayer featureLayer = this.MapFrom.get_Layer(0) as IFeatureLayer;
-        //        IFeatureClass featureClass = featureLayer.FeatureClass;
-
-        //        string oid = this.dataGridViewXFrom.SelectedRows[0].Cells[0].Value.ToString();
-        //        IFeature feature = featureClass.GetFeature(Convert.ToInt32(oid));
-        //        this.MapFrom.FlashShape(feature.Shape, 3, 100, null);
-
-        //    }
-        //}
-        //private void dataGridViewXTo_RowHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e)
-        //{
-        //    if (this.dataGridViewXTo.SelectedRows.Count == 1)
-        //    {
-        //        IFeatureLayer featureLayer = this.MapTo.get_Layer(0) as IFeatureLayer;
-        //        IFeatureClass featureClass = featureLayer.FeatureClass;
-
-        //        string oid = this.dataGridViewXTo.SelectedRows[0].Cells[0].Value.ToString();
-        //        IFeature feature = featureClass.GetFeature(Convert.ToInt32(oid));
-        //        this.MapTo.FlashShape(feature.Shape, 3, 100, null);
-
-        //    }
-        //}
-        #region mapControl operation
-        // int isMapFromOrTo = 0;
-        private void MapFrom_OnExtentUpdated(object sender, IMapControlEvents2_OnExtentUpdatedEvent e)
-        {
-            //if (this.comboBoxItemToMapControl.SelectedItem != null)
-            //{
-            //    if (this.comboBoxItemToMapControl.SelectedItem.ToString() == "源图层")
-            //    {
-
-            //    }
-            //}
-            //if (isMapFromOrTo == 0)
-            //{
-            //    isMapFromOrTo = 1;
-            //    if (isMapFromOrTo == 1)
-            //    {
-            //        MapTo.ActiveView.Extent = MapFrom.ActiveView.Extent;
-            //        MapTo.ActiveView.Refresh();
-            //    }
-            //}
-
-        }
-
-        private void MapTo_OnExtentUpdated(object sender, IMapControlEvents2_OnExtentUpdatedEvent e)
-        {
-            //if (this.comboBoxItemToMapControl.SelectedItem != null)
-            //{
-            //    if (this.comboBoxItemToMapControl.SelectedItem.ToString() == "更新图层")
-            //    {
-
-            //    }
-            //}
-
-            //if (isMapFromOrTo == 0)
-            //{
-            //    isMapFromOrTo = 2;
-            //    if (isMapFromOrTo == 2)
-            //    {
-            //        MapFrom.ActiveView.Extent = MapTo.ActiveView.Extent;
-            //        MapFrom.ActiveView.Refresh();
-            //    }
-            //}
-        }
-        #endregion
-
+    
         #region The document that already opened.
         #region write text
         private void WriteText(string text)
@@ -2862,107 +2978,6 @@ namespace ZJGIS
             frmEntiTableCheck.ShowDialog();
         }
 
-        #region 左右屏对比事件
-        string mapName = "";
-        IPoint pPoint = null;
-        string pMouseOperate = "";
-        /// <summary>
-        /// 源图层鼠标移动事件
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void MapFrom_OnMouseMove(object sender, IMapControlEvents2_OnMouseMoveEvent e)
-        {
-            mapName = (sender as AxMapControl).Name;
-
-        }
-        /// <summary>
-        /// 待匹配图层鼠标移动事件
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void MapTo_OnMouseMove(object sender, IMapControlEvents2_OnMouseMoveEvent e)
-        {
-            mapName = (sender as AxMapControl).Name;
-        }
-
-        private void MapFrom_OnMouseDown(object sender, IMapControlEvents2_OnMouseDownEvent e)
-        {
-            mapName = (sender as AxMapControl).Name;
-            pMouseOperate = "Pan";
-            //屏幕坐标点转化为地图坐标点
-            pPoint = (MapFrom.Map as IActiveView).ScreenDisplay.DisplayTransformation.ToMapPoint(e.x, e.y);
-            if (e.button == 1)
-            {
-                IEnvelope pEnvelope = new EnvelopeClass();
-                switch (pMouseOperate)
-                {
-                    case "ZoomIn":
-                        MapOperation zoomIn = new MapOperation();
-                        zoomIn.ZoomIn(MapFrom, MapFrom.TrackRectangle());
-                        break;
-                    case "ZoomOut":
-                        MapOperation zoomOut = new MapOperation();
-                        zoomOut.ZoomOut(MapFrom, MapFrom.TrackRectangle());
-                        break;
-                    case "Pan":
-                        MapOperation pan = new MapOperation();
-                        pan.Pan(MapFrom);
-                        break;
-                    default:
-                        break;
-                }
-            }
-        }
-
-        private void MapTo_OnMouseDown(object sender, IMapControlEvents2_OnMouseDownEvent e)
-        {
-            mapName = (sender as AxMapControl).Name;
-            pMouseOperate = "Pan";
-
-            //屏幕坐标点转化为地图坐标点
-            pPoint = (MapTo.Map as IActiveView).ScreenDisplay.DisplayTransformation.ToMapPoint(e.x, e.y);
-            if (e.button == 1)
-            {
-                IEnvelope pEnvelope = new EnvelopeClass();
-                switch (pMouseOperate)
-                {
-                    case "ZoomIn":
-                        MapOperation zoomIn = new MapOperation();
-                        zoomIn.ZoomIn(MapFrom, MapFrom.TrackRectangle());
-                        break;
-                    case "ZoomOut":
-                        MapOperation zoomOut = new MapOperation();
-                        zoomOut.ZoomOut(MapFrom, MapFrom.TrackRectangle());
-                        break;
-                    case "Pan":
-                        MapOperation pan = new MapOperation();
-                        pan.Pan(MapFrom);
-                        break;
-                    default:
-                        break;
-                }
-            }
-        }
-
-        private void MapFrom_OnViewRefreshed(object sender, IMapControlEvents2_OnViewRefreshedEvent e)
-        {
-            if (mapName == "MapFrom")
-            {
-                MapTo.Extent = MapFrom.Extent;
-                // axMapControl2.ActiveView.Refresh();
-            }
-        }
-
-        private void MapTo_OnViewRefreshed(object sender, IMapControlEvents2_OnViewRefreshedEvent e)
-        {
-            if (mapName == "MapTo")
-            {
-                MapFrom.Extent = MapTo.Extent;
-                // axMapControl2.ActiveView.Refresh();
-            }
-        }
-        #endregion
         /// <summary>
         /// 配置图标
         /// </summary>
@@ -2979,6 +2994,7 @@ namespace ZJGIS
 
             }
         }
+
 
 
 

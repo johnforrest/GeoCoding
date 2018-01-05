@@ -271,6 +271,7 @@ namespace ZJGISOpenData.Forms
             this.Name = "FrmOpenData";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "´ò¿ªÍ¼²ã";
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.FrmOpenData_FormClosed);
             this.Load += new System.EventHandler(this.FrmOpenData_Load);
             this.panelEx1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.advTreeFiles)).EndInit();

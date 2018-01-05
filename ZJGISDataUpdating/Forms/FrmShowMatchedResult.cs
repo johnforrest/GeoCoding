@@ -217,8 +217,8 @@ namespace ZJGISDataUpdating
             //        m_MapControlOverlap.AddShapeFile(path, name);
             //    }
             //}
-            AddITableToDGV(m_Table, null);
-
+            //AddITableToDGV(m_Table, null);
+            FilledDataGridView(m_Table, null);
             //启动标题自动排序功能
             for (int i = 0; i < dataGridViewX1.ColumnCount; i++)
             {
@@ -233,6 +233,40 @@ namespace ZJGISDataUpdating
                 m_TabControl.Tabs[2].Visible = true;
         }
 
+        public void FilledDataGridView(ITable table, IQueryFilter queryFilter)
+        {
+            //this.dataGridViewX1.Rows.Clear();
+            if (queryFilter == null)
+            {
+                DataTable dt = ZJGISCommon.Classes.ClsITableDataTable.ToDataTable(table);
+                BindingSource bs = new BindingSource();
+                bs.DataSource = dt;
+                dataGridViewX1.DataSource = bs;
+            }
+            else
+            {
+                if (table.RowCount(queryFilter) > 0)
+                {
+                    m_ClsTabWrapper = new ClsTableWrapper(table.Fields);
+                    ICursor pCursor = table.Search(queryFilter, false);
+                    IRow pRow = pCursor.NextRow();
+                    while (pRow != null)
+                    {
+                        m_ClsTabWrapper.Add(pRow);
+                        pRow = pCursor.NextRow();
+                    }
+                    this.bindingSource1.DataSource = m_ClsTabWrapper;
+                    this.dataGridViewX1.DataSource = this.bindingSource1;
+                    this.dataGridViewX1.Columns[0].Width = 55;
+                }
+                else
+                {
+                    //MessageBox.Show("不存在此类对应情况！"); 
+                    MessageBox.Show("不存在此类对应情况！", "提示");
+                }
+            }
+
+        }
 
         /// <summary>
         /// 把查询结果表添加到datagridview中
@@ -276,8 +310,6 @@ namespace ZJGISDataUpdating
                     }
 
                 }
-
-
             }
             else
             {
@@ -308,8 +340,9 @@ namespace ZJGISDataUpdating
                 return;
             if (!m_bAll)
             {
-                this.dataGridViewX1.Rows.Clear();
-                AddITableToDGV(m_Table, null);
+                //this.dataGridViewX1.Rows.Clear();
+                //AddITableToDGV(m_Table, null);
+                FilledDataGridView(m_Table, null);
 
                 m_bAll = true;
                 m_bMatched = false;
@@ -336,10 +369,11 @@ namespace ZJGISDataUpdating
                 return;
             if (!m_bMatched)
             {
-                this.dataGridViewX1.Rows.Clear();
+                //this.dataGridViewX1.Rows.Clear();
                 IQueryFilter queryFilter = new QueryFilterClass();
                 queryFilter.WhereClause = "变化标记='未变化'";
-                AddITableToDGV(m_Table, queryFilter);
+                //AddITableToDGV(m_Table, queryFilter);
+                FilledDataGridView(m_Table, queryFilter);
 
                 m_bAll = false;
                 m_bMatched = true;
@@ -366,10 +400,11 @@ namespace ZJGISDataUpdating
                 return;
             if (!m_bAttribute)
             {
-                this.dataGridViewX1.Rows.Clear();
+                //this.dataGridViewX1.Rows.Clear();
                 IQueryFilter queryFilter = new QueryFilterClass();
                 queryFilter.WhereClause = "变化标记='属性变化'";
-                AddITableToDGV(m_Table, queryFilter);
+                //AddITableToDGV(m_Table, queryFilter);
+                FilledDataGridView(m_Table, queryFilter);
 
                 m_bAll = false;
                 m_bMatched = false;
@@ -396,10 +431,11 @@ namespace ZJGISDataUpdating
                 return;
             if (!m_bShape)
             {
-                this.dataGridViewX1.Rows.Clear();
+                //this.dataGridViewX1.Rows.Clear();
                 IQueryFilter queryFilter = new QueryFilterClass();
                 queryFilter.WhereClause = "变化标记='图形变化'";
-                AddITableToDGV(m_Table, queryFilter);
+                //AddITableToDGV(m_Table, queryFilter);
+                FilledDataGridView(m_Table, queryFilter);
 
                 m_bAll = false;
                 m_bMatched = false;
@@ -426,10 +462,11 @@ namespace ZJGISDataUpdating
                 return;
             if (!m_bAttriAndShape)
             {
-                this.dataGridViewX1.Rows.Clear();
+                //this.dataGridViewX1.Rows.Clear();
                 IQueryFilter queryFilter = new QueryFilterClass();
                 queryFilter.WhereClause = "变化标记='属性图形变化'";
-                AddITableToDGV(m_Table, queryFilter);
+                FilledDataGridView(m_Table, queryFilter);
+                //AddITableToDGV(m_Table, queryFilter);
 
                 m_bAll = false;
                 m_bMatched = false;
@@ -456,11 +493,12 @@ namespace ZJGISDataUpdating
                 return;
             if (!m_bOneToMore)
             {
-                this.dataGridViewX1.Rows.Clear();
+                //this.dataGridViewX1.Rows.Clear();
                 IQueryFilter queryFilter = new QueryFilterClass();
                 //queryFilter.WhereClause = "变化标记='一对多'";
-                queryFilter.WhereClause = "变化标记="+"'"+ClsConstant.One2More+"'";
-                AddITableToDGV(m_Table, queryFilter);
+                queryFilter.WhereClause = "变化标记=" + "'" + ClsConstant.One2More + "'";
+                //AddITableToDGV(m_Table, queryFilter);
+                FilledDataGridView(m_Table, queryFilter);
 
                 m_bAll = false;
                 m_bMatched = false;
@@ -487,12 +525,13 @@ namespace ZJGISDataUpdating
                 return;
             if (!m_bMoreToOne)
             {
-                this.dataGridViewX1.Rows.Clear();
+                //this.dataGridViewX1.Rows.Clear();
                 IQueryFilter queryFilter = new QueryFilterClass();
                 //queryFilter.WhereClause = "变化标记='多对一'";
                 queryFilter.WhereClause = "变化标记=" + "'" + ClsConstant.More2One + "'";
 
-                AddITableToDGV(m_Table, queryFilter);
+                //AddITableToDGV(m_Table, queryFilter);
+                FilledDataGridView(m_Table, queryFilter);
 
                 m_bMoreToMore = false;
                 m_bOneToOne = false;
@@ -518,12 +557,13 @@ namespace ZJGISDataUpdating
                 return;
             if (!m_bOneToOne)
             {
-                this.dataGridViewX1.Rows.Clear();
+                //this.dataGridViewX1.Rows.Clear();
                 IQueryFilter queryFilter = new QueryFilterClass();
                 //queryFilter.WhereClause = "变化标记='一对一'";
                 queryFilter.WhereClause = "变化标记=" + "'" + ClsConstant.One2One + "'";
 
-                AddITableToDGV(m_Table, queryFilter);
+                //AddITableToDGV(m_Table, queryFilter);
+                FilledDataGridView(m_Table, queryFilter);
 
                 m_bMoreToMore = false;
                 m_bMoreToOne = false;
@@ -549,11 +589,14 @@ namespace ZJGISDataUpdating
                 return;
             if (!m_bNew)
             {
-                this.dataGridViewX1.Rows.Clear();
+                //this.dataGridViewX1.Rows.Clear();
+
                 IQueryFilter queryFilter = new QueryFilterClass();
                 //queryFilter.WhereClause = "变化标记='新增要素'";
                 queryFilter.WhereClause = "变化标记=" + "'" + ClsConstant.One2Zero + "'";
-                AddITableToDGV(m_Table, queryFilter);
+
+                //AddITableToDGV(m_Table, queryFilter);
+                FilledDataGridView(m_Table, queryFilter);
 
                 m_bOneToOne = false;
                 m_bMoreToOne = false;
@@ -580,12 +623,13 @@ namespace ZJGISDataUpdating
                 return;
             if (!m_bMoreToMore)
             {
-                this.dataGridViewX1.Rows.Clear();
+                //this.dataGridViewX1.Rows.Clear();
                 IQueryFilter queryFilter = new QueryFilterClass();
                 //queryFilter.WhereClause = "变化标记='多对多'";
                 queryFilter.WhereClause = "变化标记=" + "'" + ClsConstant.More2More + "'";
 
-                AddITableToDGV(m_Table, queryFilter);
+                //AddITableToDGV(m_Table, queryFilter);
+                FilledDataGridView(m_Table, queryFilter);
 
                 m_bOneToOne = false;
                 m_bMoreToOne = false;
@@ -911,7 +955,7 @@ namespace ZJGISDataUpdating
                 int j = 0;
 
                 //if (this.dataGridViewX1.SelectedRows[0].Cells["变化标记"].Value.ToString() == "新增要素")
-                    if (this.dataGridViewX1.SelectedRows[0].Cells["变化标记"].Value.ToString() == ClsConstant.One2Zero)
+                if (this.dataGridViewX1.SelectedRows[0].Cells["变化标记"].Value.ToString() == ClsConstant.One2Zero)
                 {
                     int fromOID = Convert.ToInt32(this.dataGridViewX1.SelectedRows[0].Cells["源OID"].Value.ToString().Trim());
                     IFeature fromFeature = fromFeatCls.GetFeature(fromOID);
@@ -1510,66 +1554,6 @@ namespace ZJGISDataUpdating
             }
         }
 
-        private void dataGridViewX1_SortCompare(object sender, DataGridViewSortCompareEventArgs e)
-        {
-            //if (e.CellValue1.ToString().Length == 0 && e.CellValue2.ToString().Length == 0)
-            //{
-            //    e.SortResult = 0;
-            //    // e.Handled = true;就是把默认的给屏蔽掉了
-            //    e.Handled = true;
-            //}
-            //else if (e.CellValue1.ToString().Length == 0)
-            //{
-            //    e.SortResult = -1;
-            //    e.Handled = true;
-
-            //}
-            //else if (e.CellValue2.ToString().Length == 0)
-            //{
-            //    e.SortResult = 1;
-            //    e.Handled = true;
-
-            //}
-            //else
-            //{
-            //    //e.Handled = false;则采用datagridview默认的排序方式下面的这行代码和e.Handled=false等效。
-            //    //e.SortResult = string.Compare(e.CellValue1.ToString(), e.CellValue2.ToString());
-            //    e.Handled = false;
-            //}
-        }
-
-        //private void dataGridViewX1_ColumnHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e)
-        //{
-        //    DataTable d = dvtodt(this.dataGridViewX1);
-        //    string test = this.dataGridViewX1.Columns[e.ColumnIndex].HeaderText;
-        //    d.DefaultView.Sort = this.dataGridViewX1.Columns[e.ColumnIndex].HeaderText+ " ASC";//aa是列标题的text，ASC代表升序（desc降序）
-        //    this.dataGridViewX1.Columns.Clear();
-        //    this.dataGridViewX1.DataSource = d;
-        //}
-
-        //将DataGridView 内容读进datatable
-        public DataTable dvtodt(DataGridView dv)
-        {
-            DataTable dt = new DataTable();
-            DataColumn dc;
-            for (int i = 0; i < dv.Columns.Count; i++)
-            {
-                dc = new DataColumn();
-                dc.ColumnName = dv.Columns[i].HeaderText.ToString();
-                dt.Columns.Add(dc);
-            }
-            for (int j = 0; j < dv.Rows.Count - 1; j++)
-            {
-                DataRow dr = dt.NewRow();
-                for (int x = 0; x < dv.Columns.Count; x++)
-                {
-                    dr[x] = dv.Rows[j].Cells[x].Value;
-                }
-                dt.Rows.Add(dr);
-            }
-            return dt;
-        }
-
         private void dataGridViewX1_CurrentCellChanged(object sender, EventArgs e)
         {
             if (this.dataGridViewX1.CurrentCell != null)
@@ -1623,89 +1607,7 @@ namespace ZJGISDataUpdating
                 dataGridViewX1.CurrentCell.Value = comboBox1.Items[comboBox1.SelectedIndex];
 
         }
-        /// <summary>
-        /// 保存
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void buttonXSave_Click(object sender, EventArgs e)
-        {
-            IWorkspaceEdit m_WorkspaceEdit;
-            m_WorkspaceEdit = ((IDataset)m_Table).Workspace as IWorkspaceEdit;
-            if (!m_WorkspaceEdit.IsBeingEdited())
-            {
-                m_WorkspaceEdit.StartEditing(false);
-            }
-            m_WorkspaceEdit.StartEditOperation();
 
-
-            #region 方法一
-            ////ICursor pCur = m_Table.Search(null, false);
-            //ICursor pCur = m_Table.Update(null, false);
-            //IRow row = pCur.NextRow();
-            //while (pCur != null && pCur.NextRow() != null)
-            //{
-            //    int pIndex = row.Fields.FindField("变化标记");
-
-            //    if (row != null)
-            //    {
-            //        row.set_Value(pIndex, row.get_Value(pIndex));
-            //        row.Store();
-            //    }
-            //    row = pCur.NextRow();
-            //}
-            #endregion
-
-            #region 方法二
-  
-            int index = 0;
-            int souIndex = 0;
-            int rowCount = dataGridViewX1.Rows.Count;//得到总行数    
-            int cellCount = dataGridViewX1.Rows[1].Cells.Count;//得到总列数    
-            for (int i=0; i < dataGridViewX1.Columns.Count; i++)
-            {
-                if (dataGridViewX1.Columns[i].Name == "源OID")
-                {
-                    souIndex = i;
-
-                }
-                if (dataGridViewX1.Columns[i].Name == "变化标记")
-                {
-                    index = i;
-                }
-            }
-            IRow pRow = null;
-            ICursor pCursor = null;
-            int pIndex = 0;
-            int pOID = 0;
-            for (int i = 0; i < rowCount; i++)//得到总行数并在之内循环    
-            {
-                string strDGV = dataGridViewX1.Rows[i].Cells[index].Value.ToString();
-
-                pCursor = m_Table.Update(null, false);
-                pRow = pCursor.NextRow();
-                pIndex = pRow.Fields.FindField("变化标记");
-                pOID = pRow.Fields.FindField("源OID");
-                while (pRow != null)
-                {
-                    if (dataGridViewX1.Rows[i].Cells[souIndex].Value.ToString() == pRow.get_Value(pOID).ToString())
-                    {
-                        if (pRow.get_Value(pIndex).ToString().Trim() != strDGV)
-                        {
-                            //int tstin = pRow.OID;
-                            pRow.set_Value(pIndex, strDGV);
-                            pCursor.UpdateRow(pRow);
-                        }
-                    }
-                    pRow = pCursor.NextRow();
-                }
-
-            }
-            #endregion
-            m_WorkspaceEdit.StopEditOperation();
-            m_WorkspaceEdit.StopEditing(true);
-            MessageBox.Show("保存成功！", "提示", MessageBoxButtons.OK);
-        }
         /// <summary>
         ///保存DataTable表为BF ,tempPath文件完整路径
         /// </summary>
@@ -1788,45 +1690,160 @@ namespace ZJGISDataUpdating
                 return false;
             }
         }
-
-
         /// <summary>
-        /// 将ITable转换为DataTable
+        /// 保存
         /// </summary>
-        /// <param name="mTable"></param>
-        /// <returns></returns>
-        public static DataTable ToDataTable(ITable mTable)
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void btnSave_Click(object sender, EventArgs e)
         {
-            try
+            IWorkspaceEdit m_WorkspaceEdit;
+            m_WorkspaceEdit = ((IDataset)m_Table).Workspace as IWorkspaceEdit;
+            if (!m_WorkspaceEdit.IsBeingEdited())
             {
-                DataTable pTable = new DataTable();
-                for (int i = 0; i < mTable.Fields.FieldCount; i++)
+                m_WorkspaceEdit.StartEditing(false);
+            }
+            m_WorkspaceEdit.StartEditOperation();
+
+            #region 方法一
+            ////ICursor pCur = m_Table.Search(null, false);
+            //ICursor pCur = m_Table.Update(null, false);
+            //IRow row = pCur.NextRow();
+            //while (pCur != null && pCur.NextRow() != null)
+            //{
+            //    int pIndex = row.Fields.FindField("变化标记");
+
+            //    if (row != null)
+            //    {
+            //        row.set_Value(pIndex, row.get_Value(pIndex));
+            //        row.Store();
+            //    }
+            //    row = pCur.NextRow();
+            //}
+            #endregion
+
+
+
+            int changeIndex = 0;
+            int sourceIndex = 0;
+            for (int i = 0; i < dataGridViewX1.Columns.Count; i++)
+            {
+                if (dataGridViewX1.Columns[i].Name == "源OID")
                 {
-                    pTable.Columns.Add(mTable.Fields.get_Field(i).Name);
+                    sourceIndex = i;
+
                 }
-                ICursor pCursor = mTable.Search(null, false);
-                IRow pRrow = pCursor.NextRow();
-                while (pRrow != null)
+                if (dataGridViewX1.Columns[i].Name == "变化标记")
                 {
-                    DataRow pRow = pTable.NewRow();
-                    string[] StrRow = new string[pRrow.Fields.FieldCount];
-                    for (int i = 0; i < pRrow.Fields.FieldCount; i++)
+                    changeIndex = i;
+                }
+            }
+
+            IRow pRow = null;
+            ICursor pCursor = null;
+            int pChangeIndex = 0;
+            int pOID = 0;
+            for (int i = 0; i < dataGridViewX1.Rows.Count; i++)//得到总行数并在之内循环    
+            {
+                string strDGV = dataGridViewX1.Rows[i].Cells[changeIndex].Value.ToString();
+
+                pCursor = m_Table.Update(null, false);
+                pRow = pCursor.NextRow();
+
+                pChangeIndex = pRow.Fields.FindField("变化标记");
+                pOID = pRow.Fields.FindField("源OID");
+
+                while (pRow != null)
+                {
+                    if (dataGridViewX1.Rows[i].Cells[sourceIndex].Value.ToString() == pRow.get_Value(pOID).ToString())
                     {
-                        StrRow[i] = pRrow.get_Value(i).ToString();
+                        if (pRow.get_Value(pChangeIndex).ToString().Trim() != strDGV)
+                        {
+                            //int tstin = pRow.OID;
+                            pRow.set_Value(pChangeIndex, strDGV);
+                            pCursor.UpdateRow(pRow);
+                        }
                     }
-                    pRow.ItemArray = StrRow;
-                    pTable.Rows.Add(pRow);
-                    pRrow = pCursor.NextRow();
+                    pRow = pCursor.NextRow();
                 }
-                return pTable;
+
             }
-            catch (Exception ex)
-            {
-                return null;
-            }
+
+
+            m_WorkspaceEdit.StopEditOperation();
+            m_WorkspaceEdit.StopEditing(true);
+
+            MessageBox.Show("保存成功！", "提示", MessageBoxButtons.OK);
         }
 
+        private void cmMenuSave_Click(object sender, EventArgs e)
+        {
+            IWorkspaceEdit m_WorkspaceEdit;
+            m_WorkspaceEdit = ((IDataset)m_Table).Workspace as IWorkspaceEdit;
+            if (!m_WorkspaceEdit.IsBeingEdited())
+            {
+                m_WorkspaceEdit.StartEditing(false);
+            }
+            m_WorkspaceEdit.StartEditOperation();
 
+            int changeIndex = 0;
+            int sourceIndex = 0;
+            for (int i = 0; i < dataGridViewX1.Columns.Count; i++)
+            {
+                if (dataGridViewX1.Columns[i].Name == "源OID")
+                {
+                    sourceIndex = i;
+                }
+                if (dataGridViewX1.Columns[i].Name == "变化标记")
+                {
+                    changeIndex = i;
+                }
+            }
+            //int rowindex = e; 
+            //string currentRowIndex = this.dataGridViewX1[0, this.dataGridViewX1.CurrentCell.RowIndex].Value.ToString();
+            int currentRowIndex = this.dataGridViewX1.CurrentCell.RowIndex;
+            string strChangeContent = dataGridViewX1.Rows[currentRowIndex].Cells[changeIndex].Value.ToString();
+
+            IRow pRow = null;
+            ICursor pCursor = null;
+            pCursor = m_Table.Update(null, false);
+            pRow = pCursor.NextRow();
+            int pChangeIndex = pRow.Fields.FindField("变化标记");
+            int pOID = pRow.Fields.FindField("源OID");
+
+            while (pRow != null)
+            {
+                //if (pRow.get_Value(pChangeIndex).ToString().Trim() != strChangeContent)
+                //{
+                //    pRow.set_Value(pChangeIndex, strChangeContent);
+                //    pCursor.UpdateRow(pRow);
+                //}
+                if (pRow.get_Value(sourceIndex).ToString().Trim() != currentRowIndex.ToString())
+                {
+                    pRow.set_Value(pChangeIndex, strChangeContent);
+                    pCursor.UpdateRow(pRow);
+                }
+                pRow = pCursor.NextRow();
+            }
+
+            m_WorkspaceEdit.StopEditOperation();
+            m_WorkspaceEdit.StopEditing(true);
+            MessageBox.Show("保存成功！", "提示", MessageBoxButtons.OK);
+        }
+
+        private void dataGridViewX1_CellMouseDown(object sender, DataGridViewCellMouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Right)
+            {
+                if (e.RowIndex >= 0)
+                {
+                    dataGridViewX1.ClearSelection();
+                    dataGridViewX1.Rows[e.RowIndex].Selected = true;
+                    dataGridViewX1.CurrentCell = dataGridViewX1.Rows[e.RowIndex].Cells[e.ColumnIndex];
+                    this.contextMenuStrip1.Show(MousePosition.X, MousePosition.Y);
+                }
+            }
+        }
 
     }
 }

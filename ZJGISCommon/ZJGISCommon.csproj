@@ -143,6 +143,7 @@
     <Compile Include="Classes\ClsDataDictionary.cs" />
     <Compile Include="Classes\ClsFcode.cs" />
     <Compile Include="Classes\ClsFile.cs" />
+    <Compile Include="Classes\ClsITableDataTable.cs" />
     <Compile Include="Classes\ClsMapLayer.cs" />
     <Compile Include="Classes\ClsRole.cs" />
     <Compile Include="Classes\ClsSDE.cs" />

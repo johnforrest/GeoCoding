@@ -100,7 +100,6 @@
             this.DoubleBuffered = true;
             this.Margin = new System.Windows.Forms.Padding(4);
             this.MaximizeBox = false;
-            this.MinimizeBox = false;
             this.Name = "FrmResult";
             this.Text = "编辑匹配结果表";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.FrmResult_FormClosed);
