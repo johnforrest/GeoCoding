@@ -10,6 +10,7 @@ using DevComponents.DotNetBar;
 using ESRI.ArcGIS.Geometry;
 using ZJGISCommon.Classes;
 using System.Data;
+using ZJGISCommon.Forms;
 
 namespace ZJGISGCoding.Class
 {
@@ -678,6 +679,7 @@ namespace ZJGISGCoding.Class
         //public DataTable CheckCommonEnti(IMap pMapControl, ComboBoxEx cbxLayerName)
         public List<IRow> CheckCommonEnti(IFeatureLayer pFeatureLayer)
         {
+            FrmProgressBar progressbar = null;
             //ITable pTable = new ITable();
             List<IRow> list = new List<IRow>();
             IDataset cDataset = pFeatureLayer.FeatureClass as IDataset;
@@ -690,6 +692,8 @@ namespace ZJGISGCoding.Class
 
             if (pFeatureLayer != null)
             {
+                progressbar = new FrmProgressBar(pFeatureLayer.FeatureClass.FeatureCount(null));
+                progressbar.Show();
                 //检查格网字段是否存在，不存在就添加格网字段GridCode
                 //pClsCom.CheckGridCode(pFeatureLayer, gridField);
 
@@ -722,8 +726,11 @@ namespace ZJGISGCoding.Class
                             {
                                 list.Add((pFeature as IRow));
                             }
+                            progressbar.GoOneStep();
                             pFeature = pFeatureCursor.NextFeature();
                         }
+                        progressbar.CloseForm();
+                        
                         pWorkspaceEdit.StopEditing(true);
                         pWorkspaceEdit.StopEditOperation();
                     }

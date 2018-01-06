@@ -14,15 +14,9 @@ namespace ZJGISFinishTool
    
     public sealed class ClsExtractAfterProjection : BaseCommand
     {
-       
-
         private IHookHelper m_hookHelper = null;
-      
-
         public ClsExtractAfterProjection()
         {
-          
-
             base.m_category = "DataExtract"; //localizable text
             base.m_caption = "投影转换";  //localizable text 
             base.m_message = "投影转换";  //localizable text

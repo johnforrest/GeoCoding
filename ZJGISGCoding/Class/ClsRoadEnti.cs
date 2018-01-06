@@ -9,6 +9,7 @@ using ESRI.ArcGIS.Carto;
 using ESRI.ArcGIS.Geodatabase;
 using ESRI.ArcGIS.Geometry;
 using ZJGISCommon.Classes;
+using ZJGISCommon.Forms;
 
 namespace ZJGISGCoding.Class
 {
@@ -1923,6 +1924,8 @@ namespace ZJGISGCoding.Class
         //public DataTable CheckCommonEnti(IMap pMapControl, ComboBoxEx cbxLayerName)
         public List<IRow> CheckRoadEnti(IFeatureLayer pFeatureLayer)
         {
+            FrmProgressBar progressbar = null;
+
             //ITable pTable = new ITable();
             List<IRow> list = new List<IRow>();
             string roadField = "ROADCODE";
@@ -1937,6 +1940,8 @@ namespace ZJGISGCoding.Class
 
             if (pFeatureLayer != null)
             {
+                progressbar = new FrmProgressBar(pFeatureLayer.FeatureClass.FeatureCount(null));
+                progressbar.Show();
                 //检查格网字段是否存在，不存在就添加格网字段GridCode
                 //pClsCom.CheckGridCode(pFeatureLayer, gridField);
 
@@ -1971,8 +1976,10 @@ namespace ZJGISGCoding.Class
                             {
                                 list.Add((pFeature as IRow));
                             }
+                            progressbar.GoOneStep();
                             pFeature = pFeatureCursor.NextFeature();
                         }
+                        progressbar.CloseForm();
                         pWorkspaceEdit.StopEditing(true);
                         pWorkspaceEdit.StopEditOperation();
                     }

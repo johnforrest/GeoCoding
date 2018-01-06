@@ -50,7 +50,7 @@
             this.Controls.Add(this.dataChild);
             this.DoubleBuffered = true;
             this.Name = "FrmResultDGV";
-            this.Text = "重复的实体记录";
+            this.Text = "实体空值检查";
             ((System.ComponentModel.ISupportInitialize)(this.dataChild)).EndInit();
             this.ResumeLayout(false);
 

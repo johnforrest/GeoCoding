@@ -153,6 +153,12 @@
     <Compile Include="Classes\ClsXml.cs" />
     <Compile Include="Classes\ClsXmlLinq.cs" />
     <Compile Include="Classes\SaveInfoToTxt.cs" />
+    <Compile Include="Forms\FrmProgressBar.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FrmProgressBar.Designer.cs">
+      <DependentUpon>FrmProgressBar.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\FrmSDE.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -167,6 +173,9 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Forms\FrmProgressBar.resx">
+      <DependentUpon>FrmProgressBar.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\FrmSDE.resx">
       <DependentUpon>FrmSDE.cs</DependentUpon>
     </EmbeddedResource>

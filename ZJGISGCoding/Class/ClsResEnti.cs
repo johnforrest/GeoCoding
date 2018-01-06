@@ -9,6 +9,8 @@ using ESRI.ArcGIS.Carto;
 using ESRI.ArcGIS.Geodatabase;
 using ESRI.ArcGIS.Geometry;
 using ZJGISCommon.Classes;
+using ZJGISCommon.Forms;
+using System.Data;
 
 namespace ZJGISGCoding.Class
 {
@@ -674,6 +676,8 @@ namespace ZJGISGCoding.Class
         //public DataTable CheckCommonEnti(IMap pMapControl, ComboBoxEx cbxLayerName)
         public List<IRow> CheckRESEnti(IFeatureLayer pFeatureLayer)
         {
+            FrmProgressBar progressbar = null;
+
             //ITable pTable = new ITable();
             List<IRow> list = new List<IRow>();
             IDataset cDataset = pFeatureLayer.FeatureClass as IDataset;
@@ -686,6 +690,9 @@ namespace ZJGISGCoding.Class
 
             if (pFeatureLayer != null)
             {
+                progressbar = new FrmProgressBar(pFeatureLayer.FeatureClass.FeatureCount(null));
+                progressbar.Show();
+
                 //检查格网字段是否存在，不存在就添加格网字段GridCode
                 //pClsCom.CheckGridCode(pFeatureLayer, gridField);
                 IDataset pDataset = pFeatureLayer.FeatureClass as IDataset;
@@ -706,18 +713,22 @@ namespace ZJGISGCoding.Class
                     IFeature pFeature = pFeatureCursor.NextFeature();
                     while (pFeature != null)
                     {
-                        if (pFeature.get_Value(pFeature.Fields.FindField("FCODE")).ToString() == "3103011500" ||
+                        if ((pFeature.get_Value(pFeature.Fields.FindField("FCODE")).ToString() == "3103011500" ||
                             pFeature.get_Value(pFeature.Fields.FindField("FCODE")).ToString() == "3103012500" ||
                             pFeature.get_Value(pFeature.Fields.FindField("FCODE")).ToString() == "3103013500" ||
                             pFeature.get_Value(pFeature.Fields.FindField("FCODE")).ToString() == "3103020500" ||
                             pFeature.get_Value(pFeature.Fields.FindField("FCODE")).ToString() == "3106000500" ||
                             pFeature.get_Value(pFeature.Fields.FindField("FCODE")).ToString() == "3107000500" ||
-                            pFeature.get_Value(pFeature.Fields.FindField("FCODE")).ToString() == "3108000500")
+                            pFeature.get_Value(pFeature.Fields.FindField("FCODE")).ToString() == "3108000500") &&
+                            pFeature.get_Value(pFeature.Fields.FindField(ClsConfig.LayerConfigs[(pFeatureLayer as IDataset).Name].EntityID)).ToString().Length == 0)
                         {
                             list.Add((pFeature as IRow));
                         }
+                        progressbar.GoOneStep();
+
                         pFeature = pFeatureCursor.NextFeature();
                     }
+                    progressbar.CloseForm();
                     pWorkspaceEdit.StopEditing(true);
                     pWorkspaceEdit.StopEditOperation();
                 }
@@ -728,5 +739,90 @@ namespace ZJGISGCoding.Class
             }
             return list;
         }
+
+        #region 20180106
+        //public DataTable CheckRESEnti(IFeatureLayer pFeatureLayer)
+        //{
+
+        //    List<string> list = new List<string>();
+        //    list.Add("3103011500");
+        //    list.Add("3103012500");
+        //    list.Add("3103013500");
+        //    list.Add("3103020500");
+        //    list.Add("3106000500");
+        //    list.Add("3107000500");
+        //    list.Add("3108000500");
+
+        //    FrmProgressBar progressbar = null;
+
+        //    //ITable pTable = new ITable();
+        //    //List<IRow> list = new List<IRow>();
+        //    DataTable dt = new DataTable();
+
+        //    IDataset cDataset = pFeatureLayer.FeatureClass as IDataset;
+        //    IGeoDataset cGeoDataset = cDataset as IGeoDataset;
+        //    ISpatialReference cSpatialReference = cGeoDataset.SpatialReference;
+        //    if (cSpatialReference is IProjectedCoordinateSystem)
+        //    {
+        //        MessageBox.Show("该图层为投影坐标，请转换为相应的地理坐标,再开始地理编码！");
+        //    }
+
+        //    if (pFeatureLayer != null)
+        //    {
+        //        progressbar = new FrmProgressBar(pFeatureLayer.FeatureClass.FeatureCount(null));
+        //        progressbar.Show();
+
+        //        dt = ZJGISCommon.Classes.ClsITableDataTable.FeatureClassToDataTable(pFeatureLayer.FeatureClass);
+
+
+        //        DataRow[] drArr = dt.Select("WZMC='" + MaterialName + "' and   CZ='" + MaterialTexture + "   and   GG='" + MaterialSpecs + "'");
+
+        //        //检查格网字段是否存在，不存在就添加格网字段GridCode
+        //        //pClsCom.CheckGridCode(pFeatureLayer, gridField);
+        //        IDataset pDataset = pFeatureLayer.FeatureClass as IDataset;
+        //        IWorkspaceEdit pWorkspaceEdit = null;
+        //        if (pDataset != null)
+        //        {
+        //            pWorkspaceEdit = pDataset.Workspace as IWorkspaceEdit;
+        //            if (pWorkspaceEdit != null || pWorkspaceEdit.IsBeingEdited() == false)
+        //            {
+        //                pWorkspaceEdit.StartEditing(true);
+        //                pWorkspaceEdit.StartEditOperation();
+        //            }
+        //            IFeatureCursor pFeatureCursor = pFeatureLayer.Search(null, false);
+
+        //            int i = pFeatureLayer.FeatureClass.FeatureCount(null);
+        //            int j = 0;
+
+        //            IFeature pFeature = pFeatureCursor.NextFeature();
+        //            while (pFeature != null)
+        //            {
+        //                if (pFeature.get_Value(pFeature.Fields.FindField("FCODE")).ToString() == "3103011500" ||
+        //                    pFeature.get_Value(pFeature.Fields.FindField("FCODE")).ToString() == "3103012500" ||
+        //                    pFeature.get_Value(pFeature.Fields.FindField("FCODE")).ToString() == "3103013500" ||
+        //                    pFeature.get_Value(pFeature.Fields.FindField("FCODE")).ToString() == "3103020500" ||
+        //                    pFeature.get_Value(pFeature.Fields.FindField("FCODE")).ToString() == "3106000500" ||
+        //                    pFeature.get_Value(pFeature.Fields.FindField("FCODE")).ToString() == "3107000500" ||
+        //                    pFeature.get_Value(pFeature.Fields.FindField("FCODE")).ToString() == "3108000500")
+        //                {
+        //                    list.Add((pFeature as IRow));
+        //                }
+        //                progressbar.GoOneStep();
+
+        //                pFeature = pFeatureCursor.NextFeature();
+        //            }
+        //            progressbar.CloseForm();
+        //            pWorkspaceEdit.StopEditing(true);
+        //            pWorkspaceEdit.StopEditOperation();
+        //        }
+        //    }
+        //    else
+        //    {
+        //        MessageBoxEx.Show("没有选中任何图层！");
+        //    }
+        //    return list;
+        //}
+        #endregion
+
     }
 }

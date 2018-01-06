@@ -85,5 +85,79 @@ namespace ZJGISCommon.Classes
             return dt;
         }
 
+        /// <summary>
+        /// 将FeatClass属性表高效率转换成DataTable  
+        ///gisrsman.cnblogs.com
+        /// </summary>
+        /// <param name="featCls">输入的要素类</param>
+        /// <param name="pQueryFilter">查询器，无则为Null</param>
+        /// <returns></returns>
+        public static DataTable FeatClass2DataTable(IFeatureClass featCls, IQueryFilter pQueryFilter)
+        {
+            DataTable pAttDT = null;
+            string pFieldName;
+            string pFieldValue;
+            DataRow pDataRow;
+
+            if (featCls != null)
+            {
+                //根据IFeatureClass字段结构初始化一个表结构
+                pAttDT = InitTableByFeaCls(featCls);
+
+                ITable pFeatTable = featCls as ITable;
+                int pFieldCout = pFeatTable.Fields.FieldCount;
+                ICursor pCursor = pFeatTable.Search(pQueryFilter, false);
+                IRow pRow = pCursor.NextRow();
+
+                while (pRow != null)
+                {
+                    pDataRow = pAttDT.NewRow();
+                    for (int j = 0; j < pFieldCout; j++)
+                    {
+                        pFieldValue = pRow.get_Value(j).ToString();
+                        pFieldName = pFeatTable.Fields.get_Field(j).Name;
+                        pDataRow[pFieldName] = pFieldValue;
+                    }
+                    pAttDT.Rows.Add(pDataRow);
+                    pRow = pCursor.NextRow();
+                }
+            }
+            return pAttDT;
+        }
+
+        private static DataTable InitTableByFeaCls(IFeatureClass featCls)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static DataTable FeatureClassToDataTable(IFeatureClass pListFeaCls)
+        {
+            DataTable pDataTable = new DataTable();
+            try
+            {
+                if (pListFeaCls != null)
+                {
+                    ITable pFeaTable = pListFeaCls as ITable;
+                    ICursor pCursor = pFeaTable.Search(null, false);
+                    IRow pRow = pCursor.NextRow();
+                    while (pRow != null)
+                    {
+                        object[] ob = new object[pRow.Fields.FieldCount];
+                        for (int i = 0; i < pRow.Fields.FieldCount; i++)
+                        {
+                            ob[i] = pRow.get_Value(i);
+                        }
+                        pDataTable.Rows.Add(ob);
+                        pRow = pCursor.NextRow();
+                    }
+                }
+                return pDataTable;
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
     }
 }

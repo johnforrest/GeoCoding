@@ -53,25 +53,41 @@ namespace ZJGISGCoding.Forms
         {
             if (list.Count > 0)
             {
+                //填充列字段
                 this.dataChild.Columns.Clear();
                 for (int i = 0; i < list[0].Fields.FieldCount; i++)
                 {
                     this.dataChild.Columns.Add(list[0].Fields.get_Field(i).Name, list[0].Fields.get_Field(i).AliasName);
                     this.dataChild.Columns[i].SortMode = DataGridViewColumnSortMode.NotSortable;
                 }
+                //填充行数据
                 this.dataChild.Rows.Clear();
-
+                //list[j].Table as IDataset
+         
                 for (int j = 0; j < list.Count; j++)
                 {
+                    //if ((list[0].Table as IFeatureClass).ShapeType == esriGeometryType.esriGeometryPolygon)
+                    //{
+                    //    this.dataChild.Rows[j].Cells[1].Value = "面";
+                    //}
+                    //else if ((list[0].Table as IFeatureClass).ShapeType == esriGeometryType.esriGeometryPolyline
+                    //    || (list[j].Table as IFeatureClass).ShapeType == esriGeometryType.esriGeometryLine)
+                    //{
+                    //    this.dataChild.Rows[j].Cells[1].Value = "线";
+                    //}
+                    //else if ((list[0].Table as IFeatureClass).ShapeType == esriGeometryType.esriGeometryMultipoint
+                    //    || (list[j].Table as IFeatureClass).ShapeType == esriGeometryType.esriGeometryPoint)
+                    //{
+                    //    this.dataChild.Rows[j].Cells[1].Value = "点";
+                    //}
+
                     for (int i = 0; i < list[j].Fields.FieldCount; i++)
                     {
+
                         this.dataChild.Rows.Add();
                         if (i != 1)
                         {
-                            //int index = this.dataChild.Rows.Add();
-                            //this.dataChild.Rows[index].DefaultCellStyle.BackColor = Color.LightSteelBlue;
                             this.dataChild.Rows[j].Cells[i].Value = list[j].get_Value(i);
-                            //this.dataChild.Rows[index].Cells[1].Value = pRow.get_Value(i);
                         }
                         else
                         {
@@ -83,12 +99,12 @@ namespace ZJGISGCoding.Forms
                             else if ((list[j].Table as IFeatureClass).ShapeType == esriGeometryType.esriGeometryPolyline
                                 || (list[j].Table as IFeatureClass).ShapeType == esriGeometryType.esriGeometryLine)
                             {
-                                this.dataChild.Rows[j].Cells[i].Value =  "线";
+                                this.dataChild.Rows[j].Cells[i].Value = "线";
                             }
                             else if ((list[j].Table as IFeatureClass).ShapeType == esriGeometryType.esriGeometryMultipoint
                                 || (list[j].Table as IFeatureClass).ShapeType == esriGeometryType.esriGeometryPoint)
                             {
-                                this.dataChild.Rows[j].Cells[i].Value ="点";
+                                this.dataChild.Rows[j].Cells[i].Value = "点";
                             }
                         }
                     }

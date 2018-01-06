@@ -704,20 +704,6 @@ namespace ZJGIS
                 mapMain.ActiveView.Refresh();
             }
         }
-        /// <summary>
-        /// 新建
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void btnNew_Click(object sender, EventArgs e)
-        {
-            IMapDocument pMapDocument = new MapDocumentClass();
-
-            string sFilePath = System.Windows.Forms.Application.StartupPath + "\\untitled.mxd";
-            pMapDocument.New(sFilePath);
-            pMapDocument.Open(sFilePath, "");
-            mapMain.Map = pMapDocument.get_Map(0);
-        }
 
         #endregion
         #region Environment configuration
@@ -2810,29 +2796,26 @@ namespace ZJGIS
 
         }
 
-
-
-
         #endregion
         private void btnUpdate_Click(object sender, EventArgs e)
         {
             FrmUpdate pFrmUpdate = new FrmUpdate();
             pFrmUpdate.ShowDialog();
         }
-
+        /// <summary>
+        /// 历史对照
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btnHistoryLook_Click(object sender, EventArgs e)
         {
-
             ClsHistory.Map = mapMain.Map;
             ClsHistory.Connection = ClsDBInfo.OracleConn;
             FrmHistoryView historyViewer = new FrmHistoryView();
             historyViewer.ShowDialog();
         }
 
-        private void btnSplit_Click(object sender, EventArgs e)
-        {
-
-        }
+  
         /// <summary>
         /// 退出系统
         /// </summary>
@@ -2995,24 +2978,7 @@ namespace ZJGIS
             }
         }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    
 
 
     }

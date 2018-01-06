@@ -32,6 +32,19 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmMain));
             this.RibbonTabItemGroup1 = new DevComponents.DotNetBar.RibbonTabItemGroup();
             this.ribbonControl1 = new DevComponents.DotNetBar.RibbonControl();
+            this.ribbonPanel8 = new DevComponents.DotNetBar.RibbonPanel();
+            this.ribbonBar16 = new DevComponents.DotNetBar.RibbonBar();
+            this.btnMaintain = new DevComponents.DotNetBar.ButtonItem();
+            this.ribbonBar15 = new DevComponents.DotNetBar.RibbonBar();
+            this.btnSDEConnection = new DevComponents.DotNetBar.ButtonItem();
+            this.ribbonPanel7 = new DevComponents.DotNetBar.RibbonPanel();
+            this.ribbonBar17 = new DevComponents.DotNetBar.RibbonBar();
+            this.btnHistoryLook = new DevComponents.DotNetBar.ButtonItem();
+            this.ribbonPanel2 = new DevComponents.DotNetBar.RibbonPanel();
+            this.ribbonBar5 = new DevComponents.DotNetBar.RibbonBar();
+            this.ItemContainer5 = new DevComponents.DotNetBar.ItemContainer();
+            this.btnProtrans = new DevComponents.DotNetBar.ButtonItem();
+            this.RibbonPanel3 = new DevComponents.DotNetBar.RibbonPanel();
             this.ribbonPanel4 = new DevComponents.DotNetBar.RibbonPanel();
             this.ribbonBar18 = new DevComponents.DotNetBar.RibbonBar();
             this.itemContainer8 = new DevComponents.DotNetBar.ItemContainer();
@@ -49,7 +62,20 @@
             this.btnUpdateCheck = new DevComponents.DotNetBar.ButtonItem();
             this.btnEditMathTab = new DevComponents.DotNetBar.ButtonItem();
             this.btnUpdate = new DevComponents.DotNetBar.ButtonItem();
-            this.RibbonPanel3 = new DevComponents.DotNetBar.RibbonPanel();
+            this.ribbonPanel10 = new DevComponents.DotNetBar.RibbonPanel();
+            this.ribbonBar12 = new DevComponents.DotNetBar.RibbonBar();
+            this.btnConfigLayer = new DevComponents.DotNetBar.ButtonItem();
+            this.ribbonBarCommonEntiCheck = new DevComponents.DotNetBar.RibbonBar();
+            this.itemContainer22 = new DevComponents.DotNetBar.ItemContainer();
+            this.comboBoxItemCheck = new DevComponents.DotNetBar.ComboBoxItem();
+            this.itemContainer21 = new DevComponents.DotNetBar.ItemContainer();
+            this.btnCommonNullCheck = new DevComponents.DotNetBar.ButtonItem();
+            this.btnEntiTableCheck = new DevComponents.DotNetBar.ButtonItem();
+            this.ribbonBarEnti = new DevComponents.DotNetBar.RibbonBar();
+            this.btnEntiDB = new DevComponents.DotNetBar.ButtonItem();
+            this.btnCheckEntiTable = new DevComponents.DotNetBar.ButtonItem();
+            this.buttonEntitySearch = new DevComponents.DotNetBar.ButtonItem();
+            this.buttonEntityUpdate = new DevComponents.DotNetBar.ButtonItem();
             this.ribbonPanel6 = new DevComponents.DotNetBar.RibbonPanel();
             this.ribbonBar11 = new DevComponents.DotNetBar.RibbonBar();
             this.itemContainer23 = new DevComponents.DotNetBar.ItemContainer();
@@ -70,31 +96,6 @@
             this.btnStart = new DevComponents.DotNetBar.ButtonItem();
             this.btnRestGrid = new DevComponents.DotNetBar.ButtonItem();
             this.btnRestCode = new DevComponents.DotNetBar.ButtonItem();
-            this.ribbonPanel10 = new DevComponents.DotNetBar.RibbonPanel();
-            this.ribbonBar12 = new DevComponents.DotNetBar.RibbonBar();
-            this.btnConfigLayer = new DevComponents.DotNetBar.ButtonItem();
-            this.ribbonBarCommonEntiCheck = new DevComponents.DotNetBar.RibbonBar();
-            this.itemContainer22 = new DevComponents.DotNetBar.ItemContainer();
-            this.comboBoxItemCheck = new DevComponents.DotNetBar.ComboBoxItem();
-            this.itemContainer21 = new DevComponents.DotNetBar.ItemContainer();
-            this.btnCommonNullCheck = new DevComponents.DotNetBar.ButtonItem();
-            this.btnEntiTableCheck = new DevComponents.DotNetBar.ButtonItem();
-            this.ribbonBarEnti = new DevComponents.DotNetBar.RibbonBar();
-            this.btnEntiDB = new DevComponents.DotNetBar.ButtonItem();
-            this.btnCheckEntiTable = new DevComponents.DotNetBar.ButtonItem();
-            this.buttonEntitySearch = new DevComponents.DotNetBar.ButtonItem();
-            this.buttonEntityUpdate = new DevComponents.DotNetBar.ButtonItem();
-            this.ribbonPanel2 = new DevComponents.DotNetBar.RibbonPanel();
-            this.ribbonBar4 = new DevComponents.DotNetBar.RibbonBar();
-            this.itemContainer2 = new DevComponents.DotNetBar.ItemContainer();
-            this.btnSplit = new DevComponents.DotNetBar.ButtonItem();
-            this.itemContainer3 = new DevComponents.DotNetBar.ItemContainer();
-            this.btnMerge = new DevComponents.DotNetBar.ButtonItem();
-            this.ribbonBar5 = new DevComponents.DotNetBar.RibbonBar();
-            this.ItemContainer5 = new DevComponents.DotNetBar.ItemContainer();
-            this.btnProtrans = new DevComponents.DotNetBar.ButtonItem();
-            this.itemContainer1 = new DevComponents.DotNetBar.ItemContainer();
-            this.buttonItem3 = new DevComponents.DotNetBar.ButtonItem();
             this.ribbonPanel1 = new DevComponents.DotNetBar.RibbonPanel();
             this.ribbonBar19 = new DevComponents.DotNetBar.RibbonBar();
             this.btnMeasure = new DevComponents.DotNetBar.ButtonItem();
@@ -123,24 +124,8 @@
             this.btnRefresh = new DevComponents.DotNetBar.ButtonItem();
             this.btnFullExtent = new DevComponents.DotNetBar.ButtonItem();
             this.btnDefault = new DevComponents.DotNetBar.ButtonItem();
-            this.RibbonPanel5 = new DevComponents.DotNetBar.RibbonPanel();
-            this.RibbonBar10 = new DevComponents.DotNetBar.RibbonBar();
-            this.btnAboutSys = new DevComponents.DotNetBar.ButtonItem();
-            this.btnSysHelp = new DevComponents.DotNetBar.ButtonItem();
-            this.ribbonPanel8 = new DevComponents.DotNetBar.RibbonPanel();
-            this.ribbonBar16 = new DevComponents.DotNetBar.RibbonBar();
-            this.btnMaintain = new DevComponents.DotNetBar.ButtonItem();
-            this.ribbonBar15 = new DevComponents.DotNetBar.RibbonBar();
-            this.btnSDEConnection = new DevComponents.DotNetBar.ButtonItem();
-            this.ribbonPanel7 = new DevComponents.DotNetBar.RibbonPanel();
-            this.ribbonBar17 = new DevComponents.DotNetBar.RibbonBar();
-            this.buttonItem17 = new DevComponents.DotNetBar.ButtonItem();
-            this.btnHistoryLook = new DevComponents.DotNetBar.ButtonItem();
-            this.ribbonBar13 = new DevComponents.DotNetBar.RibbonBar();
-            this.buttonItem8 = new DevComponents.DotNetBar.ButtonItem();
             this.ribbonPanel9 = new DevComponents.DotNetBar.RibbonPanel();
             this.ribbonBar20 = new DevComponents.DotNetBar.RibbonBar();
-            this.btnNew = new DevComponents.DotNetBar.ButtonItem();
             this.btnOpen = new DevComponents.DotNetBar.ButtonItem();
             this.btnAdd = new DevComponents.DotNetBar.ButtonItem();
             this.btnSave = new DevComponents.DotNetBar.ButtonItem();
@@ -154,7 +139,6 @@
             this.ribbonTabItemXMGL = new DevComponents.DotNetBar.RibbonTabItem();
             this.RibbonTabItemSJRK = new DevComponents.DotNetBar.RibbonTabItem();
             this.RibbonTabItemHJPZ = new DevComponents.DotNetBar.RibbonTabItem();
-            this.RibbonTabItemBZ = new DevComponents.DotNetBar.RibbonTabItem();
             this.buttonChangeStyle = new DevComponents.DotNetBar.ButtonItem();
             this.buttonStyleOffice2007Blue = new DevComponents.DotNetBar.ButtonItem();
             this.buttonStyleOffice2007Black = new DevComponents.DotNetBar.ButtonItem();
@@ -189,6 +173,20 @@
             this.comboItem6 = new DevComponents.Editors.ComboItem();
             this.comboItem7 = new DevComponents.Editors.ComboItem();
             this.tabControlMain = new DevComponents.DotNetBar.TabControl();
+            this.tabControlPanel1 = new DevComponents.DotNetBar.TabControlPanel();
+            this.mapMain = new ESRI.ArcGIS.Controls.AxMapControl();
+            this.tabItem1 = new DevComponents.DotNetBar.TabItem(this.components);
+            this.tabControlPanel3 = new DevComponents.DotNetBar.TabControlPanel();
+            this.MapOverlapping = new ESRI.ArcGIS.Controls.AxMapControl();
+            this.panelEx2 = new DevComponents.DotNetBar.PanelEx();
+            this.bar2 = new DevComponents.DotNetBar.Bar();
+            this.btnOverlapZoomIn = new DevComponents.DotNetBar.ButtonItem();
+            this.btnOverlapZoomOut = new DevComponents.DotNetBar.ButtonItem();
+            this.btnOverlapPan = new DevComponents.DotNetBar.ButtonItem();
+            this.btnOverlapSelectFeat = new DevComponents.DotNetBar.ButtonItem();
+            this.checkBoxItemSourceLayer = new DevComponents.DotNetBar.CheckBoxItem();
+            this.checkBoxItemUpdatedLayer = new DevComponents.DotNetBar.CheckBoxItem();
+            this.tabItem3 = new DevComponents.DotNetBar.TabItem(this.components);
             this.tabControlPanel2 = new DevComponents.DotNetBar.TabControlPanel();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
@@ -205,20 +203,6 @@
             this.comboItem4 = new DevComponents.Editors.ComboItem();
             this.comboItem5 = new DevComponents.Editors.ComboItem();
             this.tabItem2 = new DevComponents.DotNetBar.TabItem(this.components);
-            this.tabControlPanel3 = new DevComponents.DotNetBar.TabControlPanel();
-            this.MapOverlapping = new ESRI.ArcGIS.Controls.AxMapControl();
-            this.panelEx2 = new DevComponents.DotNetBar.PanelEx();
-            this.bar2 = new DevComponents.DotNetBar.Bar();
-            this.btnOverlapZoomIn = new DevComponents.DotNetBar.ButtonItem();
-            this.btnOverlapZoomOut = new DevComponents.DotNetBar.ButtonItem();
-            this.btnOverlapPan = new DevComponents.DotNetBar.ButtonItem();
-            this.btnOverlapSelectFeat = new DevComponents.DotNetBar.ButtonItem();
-            this.checkBoxItemSourceLayer = new DevComponents.DotNetBar.CheckBoxItem();
-            this.checkBoxItemUpdatedLayer = new DevComponents.DotNetBar.CheckBoxItem();
-            this.tabItem3 = new DevComponents.DotNetBar.TabItem(this.components);
-            this.tabControlPanel1 = new DevComponents.DotNetBar.TabControlPanel();
-            this.mapMain = new ESRI.ArcGIS.Controls.AxMapControl();
-            this.tabItem1 = new DevComponents.DotNetBar.TabItem(this.components);
             this.buttonItem2 = new DevComponents.DotNetBar.ButtonItem();
             this.buttonItem4 = new DevComponents.DotNetBar.ButtonItem();
             this.buttonItem5 = new DevComponents.DotNetBar.ButtonItem();
@@ -234,15 +218,14 @@
             this.btnExit = new DevComponents.DotNetBar.ButtonItem();
             this.buttonItem7 = new DevComponents.DotNetBar.ButtonItem();
             this.ribbonControl1.SuspendLayout();
-            this.ribbonPanel4.SuspendLayout();
-            this.ribbonPanel6.SuspendLayout();
-            this.ribbonBar8.SuspendLayout();
-            this.ribbonPanel10.SuspendLayout();
-            this.ribbonPanel2.SuspendLayout();
-            this.ribbonPanel1.SuspendLayout();
-            this.RibbonPanel5.SuspendLayout();
             this.ribbonPanel8.SuspendLayout();
             this.ribbonPanel7.SuspendLayout();
+            this.ribbonPanel2.SuspendLayout();
+            this.ribbonPanel4.SuspendLayout();
+            this.ribbonPanel10.SuspendLayout();
+            this.ribbonPanel6.SuspendLayout();
+            this.ribbonBar8.SuspendLayout();
+            this.ribbonPanel1.SuspendLayout();
             this.ribbonPanel9.SuspendLayout();
             this.navigationPaneLeft.SuspendLayout();
             this.navigationPanePanel5.SuspendLayout();
@@ -250,6 +233,12 @@
             this.GroupPanelXmView.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.tabControlMain)).BeginInit();
             this.tabControlMain.SuspendLayout();
+            this.tabControlPanel1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.mapMain)).BeginInit();
+            this.tabControlPanel3.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.MapOverlapping)).BeginInit();
+            this.panelEx2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.bar2)).BeginInit();
             this.tabControlPanel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -261,12 +250,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.MapTo)).BeginInit();
             this.panelEx1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.bar1)).BeginInit();
-            this.tabControlPanel3.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.MapOverlapping)).BeginInit();
-            this.panelEx2.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.bar2)).BeginInit();
-            this.tabControlPanel1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.mapMain)).BeginInit();
             this.SuspendLayout();
             // 
             // RibbonTabItemGroup1
@@ -303,15 +286,14 @@
             // 
             this.ribbonControl1.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
             this.ribbonControl1.CaptionVisible = true;
-            this.ribbonControl1.Controls.Add(this.ribbonPanel4);
-            this.ribbonControl1.Controls.Add(this.RibbonPanel3);
-            this.ribbonControl1.Controls.Add(this.ribbonPanel6);
-            this.ribbonControl1.Controls.Add(this.ribbonPanel10);
-            this.ribbonControl1.Controls.Add(this.ribbonPanel2);
-            this.ribbonControl1.Controls.Add(this.ribbonPanel1);
-            this.ribbonControl1.Controls.Add(this.RibbonPanel5);
             this.ribbonControl1.Controls.Add(this.ribbonPanel8);
             this.ribbonControl1.Controls.Add(this.ribbonPanel7);
+            this.ribbonControl1.Controls.Add(this.ribbonPanel2);
+            this.ribbonControl1.Controls.Add(this.RibbonPanel3);
+            this.ribbonControl1.Controls.Add(this.ribbonPanel4);
+            this.ribbonControl1.Controls.Add(this.ribbonPanel10);
+            this.ribbonControl1.Controls.Add(this.ribbonPanel6);
+            this.ribbonControl1.Controls.Add(this.ribbonPanel1);
             this.ribbonControl1.Controls.Add(this.ribbonPanel9);
             this.ribbonControl1.Dock = System.Windows.Forms.DockStyle.Top;
             this.ribbonControl1.Items.AddRange(new DevComponents.DotNetBar.BaseItem[] {
@@ -324,7 +306,6 @@
             this.ribbonTabItemXMGL,
             this.RibbonTabItemSJRK,
             this.RibbonTabItemHJPZ,
-            this.RibbonTabItemBZ,
             this.buttonChangeStyle});
             this.ribbonControl1.Location = new System.Drawing.Point(5, 1);
             this.ribbonControl1.Margin = new System.Windows.Forms.Padding(4);
@@ -355,6 +336,286 @@
             this.ribbonControl1.TabGroupsVisible = true;
             this.ribbonControl1.TabIndex = 15;
             // 
+            // ribbonPanel8
+            // 
+            this.ribbonPanel8.ColorSchemeStyle = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled;
+            this.ribbonPanel8.Controls.Add(this.ribbonBar16);
+            this.ribbonPanel8.Controls.Add(this.ribbonBar15);
+            this.ribbonPanel8.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.ribbonPanel8.Location = new System.Drawing.Point(0, 59);
+            this.ribbonPanel8.Margin = new System.Windows.Forms.Padding(4);
+            this.ribbonPanel8.Name = "ribbonPanel8";
+            this.ribbonPanel8.Padding = new System.Windows.Forms.Padding(4, 0, 4, 4);
+            this.ribbonPanel8.Size = new System.Drawing.Size(1569, 138);
+            // 
+            // 
+            // 
+            this.ribbonPanel8.Style.CornerType = DevComponents.DotNetBar.eCornerType.Square;
+            // 
+            // 
+            // 
+            this.ribbonPanel8.StyleMouseDown.CornerType = DevComponents.DotNetBar.eCornerType.Square;
+            // 
+            // 
+            // 
+            this.ribbonPanel8.StyleMouseOver.CornerType = DevComponents.DotNetBar.eCornerType.Square;
+            this.ribbonPanel8.TabIndex = 10;
+            this.ribbonPanel8.Visible = false;
+            // 
+            // ribbonBar16
+            // 
+            this.ribbonBar16.AutoOverflowEnabled = true;
+            // 
+            // 
+            // 
+            this.ribbonBar16.BackgroundMouseOverStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
+            // 
+            // 
+            // 
+            this.ribbonBar16.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
+            this.ribbonBar16.ContainerControlProcessDialogKey = true;
+            this.ribbonBar16.Dock = System.Windows.Forms.DockStyle.Left;
+            this.ribbonBar16.Items.AddRange(new DevComponents.DotNetBar.BaseItem[] {
+            this.btnMaintain});
+            this.ribbonBar16.Location = new System.Drawing.Point(122, 0);
+            this.ribbonBar16.Margin = new System.Windows.Forms.Padding(4);
+            this.ribbonBar16.Name = "ribbonBar16";
+            this.ribbonBar16.Size = new System.Drawing.Size(108, 134);
+            this.ribbonBar16.Style = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled;
+            this.ribbonBar16.TabIndex = 1;
+            this.ribbonBar16.Text = "XML配置";
+            // 
+            // 
+            // 
+            this.ribbonBar16.TitleStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
+            // 
+            // 
+            // 
+            this.ribbonBar16.TitleStyleMouseOver.CornerType = DevComponents.DotNetBar.eCornerType.Square;
+            // 
+            // btnMaintain
+            // 
+            this.btnMaintain.Image = global::ZJGIS.Properties.Resources.XML;
+            this.btnMaintain.ImagePosition = DevComponents.DotNetBar.eImagePosition.Top;
+            this.btnMaintain.Name = "btnMaintain";
+            this.btnMaintain.SubItemsExpandWidth = 14;
+            this.btnMaintain.Text = "数据库维护";
+            this.btnMaintain.Click += new System.EventHandler(this.btnMaintain_Click);
+            // 
+            // ribbonBar15
+            // 
+            this.ribbonBar15.AutoOverflowEnabled = true;
+            // 
+            // 
+            // 
+            this.ribbonBar15.BackgroundMouseOverStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
+            // 
+            // 
+            // 
+            this.ribbonBar15.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
+            this.ribbonBar15.ContainerControlProcessDialogKey = true;
+            this.ribbonBar15.Dock = System.Windows.Forms.DockStyle.Left;
+            this.ribbonBar15.Items.AddRange(new DevComponents.DotNetBar.BaseItem[] {
+            this.btnSDEConnection});
+            this.ribbonBar15.Location = new System.Drawing.Point(4, 0);
+            this.ribbonBar15.Margin = new System.Windows.Forms.Padding(4);
+            this.ribbonBar15.Name = "ribbonBar15";
+            this.ribbonBar15.Size = new System.Drawing.Size(118, 134);
+            this.ribbonBar15.Style = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled;
+            this.ribbonBar15.TabIndex = 0;
+            this.ribbonBar15.Text = "SDE连接";
+            // 
+            // 
+            // 
+            this.ribbonBar15.TitleStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
+            // 
+            // 
+            // 
+            this.ribbonBar15.TitleStyleMouseOver.CornerType = DevComponents.DotNetBar.eCornerType.Square;
+            // 
+            // btnSDEConnection
+            // 
+            this.btnSDEConnection.ButtonStyle = DevComponents.DotNetBar.eButtonStyle.ImageAndText;
+            this.btnSDEConnection.Image = global::ZJGIS.Properties.Resources.coonect;
+            this.btnSDEConnection.ImagePosition = DevComponents.DotNetBar.eImagePosition.Top;
+            this.btnSDEConnection.ItemAlignment = DevComponents.DotNetBar.eItemAlignment.Center;
+            this.btnSDEConnection.Name = "btnSDEConnection";
+            this.btnSDEConnection.SubItemsExpandWidth = 14;
+            this.btnSDEConnection.Text = "连接SDE数据库";
+            this.btnSDEConnection.Tooltip = "SDE连接至Oracle数据库";
+            this.btnSDEConnection.Click += new System.EventHandler(this.btnSDEConnection_Click);
+            // 
+            // ribbonPanel7
+            // 
+            this.ribbonPanel7.ColorSchemeStyle = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled;
+            this.ribbonPanel7.Controls.Add(this.ribbonBar17);
+            this.ribbonPanel7.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.ribbonPanel7.Location = new System.Drawing.Point(0, 59);
+            this.ribbonPanel7.Margin = new System.Windows.Forms.Padding(4);
+            this.ribbonPanel7.Name = "ribbonPanel7";
+            this.ribbonPanel7.Padding = new System.Windows.Forms.Padding(4, 0, 4, 4);
+            this.ribbonPanel7.Size = new System.Drawing.Size(1569, 138);
+            // 
+            // 
+            // 
+            this.ribbonPanel7.Style.CornerType = DevComponents.DotNetBar.eCornerType.Square;
+            // 
+            // 
+            // 
+            this.ribbonPanel7.StyleMouseDown.CornerType = DevComponents.DotNetBar.eCornerType.Square;
+            // 
+            // 
+            // 
+            this.ribbonPanel7.StyleMouseOver.CornerType = DevComponents.DotNetBar.eCornerType.Square;
+            this.ribbonPanel7.TabIndex = 9;
+            this.ribbonPanel7.Visible = false;
+            // 
+            // ribbonBar17
+            // 
+            this.ribbonBar17.AutoOverflowEnabled = true;
+            // 
+            // 
+            // 
+            this.ribbonBar17.BackgroundMouseOverStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
+            // 
+            // 
+            // 
+            this.ribbonBar17.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
+            this.ribbonBar17.ContainerControlProcessDialogKey = true;
+            this.ribbonBar17.Dock = System.Windows.Forms.DockStyle.Left;
+            this.ribbonBar17.Items.AddRange(new DevComponents.DotNetBar.BaseItem[] {
+            this.btnHistoryLook});
+            this.ribbonBar17.Location = new System.Drawing.Point(4, 0);
+            this.ribbonBar17.Margin = new System.Windows.Forms.Padding(4);
+            this.ribbonBar17.Name = "ribbonBar17";
+            this.ribbonBar17.Size = new System.Drawing.Size(83, 134);
+            this.ribbonBar17.Style = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled;
+            this.ribbonBar17.TabIndex = 2;
+            this.ribbonBar17.Text = "三库流转";
+            // 
+            // 
+            // 
+            this.ribbonBar17.TitleStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
+            // 
+            // 
+            // 
+            this.ribbonBar17.TitleStyleMouseOver.CornerType = DevComponents.DotNetBar.eCornerType.Square;
+            // 
+            // btnHistoryLook
+            // 
+            this.btnHistoryLook.Image = global::ZJGIS.Properties.Resources.old;
+            this.btnHistoryLook.ImagePosition = DevComponents.DotNetBar.eImagePosition.Top;
+            this.btnHistoryLook.Name = "btnHistoryLook";
+            this.btnHistoryLook.SubItemsExpandWidth = 14;
+            this.btnHistoryLook.Text = "历史对照";
+            this.btnHistoryLook.Click += new System.EventHandler(this.btnHistoryLook_Click);
+            // 
+            // ribbonPanel2
+            // 
+            this.ribbonPanel2.ColorSchemeStyle = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled;
+            this.ribbonPanel2.Controls.Add(this.ribbonBar5);
+            this.ribbonPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.ribbonPanel2.Location = new System.Drawing.Point(0, 59);
+            this.ribbonPanel2.Margin = new System.Windows.Forms.Padding(4);
+            this.ribbonPanel2.Name = "ribbonPanel2";
+            this.ribbonPanel2.Padding = new System.Windows.Forms.Padding(4, 0, 4, 4);
+            this.ribbonPanel2.Size = new System.Drawing.Size(1569, 138);
+            // 
+            // 
+            // 
+            this.ribbonPanel2.Style.CornerType = DevComponents.DotNetBar.eCornerType.Square;
+            // 
+            // 
+            // 
+            this.ribbonPanel2.StyleMouseDown.CornerType = DevComponents.DotNetBar.eCornerType.Square;
+            // 
+            // 
+            // 
+            this.ribbonPanel2.StyleMouseOver.CornerType = DevComponents.DotNetBar.eCornerType.Square;
+            this.ribbonPanel2.TabIndex = 3;
+            this.ribbonPanel2.Visible = false;
+            // 
+            // ribbonBar5
+            // 
+            this.ribbonBar5.AutoOverflowEnabled = true;
+            // 
+            // 
+            // 
+            this.ribbonBar5.BackgroundMouseOverStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
+            // 
+            // 
+            // 
+            this.ribbonBar5.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
+            this.ribbonBar5.ContainerControlProcessDialogKey = true;
+            this.ribbonBar5.DialogLauncherVisible = true;
+            this.ribbonBar5.Dock = System.Windows.Forms.DockStyle.Left;
+            this.ribbonBar5.Items.AddRange(new DevComponents.DotNetBar.BaseItem[] {
+            this.ItemContainer5});
+            this.ribbonBar5.Location = new System.Drawing.Point(4, 0);
+            this.ribbonBar5.Margin = new System.Windows.Forms.Padding(4);
+            this.ribbonBar5.Name = "ribbonBar5";
+            this.ribbonBar5.Size = new System.Drawing.Size(87, 134);
+            this.ribbonBar5.Style = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled;
+            this.ribbonBar5.TabIndex = 1;
+            this.ribbonBar5.Text = "转换工具";
+            // 
+            // 
+            // 
+            this.ribbonBar5.TitleStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
+            // 
+            // 
+            // 
+            this.ribbonBar5.TitleStyleMouseOver.CornerType = DevComponents.DotNetBar.eCornerType.Square;
+            // 
+            // ItemContainer5
+            // 
+            // 
+            // 
+            // 
+            this.ItemContainer5.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
+            this.ItemContainer5.ItemSpacing = 3;
+            this.ItemContainer5.LayoutOrientation = DevComponents.DotNetBar.eOrientation.Vertical;
+            this.ItemContainer5.Name = "ItemContainer5";
+            this.ItemContainer5.SubItems.AddRange(new DevComponents.DotNetBar.BaseItem[] {
+            this.btnProtrans});
+            // 
+            // 
+            // 
+            this.ItemContainer5.TitleStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
+            this.ItemContainer5.VerticalItemAlignment = DevComponents.DotNetBar.eVerticalItemsAlignment.Middle;
+            // 
+            // btnProtrans
+            // 
+            this.btnProtrans.Image = global::ZJGIS.Properties.Resources.project;
+            this.btnProtrans.ImagePosition = DevComponents.DotNetBar.eImagePosition.Top;
+            this.btnProtrans.Name = "btnProtrans";
+            this.btnProtrans.Text = "投影转换";
+            this.btnProtrans.Click += new System.EventHandler(this.btnProtrans_Click);
+            // 
+            // RibbonPanel3
+            // 
+            this.RibbonPanel3.ColorSchemeStyle = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled;
+            this.RibbonPanel3.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.RibbonPanel3.Location = new System.Drawing.Point(0, 59);
+            this.RibbonPanel3.Margin = new System.Windows.Forms.Padding(4);
+            this.RibbonPanel3.Name = "RibbonPanel3";
+            this.RibbonPanel3.Padding = new System.Windows.Forms.Padding(4, 0, 4, 4);
+            this.RibbonPanel3.Size = new System.Drawing.Size(1569, 138);
+            // 
+            // 
+            // 
+            this.RibbonPanel3.Style.CornerType = DevComponents.DotNetBar.eCornerType.Square;
+            // 
+            // 
+            // 
+            this.RibbonPanel3.StyleMouseDown.CornerType = DevComponents.DotNetBar.eCornerType.Square;
+            // 
+            // 
+            // 
+            this.RibbonPanel3.StyleMouseOver.CornerType = DevComponents.DotNetBar.eCornerType.Square;
+            this.RibbonPanel3.TabIndex = 4;
+            this.RibbonPanel3.Visible = false;
+            // 
             // ribbonPanel4
             // 
             this.ribbonPanel4.ColorSchemeStyle = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled;
@@ -379,6 +640,7 @@
             // 
             this.ribbonPanel4.StyleMouseOver.CornerType = DevComponents.DotNetBar.eCornerType.Square;
             this.ribbonPanel4.TabIndex = 8;
+            this.ribbonPanel4.Visible = false;
             // 
             // ribbonBar18
             // 
@@ -399,10 +661,10 @@
             this.btnUpdateCheckDif,
             this.btnEditMathTabDif,
             this.btnDUpdate});
-            this.ribbonBar18.Location = new System.Drawing.Point(411, 0);
+            this.ribbonBar18.Location = new System.Drawing.Point(276, 0);
             this.ribbonBar18.Margin = new System.Windows.Forms.Padding(4);
             this.ribbonBar18.Name = "ribbonBar18";
-            this.ribbonBar18.Size = new System.Drawing.Size(683, 134);
+            this.ribbonBar18.Size = new System.Drawing.Size(430, 134);
             this.ribbonBar18.Style = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled;
             this.ribbonBar18.TabIndex = 3;
             this.ribbonBar18.Text = "多源多尺度同名实体匹配";
@@ -538,7 +800,7 @@
             this.ribbonBar9.Location = new System.Drawing.Point(4, 0);
             this.ribbonBar9.Margin = new System.Windows.Forms.Padding(4);
             this.ribbonBar9.Name = "ribbonBar9";
-            this.ribbonBar9.Size = new System.Drawing.Size(407, 134);
+            this.ribbonBar9.Size = new System.Drawing.Size(272, 134);
             this.ribbonBar9.Style = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled;
             this.ribbonBar9.TabIndex = 0;
             this.ribbonBar9.Text = "同尺度匹配";
@@ -578,29 +840,233 @@
             this.btnUpdate.Text = "编码赋值";
             this.btnUpdate.Click += new System.EventHandler(this.btnUpdate_Click);
             // 
-            // RibbonPanel3
+            // ribbonPanel10
             // 
-            this.RibbonPanel3.ColorSchemeStyle = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled;
-            this.RibbonPanel3.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.RibbonPanel3.Location = new System.Drawing.Point(0, 59);
-            this.RibbonPanel3.Margin = new System.Windows.Forms.Padding(4);
-            this.RibbonPanel3.Name = "RibbonPanel3";
-            this.RibbonPanel3.Padding = new System.Windows.Forms.Padding(4, 0, 4, 4);
-            this.RibbonPanel3.Size = new System.Drawing.Size(1569, 138);
-            // 
-            // 
-            // 
-            this.RibbonPanel3.Style.CornerType = DevComponents.DotNetBar.eCornerType.Square;
-            // 
-            // 
-            // 
-            this.RibbonPanel3.StyleMouseDown.CornerType = DevComponents.DotNetBar.eCornerType.Square;
+            this.ribbonPanel10.ColorSchemeStyle = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled;
+            this.ribbonPanel10.Controls.Add(this.ribbonBar12);
+            this.ribbonPanel10.Controls.Add(this.ribbonBarCommonEntiCheck);
+            this.ribbonPanel10.Controls.Add(this.ribbonBarEnti);
+            this.ribbonPanel10.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.ribbonPanel10.Location = new System.Drawing.Point(0, 59);
+            this.ribbonPanel10.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.ribbonPanel10.Name = "ribbonPanel10";
+            this.ribbonPanel10.Padding = new System.Windows.Forms.Padding(3, 0, 3, 2);
+            this.ribbonPanel10.Size = new System.Drawing.Size(1569, 138);
             // 
             // 
             // 
-            this.RibbonPanel3.StyleMouseOver.CornerType = DevComponents.DotNetBar.eCornerType.Square;
-            this.RibbonPanel3.TabIndex = 4;
-            this.RibbonPanel3.Visible = false;
+            this.ribbonPanel10.Style.CornerType = DevComponents.DotNetBar.eCornerType.Square;
+            // 
+            // 
+            // 
+            this.ribbonPanel10.StyleMouseDown.CornerType = DevComponents.DotNetBar.eCornerType.Square;
+            // 
+            // 
+            // 
+            this.ribbonPanel10.StyleMouseOver.CornerType = DevComponents.DotNetBar.eCornerType.Square;
+            this.ribbonPanel10.TabIndex = 12;
+            this.ribbonPanel10.Visible = false;
+            // 
+            // ribbonBar12
+            // 
+            this.ribbonBar12.AutoOverflowEnabled = true;
+            // 
+            // 
+            // 
+            this.ribbonBar12.BackgroundMouseOverStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
+            // 
+            // 
+            // 
+            this.ribbonBar12.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
+            this.ribbonBar12.ContainerControlProcessDialogKey = true;
+            this.ribbonBar12.Dock = System.Windows.Forms.DockStyle.Left;
+            this.ribbonBar12.Items.AddRange(new DevComponents.DotNetBar.BaseItem[] {
+            this.btnConfigLayer});
+            this.ribbonBar12.Location = new System.Drawing.Point(710, 0);
+            this.ribbonBar12.Name = "ribbonBar12";
+            this.ribbonBar12.Size = new System.Drawing.Size(100, 136);
+            this.ribbonBar12.Style = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled;
+            this.ribbonBar12.TabIndex = 5;
+            this.ribbonBar12.Text = "配置";
+            // 
+            // 
+            // 
+            this.ribbonBar12.TitleStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
+            // 
+            // 
+            // 
+            this.ribbonBar12.TitleStyleMouseOver.CornerType = DevComponents.DotNetBar.eCornerType.Square;
+            // 
+            // btnConfigLayer
+            // 
+            this.btnConfigLayer.Image = global::ZJGIS.Properties.Resources.xmlConfig;
+            this.btnConfigLayer.ImagePosition = DevComponents.DotNetBar.eImagePosition.Top;
+            this.btnConfigLayer.Name = "btnConfigLayer";
+            this.btnConfigLayer.SubItemsExpandWidth = 14;
+            this.btnConfigLayer.Text = "配置图层";
+            this.btnConfigLayer.Click += new System.EventHandler(this.btnConfigLayer_Click);
+            // 
+            // ribbonBarCommonEntiCheck
+            // 
+            this.ribbonBarCommonEntiCheck.AutoOverflowEnabled = true;
+            // 
+            // 
+            // 
+            this.ribbonBarCommonEntiCheck.BackgroundMouseOverStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
+            // 
+            // 
+            // 
+            this.ribbonBarCommonEntiCheck.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
+            this.ribbonBarCommonEntiCheck.ContainerControlProcessDialogKey = true;
+            this.ribbonBarCommonEntiCheck.Dock = System.Windows.Forms.DockStyle.Left;
+            this.ribbonBarCommonEntiCheck.Items.AddRange(new DevComponents.DotNetBar.BaseItem[] {
+            this.itemContainer22,
+            this.itemContainer21});
+            this.ribbonBarCommonEntiCheck.Location = new System.Drawing.Point(380, 0);
+            this.ribbonBarCommonEntiCheck.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.ribbonBarCommonEntiCheck.Name = "ribbonBarCommonEntiCheck";
+            this.ribbonBarCommonEntiCheck.Size = new System.Drawing.Size(330, 136);
+            this.ribbonBarCommonEntiCheck.Style = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled;
+            this.ribbonBarCommonEntiCheck.TabIndex = 0;
+            // 
+            // 
+            // 
+            this.ribbonBarCommonEntiCheck.TitleStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
+            // 
+            // 
+            // 
+            this.ribbonBarCommonEntiCheck.TitleStyleMouseOver.CornerType = DevComponents.DotNetBar.eCornerType.Square;
+            // 
+            // itemContainer22
+            // 
+            // 
+            // 
+            // 
+            this.itemContainer22.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
+            this.itemContainer22.Name = "itemContainer22";
+            this.itemContainer22.SubItems.AddRange(new DevComponents.DotNetBar.BaseItem[] {
+            this.comboBoxItemCheck});
+            // 
+            // 
+            // 
+            this.itemContainer22.TitleStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
+            this.itemContainer22.VerticalItemAlignment = DevComponents.DotNetBar.eVerticalItemsAlignment.Middle;
+            // 
+            // comboBoxItemCheck
+            // 
+            this.comboBoxItemCheck.ComboWidth = 121;
+            this.comboBoxItemCheck.DropDownHeight = 106;
+            this.comboBoxItemCheck.ItemHeight = 20;
+            this.comboBoxItemCheck.Name = "comboBoxItemCheck";
+            this.comboBoxItemCheck.Text = "comboBoxItem3";
+            // 
+            // itemContainer21
+            // 
+            // 
+            // 
+            // 
+            this.itemContainer21.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
+            this.itemContainer21.HorizontalItemAlignment = DevComponents.DotNetBar.eHorizontalItemsAlignment.Center;
+            this.itemContainer21.Name = "itemContainer21";
+            this.itemContainer21.SubItems.AddRange(new DevComponents.DotNetBar.BaseItem[] {
+            this.btnCommonNullCheck,
+            this.btnEntiTableCheck});
+            // 
+            // 
+            // 
+            this.itemContainer21.TitleStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
+            this.itemContainer21.VerticalItemAlignment = DevComponents.DotNetBar.eVerticalItemsAlignment.Middle;
+            // 
+            // btnCommonNullCheck
+            // 
+            this.btnCommonNullCheck.Image = global::ZJGIS.Properties.Resources._null;
+            this.btnCommonNullCheck.ImagePosition = DevComponents.DotNetBar.eImagePosition.Top;
+            this.btnCommonNullCheck.Name = "btnCommonNullCheck";
+            this.btnCommonNullCheck.SubItemsExpandWidth = 14;
+            this.btnCommonNullCheck.Text = "编码空值检查";
+            this.btnCommonNullCheck.Click += new System.EventHandler(this.btnCommonNullCheck_Click);
+            // 
+            // btnEntiTableCheck
+            // 
+            this.btnEntiTableCheck.Image = global::ZJGIS.Properties.Resources.EntiTableCheck1;
+            this.btnEntiTableCheck.ImagePosition = DevComponents.DotNetBar.eImagePosition.Top;
+            this.btnEntiTableCheck.Name = "btnEntiTableCheck";
+            this.btnEntiTableCheck.SubItemsExpandWidth = 14;
+            this.btnEntiTableCheck.Text = "实体表检查";
+            this.btnEntiTableCheck.Click += new System.EventHandler(this.btnEntiTableCheck_Click);
+            // 
+            // ribbonBarEnti
+            // 
+            this.ribbonBarEnti.AutoOverflowEnabled = true;
+            // 
+            // 
+            // 
+            this.ribbonBarEnti.BackgroundMouseOverStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
+            // 
+            // 
+            // 
+            this.ribbonBarEnti.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
+            this.ribbonBarEnti.ContainerControlProcessDialogKey = true;
+            this.ribbonBarEnti.Dock = System.Windows.Forms.DockStyle.Left;
+            this.ribbonBarEnti.Items.AddRange(new DevComponents.DotNetBar.BaseItem[] {
+            this.btnEntiDB,
+            this.btnCheckEntiTable,
+            this.buttonEntitySearch,
+            this.buttonEntityUpdate});
+            this.ribbonBarEnti.Location = new System.Drawing.Point(3, 0);
+            this.ribbonBarEnti.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.ribbonBarEnti.Name = "ribbonBarEnti";
+            this.ribbonBarEnti.Size = new System.Drawing.Size(377, 136);
+            this.ribbonBarEnti.Style = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled;
+            this.ribbonBarEnti.TabIndex = 4;
+            this.ribbonBarEnti.Text = "实体库";
+            // 
+            // 
+            // 
+            this.ribbonBarEnti.TitleStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
+            // 
+            // 
+            // 
+            this.ribbonBarEnti.TitleStyleMouseOver.CornerType = DevComponents.DotNetBar.eCornerType.Square;
+            // 
+            // btnEntiDB
+            // 
+            this.btnEntiDB.ButtonStyle = DevComponents.DotNetBar.eButtonStyle.ImageAndText;
+            this.btnEntiDB.Image = global::ZJGIS.Properties.Resources.tableEnti;
+            this.btnEntiDB.ImagePosition = DevComponents.DotNetBar.eImagePosition.Top;
+            this.btnEntiDB.Name = "btnEntiDB";
+            this.btnEntiDB.SubItemsExpandWidth = 14;
+            this.btnEntiDB.Text = "创建实体表";
+            this.btnEntiDB.Click += new System.EventHandler(this.btnEntiDB_Click);
+            // 
+            // btnCheckEntiTable
+            // 
+            this.btnCheckEntiTable.Image = global::ZJGIS.Properties.Resources.checkEntiTable;
+            this.btnCheckEntiTable.ImagePosition = DevComponents.DotNetBar.eImagePosition.Top;
+            this.btnCheckEntiTable.Name = "btnCheckEntiTable";
+            this.btnCheckEntiTable.SubItemsExpandWidth = 14;
+            this.btnCheckEntiTable.Text = "按属性查询实体";
+            this.btnCheckEntiTable.Click += new System.EventHandler(this.btnCheckEntiTable_Click);
+            // 
+            // buttonEntitySearch
+            // 
+            this.buttonEntitySearch.ButtonStyle = DevComponents.DotNetBar.eButtonStyle.ImageAndText;
+            this.buttonEntitySearch.Image = global::ZJGIS.Properties.Resources.timeline1;
+            this.buttonEntitySearch.ImagePosition = DevComponents.DotNetBar.eImagePosition.Top;
+            this.buttonEntitySearch.Name = "buttonEntitySearch";
+            this.buttonEntitySearch.SubItemsExpandWidth = 14;
+            this.buttonEntitySearch.Text = "实体查询";
+            this.buttonEntitySearch.Click += new System.EventHandler(this.buttonEntitySearch_Click);
+            // 
+            // buttonEntityUpdate
+            // 
+            this.buttonEntityUpdate.ButtonStyle = DevComponents.DotNetBar.eButtonStyle.ImageAndText;
+            this.buttonEntityUpdate.Image = global::ZJGIS.Properties.Resources.refresh32;
+            this.buttonEntityUpdate.ImagePosition = DevComponents.DotNetBar.eImagePosition.Top;
+            this.buttonEntityUpdate.Name = "buttonEntityUpdate";
+            this.buttonEntityUpdate.SubItemsExpandWidth = 14;
+            this.buttonEntityUpdate.Text = "驱动更新";
+            this.buttonEntityUpdate.Click += new System.EventHandler(this.buttonEntityUpdate_Click);
             // 
             // ribbonPanel6
             // 
@@ -893,423 +1359,6 @@
             this.btnRestCode.Text = "补充编码";
             this.btnRestCode.Click += new System.EventHandler(this.btnRestCode_Click);
             // 
-            // ribbonPanel10
-            // 
-            this.ribbonPanel10.ColorSchemeStyle = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled;
-            this.ribbonPanel10.Controls.Add(this.ribbonBar12);
-            this.ribbonPanel10.Controls.Add(this.ribbonBarCommonEntiCheck);
-            this.ribbonPanel10.Controls.Add(this.ribbonBarEnti);
-            this.ribbonPanel10.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.ribbonPanel10.Location = new System.Drawing.Point(0, 59);
-            this.ribbonPanel10.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.ribbonPanel10.Name = "ribbonPanel10";
-            this.ribbonPanel10.Padding = new System.Windows.Forms.Padding(3, 0, 3, 2);
-            this.ribbonPanel10.Size = new System.Drawing.Size(1569, 138);
-            // 
-            // 
-            // 
-            this.ribbonPanel10.Style.CornerType = DevComponents.DotNetBar.eCornerType.Square;
-            // 
-            // 
-            // 
-            this.ribbonPanel10.StyleMouseDown.CornerType = DevComponents.DotNetBar.eCornerType.Square;
-            // 
-            // 
-            // 
-            this.ribbonPanel10.StyleMouseOver.CornerType = DevComponents.DotNetBar.eCornerType.Square;
-            this.ribbonPanel10.TabIndex = 12;
-            this.ribbonPanel10.Visible = false;
-            // 
-            // ribbonBar12
-            // 
-            this.ribbonBar12.AutoOverflowEnabled = true;
-            // 
-            // 
-            // 
-            this.ribbonBar12.BackgroundMouseOverStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
-            // 
-            // 
-            // 
-            this.ribbonBar12.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
-            this.ribbonBar12.ContainerControlProcessDialogKey = true;
-            this.ribbonBar12.Dock = System.Windows.Forms.DockStyle.Left;
-            this.ribbonBar12.Items.AddRange(new DevComponents.DotNetBar.BaseItem[] {
-            this.btnConfigLayer});
-            this.ribbonBar12.Location = new System.Drawing.Point(710, 0);
-            this.ribbonBar12.Name = "ribbonBar12";
-            this.ribbonBar12.Size = new System.Drawing.Size(100, 136);
-            this.ribbonBar12.Style = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled;
-            this.ribbonBar12.TabIndex = 5;
-            this.ribbonBar12.Text = "配置";
-            // 
-            // 
-            // 
-            this.ribbonBar12.TitleStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
-            // 
-            // 
-            // 
-            this.ribbonBar12.TitleStyleMouseOver.CornerType = DevComponents.DotNetBar.eCornerType.Square;
-            // 
-            // btnConfigLayer
-            // 
-            this.btnConfigLayer.Image = global::ZJGIS.Properties.Resources.xmlConfig;
-            this.btnConfigLayer.ImagePosition = DevComponents.DotNetBar.eImagePosition.Top;
-            this.btnConfigLayer.Name = "btnConfigLayer";
-            this.btnConfigLayer.SubItemsExpandWidth = 14;
-            this.btnConfigLayer.Text = "配置图层";
-            this.btnConfigLayer.Click += new System.EventHandler(this.btnConfigLayer_Click);
-            // 
-            // ribbonBarCommonEntiCheck
-            // 
-            this.ribbonBarCommonEntiCheck.AutoOverflowEnabled = true;
-            // 
-            // 
-            // 
-            this.ribbonBarCommonEntiCheck.BackgroundMouseOverStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
-            // 
-            // 
-            // 
-            this.ribbonBarCommonEntiCheck.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
-            this.ribbonBarCommonEntiCheck.ContainerControlProcessDialogKey = true;
-            this.ribbonBarCommonEntiCheck.Dock = System.Windows.Forms.DockStyle.Left;
-            this.ribbonBarCommonEntiCheck.Items.AddRange(new DevComponents.DotNetBar.BaseItem[] {
-            this.itemContainer22,
-            this.itemContainer21});
-            this.ribbonBarCommonEntiCheck.Location = new System.Drawing.Point(380, 0);
-            this.ribbonBarCommonEntiCheck.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.ribbonBarCommonEntiCheck.Name = "ribbonBarCommonEntiCheck";
-            this.ribbonBarCommonEntiCheck.Size = new System.Drawing.Size(330, 136);
-            this.ribbonBarCommonEntiCheck.Style = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled;
-            this.ribbonBarCommonEntiCheck.TabIndex = 0;
-            // 
-            // 
-            // 
-            this.ribbonBarCommonEntiCheck.TitleStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
-            // 
-            // 
-            // 
-            this.ribbonBarCommonEntiCheck.TitleStyleMouseOver.CornerType = DevComponents.DotNetBar.eCornerType.Square;
-            // 
-            // itemContainer22
-            // 
-            // 
-            // 
-            // 
-            this.itemContainer22.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
-            this.itemContainer22.Name = "itemContainer22";
-            this.itemContainer22.SubItems.AddRange(new DevComponents.DotNetBar.BaseItem[] {
-            this.comboBoxItemCheck});
-            // 
-            // 
-            // 
-            this.itemContainer22.TitleStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
-            this.itemContainer22.VerticalItemAlignment = DevComponents.DotNetBar.eVerticalItemsAlignment.Middle;
-            // 
-            // comboBoxItemCheck
-            // 
-            this.comboBoxItemCheck.ComboWidth = 121;
-            this.comboBoxItemCheck.DropDownHeight = 106;
-            this.comboBoxItemCheck.ItemHeight = 20;
-            this.comboBoxItemCheck.Name = "comboBoxItemCheck";
-            this.comboBoxItemCheck.Text = "comboBoxItem3";
-            // 
-            // itemContainer21
-            // 
-            // 
-            // 
-            // 
-            this.itemContainer21.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
-            this.itemContainer21.HorizontalItemAlignment = DevComponents.DotNetBar.eHorizontalItemsAlignment.Center;
-            this.itemContainer21.Name = "itemContainer21";
-            this.itemContainer21.SubItems.AddRange(new DevComponents.DotNetBar.BaseItem[] {
-            this.btnCommonNullCheck,
-            this.btnEntiTableCheck});
-            // 
-            // 
-            // 
-            this.itemContainer21.TitleStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
-            this.itemContainer21.VerticalItemAlignment = DevComponents.DotNetBar.eVerticalItemsAlignment.Middle;
-            // 
-            // btnCommonNullCheck
-            // 
-            this.btnCommonNullCheck.Image = global::ZJGIS.Properties.Resources._null;
-            this.btnCommonNullCheck.ImagePosition = DevComponents.DotNetBar.eImagePosition.Top;
-            this.btnCommonNullCheck.Name = "btnCommonNullCheck";
-            this.btnCommonNullCheck.SubItemsExpandWidth = 14;
-            this.btnCommonNullCheck.Text = "编码空值检查";
-            this.btnCommonNullCheck.Click += new System.EventHandler(this.btnCommonNullCheck_Click);
-            // 
-            // btnEntiTableCheck
-            // 
-            this.btnEntiTableCheck.Image = global::ZJGIS.Properties.Resources.EntiTableCheck1;
-            this.btnEntiTableCheck.ImagePosition = DevComponents.DotNetBar.eImagePosition.Top;
-            this.btnEntiTableCheck.Name = "btnEntiTableCheck";
-            this.btnEntiTableCheck.SubItemsExpandWidth = 14;
-            this.btnEntiTableCheck.Text = "实体表检查";
-            this.btnEntiTableCheck.Click += new System.EventHandler(this.btnEntiTableCheck_Click);
-            // 
-            // ribbonBarEnti
-            // 
-            this.ribbonBarEnti.AutoOverflowEnabled = true;
-            // 
-            // 
-            // 
-            this.ribbonBarEnti.BackgroundMouseOverStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
-            // 
-            // 
-            // 
-            this.ribbonBarEnti.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
-            this.ribbonBarEnti.ContainerControlProcessDialogKey = true;
-            this.ribbonBarEnti.Dock = System.Windows.Forms.DockStyle.Left;
-            this.ribbonBarEnti.Items.AddRange(new DevComponents.DotNetBar.BaseItem[] {
-            this.btnEntiDB,
-            this.btnCheckEntiTable,
-            this.buttonEntitySearch,
-            this.buttonEntityUpdate});
-            this.ribbonBarEnti.Location = new System.Drawing.Point(3, 0);
-            this.ribbonBarEnti.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.ribbonBarEnti.Name = "ribbonBarEnti";
-            this.ribbonBarEnti.Size = new System.Drawing.Size(377, 136);
-            this.ribbonBarEnti.Style = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled;
-            this.ribbonBarEnti.TabIndex = 4;
-            this.ribbonBarEnti.Text = "实体库";
-            // 
-            // 
-            // 
-            this.ribbonBarEnti.TitleStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
-            // 
-            // 
-            // 
-            this.ribbonBarEnti.TitleStyleMouseOver.CornerType = DevComponents.DotNetBar.eCornerType.Square;
-            // 
-            // btnEntiDB
-            // 
-            this.btnEntiDB.ButtonStyle = DevComponents.DotNetBar.eButtonStyle.ImageAndText;
-            this.btnEntiDB.Image = global::ZJGIS.Properties.Resources.tableEnti;
-            this.btnEntiDB.ImagePosition = DevComponents.DotNetBar.eImagePosition.Top;
-            this.btnEntiDB.Name = "btnEntiDB";
-            this.btnEntiDB.SubItemsExpandWidth = 14;
-            this.btnEntiDB.Text = "创建实体表";
-            this.btnEntiDB.Click += new System.EventHandler(this.btnEntiDB_Click);
-            // 
-            // btnCheckEntiTable
-            // 
-            this.btnCheckEntiTable.Image = global::ZJGIS.Properties.Resources.checkEntiTable;
-            this.btnCheckEntiTable.ImagePosition = DevComponents.DotNetBar.eImagePosition.Top;
-            this.btnCheckEntiTable.Name = "btnCheckEntiTable";
-            this.btnCheckEntiTable.SubItemsExpandWidth = 14;
-            this.btnCheckEntiTable.Text = "按属性查询实体";
-            this.btnCheckEntiTable.Click += new System.EventHandler(this.btnCheckEntiTable_Click);
-            // 
-            // buttonEntitySearch
-            // 
-            this.buttonEntitySearch.ButtonStyle = DevComponents.DotNetBar.eButtonStyle.ImageAndText;
-            this.buttonEntitySearch.Image = global::ZJGIS.Properties.Resources.timeline1;
-            this.buttonEntitySearch.ImagePosition = DevComponents.DotNetBar.eImagePosition.Top;
-            this.buttonEntitySearch.Name = "buttonEntitySearch";
-            this.buttonEntitySearch.SubItemsExpandWidth = 14;
-            this.buttonEntitySearch.Text = "实体查询";
-            this.buttonEntitySearch.Click += new System.EventHandler(this.buttonEntitySearch_Click);
-            // 
-            // buttonEntityUpdate
-            // 
-            this.buttonEntityUpdate.ButtonStyle = DevComponents.DotNetBar.eButtonStyle.ImageAndText;
-            this.buttonEntityUpdate.Image = global::ZJGIS.Properties.Resources.refresh32;
-            this.buttonEntityUpdate.ImagePosition = DevComponents.DotNetBar.eImagePosition.Top;
-            this.buttonEntityUpdate.Name = "buttonEntityUpdate";
-            this.buttonEntityUpdate.SubItemsExpandWidth = 14;
-            this.buttonEntityUpdate.Text = "驱动更新";
-            this.buttonEntityUpdate.Click += new System.EventHandler(this.buttonEntityUpdate_Click);
-            // 
-            // ribbonPanel2
-            // 
-            this.ribbonPanel2.ColorSchemeStyle = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled;
-            this.ribbonPanel2.Controls.Add(this.ribbonBar4);
-            this.ribbonPanel2.Controls.Add(this.ribbonBar5);
-            this.ribbonPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.ribbonPanel2.Location = new System.Drawing.Point(0, 59);
-            this.ribbonPanel2.Margin = new System.Windows.Forms.Padding(4);
-            this.ribbonPanel2.Name = "ribbonPanel2";
-            this.ribbonPanel2.Padding = new System.Windows.Forms.Padding(4, 0, 4, 4);
-            this.ribbonPanel2.Size = new System.Drawing.Size(1569, 138);
-            // 
-            // 
-            // 
-            this.ribbonPanel2.Style.CornerType = DevComponents.DotNetBar.eCornerType.Square;
-            // 
-            // 
-            // 
-            this.ribbonPanel2.StyleMouseDown.CornerType = DevComponents.DotNetBar.eCornerType.Square;
-            // 
-            // 
-            // 
-            this.ribbonPanel2.StyleMouseOver.CornerType = DevComponents.DotNetBar.eCornerType.Square;
-            this.ribbonPanel2.TabIndex = 3;
-            this.ribbonPanel2.Visible = false;
-            // 
-            // ribbonBar4
-            // 
-            this.ribbonBar4.AntiAlias = false;
-            this.ribbonBar4.AutoOverflowEnabled = true;
-            // 
-            // 
-            // 
-            this.ribbonBar4.BackgroundMouseOverStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
-            // 
-            // 
-            // 
-            this.ribbonBar4.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
-            this.ribbonBar4.ContainerControlProcessDialogKey = true;
-            this.ribbonBar4.DialogLauncherVisible = true;
-            this.ribbonBar4.Dock = System.Windows.Forms.DockStyle.Left;
-            this.ribbonBar4.Items.AddRange(new DevComponents.DotNetBar.BaseItem[] {
-            this.itemContainer2,
-            this.itemContainer3});
-            this.ribbonBar4.Location = new System.Drawing.Point(176, 0);
-            this.ribbonBar4.Margin = new System.Windows.Forms.Padding(4);
-            this.ribbonBar4.Name = "ribbonBar4";
-            this.ribbonBar4.Size = new System.Drawing.Size(171, 134);
-            this.ribbonBar4.Style = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled;
-            this.ribbonBar4.TabIndex = 3;
-            this.ribbonBar4.Text = "预处理工具";
-            // 
-            // 
-            // 
-            this.ribbonBar4.TitleStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
-            // 
-            // 
-            // 
-            this.ribbonBar4.TitleStyleMouseOver.CornerType = DevComponents.DotNetBar.eCornerType.Square;
-            // 
-            // itemContainer2
-            // 
-            // 
-            // 
-            // 
-            this.itemContainer2.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
-            this.itemContainer2.LayoutOrientation = DevComponents.DotNetBar.eOrientation.Vertical;
-            this.itemContainer2.Name = "itemContainer2";
-            this.itemContainer2.SubItems.AddRange(new DevComponents.DotNetBar.BaseItem[] {
-            this.btnSplit});
-            // 
-            // 
-            // 
-            this.itemContainer2.TitleStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
-            this.itemContainer2.VerticalItemAlignment = DevComponents.DotNetBar.eVerticalItemsAlignment.Middle;
-            // 
-            // btnSplit
-            // 
-            this.btnSplit.Image = global::ZJGIS.Properties.Resources.Cut;
-            this.btnSplit.ImagePosition = DevComponents.DotNetBar.eImagePosition.Top;
-            this.btnSplit.Name = "btnSplit";
-            this.btnSplit.Text = "分 割";
-            this.btnSplit.Click += new System.EventHandler(this.btnSplit_Click);
-            // 
-            // itemContainer3
-            // 
-            // 
-            // 
-            // 
-            this.itemContainer3.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
-            this.itemContainer3.LayoutOrientation = DevComponents.DotNetBar.eOrientation.Vertical;
-            this.itemContainer3.Name = "itemContainer3";
-            this.itemContainer3.SubItems.AddRange(new DevComponents.DotNetBar.BaseItem[] {
-            this.btnMerge});
-            // 
-            // 
-            // 
-            this.itemContainer3.TitleStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
-            this.itemContainer3.VerticalItemAlignment = DevComponents.DotNetBar.eVerticalItemsAlignment.Middle;
-            // 
-            // btnMerge
-            // 
-            this.btnMerge.Image = ((System.Drawing.Image)(resources.GetObject("btnMerge.Image")));
-            this.btnMerge.ImagePosition = DevComponents.DotNetBar.eImagePosition.Top;
-            this.btnMerge.Name = "btnMerge";
-            this.btnMerge.Text = "合 并";
-            // 
-            // ribbonBar5
-            // 
-            this.ribbonBar5.AutoOverflowEnabled = true;
-            // 
-            // 
-            // 
-            this.ribbonBar5.BackgroundMouseOverStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
-            // 
-            // 
-            // 
-            this.ribbonBar5.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
-            this.ribbonBar5.ContainerControlProcessDialogKey = true;
-            this.ribbonBar5.DialogLauncherVisible = true;
-            this.ribbonBar5.Dock = System.Windows.Forms.DockStyle.Left;
-            this.ribbonBar5.Items.AddRange(new DevComponents.DotNetBar.BaseItem[] {
-            this.ItemContainer5,
-            this.itemContainer1});
-            this.ribbonBar5.Location = new System.Drawing.Point(4, 0);
-            this.ribbonBar5.Margin = new System.Windows.Forms.Padding(4);
-            this.ribbonBar5.Name = "ribbonBar5";
-            this.ribbonBar5.Size = new System.Drawing.Size(172, 134);
-            this.ribbonBar5.Style = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled;
-            this.ribbonBar5.TabIndex = 1;
-            this.ribbonBar5.Text = "转换工具";
-            // 
-            // 
-            // 
-            this.ribbonBar5.TitleStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
-            // 
-            // 
-            // 
-            this.ribbonBar5.TitleStyleMouseOver.CornerType = DevComponents.DotNetBar.eCornerType.Square;
-            // 
-            // ItemContainer5
-            // 
-            // 
-            // 
-            // 
-            this.ItemContainer5.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
-            this.ItemContainer5.ItemSpacing = 3;
-            this.ItemContainer5.LayoutOrientation = DevComponents.DotNetBar.eOrientation.Vertical;
-            this.ItemContainer5.Name = "ItemContainer5";
-            this.ItemContainer5.SubItems.AddRange(new DevComponents.DotNetBar.BaseItem[] {
-            this.btnProtrans});
-            // 
-            // 
-            // 
-            this.ItemContainer5.TitleStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
-            this.ItemContainer5.VerticalItemAlignment = DevComponents.DotNetBar.eVerticalItemsAlignment.Middle;
-            // 
-            // btnProtrans
-            // 
-            this.btnProtrans.Image = global::ZJGIS.Properties.Resources.project;
-            this.btnProtrans.ImagePosition = DevComponents.DotNetBar.eImagePosition.Top;
-            this.btnProtrans.Name = "btnProtrans";
-            this.btnProtrans.Text = "投影转换";
-            this.btnProtrans.Click += new System.EventHandler(this.btnProtrans_Click);
-            // 
-            // itemContainer1
-            // 
-            // 
-            // 
-            // 
-            this.itemContainer1.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
-            this.itemContainer1.ItemSpacing = 3;
-            this.itemContainer1.LayoutOrientation = DevComponents.DotNetBar.eOrientation.Vertical;
-            this.itemContainer1.Name = "itemContainer1";
-            this.itemContainer1.SubItems.AddRange(new DevComponents.DotNetBar.BaseItem[] {
-            this.buttonItem3});
-            // 
-            // 
-            // 
-            this.itemContainer1.TitleStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
-            this.itemContainer1.VerticalItemAlignment = DevComponents.DotNetBar.eVerticalItemsAlignment.Middle;
-            // 
-            // buttonItem3
-            // 
-            this.buttonItem3.Image = global::ZJGIS.Properties.Resources.rotate_f;
-            this.buttonItem3.ImagePosition = DevComponents.DotNetBar.eImagePosition.Top;
-            this.buttonItem3.Name = "buttonItem3";
-            this.buttonItem3.Text = "格式转换";
-            // 
             // ribbonPanel1
             // 
             this.ribbonPanel1.ColorSchemeStyle = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled;
@@ -1353,10 +1402,10 @@
             this.ribbonBar19.Dock = System.Windows.Forms.DockStyle.Left;
             this.ribbonBar19.Items.AddRange(new DevComponents.DotNetBar.BaseItem[] {
             this.btnMeasure});
-            this.ribbonBar19.Location = new System.Drawing.Point(1074, 0);
+            this.ribbonBar19.Location = new System.Drawing.Point(769, 0);
             this.ribbonBar19.Margin = new System.Windows.Forms.Padding(4);
             this.ribbonBar19.Name = "ribbonBar19";
-            this.ribbonBar19.Size = new System.Drawing.Size(133, 134);
+            this.ribbonBar19.Size = new System.Drawing.Size(96, 134);
             this.ribbonBar19.Style = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled;
             this.ribbonBar19.TabIndex = 9;
             this.ribbonBar19.Text = "量测工具";
@@ -1396,10 +1445,10 @@
             this.ribbonBar2.Items.AddRange(new DevComponents.DotNetBar.BaseItem[] {
             this.btnQueryByAttribute,
             this.btnFind});
-            this.ribbonBar2.Location = new System.Drawing.Point(875, 0);
+            this.ribbonBar2.Location = new System.Drawing.Point(624, 0);
             this.ribbonBar2.Margin = new System.Windows.Forms.Padding(4);
             this.ribbonBar2.Name = "ribbonBar2";
-            this.ribbonBar2.Size = new System.Drawing.Size(199, 134);
+            this.ribbonBar2.Size = new System.Drawing.Size(145, 134);
             this.ribbonBar2.Style = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled;
             this.ribbonBar2.TabIndex = 8;
             this.ribbonBar2.Text = "属性查询";
@@ -1448,10 +1497,10 @@
             this.ribbonBar7.Dock = System.Windows.Forms.DockStyle.Left;
             this.ribbonBar7.Items.AddRange(new DevComponents.DotNetBar.BaseItem[] {
             this.itemContainer14});
-            this.ribbonBar7.Location = new System.Drawing.Point(687, 0);
+            this.ribbonBar7.Location = new System.Drawing.Point(514, 0);
             this.ribbonBar7.Margin = new System.Windows.Forms.Padding(4);
             this.ribbonBar7.Name = "ribbonBar7";
-            this.ribbonBar7.Size = new System.Drawing.Size(188, 134);
+            this.ribbonBar7.Size = new System.Drawing.Size(110, 134);
             this.ribbonBar7.Style = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled;
             this.ribbonBar7.TabIndex = 7;
             this.ribbonBar7.Text = "空间查询";
@@ -1603,7 +1652,7 @@
             this.ribbonBar3.Location = new System.Drawing.Point(4, 0);
             this.ribbonBar3.Margin = new System.Windows.Forms.Padding(4);
             this.ribbonBar3.Name = "ribbonBar3";
-            this.ribbonBar3.Size = new System.Drawing.Size(683, 134);
+            this.ribbonBar3.Size = new System.Drawing.Size(510, 134);
             this.ribbonBar3.Style = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled;
             this.ribbonBar3.TabIndex = 6;
             this.ribbonBar3.Text = "浏览工具";
@@ -1714,303 +1763,6 @@
             this.btnDefault.Tooltip = "回到初始状态";
             this.btnDefault.Click += new System.EventHandler(this.btnDefault_Click);
             // 
-            // RibbonPanel5
-            // 
-            this.RibbonPanel5.ColorSchemeStyle = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled;
-            this.RibbonPanel5.Controls.Add(this.RibbonBar10);
-            this.RibbonPanel5.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.RibbonPanel5.Location = new System.Drawing.Point(0, 59);
-            this.RibbonPanel5.Margin = new System.Windows.Forms.Padding(4);
-            this.RibbonPanel5.Name = "RibbonPanel5";
-            this.RibbonPanel5.Padding = new System.Windows.Forms.Padding(4, 0, 4, 4);
-            this.RibbonPanel5.Size = new System.Drawing.Size(1569, 138);
-            // 
-            // 
-            // 
-            this.RibbonPanel5.Style.CornerType = DevComponents.DotNetBar.eCornerType.Square;
-            // 
-            // 
-            // 
-            this.RibbonPanel5.StyleMouseDown.CornerType = DevComponents.DotNetBar.eCornerType.Square;
-            // 
-            // 
-            // 
-            this.RibbonPanel5.StyleMouseOver.CornerType = DevComponents.DotNetBar.eCornerType.Square;
-            this.RibbonPanel5.TabIndex = 6;
-            this.RibbonPanel5.Visible = false;
-            // 
-            // RibbonBar10
-            // 
-            this.RibbonBar10.AutoOverflowEnabled = true;
-            // 
-            // 
-            // 
-            this.RibbonBar10.BackgroundMouseOverStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
-            // 
-            // 
-            // 
-            this.RibbonBar10.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
-            this.RibbonBar10.ContainerControlProcessDialogKey = true;
-            this.RibbonBar10.Dock = System.Windows.Forms.DockStyle.Left;
-            this.RibbonBar10.Items.AddRange(new DevComponents.DotNetBar.BaseItem[] {
-            this.btnAboutSys,
-            this.btnSysHelp});
-            this.RibbonBar10.ItemSpacing = 4;
-            this.RibbonBar10.Location = new System.Drawing.Point(4, 0);
-            this.RibbonBar10.Margin = new System.Windows.Forms.Padding(4);
-            this.RibbonBar10.Name = "RibbonBar10";
-            this.RibbonBar10.Size = new System.Drawing.Size(320, 134);
-            this.RibbonBar10.Style = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled;
-            this.RibbonBar10.TabIndex = 6;
-            this.RibbonBar10.Text = "帮助";
-            // 
-            // 
-            // 
-            this.RibbonBar10.TitleStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
-            // 
-            // 
-            // 
-            this.RibbonBar10.TitleStyleMouseOver.CornerType = DevComponents.DotNetBar.eCornerType.Square;
-            // 
-            // btnAboutSys
-            // 
-            this.btnAboutSys.ButtonStyle = DevComponents.DotNetBar.eButtonStyle.ImageAndText;
-            this.btnAboutSys.Image = ((System.Drawing.Image)(resources.GetObject("btnAboutSys.Image")));
-            this.btnAboutSys.ImagePosition = DevComponents.DotNetBar.eImagePosition.Top;
-            this.btnAboutSys.Name = "btnAboutSys";
-            this.btnAboutSys.Text = "关于系统";
-            // 
-            // btnSysHelp
-            // 
-            this.btnSysHelp.Image = ((System.Drawing.Image)(resources.GetObject("btnSysHelp.Image")));
-            this.btnSysHelp.ImagePosition = DevComponents.DotNetBar.eImagePosition.Top;
-            this.btnSysHelp.Name = "btnSysHelp";
-            this.btnSysHelp.Text = "系统帮助";
-            this.btnSysHelp.Tooltip = "该功能暂时没有实现";
-            // 
-            // ribbonPanel8
-            // 
-            this.ribbonPanel8.ColorSchemeStyle = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled;
-            this.ribbonPanel8.Controls.Add(this.ribbonBar16);
-            this.ribbonPanel8.Controls.Add(this.ribbonBar15);
-            this.ribbonPanel8.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.ribbonPanel8.Location = new System.Drawing.Point(0, 59);
-            this.ribbonPanel8.Margin = new System.Windows.Forms.Padding(4);
-            this.ribbonPanel8.Name = "ribbonPanel8";
-            this.ribbonPanel8.Padding = new System.Windows.Forms.Padding(4, 0, 4, 4);
-            this.ribbonPanel8.Size = new System.Drawing.Size(1569, 138);
-            // 
-            // 
-            // 
-            this.ribbonPanel8.Style.CornerType = DevComponents.DotNetBar.eCornerType.Square;
-            // 
-            // 
-            // 
-            this.ribbonPanel8.StyleMouseDown.CornerType = DevComponents.DotNetBar.eCornerType.Square;
-            // 
-            // 
-            // 
-            this.ribbonPanel8.StyleMouseOver.CornerType = DevComponents.DotNetBar.eCornerType.Square;
-            this.ribbonPanel8.TabIndex = 10;
-            this.ribbonPanel8.Visible = false;
-            // 
-            // ribbonBar16
-            // 
-            this.ribbonBar16.AutoOverflowEnabled = true;
-            // 
-            // 
-            // 
-            this.ribbonBar16.BackgroundMouseOverStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
-            // 
-            // 
-            // 
-            this.ribbonBar16.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
-            this.ribbonBar16.ContainerControlProcessDialogKey = true;
-            this.ribbonBar16.Dock = System.Windows.Forms.DockStyle.Left;
-            this.ribbonBar16.Items.AddRange(new DevComponents.DotNetBar.BaseItem[] {
-            this.btnMaintain});
-            this.ribbonBar16.Location = new System.Drawing.Point(145, 0);
-            this.ribbonBar16.Margin = new System.Windows.Forms.Padding(4);
-            this.ribbonBar16.Name = "ribbonBar16";
-            this.ribbonBar16.Size = new System.Drawing.Size(108, 134);
-            this.ribbonBar16.Style = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled;
-            this.ribbonBar16.TabIndex = 1;
-            this.ribbonBar16.Text = "XML配置";
-            // 
-            // 
-            // 
-            this.ribbonBar16.TitleStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
-            // 
-            // 
-            // 
-            this.ribbonBar16.TitleStyleMouseOver.CornerType = DevComponents.DotNetBar.eCornerType.Square;
-            // 
-            // btnMaintain
-            // 
-            this.btnMaintain.Image = global::ZJGIS.Properties.Resources.XML;
-            this.btnMaintain.ImagePosition = DevComponents.DotNetBar.eImagePosition.Top;
-            this.btnMaintain.Name = "btnMaintain";
-            this.btnMaintain.SubItemsExpandWidth = 14;
-            this.btnMaintain.Text = "数据库维护";
-            this.btnMaintain.Click += new System.EventHandler(this.btnMaintain_Click);
-            // 
-            // ribbonBar15
-            // 
-            this.ribbonBar15.AutoOverflowEnabled = true;
-            // 
-            // 
-            // 
-            this.ribbonBar15.BackgroundMouseOverStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
-            // 
-            // 
-            // 
-            this.ribbonBar15.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
-            this.ribbonBar15.ContainerControlProcessDialogKey = true;
-            this.ribbonBar15.Dock = System.Windows.Forms.DockStyle.Left;
-            this.ribbonBar15.Items.AddRange(new DevComponents.DotNetBar.BaseItem[] {
-            this.btnSDEConnection});
-            this.ribbonBar15.Location = new System.Drawing.Point(4, 0);
-            this.ribbonBar15.Margin = new System.Windows.Forms.Padding(4);
-            this.ribbonBar15.Name = "ribbonBar15";
-            this.ribbonBar15.Size = new System.Drawing.Size(141, 134);
-            this.ribbonBar15.Style = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled;
-            this.ribbonBar15.TabIndex = 0;
-            this.ribbonBar15.Text = "SDE连接";
-            // 
-            // 
-            // 
-            this.ribbonBar15.TitleStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
-            // 
-            // 
-            // 
-            this.ribbonBar15.TitleStyleMouseOver.CornerType = DevComponents.DotNetBar.eCornerType.Square;
-            // 
-            // btnSDEConnection
-            // 
-            this.btnSDEConnection.ButtonStyle = DevComponents.DotNetBar.eButtonStyle.ImageAndText;
-            this.btnSDEConnection.Image = global::ZJGIS.Properties.Resources.coonect;
-            this.btnSDEConnection.ImagePosition = DevComponents.DotNetBar.eImagePosition.Top;
-            this.btnSDEConnection.ItemAlignment = DevComponents.DotNetBar.eItemAlignment.Center;
-            this.btnSDEConnection.Name = "btnSDEConnection";
-            this.btnSDEConnection.SubItemsExpandWidth = 14;
-            this.btnSDEConnection.Text = "连接SDE数据库";
-            this.btnSDEConnection.Tooltip = "SDE连接至Oracle数据库";
-            this.btnSDEConnection.Click += new System.EventHandler(this.btnSDEConnection_Click);
-            // 
-            // ribbonPanel7
-            // 
-            this.ribbonPanel7.ColorSchemeStyle = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled;
-            this.ribbonPanel7.Controls.Add(this.ribbonBar17);
-            this.ribbonPanel7.Controls.Add(this.ribbonBar13);
-            this.ribbonPanel7.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.ribbonPanel7.Location = new System.Drawing.Point(0, 59);
-            this.ribbonPanel7.Margin = new System.Windows.Forms.Padding(4);
-            this.ribbonPanel7.Name = "ribbonPanel7";
-            this.ribbonPanel7.Padding = new System.Windows.Forms.Padding(4, 0, 4, 4);
-            this.ribbonPanel7.Size = new System.Drawing.Size(1569, 138);
-            // 
-            // 
-            // 
-            this.ribbonPanel7.Style.CornerType = DevComponents.DotNetBar.eCornerType.Square;
-            // 
-            // 
-            // 
-            this.ribbonPanel7.StyleMouseDown.CornerType = DevComponents.DotNetBar.eCornerType.Square;
-            // 
-            // 
-            // 
-            this.ribbonPanel7.StyleMouseOver.CornerType = DevComponents.DotNetBar.eCornerType.Square;
-            this.ribbonPanel7.TabIndex = 9;
-            this.ribbonPanel7.Visible = false;
-            // 
-            // ribbonBar17
-            // 
-            this.ribbonBar17.AutoOverflowEnabled = true;
-            // 
-            // 
-            // 
-            this.ribbonBar17.BackgroundMouseOverStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
-            // 
-            // 
-            // 
-            this.ribbonBar17.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
-            this.ribbonBar17.ContainerControlProcessDialogKey = true;
-            this.ribbonBar17.Dock = System.Windows.Forms.DockStyle.Left;
-            this.ribbonBar17.Items.AddRange(new DevComponents.DotNetBar.BaseItem[] {
-            this.buttonItem17,
-            this.btnHistoryLook});
-            this.ribbonBar17.Location = new System.Drawing.Point(137, 0);
-            this.ribbonBar17.Margin = new System.Windows.Forms.Padding(4);
-            this.ribbonBar17.Name = "ribbonBar17";
-            this.ribbonBar17.Size = new System.Drawing.Size(209, 134);
-            this.ribbonBar17.Style = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled;
-            this.ribbonBar17.TabIndex = 2;
-            this.ribbonBar17.Text = "三库流转";
-            // 
-            // 
-            // 
-            this.ribbonBar17.TitleStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
-            // 
-            // 
-            // 
-            this.ribbonBar17.TitleStyleMouseOver.CornerType = DevComponents.DotNetBar.eCornerType.Square;
-            // 
-            // buttonItem17
-            // 
-            this.buttonItem17.Image = global::ZJGIS.Properties.Resources.Re_database;
-            this.buttonItem17.ImagePosition = DevComponents.DotNetBar.eImagePosition.Top;
-            this.buttonItem17.Name = "buttonItem17";
-            this.buttonItem17.SubItemsExpandWidth = 14;
-            this.buttonItem17.Text = "新数据入库";
-            // 
-            // btnHistoryLook
-            // 
-            this.btnHistoryLook.Image = global::ZJGIS.Properties.Resources.old;
-            this.btnHistoryLook.ImagePosition = DevComponents.DotNetBar.eImagePosition.Top;
-            this.btnHistoryLook.Name = "btnHistoryLook";
-            this.btnHistoryLook.SubItemsExpandWidth = 14;
-            this.btnHistoryLook.Text = "历史对照";
-            this.btnHistoryLook.Click += new System.EventHandler(this.btnHistoryLook_Click);
-            // 
-            // ribbonBar13
-            // 
-            this.ribbonBar13.AutoOverflowEnabled = true;
-            // 
-            // 
-            // 
-            this.ribbonBar13.BackgroundMouseOverStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
-            // 
-            // 
-            // 
-            this.ribbonBar13.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
-            this.ribbonBar13.ContainerControlProcessDialogKey = true;
-            this.ribbonBar13.Dock = System.Windows.Forms.DockStyle.Left;
-            this.ribbonBar13.Items.AddRange(new DevComponents.DotNetBar.BaseItem[] {
-            this.buttonItem8});
-            this.ribbonBar13.Location = new System.Drawing.Point(4, 0);
-            this.ribbonBar13.Margin = new System.Windows.Forms.Padding(4);
-            this.ribbonBar13.Name = "ribbonBar13";
-            this.ribbonBar13.Size = new System.Drawing.Size(133, 134);
-            this.ribbonBar13.Style = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled;
-            this.ribbonBar13.TabIndex = 0;
-            this.ribbonBar13.Text = "规则设置";
-            // 
-            // 
-            // 
-            this.ribbonBar13.TitleStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
-            // 
-            // 
-            // 
-            this.ribbonBar13.TitleStyleMouseOver.CornerType = DevComponents.DotNetBar.eCornerType.Square;
-            // 
-            // buttonItem8
-            // 
-            this.buttonItem8.Image = global::ZJGIS.Properties.Resources.rule;
-            this.buttonItem8.ImagePosition = DevComponents.DotNetBar.eImagePosition.Top;
-            this.buttonItem8.Name = "buttonItem8";
-            this.buttonItem8.SubItemsExpandWidth = 14;
-            this.buttonItem8.Text = "入库规则";
-            // 
             // ribbonPanel9
             // 
             this.ribbonPanel9.ColorSchemeStyle = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled;
@@ -2050,7 +1802,6 @@
             this.ribbonBar20.ContainerControlProcessDialogKey = true;
             this.ribbonBar20.Dock = System.Windows.Forms.DockStyle.Left;
             this.ribbonBar20.Items.AddRange(new DevComponents.DotNetBar.BaseItem[] {
-            this.btnNew,
             this.btnOpen,
             this.btnAdd,
             this.btnSave,
@@ -2070,16 +1821,6 @@
             // 
             // 
             this.ribbonBar20.TitleStyleMouseOver.CornerType = DevComponents.DotNetBar.eCornerType.Square;
-            // 
-            // btnNew
-            // 
-            this.btnNew.Image = global::ZJGIS.Properties.Resources._new;
-            this.btnNew.ImagePosition = DevComponents.DotNetBar.eImagePosition.Top;
-            this.btnNew.Name = "btnNew";
-            this.btnNew.SubItemsExpandWidth = 14;
-            this.btnNew.Text = "新 建";
-            this.btnNew.Visible = false;
-            this.btnNew.Click += new System.EventHandler(this.btnNew_Click);
             // 
             // btnOpen
             // 
@@ -2144,7 +1885,6 @@
             // 
             // RibbonTabItemSTPP
             // 
-            this.RibbonTabItemSTPP.Checked = true;
             this.RibbonTabItemSTPP.Name = "RibbonTabItemSTPP";
             this.RibbonTabItemSTPP.Panel = this.ribbonPanel4;
             this.RibbonTabItemSTPP.Text = "匹配编码";
@@ -2176,13 +1916,6 @@
             this.RibbonTabItemHJPZ.Panel = this.ribbonPanel8;
             this.RibbonTabItemHJPZ.Text = "环境配置";
             this.RibbonTabItemHJPZ.Visible = false;
-            // 
-            // RibbonTabItemBZ
-            // 
-            this.RibbonTabItemBZ.Name = "RibbonTabItemBZ";
-            this.RibbonTabItemBZ.Panel = this.RibbonPanel5;
-            this.RibbonTabItemBZ.Text = "帮助";
-            this.RibbonTabItemBZ.Visible = false;
             // 
             // buttonChangeStyle
             // 
@@ -2660,9 +2393,9 @@
             // 
             this.tabControlMain.BackColor = System.Drawing.Color.Transparent;
             this.tabControlMain.CanReorderTabs = true;
+            this.tabControlMain.Controls.Add(this.tabControlPanel1);
             this.tabControlMain.Controls.Add(this.tabControlPanel3);
             this.tabControlMain.Controls.Add(this.tabControlPanel2);
-            this.tabControlMain.Controls.Add(this.tabControlPanel1);
             this.tabControlMain.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabControlMain.Location = new System.Drawing.Point(306, 200);
             this.tabControlMain.Margin = new System.Windows.Forms.Padding(4);
@@ -2678,6 +2411,170 @@
             this.tabControlMain.Tabs.Add(this.tabItem2);
             this.tabControlMain.Tabs.Add(this.tabItem3);
             this.tabControlMain.Text = "tabControl1";
+            // 
+            // tabControlPanel1
+            // 
+            this.tabControlPanel1.Controls.Add(this.mapMain);
+            this.tabControlPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tabControlPanel1.Location = new System.Drawing.Point(0, 0);
+            this.tabControlPanel1.Margin = new System.Windows.Forms.Padding(4);
+            this.tabControlPanel1.Name = "tabControlPanel1";
+            this.tabControlPanel1.Padding = new System.Windows.Forms.Padding(1);
+            this.tabControlPanel1.Size = new System.Drawing.Size(1268, 363);
+            this.tabControlPanel1.Style.BackColor1.Color = System.Drawing.Color.FromArgb(((int)(((byte)(253)))), ((int)(((byte)(253)))), ((int)(((byte)(254)))));
+            this.tabControlPanel1.Style.BackColor2.Color = System.Drawing.Color.FromArgb(((int)(((byte)(157)))), ((int)(((byte)(188)))), ((int)(((byte)(227)))));
+            this.tabControlPanel1.Style.Border = DevComponents.DotNetBar.eBorderType.SingleLine;
+            this.tabControlPanel1.Style.BorderColor.Color = System.Drawing.Color.FromArgb(((int)(((byte)(146)))), ((int)(((byte)(165)))), ((int)(((byte)(199)))));
+            this.tabControlPanel1.Style.BorderSide = ((DevComponents.DotNetBar.eBorderSide)(((DevComponents.DotNetBar.eBorderSide.Left | DevComponents.DotNetBar.eBorderSide.Right) 
+            | DevComponents.DotNetBar.eBorderSide.Top)));
+            this.tabControlPanel1.Style.GradientAngle = -90;
+            this.tabControlPanel1.TabIndex = 1;
+            this.tabControlPanel1.TabItem = this.tabItem1;
+            // 
+            // mapMain
+            // 
+            this.mapMain.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.mapMain.Location = new System.Drawing.Point(1, 1);
+            this.mapMain.Margin = new System.Windows.Forms.Padding(4);
+            this.mapMain.Name = "mapMain";
+            this.mapMain.OcxState = ((System.Windows.Forms.AxHost.State)(resources.GetObject("mapMain.OcxState")));
+            this.mapMain.Size = new System.Drawing.Size(1266, 361);
+            this.mapMain.TabIndex = 1;
+            // 
+            // tabItem1
+            // 
+            this.tabItem1.AttachedControl = this.tabControlPanel1;
+            this.tabItem1.Name = "tabItem1";
+            this.tabItem1.Text = "数据视图";
+            // 
+            // tabControlPanel3
+            // 
+            this.tabControlPanel3.Controls.Add(this.MapOverlapping);
+            this.tabControlPanel3.Controls.Add(this.panelEx2);
+            this.tabControlPanel3.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tabControlPanel3.Location = new System.Drawing.Point(0, 0);
+            this.tabControlPanel3.Margin = new System.Windows.Forms.Padding(4);
+            this.tabControlPanel3.Name = "tabControlPanel3";
+            this.tabControlPanel3.Padding = new System.Windows.Forms.Padding(1);
+            this.tabControlPanel3.Size = new System.Drawing.Size(1268, 363);
+            this.tabControlPanel3.Style.BackColor1.Color = System.Drawing.Color.FromArgb(((int)(((byte)(253)))), ((int)(((byte)(253)))), ((int)(((byte)(254)))));
+            this.tabControlPanel3.Style.BackColor2.Color = System.Drawing.Color.FromArgb(((int)(((byte)(157)))), ((int)(((byte)(188)))), ((int)(((byte)(227)))));
+            this.tabControlPanel3.Style.Border = DevComponents.DotNetBar.eBorderType.SingleLine;
+            this.tabControlPanel3.Style.BorderColor.Color = System.Drawing.Color.FromArgb(((int)(((byte)(146)))), ((int)(((byte)(165)))), ((int)(((byte)(199)))));
+            this.tabControlPanel3.Style.BorderSide = ((DevComponents.DotNetBar.eBorderSide)(((DevComponents.DotNetBar.eBorderSide.Left | DevComponents.DotNetBar.eBorderSide.Right) 
+            | DevComponents.DotNetBar.eBorderSide.Top)));
+            this.tabControlPanel3.Style.GradientAngle = -90;
+            this.tabControlPanel3.TabIndex = 3;
+            this.tabControlPanel3.TabItem = this.tabItem3;
+            // 
+            // MapOverlapping
+            // 
+            this.MapOverlapping.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.MapOverlapping.Location = new System.Drawing.Point(1, 33);
+            this.MapOverlapping.Margin = new System.Windows.Forms.Padding(4);
+            this.MapOverlapping.Name = "MapOverlapping";
+            this.MapOverlapping.OcxState = ((System.Windows.Forms.AxHost.State)(resources.GetObject("MapOverlapping.OcxState")));
+            this.MapOverlapping.Size = new System.Drawing.Size(1266, 329);
+            this.MapOverlapping.TabIndex = 1;
+            this.MapOverlapping.OnMouseDown += new ESRI.ArcGIS.Controls.IMapControlEvents2_Ax_OnMouseDownEventHandler(this.MapOverlapping_OnMouseDown);
+            // 
+            // panelEx2
+            // 
+            this.panelEx2.CanvasColor = System.Drawing.SystemColors.Control;
+            this.panelEx2.ColorSchemeStyle = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled;
+            this.panelEx2.Controls.Add(this.bar2);
+            this.panelEx2.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panelEx2.Location = new System.Drawing.Point(1, 1);
+            this.panelEx2.Margin = new System.Windows.Forms.Padding(4);
+            this.panelEx2.Name = "panelEx2";
+            this.panelEx2.Size = new System.Drawing.Size(1266, 32);
+            this.panelEx2.Style.Alignment = System.Drawing.StringAlignment.Center;
+            this.panelEx2.Style.BackColor1.ColorSchemePart = DevComponents.DotNetBar.eColorSchemePart.PanelBackground;
+            this.panelEx2.Style.BackColor2.ColorSchemePart = DevComponents.DotNetBar.eColorSchemePart.PanelBackground2;
+            this.panelEx2.Style.BorderColor.ColorSchemePart = DevComponents.DotNetBar.eColorSchemePart.PanelBorder;
+            this.panelEx2.Style.ForeColor.ColorSchemePart = DevComponents.DotNetBar.eColorSchemePart.PanelText;
+            this.panelEx2.Style.GradientAngle = 90;
+            this.panelEx2.TabIndex = 0;
+            // 
+            // bar2
+            // 
+            this.bar2.AntiAlias = true;
+            this.bar2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.bar2.DockSide = DevComponents.DotNetBar.eDockSide.Top;
+            this.bar2.Font = new System.Drawing.Font("Microsoft YaHei", 9F);
+            this.bar2.Items.AddRange(new DevComponents.DotNetBar.BaseItem[] {
+            this.btnOverlapZoomIn,
+            this.btnOverlapZoomOut,
+            this.btnOverlapPan,
+            this.btnOverlapSelectFeat,
+            this.checkBoxItemSourceLayer,
+            this.checkBoxItemUpdatedLayer});
+            this.bar2.Location = new System.Drawing.Point(0, 0);
+            this.bar2.Margin = new System.Windows.Forms.Padding(4);
+            this.bar2.Name = "bar2";
+            this.bar2.Size = new System.Drawing.Size(1266, 29);
+            this.bar2.Stretch = true;
+            this.bar2.Style = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled;
+            this.bar2.TabIndex = 0;
+            this.bar2.TabStop = false;
+            this.bar2.Text = "bar2";
+            // 
+            // btnOverlapZoomIn
+            // 
+            this.btnOverlapZoomIn.ButtonStyle = DevComponents.DotNetBar.eButtonStyle.ImageAndText;
+            this.btnOverlapZoomIn.Image = global::ZJGIS.Properties.Resources.ZoomIn;
+            this.btnOverlapZoomIn.Name = "btnOverlapZoomIn";
+            this.btnOverlapZoomIn.Text = "放大";
+            this.btnOverlapZoomIn.Click += new System.EventHandler(this.btnOverlapZoomIn_Click);
+            // 
+            // btnOverlapZoomOut
+            // 
+            this.btnOverlapZoomOut.ButtonStyle = DevComponents.DotNetBar.eButtonStyle.ImageAndText;
+            this.btnOverlapZoomOut.Image = global::ZJGIS.Properties.Resources.ZoomOut;
+            this.btnOverlapZoomOut.Name = "btnOverlapZoomOut";
+            this.btnOverlapZoomOut.Text = "缩小";
+            this.btnOverlapZoomOut.Click += new System.EventHandler(this.btnOverlapZoomOut_Click);
+            // 
+            // btnOverlapPan
+            // 
+            this.btnOverlapPan.ButtonStyle = DevComponents.DotNetBar.eButtonStyle.ImageAndText;
+            this.btnOverlapPan.Image = global::ZJGIS.Properties.Resources.pan1;
+            this.btnOverlapPan.Name = "btnOverlapPan";
+            this.btnOverlapPan.Text = "漫游";
+            this.btnOverlapPan.Click += new System.EventHandler(this.btnOverlapPan_Click);
+            // 
+            // btnOverlapSelectFeat
+            // 
+            this.btnOverlapSelectFeat.ButtonStyle = DevComponents.DotNetBar.eButtonStyle.ImageAndText;
+            this.btnOverlapSelectFeat.Image = global::ZJGIS.Properties.Resources.select_bmp;
+            this.btnOverlapSelectFeat.Name = "btnOverlapSelectFeat";
+            this.btnOverlapSelectFeat.Text = "选择要素";
+            this.btnOverlapSelectFeat.Click += new System.EventHandler(this.btnOverlapSelectFeat_Click);
+            // 
+            // checkBoxItemSourceLayer
+            // 
+            this.checkBoxItemSourceLayer.Checked = true;
+            this.checkBoxItemSourceLayer.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.checkBoxItemSourceLayer.ItemAlignment = DevComponents.DotNetBar.eItemAlignment.Far;
+            this.checkBoxItemSourceLayer.Name = "checkBoxItemSourceLayer";
+            this.checkBoxItemSourceLayer.Text = "源图层";
+            this.checkBoxItemSourceLayer.CheckedChanged += new DevComponents.DotNetBar.CheckBoxChangeEventHandler(this.checkBoxItemSourceLayer_CheckedChanged);
+            // 
+            // checkBoxItemUpdatedLayer
+            // 
+            this.checkBoxItemUpdatedLayer.Checked = true;
+            this.checkBoxItemUpdatedLayer.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.checkBoxItemUpdatedLayer.ItemAlignment = DevComponents.DotNetBar.eItemAlignment.Far;
+            this.checkBoxItemUpdatedLayer.Name = "checkBoxItemUpdatedLayer";
+            this.checkBoxItemUpdatedLayer.Text = "匹配图层";
+            this.checkBoxItemUpdatedLayer.CheckedChanged += new DevComponents.DotNetBar.CheckBoxChangeEventHandler(this.checkBoxItemUpdatedLayer_CheckedChanged);
+            // 
+            // tabItem3
+            // 
+            this.tabItem3.AttachedControl = this.tabControlPanel3;
+            this.tabItem3.Name = "tabItem3";
+            this.tabItem3.Text = "匹配要素叠加对比";
+            this.tabItem3.Visible = false;
             // 
             // tabControlPanel2
             // 
@@ -2872,170 +2769,6 @@
             this.tabItem2.Text = "匹配要素分屏对比";
             this.tabItem2.Visible = false;
             // 
-            // tabControlPanel3
-            // 
-            this.tabControlPanel3.Controls.Add(this.MapOverlapping);
-            this.tabControlPanel3.Controls.Add(this.panelEx2);
-            this.tabControlPanel3.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tabControlPanel3.Location = new System.Drawing.Point(0, 0);
-            this.tabControlPanel3.Margin = new System.Windows.Forms.Padding(4);
-            this.tabControlPanel3.Name = "tabControlPanel3";
-            this.tabControlPanel3.Padding = new System.Windows.Forms.Padding(1);
-            this.tabControlPanel3.Size = new System.Drawing.Size(1268, 363);
-            this.tabControlPanel3.Style.BackColor1.Color = System.Drawing.Color.FromArgb(((int)(((byte)(253)))), ((int)(((byte)(253)))), ((int)(((byte)(254)))));
-            this.tabControlPanel3.Style.BackColor2.Color = System.Drawing.Color.FromArgb(((int)(((byte)(157)))), ((int)(((byte)(188)))), ((int)(((byte)(227)))));
-            this.tabControlPanel3.Style.Border = DevComponents.DotNetBar.eBorderType.SingleLine;
-            this.tabControlPanel3.Style.BorderColor.Color = System.Drawing.Color.FromArgb(((int)(((byte)(146)))), ((int)(((byte)(165)))), ((int)(((byte)(199)))));
-            this.tabControlPanel3.Style.BorderSide = ((DevComponents.DotNetBar.eBorderSide)(((DevComponents.DotNetBar.eBorderSide.Left | DevComponents.DotNetBar.eBorderSide.Right) 
-            | DevComponents.DotNetBar.eBorderSide.Top)));
-            this.tabControlPanel3.Style.GradientAngle = -90;
-            this.tabControlPanel3.TabIndex = 3;
-            this.tabControlPanel3.TabItem = this.tabItem3;
-            // 
-            // MapOverlapping
-            // 
-            this.MapOverlapping.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.MapOverlapping.Location = new System.Drawing.Point(1, 33);
-            this.MapOverlapping.Margin = new System.Windows.Forms.Padding(4);
-            this.MapOverlapping.Name = "MapOverlapping";
-            this.MapOverlapping.OcxState = ((System.Windows.Forms.AxHost.State)(resources.GetObject("MapOverlapping.OcxState")));
-            this.MapOverlapping.Size = new System.Drawing.Size(1266, 329);
-            this.MapOverlapping.TabIndex = 1;
-            this.MapOverlapping.OnMouseDown += new ESRI.ArcGIS.Controls.IMapControlEvents2_Ax_OnMouseDownEventHandler(this.MapOverlapping_OnMouseDown);
-            // 
-            // panelEx2
-            // 
-            this.panelEx2.CanvasColor = System.Drawing.SystemColors.Control;
-            this.panelEx2.ColorSchemeStyle = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled;
-            this.panelEx2.Controls.Add(this.bar2);
-            this.panelEx2.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panelEx2.Location = new System.Drawing.Point(1, 1);
-            this.panelEx2.Margin = new System.Windows.Forms.Padding(4);
-            this.panelEx2.Name = "panelEx2";
-            this.panelEx2.Size = new System.Drawing.Size(1266, 32);
-            this.panelEx2.Style.Alignment = System.Drawing.StringAlignment.Center;
-            this.panelEx2.Style.BackColor1.ColorSchemePart = DevComponents.DotNetBar.eColorSchemePart.PanelBackground;
-            this.panelEx2.Style.BackColor2.ColorSchemePart = DevComponents.DotNetBar.eColorSchemePart.PanelBackground2;
-            this.panelEx2.Style.BorderColor.ColorSchemePart = DevComponents.DotNetBar.eColorSchemePart.PanelBorder;
-            this.panelEx2.Style.ForeColor.ColorSchemePart = DevComponents.DotNetBar.eColorSchemePart.PanelText;
-            this.panelEx2.Style.GradientAngle = 90;
-            this.panelEx2.TabIndex = 0;
-            // 
-            // bar2
-            // 
-            this.bar2.AntiAlias = true;
-            this.bar2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.bar2.DockSide = DevComponents.DotNetBar.eDockSide.Top;
-            this.bar2.Font = new System.Drawing.Font("Microsoft YaHei", 9F);
-            this.bar2.Items.AddRange(new DevComponents.DotNetBar.BaseItem[] {
-            this.btnOverlapZoomIn,
-            this.btnOverlapZoomOut,
-            this.btnOverlapPan,
-            this.btnOverlapSelectFeat,
-            this.checkBoxItemSourceLayer,
-            this.checkBoxItemUpdatedLayer});
-            this.bar2.Location = new System.Drawing.Point(0, 0);
-            this.bar2.Margin = new System.Windows.Forms.Padding(4);
-            this.bar2.Name = "bar2";
-            this.bar2.Size = new System.Drawing.Size(1266, 29);
-            this.bar2.Stretch = true;
-            this.bar2.Style = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled;
-            this.bar2.TabIndex = 0;
-            this.bar2.TabStop = false;
-            this.bar2.Text = "bar2";
-            // 
-            // btnOverlapZoomIn
-            // 
-            this.btnOverlapZoomIn.ButtonStyle = DevComponents.DotNetBar.eButtonStyle.ImageAndText;
-            this.btnOverlapZoomIn.Image = global::ZJGIS.Properties.Resources.ZoomIn;
-            this.btnOverlapZoomIn.Name = "btnOverlapZoomIn";
-            this.btnOverlapZoomIn.Text = "放大";
-            this.btnOverlapZoomIn.Click += new System.EventHandler(this.btnOverlapZoomIn_Click);
-            // 
-            // btnOverlapZoomOut
-            // 
-            this.btnOverlapZoomOut.ButtonStyle = DevComponents.DotNetBar.eButtonStyle.ImageAndText;
-            this.btnOverlapZoomOut.Image = global::ZJGIS.Properties.Resources.ZoomOut;
-            this.btnOverlapZoomOut.Name = "btnOverlapZoomOut";
-            this.btnOverlapZoomOut.Text = "缩小";
-            this.btnOverlapZoomOut.Click += new System.EventHandler(this.btnOverlapZoomOut_Click);
-            // 
-            // btnOverlapPan
-            // 
-            this.btnOverlapPan.ButtonStyle = DevComponents.DotNetBar.eButtonStyle.ImageAndText;
-            this.btnOverlapPan.Image = global::ZJGIS.Properties.Resources.pan1;
-            this.btnOverlapPan.Name = "btnOverlapPan";
-            this.btnOverlapPan.Text = "漫游";
-            this.btnOverlapPan.Click += new System.EventHandler(this.btnOverlapPan_Click);
-            // 
-            // btnOverlapSelectFeat
-            // 
-            this.btnOverlapSelectFeat.ButtonStyle = DevComponents.DotNetBar.eButtonStyle.ImageAndText;
-            this.btnOverlapSelectFeat.Image = global::ZJGIS.Properties.Resources.select_bmp;
-            this.btnOverlapSelectFeat.Name = "btnOverlapSelectFeat";
-            this.btnOverlapSelectFeat.Text = "选择要素";
-            this.btnOverlapSelectFeat.Click += new System.EventHandler(this.btnOverlapSelectFeat_Click);
-            // 
-            // checkBoxItemSourceLayer
-            // 
-            this.checkBoxItemSourceLayer.Checked = true;
-            this.checkBoxItemSourceLayer.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkBoxItemSourceLayer.ItemAlignment = DevComponents.DotNetBar.eItemAlignment.Far;
-            this.checkBoxItemSourceLayer.Name = "checkBoxItemSourceLayer";
-            this.checkBoxItemSourceLayer.Text = "源图层";
-            this.checkBoxItemSourceLayer.CheckedChanged += new DevComponents.DotNetBar.CheckBoxChangeEventHandler(this.checkBoxItemSourceLayer_CheckedChanged);
-            // 
-            // checkBoxItemUpdatedLayer
-            // 
-            this.checkBoxItemUpdatedLayer.Checked = true;
-            this.checkBoxItemUpdatedLayer.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkBoxItemUpdatedLayer.ItemAlignment = DevComponents.DotNetBar.eItemAlignment.Far;
-            this.checkBoxItemUpdatedLayer.Name = "checkBoxItemUpdatedLayer";
-            this.checkBoxItemUpdatedLayer.Text = "匹配图层";
-            this.checkBoxItemUpdatedLayer.CheckedChanged += new DevComponents.DotNetBar.CheckBoxChangeEventHandler(this.checkBoxItemUpdatedLayer_CheckedChanged);
-            // 
-            // tabItem3
-            // 
-            this.tabItem3.AttachedControl = this.tabControlPanel3;
-            this.tabItem3.Name = "tabItem3";
-            this.tabItem3.Text = "匹配要素叠加对比";
-            this.tabItem3.Visible = false;
-            // 
-            // tabControlPanel1
-            // 
-            this.tabControlPanel1.Controls.Add(this.mapMain);
-            this.tabControlPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tabControlPanel1.Location = new System.Drawing.Point(0, 0);
-            this.tabControlPanel1.Margin = new System.Windows.Forms.Padding(4);
-            this.tabControlPanel1.Name = "tabControlPanel1";
-            this.tabControlPanel1.Padding = new System.Windows.Forms.Padding(1);
-            this.tabControlPanel1.Size = new System.Drawing.Size(1268, 363);
-            this.tabControlPanel1.Style.BackColor1.Color = System.Drawing.Color.FromArgb(((int)(((byte)(253)))), ((int)(((byte)(253)))), ((int)(((byte)(254)))));
-            this.tabControlPanel1.Style.BackColor2.Color = System.Drawing.Color.FromArgb(((int)(((byte)(157)))), ((int)(((byte)(188)))), ((int)(((byte)(227)))));
-            this.tabControlPanel1.Style.Border = DevComponents.DotNetBar.eBorderType.SingleLine;
-            this.tabControlPanel1.Style.BorderColor.Color = System.Drawing.Color.FromArgb(((int)(((byte)(146)))), ((int)(((byte)(165)))), ((int)(((byte)(199)))));
-            this.tabControlPanel1.Style.BorderSide = ((DevComponents.DotNetBar.eBorderSide)(((DevComponents.DotNetBar.eBorderSide.Left | DevComponents.DotNetBar.eBorderSide.Right) 
-            | DevComponents.DotNetBar.eBorderSide.Top)));
-            this.tabControlPanel1.Style.GradientAngle = -90;
-            this.tabControlPanel1.TabIndex = 1;
-            this.tabControlPanel1.TabItem = this.tabItem1;
-            // 
-            // mapMain
-            // 
-            this.mapMain.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.mapMain.Location = new System.Drawing.Point(1, 1);
-            this.mapMain.Margin = new System.Windows.Forms.Padding(4);
-            this.mapMain.Name = "mapMain";
-            this.mapMain.OcxState = ((System.Windows.Forms.AxHost.State)(resources.GetObject("mapMain.OcxState")));
-            this.mapMain.Size = new System.Drawing.Size(1266, 361);
-            this.mapMain.TabIndex = 1;
-            // 
-            // tabItem1
-            // 
-            this.tabItem1.AttachedControl = this.tabControlPanel1;
-            this.tabItem1.Name = "tabItem1";
-            this.tabItem1.Text = "数据视图";
-            // 
             // buttonItem2
             // 
             this.buttonItem2.Name = "buttonItem2";
@@ -3204,15 +2937,14 @@
             this.Load += new System.EventHandler(this.frmMain_Load);
             this.ribbonControl1.ResumeLayout(false);
             this.ribbonControl1.PerformLayout();
-            this.ribbonPanel4.ResumeLayout(false);
-            this.ribbonPanel6.ResumeLayout(false);
-            this.ribbonBar8.ResumeLayout(false);
-            this.ribbonPanel10.ResumeLayout(false);
-            this.ribbonPanel2.ResumeLayout(false);
-            this.ribbonPanel1.ResumeLayout(false);
-            this.RibbonPanel5.ResumeLayout(false);
             this.ribbonPanel8.ResumeLayout(false);
             this.ribbonPanel7.ResumeLayout(false);
+            this.ribbonPanel2.ResumeLayout(false);
+            this.ribbonPanel4.ResumeLayout(false);
+            this.ribbonPanel10.ResumeLayout(false);
+            this.ribbonPanel6.ResumeLayout(false);
+            this.ribbonBar8.ResumeLayout(false);
+            this.ribbonPanel1.ResumeLayout(false);
             this.ribbonPanel9.ResumeLayout(false);
             this.navigationPaneLeft.ResumeLayout(false);
             this.navigationPanePanel5.ResumeLayout(false);
@@ -3220,6 +2952,12 @@
             this.GroupPanelXmView.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.tabControlMain)).EndInit();
             this.tabControlMain.ResumeLayout(false);
+            this.tabControlPanel1.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.mapMain)).EndInit();
+            this.tabControlPanel3.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.MapOverlapping)).EndInit();
+            this.panelEx2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.bar2)).EndInit();
             this.tabControlPanel2.ResumeLayout(false);
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
@@ -3231,12 +2969,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.MapTo)).EndInit();
             this.panelEx1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.bar1)).EndInit();
-            this.tabControlPanel3.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.MapOverlapping)).EndInit();
-            this.panelEx2.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.bar2)).EndInit();
-            this.tabControlPanel1.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.mapMain)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -3254,11 +2986,6 @@
         private DevComponents.DotNetBar.NavigationPanePanel navigationPanePanel5;
         private DevComponents.DotNetBar.ButtonItem btnTcgl;
         private DevComponents.DotNetBar.ButtonItem btnProtrans;
-        private DevComponents.DotNetBar.ButtonItem buttonItem3;
-        private DevComponents.DotNetBar.ItemContainer itemContainer2;
-        private DevComponents.DotNetBar.ButtonItem btnSplit;
-        private DevComponents.DotNetBar.ItemContainer itemContainer3;
-        private DevComponents.DotNetBar.ButtonItem btnMerge;
         private DevComponents.DotNetBar.RibbonBar ribbonBar8;
         private DevComponents.DotNetBar.RibbonPanel ribbonPanel4;
         private DevComponents.DotNetBar.RibbonPanel ribbonPanel7;
@@ -3268,13 +2995,10 @@
         private DevComponents.DotNetBar.RibbonPanel ribbonPanel8;
         private DevComponents.DotNetBar.RibbonBar ribbonBar16;
         private DevComponents.DotNetBar.RibbonBar ribbonBar15;
-        private DevComponents.DotNetBar.RibbonBar ribbonBar13;
         private DevComponents.DotNetBar.RibbonTabItem RibbonTabItemHJPZ;
         private DevComponents.DotNetBar.RibbonBar ribbonBar18;
         private DevComponents.DotNetBar.RibbonBar ribbonBar17;
-        private DevComponents.DotNetBar.ButtonItem buttonItem17;
         private DevComponents.DotNetBar.ButtonItem btnHistoryLook;
-        private DevComponents.DotNetBar.ButtonItem buttonItem8;
         private DevComponents.DotNetBar.ItemContainer itemContainer8;
         private DevComponents.DotNetBar.ComboBoxItem comboBoxItem1;
         private DevComponents.Editors.ComboItem comboItem1;
@@ -3291,7 +3015,6 @@
         private DevComponents.DotNetBar.ButtonItem btnMeasure;
         private DevComponents.DotNetBar.RibbonPanel ribbonPanel9;
         private DevComponents.DotNetBar.RibbonBar ribbonBar20;
-        private DevComponents.DotNetBar.ButtonItem btnNew;
         private DevComponents.DotNetBar.ButtonItem btnOpen;
         private DevComponents.DotNetBar.ButtonItem btnAdd;
         private DevComponents.DotNetBar.RibbonTabItem ribbonTabItemWJ;
@@ -3304,16 +3027,10 @@
         private DevComponents.DotNetBar.RibbonPanel ribbonPanel1;
         private DevComponents.DotNetBar.RibbonPanel RibbonPanel3;
         private DevComponents.DotNetBar.RibbonPanel ribbonPanel2;
-        private DevComponents.DotNetBar.RibbonBar ribbonBar4;
         private DevComponents.DotNetBar.RibbonBar ribbonBar5;
-        private DevComponents.DotNetBar.RibbonPanel RibbonPanel5;
-        private DevComponents.DotNetBar.RibbonBar RibbonBar10;
-        private DevComponents.DotNetBar.ButtonItem btnAboutSys;
-        private DevComponents.DotNetBar.ButtonItem btnSysHelp;
         private DevComponents.DotNetBar.RibbonTabItem ribbonTabItemXMLL;
         private DevComponents.DotNetBar.RibbonTabItem ribbonTabItemXMGL;
         private DevComponents.DotNetBar.RibbonTabItem RibbonTabItemJBQKGL;
-        private DevComponents.DotNetBar.RibbonTabItem RibbonTabItemBZ;
         private DevComponents.DotNetBar.ButtonItem buttonChangeStyle;
         private DevComponents.DotNetBar.ButtonItem buttonStyleOffice2007Blue;
         private DevComponents.DotNetBar.ButtonItem buttonStyleOffice2007Black;
@@ -3336,7 +3053,6 @@
         private DevComponents.DotNetBar.ButtonItem btnFullExtent;
         private DevComponents.DotNetBar.ButtonItem btnDefault;
         private DevComponents.DotNetBar.ItemContainer ItemContainer5;
-        private DevComponents.DotNetBar.ItemContainer itemContainer1;
         private DevComponents.DotNetBar.ItemContainer itemContainer14;
         private DevComponents.DotNetBar.ItemContainer itemContainer15;
         private DevComponents.DotNetBar.ButtonItem btnPointSel;
