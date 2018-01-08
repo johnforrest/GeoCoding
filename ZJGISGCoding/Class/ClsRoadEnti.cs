@@ -16,6 +16,7 @@ namespace ZJGISGCoding.Class
     public class ClsRoadEnti
     {
         ClsCommon pClsCom = new ClsCommon();
+        FrmProgressBar progressbar = null;
 
         /// <summary>
         /// 生成格网码(道路)
@@ -45,6 +46,9 @@ namespace ZJGISGCoding.Class
 
             if (pFeatureLayer != null)
             {
+                progressbar = new FrmProgressBar(pFeatureLayer.FeatureClass.FeatureCount(null)*2);
+                progressbar.Show();
+
                 pFeatureClass = pFeatureLayer.FeatureClass;
 
                 //存在路网字段
@@ -123,6 +127,8 @@ namespace ZJGISGCoding.Class
                                 pRoadNotNull.Add(pFeature, pFeature.get_Value(pFeature.Fields.FindField(roadField)).ToString());
                                 pOID.Add(pFeature.OID);
                             }
+                            progressbar.GoOneStep();
+                            
                             pFeature = pFeatureCursor.NextFeature();
 
                         }
@@ -335,13 +341,13 @@ namespace ZJGISGCoding.Class
                         //    pFeature = pFeatureCursor.NextFeature();
                         //}
                         #endregion
-
+                        //progressbar.CloseForm();
                         pWorkspaceEdit.StopEditing(true);
                         pWorkspaceEdit.StopEditOperation();
 
                     }
 
-                    CreatGridCodeRoad2(pFeatureLayer, pNameNotNull, pRoadNotNull, pOID);
+                    CreatGridCodeRoad2(pFeatureLayer, pNameNotNull, pRoadNotNull, pOID,progressbar);
 
                 }
                 else
@@ -360,7 +366,7 @@ namespace ZJGISGCoding.Class
         /// </summary>
         /// <param name="pMapControl"></param>
         /// <param name="cbxLayerName"></param>
-        public void CreatGridCodeRoad2(IFeatureLayer pFeatureLayer, Dictionary<IFeature, string> pNameNotNull, Dictionary<IFeature, string> pRoadNotNull, List<object> pOID)
+        public void CreatGridCodeRoad2(IFeatureLayer pFeatureLayer, Dictionary<IFeature, string> pNameNotNull, Dictionary<IFeature, string> pRoadNotNull, List<object> pOID,FrmProgressBar pgBar)
         {
             string strField = "GridCode";
             if (pFeatureLayer != null)
@@ -385,7 +391,6 @@ namespace ZJGISGCoding.Class
                     {
                         if (pOID.Contains(pFeature.OID))
                         {
-
                             //名称不为空
                             if (pFeature.get_Value(pFeature.Fields.FindField(ClsConfig.LayerConfigs[(pFeatureLayer.FeatureClass as IDataset).Name].NameField)).ToString().Trim().Length > 0)
                             {
@@ -546,9 +551,10 @@ namespace ZJGISGCoding.Class
 
 
                         }
+                        pgBar.GoOneStep();
                         pFeature = pFeatureCursor.NextFeature();
                     }
-
+                    pgBar.CloseForm();
                     pWorkspaceEdit.StopEditing(true);
                     pWorkspaceEdit.StopEditOperation();
                     MessageBoxEx.Show("格网生成成功！");
@@ -587,6 +593,10 @@ namespace ZJGISGCoding.Class
         public void RoadCode(IMap pMapControl, ComboBoxEx cbxLayerName)
         {
             IFeatureLayer pFeatureLayer = (IFeatureLayer)pClsCom.GetLayerByName(pMapControl, cbxLayerName.Text);
+
+
+            progressbar = new FrmProgressBar(pFeatureLayer.FeatureClass.FeatureCount(null)*2);
+            progressbar.Show();
             IFields pFields = pFeatureLayer.FeatureClass.Fields;
             Dictionary<IFeature, string> pDicGridCode = new Dictionary<IFeature, string>();
             //遍历Feature
@@ -608,6 +618,7 @@ namespace ZJGISGCoding.Class
                     {
                         pDicGridCode.Add(pFeature, pFeature.get_Value(pFeature.Fields.FindField("GridCode")).ToString());
                     }
+                    progressbar.GoOneStep();
                     pFeature = pFeatureCursor.NextFeature();
                 }
                 pWorkspaceEdit.StopEditing(true);
@@ -615,7 +626,7 @@ namespace ZJGISGCoding.Class
 
             }
 
-            CreatRoadCode2(pFeatureLayer, pDicGridCode, "FCODE", "GridCode", "ENTIID");
+            RoadCode2(pFeatureLayer, pDicGridCode, "FCODE", "GridCode", "ENTIID",progressbar);
 
             #region 20170609注释掉
             //for (int i = 0; i < pFields.FieldCount - 1; i++)
@@ -760,7 +771,7 @@ namespace ZJGISGCoding.Class
         /// <param name="pField"></param>
         /// <param name="pRoadCode"></param>
         /// <param name="pENEIID"></param>
-        private void CreatRoadCode2(IFeatureLayer pFeatureLayer, Dictionary<IFeature, string> pDGCode, string pFCODE, string pGridCode, string pENEIID)
+        private void RoadCode2(IFeatureLayer pFeatureLayer, Dictionary<IFeature, string> pDGCode, string pFCODE, string pGridCode, string pENEIID,FrmProgressBar pgBar)
         {
             //遍历Feature
             IDataset pDataset = pFeatureLayer.FeatureClass as IDataset;
@@ -998,9 +1009,10 @@ namespace ZJGISGCoding.Class
 
                         }
                     }
-
+                    pgBar.GoOneStep();
                     pFeature = pFeatureCursor.NextFeature();
                 }
+                pgBar.CloseForm();
                 pWorkspaceEdit.StopEditing(true);
                 pWorkspaceEdit.StopEditOperation();
             }
@@ -1012,7 +1024,7 @@ namespace ZJGISGCoding.Class
         /// </summary>
         /// <param name="pMapControl"></param>
         /// <param name="cbxLayerName"></param>
-        public void CreatRestRoadGrid(IMap pMapControl, ComboBoxEx cbxLayerName)
+        public void RestRoadGrid(IMap pMapControl, ComboBoxEx cbxLayerName)
         {
             Dictionary<IFeature, string> pBothNotNull = new Dictionary<IFeature, string>();
             Dictionary<IFeature, string> pRoadNotNull = new Dictionary<IFeature, string>();
@@ -1034,7 +1046,10 @@ namespace ZJGISGCoding.Class
 
             if (pFeatureLayer != null)
             {
-                pClsCom.CheckGridCode(pFeatureLayer, gridField);
+                progressbar = new FrmProgressBar(pFeatureLayer.FeatureClass.FeatureCount(null)*2);
+                progressbar.Show();
+                //检查格网字段，不存在就生成此字段
+                pClsCom.CheckGridField(pFeatureLayer, gridField);
 
                 if (pFeatureLayer.FeatureClass.Fields.FindField(ClsConfig.LayerConfigs[(pFeatureLayer.FeatureClass as IDataset).Name].NameField) != -1
                     && pFeatureLayer.FeatureClass.Fields.FindField(ClsConfig.LayerConfigs[(pFeatureLayer.FeatureClass as IDataset).Name].NameField) != -1)
@@ -1096,7 +1111,7 @@ namespace ZJGISGCoding.Class
                                 pNameNotNull.Add(pFeature, pFeature.get_Value(pFeature.Fields.FindField(ClsConfig.LayerConfigs[(pFeatureLayer.FeatureClass as IDataset).Name].NameField)).ToString());
                                 pOID.Add(pFeature.OID);
                             }
-
+                            progressbar.GoOneStep();
                             pFeature = pFeatureCursor.NextFeature();
                         }
 
@@ -1313,7 +1328,7 @@ namespace ZJGISGCoding.Class
                         pWorkspaceEdit.StopEditOperation();
 
                     }
-                    CreatRestRoadGrid2(pFeatureLayer, pNameNotNull, pOID);
+                    RestRoadGrid2(pFeatureLayer, pNameNotNull, pOID,progressbar);
                 }
                 else
                 {
@@ -1334,7 +1349,7 @@ namespace ZJGISGCoding.Class
         /// </summary>
         /// <param name="pMapControl"></param>
         /// <param name="cbxLayerName"></param>
-        public void CreatRestRoadGrid2(IFeatureLayer pFeatureLayer, Dictionary<IFeature, string> pNameNotNull, List<object> pOID)
+        public void RestRoadGrid2(IFeatureLayer pFeatureLayer, Dictionary<IFeature, string> pNameNotNull, List<object> pOID,FrmProgressBar pgBar)
         {
             string strField = "GridCode";
 
@@ -1348,24 +1363,6 @@ namespace ZJGISGCoding.Class
 
             if (pFeatureLayer != null)
             {
-                IClass pTable = pFeatureLayer.FeatureClass as IClass;
-                try
-                {
-                    if (pTable.Fields.FindField(strField) == -1)
-                    {
-                        IField pField = new FieldClass();
-                        IFieldEdit pFieldEdit = pField as IFieldEdit;
-                        pFieldEdit.Name_2 = strField;
-                        pFieldEdit.Type_2 = esriFieldType.esriFieldTypeString;
-                        pTable.AddField(pField);
-                    }
-                }
-                catch
-                {
-                    MessageBoxEx.Show("添加字段有误,数据被占用！");
-                    return;
-                }
-
                 IDataset pDataset = pFeatureLayer.FeatureClass as IDataset;
                 IWorkspaceEdit pWorkspaceEdit = null;
                 if (pDataset != null)
@@ -1480,9 +1477,11 @@ namespace ZJGISGCoding.Class
                                 }
                             }
                         }
+
+                        pgBar.GoOneStep();
                         pFeature = pFeatureCursor.NextFeature();
                     }
-
+                    pgBar.CloseForm();
                     pWorkspaceEdit.StopEditing(true);
                     pWorkspaceEdit.StopEditOperation();
                     MessageBoxEx.Show("格网生成成功！");
@@ -1499,9 +1498,12 @@ namespace ZJGISGCoding.Class
         /// </summary>
         /// <param name="pMapControl"></param>
         /// <param name="cbxLayerName"></param>
-        public void CreatRestRoadCode(IMap pMapControl, ComboBoxEx cbxLayerName)
+        public void RestRoadCode(IMap pMapControl, ComboBoxEx cbxLayerName)
         {
             IFeatureLayer pFeatureLayer = (IFeatureLayer)pClsCom.GetLayerByName(pMapControl, cbxLayerName.Text);
+
+            progressbar = new FrmProgressBar(pFeatureLayer.FeatureClass.FeatureCount(null) * 2);
+            progressbar.Show();
             IFields pFields = pFeatureLayer.FeatureClass.Fields;
 
             Dictionary<IFeature, string> pDicGridCode = new Dictionary<IFeature, string>();
@@ -1524,12 +1526,13 @@ namespace ZJGISGCoding.Class
                     {
                         pDicGridCode.Add(pFeature, pFeature.get_Value(pFeature.Fields.FindField("GridCode")).ToString());
                     }
+                    progressbar.GoOneStep();
                     pFeature = pFeatureCursor.NextFeature();
                 }
                 pWorkspaceEdit.StopEditing(true);
                 pWorkspaceEdit.StopEditOperation();
 
-                CreatRestRoadCode2(pFeatureLayer, pDicGridCode, "FCODE", "GridCode", "ENTIID");
+                RestRoadCode2(pFeatureLayer, pDicGridCode, "FCODE", "GridCode", "ENTIID",progressbar);
             }
 
 
@@ -1676,7 +1679,7 @@ namespace ZJGISGCoding.Class
         /// <param name="pField"></param>
         /// <param name="pRoadCode"></param>
         /// <param name="pENEIID"></param>
-        private void CreatRestRoadCode2(IFeatureLayer pFeatureLayer, Dictionary<IFeature, string> pDGCode, string pFCODE, string pGridCode, string pENEIID)
+        private void RestRoadCode2(IFeatureLayer pFeatureLayer, Dictionary<IFeature, string> pDGCode, string pFCODE, string pGridCode, string pENEIID,FrmProgressBar pgBar)
         {
             //遍历Feature
             IDataset pDataset = pFeatureLayer.FeatureClass as IDataset;
@@ -1906,9 +1909,10 @@ namespace ZJGISGCoding.Class
                             #endregion
                         }
                     }
-
+                    pgBar.GoOneStep();
                     pFeature = pFeatureCursor.NextFeature();
                 }
+                pgBar.CloseForm();
                 pWorkspaceEdit.StopEditing(true);
                 pWorkspaceEdit.StopEditOperation();
                 MessageBox.Show("道路编码成功！");
@@ -1924,7 +1928,6 @@ namespace ZJGISGCoding.Class
         //public DataTable CheckCommonEnti(IMap pMapControl, ComboBoxEx cbxLayerName)
         public List<IRow> CheckRoadEnti(IFeatureLayer pFeatureLayer)
         {
-            FrmProgressBar progressbar = null;
 
             //ITable pTable = new ITable();
             List<IRow> list = new List<IRow>();

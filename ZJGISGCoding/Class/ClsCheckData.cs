@@ -126,7 +126,7 @@ namespace ZJGISGCoding
             dataView.Columns[2].Name = "LayerGroup";
             dataView.Columns[2].HeaderText = "所在图层组";
 
-            string strField = "FCODE";
+            string fcodeField = "FCODE";
             ILayer pLayer = GetLayerByName(pMapControl, cbxLayerName.Text);
             if (pLayer is IGroupLayer)
             {
@@ -141,7 +141,7 @@ namespace ZJGISGCoding
                         dataView["LayerName", j].Value = pMapControl.get_Layer(k).Name;
                         IFeatureLayer pFeatureLayer = pCompositeLayer.get_Layer(k) as IFeatureLayer;
                         IClass pTable = pFeatureLayer.FeatureClass as IClass;
-                        if (pTable.Fields.FindField(strField) == -1)
+                        if (pTable.Fields.FindField(fcodeField) == -1)
                         {
                             dataView["YesOrNo", j].Value = "否";
                             dataView.Columns[0].Width = dataView.Width / 3;
@@ -167,7 +167,7 @@ namespace ZJGISGCoding
                     dataView["LayerName", j].Value = cbxLayerName.Text;
                     IFeatureLayer pFeatureLayer = pLayer as IFeatureLayer;
                     IClass pTable = pFeatureLayer.FeatureClass as IClass;
-                    if (pTable.Fields.FindField(strField) == -1)
+                    if (pTable.Fields.FindField(fcodeField) == -1)
                     {
                         dataView["YesOrNo", j].Value = "否";
                         dataView.Columns[0].Width = dataView.Width / 3;

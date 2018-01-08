@@ -130,6 +130,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Classes\ClsMapOperation.cs" />
+    <Compile Include="Classes\LicenseInitializer.cs" />
     <Compile Include="Forms\frmDataTree.cs">
       <SubType>Form</SubType>
     </Compile>

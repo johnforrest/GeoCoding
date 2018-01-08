@@ -40,6 +40,7 @@ using ZJGISDataUpdating.Class;
 using ZJGISXMLOperation;
 using ZJGISXMLOperation.Forms;
 using ZJGIS.Class;
+using ZJGIS.Classes;
 namespace ZJGIS
 {
     public partial class frmMain
@@ -54,7 +55,7 @@ namespace ZJGIS
         private IApplication mainApplication = new PluginFramework.Application();
         private PluginService pluginService;
 
-        private IAoInitialize m_AoInitialize = new AoInitializeClass();
+        //private IAoInitialize m_AoInitialize = new AoInitializeClass();
         ZJGISGCoding.Class.ClsCommon pClsCom = new ZJGISGCoding.Class.ClsCommon();
 
         #region mapbrowse tools
@@ -72,21 +73,17 @@ namespace ZJGIS
         public frmMain()
         {
             InitializeComponent();
+
             InitialMapStorage();
 
             this.ribbonControl1.SelectedRibbonTabItem = ribbonTabItemWJ;
 
             //匹配结果窗体加载控件
             ClsControl.MapControlMain = this.mapMain.Object as IMapControl4;
-
             ClsControl.m_MapControlFrom = this.MapFrom.Object as IMapControl4;
             ClsControl.m_MapControlTo = this.MapTo.Object as IMapControl4;
             ClsControl.m_MapControlOverlap = this.MapOverlapping.Object as IMapControl4;
             ClsControl.m_MainTabControl = this.tabControlMain;
-
-            //ClsControl.m_DGVFrom = this.dataGridViewXFrom;
-            //ClsControl.m_DGVTo = this.dataGridViewXTo;
-            //ClsControl.m_BottomStandBar = this.barStandBottom;
 
             //插件
             mainApplication.RibbonControlMain = this.ribbonControl1;
@@ -101,7 +98,7 @@ namespace ZJGIS
 
 
         }
-        #region initialmap management
+        #region 图库管理
         /// <summary>
         /// 初始化图库管理
         /// </summary>
@@ -127,7 +124,7 @@ namespace ZJGIS
         }
         #endregion
 
-        #region   set style
+        #region  设置样式
         private void buttonStyleOffice2007Blue_Click(System.Object sender, System.EventArgs e)
         {
 
@@ -180,47 +177,16 @@ namespace ZJGIS
         }
         #endregion
 
-        /// <summary>
-        /// 初始化许可
-        /// </summary>
-        /// <returns></returns>
-        private bool CheckLicenses()
-        {
-            if (m_AoInitialize == null)
-            {
-                MessageBox.Show("不能初始化", "ArcGIS Engine许可错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return false;
-            }
-            esriLicenseStatus licenseStatus = (esriLicenseStatus)m_AoInitialize.IsProductCodeAvailable(esriLicenseProductCode.esriLicenseProductCodeEngineGeoDB);
-
-            if (licenseStatus == esriLicenseStatus.esriLicenseAvailable)
-            {
-                licenseStatus = (esriLicenseStatus)m_AoInitialize.Initialize(esriLicenseProductCode.esriLicenseProductCodeEngineGeoDB);
-                if (licenseStatus != esriLicenseStatus.esriLicenseCheckedOut)
-                {
-                    MessageBox.Show("初始化失败，应用程序不能运行!", "ArcGIS Engine许可错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return false;
-                }
-            }
-            else
-            {
-                MessageBox.Show("初始化失败，应用程序不能运行!", "ArcGIS Engine许可错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return false;
-            }
-            return true;
-        }
 
         private void frmMain_Load(object sender, EventArgs e)
         {
-            if (CheckLicenses() == false)
-                this.Close();
-
+            //    LicenseInitializer license = new LicenseInitializer();
+            //    if (license.CheckLicenses() == false)
+            //        this.Close();
             try
             {
-
                 //20170313 注释掉
                 //IWorkspace workSpace = ClsDBInfo.SdeWorkspace;
-
                 m_clsFrmMain = new clsFrmMain();
 
                 m_clsFrmMain.FrmActive = this;
@@ -649,6 +615,7 @@ namespace ZJGIS
                         pMapDocument.New(saveMapFileDialog.FileName);
                         pMapDocument.ReplaceContents(pMxdC);
                         pMapDocument.Save(true, true);
+                        MessageBox.Show("保存成功！");
                     }
                 }
                 else
@@ -658,7 +625,6 @@ namespace ZJGIS
                     pMapDocument.ReplaceContents(pMxdC);
                     pMapDocument.Save(true, true);
                 }
-                MessageBox.Show("保存成功！");
             }
             catch (System.Exception ex)
             {
@@ -1048,7 +1014,7 @@ namespace ZJGIS
             toolExtractAfterProjection.OnClick();
         }
         #endregion
-        #region GeoCoding
+        #region 地理编码
         /// <summary>
         /// 空值检查(检查的是FCode字段是否存在)
         /// </summary>
@@ -1098,7 +1064,7 @@ namespace ZJGIS
 
 
         /// <summary>
-        /// 生成编码
+        /// 实体编码
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -1110,7 +1076,7 @@ namespace ZJGIS
                 if (pFeatureLayer.FeatureClass.ShapeType == esriGeometryType.esriGeometryPoint)
                 {
                     ClsCommonEnti pcommonEnti = new ClsCommonEnti();
-                    pcommonEnti.Code(mapMain.Map, cbxCodeLayer);
+                    pcommonEnti.CommonEntiCode(mapMain.Map, cbxCodeLayer);
                 }
                 else if (pFeatureLayer.FeatureClass.ShapeType == esriGeometryType.esriGeometryPolyline)
                 {
@@ -1130,14 +1096,14 @@ namespace ZJGIS
 
         }
         /// <summary>
-        /// 补全格网
+        /// 补充格网
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void btnRestGrid_Click(object sender, EventArgs e)
         {
             IFeatureLayer pFeatureLayer = (IFeatureLayer)pClsCom.GetLayerByName(this.mapMain.Map, this.cbxCodeLayer.Text);
-            if (pFeatureLayer!=null)
+            if (pFeatureLayer != null)
             {
                 if (pFeatureLayer.FeatureClass.ShapeType == esriGeometryType.esriGeometryPoint)
                 {
@@ -1147,12 +1113,12 @@ namespace ZJGIS
                 else if (pFeatureLayer.FeatureClass.ShapeType == esriGeometryType.esriGeometryPolyline)
                 {
                     ClsRoadEnti pRoadEnti = new ClsRoadEnti();
-                    pRoadEnti.CreatRestRoadGrid(mapMain.Map, cbxCodeLayer);
+                    pRoadEnti.RestRoadGrid(mapMain.Map, cbxCodeLayer);
                 }
                 else if (pFeatureLayer.FeatureClass.ShapeType == esriGeometryType.esriGeometryPolygon)
                 {
                     ClsResEnti pResEnti = new ClsResEnti();
-                    pResEnti.CreatRestGridCodeRES(mapMain.Map, cbxCodeLayer);
+                    pResEnti.RestRESGridCode(mapMain.Map, cbxCodeLayer);
                 }
             }
             else
@@ -1162,7 +1128,7 @@ namespace ZJGIS
 
         }
         /// <summary>
-        /// 补全编码
+        /// 补充编码
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -1179,7 +1145,7 @@ namespace ZJGIS
                 else if (pFeatureLayer.FeatureClass.ShapeType == esriGeometryType.esriGeometryPolyline)
                 {
                     ClsRoadEnti pRoadEnti = new ClsRoadEnti();
-                    pRoadEnti.CreatRestRoadCode(mapMain.Map, cbxCodeLayer);
+                    pRoadEnti.RestRoadCode(mapMain.Map, cbxCodeLayer);
                 }
                 else if (pFeatureLayer.FeatureClass.ShapeType == esriGeometryType.esriGeometryPolygon)
                 {
@@ -2530,7 +2496,7 @@ namespace ZJGIS
 
             this.btnOverlapZoomIn.Checked = false;
             this.btnOverlapZoomOut.Checked = false;
-            this.btnOverlapPan.Checked = true; 
+            this.btnOverlapPan.Checked = true;
             this.btnOverlapSelectFeat.Checked = false;
 
         }
@@ -2554,7 +2520,7 @@ namespace ZJGIS
             this.btnOverlapSelectFeat.Checked = true;
         }
 
-      
+
         string mapName = "";
         IPoint pPoint = null;
         string pMouseOperate = "";
@@ -2680,7 +2646,7 @@ namespace ZJGIS
             }
         }
         #endregion
-    
+
         #region The document that already opened.
         #region write text
         private void WriteText(string text)
@@ -2815,7 +2781,7 @@ namespace ZJGIS
             historyViewer.ShowDialog();
         }
 
-  
+
         /// <summary>
         /// 退出系统
         /// </summary>
@@ -2919,7 +2885,7 @@ namespace ZJGIS
         private void btnCommonNullCheck_Click(object sender, EventArgs e)
         {
             IFeatureLayer pFeatureLayer = (IFeatureLayer)pClsCom.GetLayerByName(this.mapMain.Map, this.comboBoxItemCheck.Text);
-            if (pFeatureLayer!=null)
+            if (pFeatureLayer != null)
             {
                 FrmResultDGV frmResult = new ZJGISGCoding.Forms.FrmResultDGV();
                 //BindingSource bs = new BindingSource();
@@ -2978,7 +2944,7 @@ namespace ZJGIS
             }
         }
 
-    
+
 
 
     }

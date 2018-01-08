@@ -9,12 +9,14 @@ using ESRI.ArcGIS.Carto;
 using ESRI.ArcGIS.Geodatabase;
 using ESRI.ArcGIS.Geometry;
 using ZJGISCommon.Classes;
+using ZJGISCommon.Forms;
 
 namespace ZJGISGCoding.Class
 {
     public class ClsPOIEnti
     {
         ClsCommon pClsCom = new ClsCommon();
+        FrmProgressBar progressbar;
         /// <summary>
         /// 生成格网码(道路)
         /// </summary>
@@ -35,6 +37,9 @@ namespace ZJGISGCoding.Class
 
             if (pFeatureLayer != null)
             {
+                progressbar = new FrmProgressBar(pFeatureLayer.FeatureClass.FeatureCount(null));
+                progressbar.Show();
+
                 IDataset cDataset = pFeatureLayer.FeatureClass as IDataset;
                 IGeoDataset cGeoDataset = cDataset as IGeoDataset;
                 ISpatialReference cSpatialReference = cGeoDataset.SpatialReference;
@@ -42,8 +47,8 @@ namespace ZJGISGCoding.Class
                 {
                     MessageBox.Show("该图层为投影坐标，请转换为相应的地理坐标,再开始地理编码！");
                 }
-
-                pClsCom.CheckGridCode(pFeatureLayer, gridField);
+                //检查是否存在格网字段，不存在则补充此字段
+                pClsCom.CheckGridField(pFeatureLayer, gridField);
 
                 if (pFeatureLayer.FeatureClass.Fields.FindField(ClsConfig.LayerConfigs[(pFeatureLayer.FeatureClass as IDataset).Name].NameField) != -1)
                 {
@@ -79,9 +84,11 @@ namespace ZJGISGCoding.Class
                                     MessageBoxEx.Show("格网码生成失败，请转换成地理坐标！");
                                     return;
                                 }
-                            }
+                            } 
+                            progressbar.GoOneStep();
                             pFeature = pFeatureCursor.NextFeature();
                         }
+                        progressbar.CloseForm();
                         pWorkspaceEdit.StopEditing(true);
                         pWorkspaceEdit.StopEditOperation();
                     }
@@ -110,6 +117,9 @@ namespace ZJGISGCoding.Class
             IFeatureLayer pFeatureLayer = (IFeatureLayer)pClsCom.GetLayerByName(pMapControl, cbxLayerName.Text);
             if (pFeatureLayer!=null)
             {
+                progressbar = new FrmProgressBar(pFeatureLayer.FeatureClass.FeatureCount(null)*2);
+                progressbar.Show();
+
                 IFields pFields = pFeatureLayer.FeatureClass.Fields;
 
                 Dictionary<IFeature, string> pDicGridCode = new Dictionary<IFeature, string>();
@@ -162,16 +172,12 @@ namespace ZJGISGCoding.Class
                                 }
 
                             }
+                            progressbar.GoOneStep();
                             pFeature = pFeatureCursor.NextFeature();
                         }
                         pWorkspaceEdit.StopEditing(true);
                         pWorkspaceEdit.StopEditOperation();
-
-
-
-
-                        //RestPOICode2(pFeatureLayer, pEntiCode, pDicGridCode, "POI", "GridCode", "ENTIID");
-                        RestPOICode3(pFeatureLayer, pEntiCode, pDicGridCode, "GridCode", "ENTIID");
+                        RestPOICode2(pFeatureLayer, pEntiCode, pDicGridCode, "GridCode", "ENTIID",progressbar);
                     }
                     else
                     {
@@ -191,104 +197,7 @@ namespace ZJGISGCoding.Class
             }
         }
 
-
-        /// <summary>
-        /// 道路编码函数
-        /// </summary>
-        /// <param name="pFeatureLayer"></param>
-        /// <param name="pField"></param>
-        /// <param name="pRoadCode"></param>
-        /// <param name="pENEIID"></param>
-        private void RestPOICode2(IFeatureLayer pFeatureLayer, Dictionary<IFeature, string> pEntiCode, Dictionary<IFeature, string> pDicGridCode, string pFCODE, string pGridCode, string pENEIID)
-        //private void RestPOICode2(IFeatureLayer pFeatureLayer, Dictionary<IFeature, string> pEntiCode, Dictionary<IFeature, string> pDicGridCode, string pGridCode, string pENEIID)
-        {
-            //遍历Feature
-            IDataset pDataset = pFeatureLayer.FeatureClass as IDataset;
-            IWorkspaceEdit pWorkspaceEdit = null;
-            if (pDataset != null)
-            {
-                pWorkspaceEdit = pDataset.Workspace as IWorkspaceEdit;
-                if (pWorkspaceEdit != null || pWorkspaceEdit.IsBeingEdited() == false)
-                {
-                    pWorkspaceEdit.StartEditing(true);
-                    pWorkspaceEdit.StartEditOperation();
-                }
-                IFeatureCursor pFeatureCursor = pFeatureLayer.Search(null, false);
-                IFeature pFeature = pFeatureCursor.NextFeature();
-                string pNum = string.Empty;
-                string pEntiidCode = string.Empty;
-
-                while (pFeature != null)
-                {
-                    int flag = 0;
-                    string gridCode1 = pFeature.get_Value(pFeature.Fields.FindField(pGridCode)).ToString();
-                    //格网码不为空，只对有格网码的的要素进行编码
-                    if (pFeature.get_Value(pFeature.Fields.FindField(pGridCode)).ToString().Length > 0)
-                    {
-                        foreach (string s in pDicGridCode.Values)
-                        {
-                            if (gridCode1 == s)
-                            {
-                                flag++;
-                            }
-                        }
-                        //格网码唯一的情况：那么地理编码也一定唯一
-                        if (flag == 1)
-                        {
-                            pNum = "A01";
-                            pEntiidCode = gridCode1 + pFCODE + pNum;
-                            pFeature.set_Value(pFeature.Fields.FindField(pENEIID), pEntiidCode);
-                            pFeature.Store();
-                        }
-                        //格网码有多个的情况
-                        else
-                        {
-                            List<IFeature> keyListTotal = (from q in pDicGridCode
-                                                           where q.Value == gridCode1
-                                                           select q.Key).ToList<IFeature>(); //get all keys
-                            //test
-                            object testobj = pFeature.OID;
-
-                            int flag2 = 0;
-                            //顺序码
-                            for (int k = 0; k < keyListTotal.Count; k++)
-                            {
-                                string enticode = keyListTotal[k].get_Value(keyListTotal[k].Fields.FindField("ENTIID")).ToString();
-                                if (enticode.Trim().Length > 0)
-                                {
-                                    flag2++;
-                                    pNum = enticode.Substring(enticode.Length - 2);
-                                    //pNum = "A" + string.Format("{0:00}", (Convert.ToInt32(pNum) + 1));
-                                }
-                            }
-                            //顺序码
-                            for (int k = 0; k < keyListTotal.Count; k++)
-                            {
-                                if (pFeature.OID == keyListTotal[k].OID && flag2 > 0)
-                                {
-                                    pNum = "A" + string.Format("{0:00}", k + flag2 + 1);
-                                }
-
-                                if (pFeature.OID == keyListTotal[k].OID && flag2 == 0)
-                                {
-                                    pNum = "A" + string.Format("{0:00}", k + 1);
-                                }
-
-                            }
-
-                            pEntiidCode = gridCode1 + pFCODE + pNum;
-                            pFeature.set_Value(pFeature.Fields.FindField(pENEIID), pEntiidCode);
-                            pFeature.Store();
-                        }
-                    }
-                    pFeature = pFeatureCursor.NextFeature();
-                }
-                pWorkspaceEdit.StopEditing(true);
-                pWorkspaceEdit.StopEditOperation();
-            }
-        }
-
-        private void RestPOICode3(IFeatureLayer pFeatureLayer, Dictionary<IFeature, string> pEntiCode, Dictionary<IFeature, string> pDicGridCode, string pGridCode, string pENEIID)
+        private void RestPOICode2(IFeatureLayer pFeatureLayer, Dictionary<IFeature, string> pEntiCode, Dictionary<IFeature, string> pDicGridCode, string pGridCode, string pENEIID,FrmProgressBar pgBar)
         {
             string pFCODE = string.Empty;
             //遍历Feature
@@ -377,8 +286,10 @@ namespace ZJGISGCoding.Class
                             }
                         }
                     }
+                    pgBar.GoOneStep();
                     pFeature = pFeatureCursor.NextFeature();
                 }
+                pgBar.CloseForm();
                 pWorkspaceEdit.StopEditing(true);
                 pWorkspaceEdit.StopEditOperation();
             }

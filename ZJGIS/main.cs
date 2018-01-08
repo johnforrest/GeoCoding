@@ -18,11 +18,10 @@ namespace ZJGIS
         [STAThread]
         static void Main()
         {
+            ESRI.ArcGIS.RuntimeManager.Bind(ESRI.ArcGIS.ProductCode.EngineOrDesktop);
 
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            ESRI.ArcGIS.RuntimeManager.Bind(ESRI.ArcGIS.ProductCode.EngineOrDesktop);
-
             ////20170310
             ////实例化数据连接信息 写入连接SDE的设置信息
             //ClsConnectInfo connectInfo = new ClsConnectInfo();

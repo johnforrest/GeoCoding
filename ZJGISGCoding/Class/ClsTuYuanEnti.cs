@@ -6,13 +6,14 @@ using System.Windows.Forms;
 using DevComponents.DotNetBar.Controls;
 using ESRI.ArcGIS.Carto;
 using ESRI.ArcGIS.Geodatabase;
+using ZJGISCommon.Forms;
 
 namespace ZJGISGCoding.Class
 {
     public class ClsTuYuanEnti
     {
         ClsCommon pClsCom = new ClsCommon();
-
+        FrmProgressBar progressbar;
         /// <summary>
         /// 对图元编码
         /// </summary>
@@ -26,6 +27,9 @@ namespace ZJGISGCoding.Class
             //遍历字段
             if (pFeatureLayer!=null)
             {
+                progressbar = new FrmProgressBar(pFeatureLayer.FeatureClass.FeatureCount(null) * 2);
+                progressbar.Show();
+
                 IField pField = null;
                 IFields pFields = pFeatureLayer.FeatureClass.Fields;
 
@@ -46,9 +50,7 @@ namespace ZJGISGCoding.Class
                 }
 
                 //对图元进行编码
-                //CreatePrimitiveCode(pFeatureLayer, "图元标识码");
-                CreatePrimitiveCode(pFeatureLayer, elemid);
-
+                CreatePrimitiveCode(pFeatureLayer, elemid, progressbar);
                 MessageBox.Show("图元编码成功！"); 
             }
             else
@@ -62,7 +64,7 @@ namespace ZJGISGCoding.Class
         /// </summary>
         /// <param name="pFeatureLayer">需要编码的图层</param>
         /// <param name="pENTIID">需要编码的字段名称</param>
-        private void CreatePrimitiveCode(IFeatureLayer pFeatureLayer, string pELEMID)
+        private void CreatePrimitiveCode(IFeatureLayer pFeatureLayer, string pELEMID,FrmProgressBar pgBar)
         {
             #region 针对GUID编码来讲
             //遍历Feature
@@ -76,12 +78,7 @@ namespace ZJGISGCoding.Class
                     pWorkspaceEdit.StartEditing(true);
                     pWorkspaceEdit.StartEditOperation();
                 }
-
                 IFeatureCursor pFeatureCursor = pFeatureLayer.Search(null, false);
-
-                //test
-                int test = pFeatureLayer.FeatureClass.FeatureCount(null);
-
                 IFeature pFeature = pFeatureCursor.NextFeature();
                 while (pFeature != null)
                 {
@@ -95,17 +92,14 @@ namespace ZJGISGCoding.Class
                         pFeature.set_Value(pFeature.Fields.FindField(pELEMID), pGUID);
                         pFeature.Store();
                     }
+                    pgBar.GoOneStep();
                     pFeature = pFeatureCursor.NextFeature();
-
                 }
+                pgBar.CloseForm();
                 pWorkspaceEdit.StopEditing(true);
                 pWorkspaceEdit.StopEditOperation();
-
             }
-
             #endregion
         }
-
-
     }
 }

@@ -16,7 +16,7 @@ namespace ZJGISGCoding.Class
         /// </summary>
         /// <param name="pFeatureLayer">待检查的图层</param>
         /// <param name="strField">格网字段的NameField</param>
-        public void CheckGridCode(IFeatureLayer pFeatureLayer,string strField)
+        public void CheckGridField(IFeatureLayer pFeatureLayer,string strField)
         {
             IClass pTable = pFeatureLayer.FeatureClass as IClass;
             try
