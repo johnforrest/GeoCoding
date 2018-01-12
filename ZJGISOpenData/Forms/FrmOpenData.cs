@@ -14,13 +14,15 @@ using System.Collections.ObjectModel;
 using ZJGISCommon;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Text;
 
 namespace ZJGISOpenData.Forms
 {
     public partial class FrmOpenData : DevComponents.DotNetBar.Office2007Form
     {
         private ElementStyle _RightAlignFileSizeStyle = null;
-        private string strFix = null;
+        private string postFix = null;
+        //1
         private DirectoryInfo currentDirectory = null;
 
         private string pFinallyPath = null;
@@ -29,14 +31,20 @@ namespace ZJGISOpenData.Forms
         private IBasicMap targetMap = null;
 
         private Collection<object> m_ListCollection = new Collection<object>();
+        private Collection<object> m_FileCollection = new Collection<object>();
+        private Collection<object> m_FeatClsCollection = new Collection<object>();
+        private Collection<object> m_TableCollection = new Collection<object>();
+
         private Collection<object> m_DatasetCol = new Collection<object>();
-        private IWorkspace m_pMdbWS;
+        //2
+        private IWorkspace m_pMDBGDBWorkspace;
         private IWorkspace m_pSDEWorkspace;
 
         //private string m_LastPathName;
         private string m_sFilePath = null;
-        private string m_sFullPath = null;
+        private string m_sDirectoryFullPath = null;
         private string m_sMdbPath = null;
+        //20180112
         private string opendatapath = new DirectoryInfo("../").FullName + "Res\\path\\opendatapath.txt";
         List<string> listOPData = new List<string>();
 
@@ -44,13 +52,13 @@ namespace ZJGISOpenData.Forms
         private bool m_blnAddData = true;
         private bool blnEditMapSpatial = false;
 
-        private string m_sFeatDatasetName = null;
-        private string m_sFeatClsName = null;
+        //要素集名称
+        private string m_sFeatureDatasetName = null;
+        //要素类名称
+        private string m_sFeatureClassName = null;
 
-        private Collection<object> m_FileCollection = new Collection<object>();
-        private Collection<object> m_FeatClsCollection = new Collection<object>();
-        private Collection<object> m_TableCollection = new Collection<object>();
 
+        //3
         private List<object> preList = new List<object>();
 
         private string currentPath = ""; //当前路径
@@ -58,12 +66,11 @@ namespace ZJGISOpenData.Forms
 
         //是否显示表
         private bool isShowTable = false;
-        private bool isUpdateDate = false;
         public IWorkspace Workspace
         {
             get
             {
-                return m_pMdbWS;
+                return m_pMDBGDBWorkspace;
             }
         }
 
@@ -72,7 +79,7 @@ namespace ZJGISOpenData.Forms
         {
             get
             {
-                return strFix;
+                return postFix;
             }
         }
 
@@ -93,8 +100,6 @@ namespace ZJGISOpenData.Forms
                 //return m_LastPathName;
                 return currentDirectory.FullName;
             }
-
-
         }
 
 
@@ -156,17 +161,7 @@ namespace ZJGISOpenData.Forms
                 isShowTable = value;
             }
         }
-        public bool IsUpdateDate
-        {
-            get
-            {
-                return isUpdateDate;
-            }
-            set
-            {
-                isUpdateDate = value;
-            }
-        }
+
         public FrmOpenData(IBasicMap targMap)
         {
             InitializeComponent();
@@ -195,7 +190,7 @@ namespace ZJGISOpenData.Forms
             InitializeComponent();
 
             //设置回退按钮图标
-            //buttonXBack.Image = Properties.Resources.Up.ToBitmap();
+            buttonXBack.Image = Properties.Resources.Up.ToBitmap();
 
             //初始图像列表文件
             imageListFiles.Images.Add("Folder", ClsGetSysIcon.GetDirectoryIcon());
@@ -208,16 +203,66 @@ namespace ZJGISOpenData.Forms
 
             //targetMap = targMap;
         }
+        #region Form事件
         private void FrmOpenData_Load(object sender, EventArgs e)
+        {
+            InitialComboBox();
+            //初始化comboBoxExFileType的选项，会调用对应的SelectedIndexChanged事件
+            comboBoxExFileType.SelectedIndex = 0;
+
+            //20180105 最初的
+            //InitialBothView();
+
+            //res文件夹的path文件夹下存在opendatapath.txt文件
+            if (File.Exists(opendatapath))
+            {
+                ReadTxt();
+
+                if (listOPData.Count > 0 && listOPData[listOPData.Count - 1].Length > 0)
+                {
+                    //加载最后一次加载的目录
+                    string dir = listOPData[listOPData.Count - 1];
+                    //ListUpdate(dir);
+                    LoadPathToList(dir);
+                }
+                else
+                {
+                    InitialBothView();
+                }
+            }
+            else
+            {
+                InitialBothView();
+            }
+        }
+        /// <summary>
+        /// 读取txt文件路径
+        /// </summary>
+        private void ReadTxt()
+        {
+            if (File.Exists(opendatapath))
+            {
+                System.IO.FileStream fs = new System.IO.FileStream(opendatapath, FileMode.Open, FileAccess.Read);
+                StreamReader read = new StreamReader(fs, Encoding.Default);
+                string strReadline;
+                while ((strReadline = read.ReadLine()) != null && strReadline.Trim().Length > 0)
+                {
+                    // strReadline即为按照行读取的字符串
+                    listOPData.Add(strReadline);
+                }
+                fs.Close();
+                read.Close();
+            }
+        }
+
+        private void InitialComboBox()
         {
             ////下拉框初始值
             if (!isShowTable)
             {
                 comboBoxExFileType.Items.Add("File GeoDataBase (.gdb)");
-
                 comboBoxExFileType.Items.Add("Shapefile  (.shp)");
                 comboBoxExFileType.Items.Add("dbf文件(.dbf)");
-
                 //Personal DataBase(.mdb)
                 comboBoxExFileType.Items.Add("SDE数据库");
             }
@@ -227,89 +272,12 @@ namespace ZJGISOpenData.Forms
                 comboBoxExFileType.Items.Add("dbf文件(.dbf)");
                 comboBoxExFileType.Items.Add("Shapefile  (.shp)");
             }
-
-            comboBoxExFileType.SelectedIndex = 0;
-
-            //20170615注释掉
-            //if (!isUpdateDate)
-            //{
-            //    comboBoxExFileType.SelectedIndex = 0;
-            //}
-            //else
-            //{
-            //comboBoxExFileType.Items.RemoveAt(0);
-            //    comboBoxExFileType.SelectedIndex = 0;
-
-            //}
-
-            //20180105
-
-            Initialadvlistviewfiles();
-
-            ////res文件夹的path文件夹下存在opendatapath.txt文件
-            //if (File.Exists(opendatapath))
-            //{
-
-            //    var file = File.Open(opendatapath, FileMode.Open);
-            //    using (var streamReader = new StreamReader(file))
-            //    {
-            //        while (!streamReader.EndOfStream)
-            //        {
-            //            listOPData.Add(streamReader.ReadLine());
-            //        }
-            //    }
-
-            //    if (listOPData.Count > 0 && listOPData[listOPData.Count - 1].Length > 0)
-            //    {
-            //        //加载最后一次加载的目录
-            //        string dir = listOPData[listOPData.Count - 1];
-            //        //ListUpdate(dir);
-            //        Initiallistviewfiles(dir);
-
-            //    }
-            //    else
-            //    {
-            //        Initialadvlistviewfiles();
-            //    }
-            //}
-            //else
-            //{
-            //    Initialadvlistviewfiles();
-            //}
         }
+
         /// <summary>
-        /// 在指定目录下查找目录名，如果找到就打开。同时返回查找结果
+        /// 初始化advview和listview
         /// </summary>
-        /// <param name="path">指定查找目录路径。</param>
-        /// <param name="dirName">待查找的目录名。</param>
-        /// <returns></returns>
-        public bool FindAndOpenDir(string path, string dirName)
-        {
-            bool isFind = false;
-            if (Directory.Exists(path))
-            {//指定父目录存在时，才遍历子目录
-                var subDirs = Directory.EnumerateDirectories(path);
-                foreach (var subDir in subDirs)
-                {//递归遍历子目录，直到找到指定目录。
-                    DirectoryInfo dirInfo = new DirectoryInfo(subDir);
-                    if (dirInfo.Name == dirName)
-                    {
-                        isFind = true;
-                        Process.Start(subDir);//打开目录
-                        break;
-                    }
-                    else
-                    {//递归查找。当然现在就遍历不是很好，应该把当前目录下文件夹查找完再查找子目录，你可以自己修改。
-                        isFind = FindAndOpenDir(subDir, dirName);
-                    }
-                }
-            }
-            if (!isFind)
-            {//TODO:自定义未找到处理
-            }
-            return isFind;
-        }
-        private void Initialadvlistviewfiles()
+        private void InitialBothView()
         {
             //获取磁盘
             DriveInfo[] drives = DriveInfo.GetDrives();
@@ -361,7 +329,11 @@ namespace ZJGISOpenData.Forms
 
             System.Diagnostics.Debug.WriteLine(comboBoxExFileType.Text.Trim());
         }
-        private void Initiallistviewfiles(string dirPath)
+        /// <summary>
+        /// 把固定路径下的文件夹读取到ListView中
+        /// </summary>
+        /// <param name="dirPath"></param>
+        private void LoadPathToList(string dirPath)
         {
             string newPath = "";
             if (dirPath.Contains("."))
@@ -372,69 +344,175 @@ namespace ZJGISOpenData.Forms
             {
                 newPath = dirPath;
             }
-            if (newPath.Length > 0)
+            if ( Directory.Exists(newPath)&&newPath.Length > 0)
             {
-                ListUpdate(newPath);
-
-                //获取磁盘
-                DriveInfo[] drives = DriveInfo.GetDrives();
-
-                advTreeFiles.BeginUpdate();
-                listViewExFiles.BeginUpdate();
-                foreach (DriveInfo driveInfo in drives)
-                {
-                    //初始化磁盘树节点
-                    if (driveInfo.DriveType != DriveType.Fixed)
-                        continue;
-                    Node node = new Node();
-                    node.Tag = driveInfo;
-                    node.Text = driveInfo.Name.Replace(@"\", "") + "本地磁盘";
-                    node.Image = Properties.Resources.Harddrive;
-                    advTreeFiles.Nodes.Add(node);
-                    node.ExpandVisibility = eNodeExpandVisibility.Visible;
-
-                    ////初始磁盘在文件视窗中的显示
-                    //imageListFiles.Images.Add(node.Text, ClsGetSysIcon.GetIcon(driveInfo.Name, true));
-                    //ListViewItem lvi = new ListViewItem(node.Text);
-                    //lvi.ImageKey = node.Text;
-                    //lvi.Tag = driveInfo;
-
-                    //listViewExFiles.Items.Add(lvi);
-                }
-
-                //初始化桌面节点
-                Node nodeDesk = new Node();
-                nodeDesk.Tag = new DirectoryInfo(ClsGetSysPath.GetPath(PathType.DeskTopPath));
-                nodeDesk.Text = "桌面";
-                nodeDesk.Image = Properties.Resources.Home;
-                nodeDesk.ExpandVisibility = eNodeExpandVisibility.Visible;
-                advTreeFiles.Nodes.Add(nodeDesk);
-
-                //初始化我的文档节点
-                Node nodeDoc = new Node();
-                nodeDoc.Tag = new DirectoryInfo(ClsGetSysPath.GetPath(PathType.PersonalPath));
-                nodeDoc.Text = "我的文档";
-                nodeDoc.Image = Properties.Resources.MyDoc;
-                nodeDoc.ExpandVisibility = eNodeExpandVisibility.Visible;
-                advTreeFiles.Nodes.Add(nodeDoc);
-
-                listViewExFiles.EndUpdate();
-                advTreeFiles.EndUpdate();
-
-                _RightAlignFileSizeStyle = new ElementStyle();
-                _RightAlignFileSizeStyle.TextAlignment = DevComponents.DotNetBar.eStyleTextAlignment.Far;
-
-                System.Diagnostics.Debug.WriteLine(comboBoxExFileType.Text.Trim());
+                DirectoryInfo directoryInfo = new DirectoryInfo(newPath);
+                LoadFolderFileToList(directoryInfo);
+                //设置textBoxXPath目录
+                this.textBoxXPath.Text = newPath;
+                //设置当前DirectoryInfo
+                currentDirectory = directoryInfo;
+                //ListUpdate(newPath);
+                InitialAdvTree();
             }
             else
             {
-                Initialadvlistviewfiles();
+                InitialBothView();
             }
-
-
-
         }
 
+        private void InitialAdvTree()
+        {
+            //获取磁盘
+            DriveInfo[] drives = DriveInfo.GetDrives();
+            advTreeFiles.BeginUpdate();
+            listViewExFiles.BeginUpdate();
+            foreach (DriveInfo driveInfo in drives)
+            {
+                //初始化磁盘树节点
+                if (driveInfo.DriveType != DriveType.Fixed)
+                    continue;
+                Node node = new Node();
+                node.Tag = driveInfo;
+                node.Text = driveInfo.Name.Replace(@"\", "") + "本地磁盘";
+                node.Image = Properties.Resources.Harddrive;
+                advTreeFiles.Nodes.Add(node);
+                node.ExpandVisibility = eNodeExpandVisibility.Visible;
+
+                ////初始磁盘在文件视窗中的显示
+                //imageListFiles.Images.Add(node.Text, ClsGetSysIcon.GetIcon(driveInfo.Name, true));
+                //ListViewItem lvi = new ListViewItem(node.Text);
+                //lvi.ImageKey = node.Text;
+                //lvi.Tag = driveInfo;
+
+                //listViewExFiles.Items.Add(lvi);
+            }
+            //初始化桌面节点
+            Node nodeDesk = new Node();
+            nodeDesk.Tag = new DirectoryInfo(ClsGetSysPath.GetPath(PathType.DeskTopPath));
+            nodeDesk.Text = "桌面";
+            nodeDesk.Image = Properties.Resources.Home;
+            nodeDesk.ExpandVisibility = eNodeExpandVisibility.Visible;
+            advTreeFiles.Nodes.Add(nodeDesk);
+
+            //初始化我的文档节点
+            Node nodeDoc = new Node();
+            nodeDoc.Tag = new DirectoryInfo(ClsGetSysPath.GetPath(PathType.PersonalPath));
+            nodeDoc.Text = "我的文档";
+            nodeDoc.Image = Properties.Resources.MyDoc;
+            nodeDoc.ExpandVisibility = eNodeExpandVisibility.Visible;
+            advTreeFiles.Nodes.Add(nodeDoc);
+
+            listViewExFiles.EndUpdate();
+            advTreeFiles.EndUpdate();
+
+            _RightAlignFileSizeStyle = new ElementStyle();
+            _RightAlignFileSizeStyle.TextAlignment = DevComponents.DotNetBar.eStyleTextAlignment.Far;
+
+            System.Diagnostics.Debug.WriteLine(comboBoxExFileType.Text.Trim());
+        }
+
+        private void InitialListView()
+        {
+            //获取磁盘
+            DriveInfo[] drives = DriveInfo.GetDrives();
+
+            advTreeFiles.BeginUpdate();
+            listViewExFiles.BeginUpdate();
+            foreach (DriveInfo driveInfo in drives)
+            {
+                //初始化磁盘树节点
+                if (driveInfo.DriveType != DriveType.Fixed)
+                    continue;
+                Node node = new Node();
+                node.Tag = driveInfo;
+                node.Text = driveInfo.Name.Replace(@"\", "") + "本地磁盘";
+                node.Image = Properties.Resources.Harddrive;
+                advTreeFiles.Nodes.Add(node);
+                node.ExpandVisibility = eNodeExpandVisibility.Visible;
+
+                //初始磁盘在文件视窗中的显示
+                imageListFiles.Images.Add(node.Text, ClsGetSysIcon.GetIcon(driveInfo.Name, true));
+                ListViewItem lvi = new ListViewItem(node.Text);
+                lvi.ImageKey = node.Text;
+                lvi.Tag = driveInfo;
+                listViewExFiles.Items.Add(lvi);
+            }
+            listViewExFiles.EndUpdate();
+            advTreeFiles.EndUpdate();
+        }
+
+        private void FrmOpenData_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            WriteTxt();
+        }
+
+        private void WriteTxt()
+        {
+            if (File.Exists(opendatapath))
+            {
+                if (currentDirectory != null)
+                {
+                    string path = currentDirectory.FullName;
+                    if (!listOPData.Contains(path))
+                    {
+                        //只保存一行数据
+                        System.IO.FileStream fs = new System.IO.FileStream(opendatapath, FileMode.Create);
+                        //获得字节数组
+                        byte[] data = System.Text.Encoding.Default.GetBytes(path);
+                        //开始写入
+                        fs.Write(data, 0, data.Length);
+                        //清空缓冲区、关闭流
+                        fs.Flush();
+                        fs.Close();
+
+                        //StreamWriter sw = new StreamWriter(opendatapath, true);
+                        //sw.WriteLine();
+                        //sw.Write(path);
+                        //sw.Close();
+                        ////fs.Close();
+                    }
+                }
+            }
+            else
+            {
+                MessageBox.Show("文件路径不存在，请检查文件路径！");
+            }
+        }
+
+        #endregion
+        /// <summary>
+        /// 在指定目录下查找目录名，如果找到就打开。同时返回查找结果
+        /// </summary>
+        /// <param name="path">指定查找目录路径。</param>
+        /// <param name="dirName">待查找的目录名。</param>
+        /// <returns></returns>
+        public bool FindAndOpenDir(string path, string dirName)
+        {
+            bool isFind = false;
+            if (Directory.Exists(path))
+            {//指定父目录存在时，才遍历子目录
+                var subDirs = Directory.EnumerateDirectories(path);
+                foreach (var subDir in subDirs)
+                {//递归遍历子目录，直到找到指定目录。
+                    DirectoryInfo dirInfo = new DirectoryInfo(subDir);
+                    if (dirInfo.Name == dirName)
+                    {
+                        isFind = true;
+                        Process.Start(subDir);//打开目录
+                        break;
+                    }
+                    else
+                    {//递归查找。当然现在就遍历不是很好，应该把当前目录下文件夹查找完再查找子目录，你可以自己修改。
+                        isFind = FindAndOpenDir(subDir, dirName);
+                    }
+                }
+            }
+            if (!isFind)
+            {//TODO:自定义未找到处理
+            }
+            return isFind;
+        }
         private void ReturnParentFolder(string dirPath)
         {
             string newPath = "";
@@ -452,43 +530,11 @@ namespace ZJGISOpenData.Forms
             }
             else
             {
-                Initialadvlistviewfiles();
+                InitialBothView();
             }
 
         }
-        /// <summary>
-        /// 在树节点展开之前，控制其子节点显示
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void advTreeFiles_BeforeExpand(object sender, AdvTreeNodeCancelEventArgs e)
-        {
-            Node parent = e.Node;
-            if (parent.Nodes.Count > 0) return;
-
-            if (parent.Tag is DriveInfo)
-            {
-                advTreeFiles.BeginUpdate();
-                DriveInfo driveInfo = (DriveInfo)parent.Tag;
-                LoadDirectoriesToTree(parent, driveInfo.RootDirectory);
-                if (!parent.HasChildNodes)
-                {
-                    e.Cancel = true;
-                    return;
-                }
-                parent.ExpandVisibility = eNodeExpandVisibility.Auto;
-                advTreeFiles.EndUpdate(true);
-            }
-            else if (parent.Tag is DirectoryInfo)
-            {
-                LoadDirectoriesToTree(parent, (DirectoryInfo)parent.Tag);
-                if (!parent.HasChildNodes)
-                {
-                    e.Cancel = true;
-                }
-            }
-        }
-
+        #region comboBox选择事件
         /// <summary>
         /// 选择类型下拉菜单
         /// </summary>
@@ -497,21 +543,23 @@ namespace ZJGISOpenData.Forms
         private void comboBoxExFileType_SelectedIndexChanged(object sender, EventArgs e)
         {
             preList.Clear();
-            strFix = GetStringFix(comboBoxExFileType.SelectedItem.ToString());
-            if (strFix != null)//////////////////////////////////////////////////////////////////如果不是sde
+            postFix = GetPostGetFix(comboBoxExFileType.SelectedItem.ToString());
+            //不是sde
+            if (postFix != null)
             {
                 advTreeFiles.Enabled = true;
                 if (imageListFiles.Images.ContainsKey("File"))
                 {
                     imageListFiles.Images.RemoveByKey("File");
                 }
-
-                imageListFiles.Images.Add("File", ClsGetSysIcon.GetIcon(strFix, true));//////获取对应的文件图标
+                //获取对应的文件图标
+                imageListFiles.Images.Add("File", ClsGetSysIcon.GetIcon(postFix, true));
                 if (currentDirectory != null)
                 {
                     LoadFolderFileToList(currentDirectory);
                 }
             }
+            //sde数据库
             else
             {
                 advTreeFiles.Enabled = false;
@@ -523,8 +571,7 @@ namespace ZJGISOpenData.Forms
                     {
                         m_pSDEWorkspace = pFrmSDE.m_pSDEWorkspace;
                         LoadDatasetToList(pFrmSDE.m_pSDEWorkspace);
-
-                        //          cmbSDEList.Text = "Connect to SDE " + pFrmSDE.m_SDEPropertSet.GetProperty("Server");
+                        //cmbSDEList.Text = "Connect to SDE " + pFrmSDE.m_SDEPropertSet.GetProperty("Server");
                     }
                 }
             }
@@ -534,13 +581,115 @@ namespace ZJGISOpenData.Forms
             m_TableCollection.Clear();
         }
 
-        private void buttonXCancel_Click(object sender, EventArgs e)
+        /// <summary>
+        /// 获取文件后缀类型
+        /// </summary>
+        /// <param name="fullName">文件类型全名</param>
+        /// <returns>获取的后缀名</returns>
+        private string GetPostGetFix(string fullName)
         {
-            this.DialogResult = DialogResult.Cancel;
+            if (fullName.Contains(".") && fullName.Contains("("))
+            {
+                return fullName.Substring(fullName.LastIndexOf("(")).Trim(new char[] { '(', ')' });
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        #endregion
+        #region advTree事件
+        /// <summary>
+        /// 在树节点展开之前，控制其子节点显示
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void advTreeFiles_BeforeExpand(object sender, AdvTreeNodeCancelEventArgs e)
+        {
+            Node parent = e.Node;
+            if (parent.Nodes.Count > 0) return;
+            //如果树节点是驱动
+            if (parent.Tag is DriveInfo)
+            {
+                advTreeFiles.BeginUpdate();
+                DriveInfo driveInfo = (DriveInfo)parent.Tag;
+                LoadDirectoriesToadvTree(parent, driveInfo.RootDirectory);
+                if (!parent.HasChildNodes)
+                {
+                    e.Cancel = true;
+                    return;
+                }
+                parent.ExpandVisibility = eNodeExpandVisibility.Auto;
+                advTreeFiles.EndUpdate(true);
+            }
+            //如果树节点是磁盘
+            else if (parent.Tag is DirectoryInfo)
+            {
+                LoadDirectoriesToadvTree(parent, (DirectoryInfo)parent.Tag);
+                if (!parent.HasChildNodes)
+                {
+                    e.Cancel = true;
+                }
+            }
+        }
+        /// <summary>
+        /// 点击节点时触发
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void advTreeFiles_NodeClick(object sender, TreeNodeMouseEventArgs e)
+        {
+            DirectoryInfo directoryInfo = null;
+            if (e.Node.Tag is DriveInfo)
+            //节点为磁盘
+            {
+                directoryInfo = ((DriveInfo)e.Node.Tag).RootDirectory;
+                textBoxXPath.Text = directoryInfo.Name;
+            }
+            else
+            {
+                //节点为目录
+                if (e.Node.Tag is DirectoryInfo)
+                {
+                    directoryInfo = (DirectoryInfo)e.Node.Tag;
+                    textBoxXPath.Text = directoryInfo.FullName;
+                }
+                else
+                {
+                    return;
+                }
+            }
+            currentDirectory = directoryInfo;////////////////////////////当前目录
+            //m_LastPathName = directoryInfo.FullName;
+            LoadFolderFileToList(directoryInfo);
+        }
+
+
+        #endregion
+        /// <summary>
+        ///将目录加入advTree树
+        /// </summary>
+        /// <param name="parent">父节点</param>
+        /// <param name="directoryInfo">父节点目录信息</param>
+        private void LoadDirectoriesToadvTree(Node parent, DirectoryInfo directoryInfo)
+        {
+            DirectoryInfo[] directories = directoryInfo.GetDirectories();
+            foreach (DirectoryInfo dir in directories)
+            {
+                if ((dir.Attributes & FileAttributes.Hidden) == FileAttributes.Hidden) continue;
+                Node node = new Node();
+                node.Tag = dir;
+                node.Text = dir.Name;
+                node.Image = Properties.Resources.FolderClosed;
+                node.ImageExpanded = Properties.Resources.FolderOpen;
+                node.ExpandVisibility = eNodeExpandVisibility.Visible;
+                parent.Nodes.Add(node);
+            }
         }
 
         /// <summary>
-        /// 将目录中信息导入视窗
+        /// 将目录中信息载入listViewExFiles
         /// </summary>
         /// <param name="directoryInfo">上一级目录信息</param>
         private void LoadFolderFileToList(DirectoryInfo directoryInfo)
@@ -551,13 +700,16 @@ namespace ZJGISOpenData.Forms
 
             foreach (DirectoryInfo dir in directories)
             {
-                if ((dir.Attributes & FileAttributes.Hidden) == FileAttributes.Hidden) continue;//隐藏文件不显示
+                if ((dir.Attributes & FileAttributes.Hidden) == FileAttributes.Hidden)
+                    continue;//隐藏文件不显示
                 ListViewItem lvi = new ListViewItem(dir.Name);
                 lvi.Tag = dir;
 
-                if (dir.Name.Contains(".") && dir.Name.Substring(dir.Name.LastIndexOf(".")).ToLower() == ".gdb")//如果是gdb文件夹判断是否显示
+                //如果是gdb文件夹判断是否显示
+                if (dir.Name.Contains(".") && dir.Name.Substring(dir.Name.LastIndexOf(".")).ToLower() == ".gdb")
                 {
-                    if (strFix == ".gdb")/////////////////////////////////////////////过滤器是.gdb给予显示
+                    //过滤器是.gdb给予显示
+                    if (postFix == ".gdb")
                     {
                         lvi.ImageKey = "Database";
                         listViewExFiles.Items.Add(lvi);
@@ -581,7 +733,7 @@ namespace ZJGISOpenData.Forms
                 int index = fileName.LastIndexOf(".");
                 if (index >= 0)
                 {
-                    if (fileName.Substring(index).ToLower() == strFix)
+                    if (fileName.Substring(index).ToLower() == postFix)
                     {
                         ListViewItem lvi = new ListViewItem(fileName);
                         lvi.Tag = file;
@@ -594,71 +746,412 @@ namespace ZJGISOpenData.Forms
             preList.Clear();
         }
 
+        #region listViewFiles事件
         private void listViewExFiles_DoubleClick(object sender, EventArgs e)
         {
             DirectoryInfo directoryInfo = null;
-            object tempObject = listViewExFiles.SelectedItems[0].Tag;
-            string temItemName = listViewExFiles.SelectedItems[0].Text;
-            if (tempObject == null && temItemName.Length > 0 && !temItemName.Contains("."))
+            object selectItemObject = listViewExFiles.SelectedItems[0].Tag;
+            string selectItemText = listViewExFiles.SelectedItems[0].Text;
+            if (selectItemObject == null && selectItemText.Length > 0 && !selectItemText.Contains("."))
             {
-                string tempstr = currentPath + "\\" + temItemName;
-                Initiallistviewfiles(tempstr);
+                string tempstr = currentPath + "\\" + selectItemText;
+                LoadPathToList(tempstr);
             }
             else
             {
-                if (tempObject is DriveInfo)/////////////////////////////////////////////双击的项为磁盘根目录
+                //双击的项为磁盘根目录
+                if (selectItemObject is DriveInfo)
                 {
-                    directoryInfo = ((DriveInfo)tempObject).RootDirectory;
+                    directoryInfo = ((DriveInfo)selectItemObject).RootDirectory;
                     currentDirectory = directoryInfo;
                     LoadFolderFileToList(directoryInfo);
                     preList.Clear();
                 }
-                else
+                //双击的项为文件夹
+                else if ((selectItemObject is DirectoryInfo))
                 {
-                    if ((tempObject is DirectoryInfo))/////////////////////////////////////双击的项为文件夹
-                    {
 
-                        directoryInfo = (DirectoryInfo)tempObject;
-                        currentDirectory = directoryInfo;
-                        DirectoryInfo[] dirs = directoryInfo.GetDirectories();
-                        if (dirs.Length == 0 && temItemName.Length > 4 && temItemName.Substring(temItemName.Length - 4) == ".gdb")
+                    directoryInfo = (DirectoryInfo)selectItemObject;
+                    currentDirectory = directoryInfo;
+                    DirectoryInfo[] dirs = directoryInfo.GetDirectories();
+                    if (dirs.Length == 0 && selectItemText.Length > 4 && selectItemText.Substring(selectItemText.Length - 4) == ".gdb")
+                    {
+                        IWorkspaceFactory2 pFact = new FileGDBWorkspaceFactory() as IWorkspaceFactory2;
+                        m_pMDBGDBWorkspace = pFact.OpenFromFile(directoryInfo.FullName, 0);
+                        if (!isShowTable)
                         {
-                            IWorkspaceFactory2 pFact = new FileGDBWorkspaceFactory() as IWorkspaceFactory2;
-                            m_pMdbWS = pFact.OpenFromFile(directoryInfo.FullName, 0);
-                            if (!isShowTable)
-                            {
-                                LoadDatasetToList(m_pMdbWS);
-                            }
-                            else
-                            {
-                                LoadTablesToList(m_pMdbWS);
-                            }
+                            LoadDatasetToList(m_pMDBGDBWorkspace);
                         }
                         else
                         {
-                            LoadFolderFileToList(directoryInfo);
+                            LoadTablesToList(m_pMDBGDBWorkspace);
                         }
                     }
                     else
                     {
-                        if (tempObject is IDatasetName)//////////////////////////////////////如果是数据集则将其子集加载到视图中
+                        LoadFolderFileToList(directoryInfo);
+                    }
+                }
+                else
+                {
+                    //如果是数据集则将其子集加载到视图中
+                    if (selectItemObject is IDatasetName)
+                    {
+                        IDatasetName datasetName = selectItemObject as IDatasetName;
+                        string p = datasetName.WorkspaceName.WorkspaceFactoryProgID;
+                        if (datasetName.Type == esriDatasetType.esriDTFeatureDataset)
                         {
-                            IDatasetName datasetName = tempObject as IDatasetName;
-                            string p = datasetName.WorkspaceName.WorkspaceFactoryProgID;
+                            LoadDatasetLayerToList(datasetName);
+                        }
+                        else
+                        {
+                            //如果是要素类加入到目标地图
+                            if (selectItemObject is IFeatureClassName)
+                            {
+                                IName name = datasetName as IName;
+                                IFeatureClass featureClass = name.Open() as IFeatureClass;
+
+                                //加载选中FeatureClass到集合内
+                                m_FeatClsCollection.Add(featureClass);
+
+                                IFeatureLayer featureLayer = new FeatureLayerClass();
+                                featureLayer.Name = featureClass.AliasName;
+                                featureLayer.FeatureClass = featureClass;
+                                if (targetMap != null)
+                                {
+                                    ClsMapLayer.AddLyrToBasicMap(targetMap, (ILayer)featureLayer);
+                                }
+                                this.DialogResult = DialogResult.OK;
+                            }
+                            else if (selectItemObject is ITableName)
+                            {
+                                IName name = datasetName as IName;
+                                ITable table = name.Open() as ITable;
+                                m_TableCollection.Add(table);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        IWorkspaceFactory workspaceFactory;
+                        IFeatureWorkspace featWorkspace;
+                        try
+                        {
+                            //如果双击的是.shp文件则将其加载到目标地图
+                            if (postFix == ".shp")
+                            {
+                                //string path = currentDirectory.FullName;
+                                string path = null;
+                                if (currentDirectory != null)
+                                {
+                                    path = currentDirectory.FullName;
+
+                                }
+                                else if (pFinallyPath != null)
+                                {
+                                    path = pFinallyPath;
+                                }
+                                else
+                                {
+                                    path = currentPath;
+                                }
+                                workspaceFactory = new ShapefileWorkspaceFactory() as IWorkspaceFactory;
+                                featWorkspace = workspaceFactory.OpenFromFile(path, 0) as IFeatureWorkspace;
+                                IFeatureClass featureClass = featWorkspace.OpenFeatureClass(selectItemText);
+                                IFeatureLayer featureLayer = new FeatureLayerClass();
+                                featureLayer.Name = featureClass.AliasName;
+                                featureLayer.FeatureClass = featureClass;
+
+                                //加载选中FeatureClass到集合内
+                                m_FeatClsCollection.Add(featureClass);
+                                if (targetMap != null)
+                                {
+                                    ClsMapLayer.AddLyrToBasicMap(targetMap, (ILayer)featureLayer);
+                                }
+                                this.DialogResult = DialogResult.OK;
+                            }
+                            //如果双击的为mdb文件将其子集加载
+                            if (postFix == ".mdb")
+                            {
+                                m_sMdbPath = currentDirectory.FullName + "\\" + selectItemText;
+                                m_sFilePath = m_sMdbPath;
+                                IWorkspaceFactory2 pFact = new AccessWorkspaceFactory() as IWorkspaceFactory2;
+                                if (pFact.IsWorkspace(m_sMdbPath))
+                                {
+                                    //获得MDB路径
+                                    m_pMDBGDBWorkspace = pFact.OpenFromFile(m_sMdbPath, 0);
+                                    LoadDatasetToList(m_pMDBGDBWorkspace);
+                                }
+                            }
+                            //如果双击的为gdb文件将其子集加载
+                            if (postFix == ".gdb")
+                            {
+                                //m_sMdbPath = currentDirectory.FullName + "\\" + temItemName;
+                                if (currentDirectory != null)
+                                {
+                                    m_sMdbPath = currentDirectory.FullName + "\\" + selectItemText;
+                                }
+                                else
+                                {
+                                    if (pFinallyPath != null)
+                                    {
+                                        m_sMdbPath = pFinallyPath + "\\" + selectItemText;
+                                    }
+                                    else
+                                    {
+                                        m_sMdbPath = currentPath + "\\" + selectItemText;
+
+                                    }
+                                    //m_sMdbPath = pFinallyPath;
+                                }
+                                m_sFilePath = m_sMdbPath;
+                                IWorkspaceFactory2 pFact = new FileGDBWorkspaceFactoryClass();
+
+                                m_pMDBGDBWorkspace = pFact.OpenFromFile(m_sMdbPath, 0);
+                                LoadDatasetToList(m_pMDBGDBWorkspace);
+
+                            }
+                        }
+                        catch (System.Exception ex)
+                        {
+                            MessageBox.Show("选择的文件类型不正确！");
+                        }
+                    }
+                }
+
+            }
+        }
+        /// <summary>
+        /// listViewExFiles单击事件
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void listViewExFiles_MouseUp(object sender, MouseEventArgs e)
+        {
+            if (this.DialogResult == DialogResult.OK)
+            {
+                return;
+            }
+            //在listViewExFiles中单击空白地方
+            if (listViewExFiles.SelectedItems.Count == 0)
+            {
+                return;
+            }
+            //在listViewExFiles中选中文件        
+            else
+            {
+                object selectItemObject = listViewExFiles.SelectedItems[0].Tag;
+                //选中为文件夹
+                if (selectItemObject is DirectoryInfo)
+                {
+                    textBoxXPath.Text = ((DirectoryInfo)selectItemObject).FullName;
+                    //return;
+                }
+                //选中为文件
+                if (selectItemObject is FileInfo)
+                {
+                    textBoxXPath.Text = ((FileInfo)selectItemObject).FullName;
+                    //return;
+                }
+                //选中为磁盘
+                if (selectItemObject is DriveInfo)
+                {
+                    textBoxXPath.Text = ((DriveInfo)selectItemObject).Name;
+                    //return;
+                }
+
+                ListViewItem pListViewItem = null;
+                //int relVal = 0;
+
+                m_ListCollection.Clear();
+                m_FileCollection.Clear();
+                m_FeatClsCollection.Clear();
+                m_TableCollection.Clear();
+
+                string selectItemText = listViewExFiles.SelectedItems[0].Text;
+
+                if (postFix == ".mdb")
+                {
+                    if (selectItemText.Length >= 4 && selectItemText.Substring(selectItemText.Length - 4).ToLower() == ".mdb")
+                    {
+                        return;
+                    }
+
+                    if (textBoxXPath.Text.ToLower().Contains(".mdb"))
+                    {
+                        for (int i = 0; i < listViewExFiles.SelectedItems.Count; i++)
+                        {
+                            pListViewItem = listViewExFiles.SelectedItems[i];
+                            m_ListCollection.Add(pListViewItem.Tag);
+                            //打开的是要素集
+                            if (this.listViewExFiles.SelectedItems[i].Tag is IFeatureDatasetName)
+                            {
+                                IDatasetName pDSN = default(IDatasetName);
+                                pDSN = this.listViewExFiles.SelectedItems[0].Tag as IDatasetName;
+                                //获得要素集名称(m_sFeatureDatasetName)
+                                m_sFeatureDatasetName = pDSN.Name;
+                            }
+                            //打开的是要素类
+                            else
+                            {
+                                //获得要素类名称(m_sFeatureClassName)
+                                m_sFeatureClassName = pListViewItem.Text;
+                            }
+
+                            if (m_sFeatureDatasetName == null)
+                            {
+                                m_sDirectoryFullPath = m_sMdbPath + "\\" + m_sFeatureClassName;
+                            }
+                            else
+                            {
+                                m_sDirectoryFullPath = m_sMdbPath + "\\" + m_sFeatureDatasetName + "\\" + m_sFeatureClassName;
+                            }
+
+                            m_FileCollection.Add(m_sDirectoryFullPath);
+                        }
+                    }
+                }
+                else if (postFix == ".gdb")
+                {
+                    if ((selectItemText.ToLower().Contains(".gdb") && selectItemText.Substring(selectItemText.Length - 4).ToLower() == ".gdb")
+                        || currentDirectory == null)
+                    {
+                        return;
+                    }
+                    if (currentDirectory.FullName.ToLower().Contains(".gdb"))
+                    {
+                        for (int i = 0; i < listViewExFiles.SelectedItems.Count; i++)
+                        {
+                            pListViewItem = listViewExFiles.SelectedItems[i];
+                            //txtName.Text = txtName.Text + pListViewItem.Text + ";";
+                            m_ListCollection.Add(pListViewItem.Tag);
+                        }
+                    }
+                }
+                else
+                {
+                    if (postFix == null)
+                    {
+                        if (listViewExFiles.SelectedItems.Count == 0)
+                        {
+                            return;
+                        }
+                        //ListViewItem plistviewitem = null;
+                        m_ListCollection.Clear();
+                        for (int i = 0; i < listViewExFiles.SelectedItems.Count; i++)
+                        {
+                            pListViewItem = listViewExFiles.SelectedItems[i];
+                            m_ListCollection.Add(pListViewItem.Tag);
+                        }
+                    }
+                    else
+                    {
+                        for (int i = 0; i <= listViewExFiles.SelectedItems.Count - 1; i++)
+                        {
+                            pListViewItem = listViewExFiles.SelectedItems[i];
+
+                            if (pListViewItem.Text.ToLower().Contains(postFix) && pListViewItem.Text.Substring(pListViewItem.Text.Length - 4).ToLower() == postFix)
+                            {
+                                //txtName.Text = txtName.Text + pListViewItem.Text + ";";
+                                m_ListCollection.Add(pListViewItem.Text);
+                                //获得shapefile完整文件路径集合
+                                if (currentDirectory != null)
+                                {
+                                    m_sDirectoryFullPath = currentDirectory.FullName + "\\" + pListViewItem.Text;
+                                }
+                                else
+                                {
+                                    m_sDirectoryFullPath = pFinallyPath + "\\" + pListViewItem.Text;
+                                }
+                                //m_sDirectoryFullPath = currentDirectory.FullName + "\\" + pListViewItem.Text;
+                                m_sFilePath = m_sDirectoryFullPath;
+                                m_FileCollection.Add(m_sDirectoryFullPath);
+                            }
+                        }
+                    }
+                }
+
+            }
+
+        }
+
+        #endregion
+        #region 按钮
+        /// <summary>
+        /// 打开按钮
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void buttonXOpen_Click(object sender, EventArgs e)
+        {
+            DirectoryInfo directoryInfo = null;
+            //如果在listviewExFiles中选中了，否则打开textBoxXPath中的内容
+            #region 20180112
+            if (listViewExFiles.SelectedItems.Count > 0)
+            {
+                for (int i = 0; i < listViewExFiles.SelectedItems.Count; i++)
+                {
+                    object selectItemObject = listViewExFiles.SelectedItems[i].Tag;
+                    string selectItemText = listViewExFiles.SelectedItems[i].Text;
+
+                    if (selectItemObject == null && selectItemText.Length > 0 && !selectItemText.Contains("."))
+                    {
+                        string tempstr = currentPath + "\\" + selectItemText;
+                        LoadPathToList(tempstr);
+                    }
+                    else
+                    {
+                        //选中的项为磁盘根目录
+                        if (selectItemObject is DriveInfo)
+                        {
+                            directoryInfo = ((DriveInfo)selectItemObject).RootDirectory;
+                            currentDirectory = directoryInfo;
+                            LoadFolderFileToList(directoryInfo);
+                            preList.Clear();
+                        }
+                        //选中的项为文件夹
+                        else if ((selectItemObject is DirectoryInfo))
+                        {
+                            directoryInfo = (DirectoryInfo)selectItemObject;
+                            currentDirectory = directoryInfo;
+                            //该文件夹不包含子文件夹且该文件夹的后缀为.gdb
+                            DirectoryInfo[] dirs = directoryInfo.GetDirectories();
+                            if (dirs.Length == 0 && selectItemText.Length > 4 && selectItemText.Substring(selectItemText.Length - 4) == ".gdb")
+                            {
+                                IWorkspaceFactory2 pFact = new FileGDBWorkspaceFactory() as IWorkspaceFactory2;
+                                m_pMDBGDBWorkspace = pFact.OpenFromFile(directoryInfo.FullName, 0);
+                                if (!isShowTable)
+                                {
+                                    LoadDatasetToList(m_pMDBGDBWorkspace);
+                                }
+                                else
+                                {
+                                    LoadTablesToList(m_pMDBGDBWorkspace);
+                                }
+                            }
+                            else
+                            {
+                                LoadFolderFileToList(directoryInfo);
+                            }
+                        }
+                        //如果是数据集则将其子集加载到视图中
+                        else if (selectItemObject is IDatasetName)
+                        {
+                            IDatasetName datasetName = selectItemObject as IDatasetName;
                             if (datasetName.Type == esriDatasetType.esriDTFeatureDataset)
                             {
                                 LoadDatasetLayerToList(datasetName);
                             }
                             else
                             {
-                                if (tempObject is IFeatureClassName)///////////////////////////如果是要素类加入到目标地图
+                                //如果是要素类加入到目标地图
+                                if (selectItemObject is IFeatureClassName)
                                 {
                                     IName name = datasetName as IName;
                                     IFeatureClass featureClass = name.Open() as IFeatureClass;
 
                                     //加载选中FeatureClass到集合内
                                     m_FeatClsCollection.Add(featureClass);
-
                                     IFeatureLayer featureLayer = new FeatureLayerClass();
                                     featureLayer.Name = featureClass.AliasName;
                                     featureLayer.FeatureClass = featureClass;
@@ -668,7 +1161,7 @@ namespace ZJGISOpenData.Forms
                                     }
                                     this.DialogResult = DialogResult.OK;
                                 }
-                                else if (tempObject is ITableName)
+                                else if (selectItemObject is ITableName)
                                 {
                                     IName name = datasetName as IName;
                                     ITable table = name.Open() as ITable;
@@ -676,93 +1169,213 @@ namespace ZJGISOpenData.Forms
                                 }
                             }
                         }
-                        else
-                        {
-                            IWorkspaceFactory workspaceFactory;
-                            IFeatureWorkspace featWorkspace;
-                            try
-                            {
-                                if (strFix == ".shp")/////////////////////////////如果双击的是.shp文件则将其加载到目标地图
-                                {
-                                    //string path = currentDirectory.FullName;
-                                    string path = null;
-                                    if (currentDirectory != null)
-                                    {
-                                        path = currentDirectory.FullName;
-
-                                    }
-                                    else if (pFinallyPath != null)
-                                    {
-                                        path = pFinallyPath;
-                                    }
-                                    else
-                                    {
-                                        path = currentPath;
-                                    }
-                                    workspaceFactory = new ShapefileWorkspaceFactory() as IWorkspaceFactory;
-                                    featWorkspace = workspaceFactory.OpenFromFile(path, 0) as IFeatureWorkspace;
-                                    IFeatureClass featureClass = featWorkspace.OpenFeatureClass(temItemName);
-                                    IFeatureLayer featureLayer = new FeatureLayerClass();
-                                    featureLayer.Name = featureClass.AliasName;
-                                    featureLayer.FeatureClass = featureClass;
-
-                                    //加载选中FeatureClass到集合内
-                                    m_FeatClsCollection.Add(featureClass);
-                                    if (targetMap != null)
-                                    {
-                                        ClsMapLayer.AddLyrToBasicMap(targetMap, (ILayer)featureLayer);
-                                    }
-                                    this.DialogResult = DialogResult.OK;
-                                }
-                                if (strFix == ".mdb")//////////////////////////////如果双击的为mdb文件将其子集加载
-                                {
-                                    m_sMdbPath = currentDirectory.FullName + "\\" + temItemName;
-                                    m_sFilePath = m_sMdbPath;
-                                    IWorkspaceFactory2 pFact = new AccessWorkspaceFactory() as IWorkspaceFactory2;
-                                    if (pFact.IsWorkspace(m_sMdbPath))
-                                    {
-                                        //获得MDB路径
-                                        m_pMdbWS = pFact.OpenFromFile(m_sMdbPath, 0);
-                                        LoadDatasetToList(m_pMdbWS);
-                                    }
-                                }
-                                if (strFix == ".gdb")/////////////////////////////如果双击的为gdb文件将其子集加载
-                                {
-                                    //m_sMdbPath = currentDirectory.FullName + "\\" + temItemName;
-                                    if (currentDirectory != null)
-                                    {
-                                        m_sMdbPath = currentDirectory.FullName + "\\" + temItemName;
-                                    }
-                                    else
-                                    {
-                                        if (pFinallyPath != null)
-                                        {
-                                            m_sMdbPath = pFinallyPath + "\\" + temItemName;
-                                        }
-                                        else
-                                        {
-                                            m_sMdbPath = currentPath + "\\" + temItemName;
-
-                                        }
-                                        //m_sMdbPath = pFinallyPath;
-                                    }
-                                    m_sFilePath = m_sMdbPath;
-                                    IWorkspaceFactory2 pFact = new FileGDBWorkspaceFactoryClass();
-
-                                    m_pMdbWS = pFact.OpenFromFile(m_sMdbPath, 0);
-                                    LoadDatasetToList(m_pMdbWS);
-
-                                }
-                            }
-                            catch (System.Exception ex)
-                            {
-                                MessageBox.Show("选择的文件类型不正确！");
-                            }
-                        }
                     }
                 }
             }
+            else
+            {
+                string newPath = textBoxXPath.Text.Trim();
+                if (newPath == "")
+                    return;
+                ListUpdate(newPath);
+                pFinallyPath = newPath;
+            }
+            #endregion
+
+            #region 20180112注释
+            if (listViewExFiles.SelectedItems.Count > 0)
+            {
+                if (postFix == ".shp")
+                {
+                    if (targetMap != null)
+                    {
+                        //ClsMapLayer.AddSelectedLayer(targetMap, postFix, m_ListCollection, m_DatasetCol, currentDirectory.FullName, m_blnAddData);
+                        if (currentDirectory != null)
+                        {
+                            ClsMapLayer.AddSelectedLayer(targetMap, postFix, m_ListCollection, m_DatasetCol, currentDirectory.FullName, m_blnAddData);
+                        }
+                        else
+                        {
+                            ClsMapLayer.AddSelectedLayer(targetMap, postFix, m_ListCollection, m_DatasetCol, pFinallyPath, m_blnAddData);
+                        }
+                    }
+                    ////20081201 印骅 获得要素类集合
+                    IWorkspaceFactory pWorkspaceFactory = null;
+                    IFeatureWorkspace pFeatWorkspace = null;
+                    IFeatureClass pFeatCls = null;
+                    string sFileName = null;
+
+                    pWorkspaceFactory = new ESRI.ArcGIS.DataSourcesFile.ShapefileWorkspaceFactory();
+                    if (currentDirectory != null)
+                    {
+                        if (pWorkspaceFactory.IsWorkspace(currentDirectory.FullName))
+                        {
+                            pFeatWorkspace = pWorkspaceFactory.OpenFromFile(currentDirectory.FullName, 0) as IFeatureWorkspace;
+                            for (int i = 0; i < m_ListCollection.Count; i++)
+                            {
+                                sFileName = m_ListCollection[i].ToString();
+                                pFeatCls = pFeatWorkspace.OpenFeatureClass(sFileName);
+                                m_FeatClsCollection.Add(pFeatCls);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        if (pWorkspaceFactory.IsWorkspace(pFinallyPath))
+                        {
+                            pFeatWorkspace = pWorkspaceFactory.OpenFromFile(pFinallyPath, 0) as IFeatureWorkspace;
+                            for (int i = 0; i < m_ListCollection.Count; i++)
+                            {
+                                sFileName = m_ListCollection[i].ToString();
+                                pFeatCls = pFeatWorkspace.OpenFeatureClass(sFileName);
+                                m_FeatClsCollection.Add(pFeatCls);
+                            }
+                        }
+                    }
+
+                    this.DialogResult = DialogResult.OK;
+                }
+                if (postFix == ".mdb")
+                {
+                    //印骅 20081204 没有选择任何项
+                    if (listViewExFiles.SelectedItems.Count == 0)
+                    {
+                        m_FileCollection.Clear();
+                        return;
+                    }
+                    //Strings.Right(lvwDriver.SelectedItems(0).Name, 4) = ".mdb"
+
+                    for (int i = 0; i < listViewExFiles.SelectedItems.Count; i++)
+                    {
+                        string pStr = listViewExFiles.SelectedItems[i].Text;
+                        if (pStr.Length >= 4 && pStr.Substring(pStr.Length - 4) == ".mdb")
+                        {
+                            listViewExFiles_DoubleClick(null, null);
+                        }
+                        else
+                        {
+                            ////按照加载featureclass 和featuredataset 来做
+                            if (targetMap != null)
+                            {
+                                ClsMapLayer.AddSelectedLayer(targetMap, "IDatasetName", m_ListCollection, m_DatasetCol, "", m_blnAddData);
+                            }
+                            //// 获得MDB中要素类集合
+                            IDatasetName pDSN = null;
+                            IName pName = null;
+                            IDataset pDataset = null;
+                            IFeatureClass pFeatCls = null;
+
+                            //If m_ListCollection.Item(i) = esriDatasetType.esriDTFeatureDataset Then Exit Sub '选择要素集，不添加数据
+                            if (listViewExFiles.SelectedItems[i].Tag is IFeatureDatasetName)
+                            {
+                                this.DialogResult = DialogResult.OK;
+                                return;
+                            }
+                            for (int j = 0; j < m_ListCollection.Count; j++)
+                            {
+                                pDSN = m_ListCollection[j] as IDatasetName;
+                                pName = pDSN as IName;
+                                pDataset = pName.Open() as IDataset;
+                                pFeatCls = pDataset as IFeatureClass;
+                                m_FeatClsCollection.Add(pFeatCls);
+                            }
+                            this.DialogResult = DialogResult.OK;
+                        }
+                    }
+                }
+                if (postFix == ".gdb")
+                {
+                    for (int i = 0; i < listViewExFiles.SelectedItems.Count; i++)
+                    {
+                        if (listViewExFiles.SelectedItems[i].Text.ToLower().Contains(".gdb")
+                         && listViewExFiles.SelectedItems[i].Text.Substring(listViewExFiles.SelectedItems[i].Text.Length - 4) == ".gdb")
+                        {
+                            if (listViewExFiles.SelectedItems.Count == 0 || listViewExFiles.SelectedItems.Count > 1)
+                            {
+                                return;
+                            }
+                            else
+                            {
+                                //listViewExFiles_DoubleClick(null, null);
+                                if (currentDirectory != null)
+                                {
+                                    m_sMdbPath = currentDirectory.FullName + "\\" + listViewExFiles.SelectedItems[i].Text;
+                                }
+                                else
+                                {
+                                    if (pFinallyPath != null)
+                                    {
+                                        m_sMdbPath = pFinallyPath + "\\" + listViewExFiles.SelectedItems[i].Text;
+                                    }
+                                    else
+                                    {
+                                        m_sMdbPath = currentPath + "\\" + listViewExFiles.SelectedItems[i].Text;
+
+                                    }
+                                    //m_sMdbPath = pFinallyPath;
+                                }
+                                m_sFilePath = m_sMdbPath;
+                                IWorkspaceFactory2 pFact = new FileGDBWorkspaceFactoryClass();
+
+                                m_pMDBGDBWorkspace = pFact.OpenFromFile(m_sMdbPath, 0);
+                                LoadDatasetToList(m_pMDBGDBWorkspace);
+                            }
+                        }
+                        else
+                        {
+                            ////按照加载featureclass 和featuredataset 来做
+                            if (listViewExFiles.SelectedItems.Count >= 0)
+                            {
+                                object tempObj = listViewExFiles.SelectedItems[i].Tag;
+                                if (tempObj is IFeatureClassName)
+                                {
+                                    IDatasetName datasetName = tempObj as IDatasetName;
+                                    IName name = datasetName as IName;
+
+                                    IFeatureClass featureClass = name.Open() as IFeatureClass;
+                                    //20170515注释掉
+                                    //m_FeatClsCollection.Add(featureClass);
+                                }
+                                if (tempObj is ITableName)
+                                {
+                                    IDatasetName datasetName = tempObj as IDatasetName;
+                                    IName name = datasetName as IName;
+
+                                    ITable table = name.Open() as ITable;
+                                    m_TableCollection.Add(table);
+                                }
+                                if (targetMap != null)
+                                {
+                                    //20170314 gdb数据加载两次，注释掉此行代码
+                                    //ClsMapLayer.AddSelectedLayer(targetMap, "IDatasetName", m_ListCollection, m_DatasetCol, null, m_blnAddData);
+                                }
+                                this.DialogResult = DialogResult.OK;
+                            }
+                            else
+                            {
+                                return;
+                            }
+
+                        }
+                    }
+                }
+                if (postFix == null)
+                {
+                    if (targetMap != null)
+                    {
+                        ClsMapLayer.AddSelectedLayer(targetMap, "IDatasetName", m_ListCollection, m_DatasetCol, null, m_blnAddData);
+                    }
+                    this.DialogResult = DialogResult.OK;
+                }
+            }
+            else
+            {
+                return;
+            }
+            #endregion
+
         }
+
         /// <summary>
         /// 后退按钮
         /// </summary>
@@ -783,40 +1396,19 @@ namespace ZJGISOpenData.Forms
                 LoadDatasetToList(preLocation);
                 return;
             }
-
             if (preObject is IDatasetName)
             {
                 IDatasetName preLocation = preObject as IDatasetName;
                 LoadDatasetLayerToList(preLocation);
                 return;
             }
-
             if (preObject == null)
             {
-                if (strFix == null)
+                if (postFix == null)
                 {
                     MessageBox.Show("已经是最上一层了!", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     return;
                 }
-
-                //if (currentPath.Length>0&&currentPath.Contains("\\"))
-                //{
-                //    string tempstr = currentPath.Substring(0, currentPath.LastIndexOf("\\"));
-                //    ReturnParentFolder(tempstr);
-                //    return;
-                //}else
-                //{
-                //    string label = currentPath.Replace(@"\", "") + "本地磁盘";
-                //    imageListFiles.Images.Add(label, ClsGetSysIcon.GetIcon(currentPath, true));
-                //    ListViewItem lvi = new ListViewItem(label);
-                //    lvi.ImageKey = label;
-                //    lvi.Tag = currentPath;
-
-                //    listViewExFiles.Items.Add(lvi);
-                //    //MessageBox.Show("磁盘跟目录!", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                //    return;
-                //}
-
                 if (currentDirectory == null)
                 {
                     MessageBox.Show("已经是最上一层了!", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -824,14 +1416,16 @@ namespace ZJGISOpenData.Forms
                 }
                 else
                 {
-                    if (strFix == ".mdb" && preList.Count == 1)////////////////////////////////如果是包含有.mdb文件的目录
+                    //如果是包含有.mdb文件的目录
+                    if (postFix == ".mdb" && preList.Count == 1)
                     {
                         textBoxXPath.Text = currentDirectory.FullName;
                         LoadFolderFileToList(currentDirectory);
                         preList.Clear();
                         return;
                     }
-                    if (currentDirectory.Parent == null)////////////////////////上一层为空，即我的电脑
+                    //上一层为空，即我的电脑
+                    if (currentDirectory.Parent == null)
                     {
                         currentDirectory = currentDirectory.Parent;
                         textBoxXPath.Text = "";
@@ -840,7 +1434,7 @@ namespace ZJGISOpenData.Forms
                         DriveInfo[] drives = DriveInfo.GetDrives();
                         foreach (DriveInfo driveInfo in drives)
                         {
-                            if (driveInfo.DriveType != DriveType.Fixed) 
+                            if (driveInfo.DriveType != DriveType.Fixed)
                                 continue;
                             string label = driveInfo.Name.Replace(@"\", "") + "本地磁盘";
                             imageListFiles.Images.Add(label, ClsGetSysIcon.GetIcon(driveInfo.Name, true));
@@ -876,44 +1470,12 @@ namespace ZJGISOpenData.Forms
                 //}
             }
         }
-        /// <summary>
-        ///将目录加入树视图
-        /// </summary>
-        /// <param name="parent">父节点</param>
-        /// <param name="directoryInfo">父节点目录信息</param>
-        private void LoadDirectoriesToTree(Node parent, DirectoryInfo directoryInfo)
+        private void buttonXCancel_Click(object sender, EventArgs e)
         {
-            DirectoryInfo[] directories = directoryInfo.GetDirectories();
-            foreach (DirectoryInfo dir in directories)
-            {
-                if ((dir.Attributes & FileAttributes.Hidden) == FileAttributes.Hidden) continue;
-                Node node = new Node();
-                node.Tag = dir;
-                node.Text = dir.Name;
-                node.Image = Properties.Resources.FolderClosed;
-                node.ImageExpanded = Properties.Resources.FolderOpen;
-                node.ExpandVisibility = eNodeExpandVisibility.Visible;
-                parent.Nodes.Add(node);
-            }
+            this.DialogResult = DialogResult.Cancel;
         }
 
-        /// <summary>
-        /// 获取下拉框中文件类型对应的后缀
-        /// </summary>
-        /// <param name="fullName">文件类型全名</param>
-        /// <returns>获取的后缀名</returns>
-        private string GetStringFix(string fullName)
-        {
-            if (fullName.Contains(".") && fullName.Contains("("))
-            {
-                return fullName.Substring(fullName.LastIndexOf("(")).Trim(new char[] { '(', ')' });
-            }
-            else
-            {
-                return null;
-            }
-        }
-
+        #endregion
         private void LoadDatasetToList(IWorkspace datasetWorkSpace)
         {
             listViewExFiles.Items.Clear();
@@ -923,16 +1485,14 @@ namespace ZJGISOpenData.Forms
             ListViewItem listItemFile;
             int shpType;
 
-            IEnumDatasetName enumDatasetName =
-                datasetWorkSpace.get_DatasetNames(esriDatasetType.esriDTFeatureDataset);
+            IEnumDatasetName enumDatasetName = datasetWorkSpace.get_DatasetNames(esriDatasetType.esriDTFeatureDataset);
             while ((datasetName = enumDatasetName.Next()) != null)
             {
                 listItemFile = listViewExFiles.Items.Add(datasetName.Name, "Dataset");
                 listItemFile.Tag = datasetName;
             }
 
-            IEnumDatasetName enumDatasetNameFeature =
-                datasetWorkSpace.get_DatasetNames(esriDatasetType.esriDTFeatureClass);
+            IEnumDatasetName enumDatasetNameFeature = datasetWorkSpace.get_DatasetNames(esriDatasetType.esriDTFeatureClass);
             datasetName = null;
 
             while ((datasetName = enumDatasetNameFeature.Next()) != null)
@@ -996,8 +1556,7 @@ namespace ZJGISOpenData.Forms
                 }
             }
 
-            IEnumDatasetName enumDatasetNameRaster =
-                datasetWorkSpace.get_DatasetNames(esriDatasetType.esriDTRasterDataset);
+            IEnumDatasetName enumDatasetNameRaster = datasetWorkSpace.get_DatasetNames(esriDatasetType.esriDTRasterDataset);
             datasetName = null;
 
             while ((datasetName = enumDatasetNameRaster.Next()) != null)
@@ -1006,8 +1565,7 @@ namespace ZJGISOpenData.Forms
                 listItemFile.Tag = datasetName;
             }
 
-            enumDatasetNameRaster =
-                datasetWorkSpace.get_DatasetNames(esriDatasetType.esriDTRasterCatalog);
+            enumDatasetNameRaster = datasetWorkSpace.get_DatasetNames(esriDatasetType.esriDTRasterCatalog);
             datasetName = null;
 
             while ((datasetName = enumDatasetNameRaster.Next()) != null)
@@ -1017,6 +1575,7 @@ namespace ZJGISOpenData.Forms
             }
             preList.Add(datasetWorkSpace);
         }
+
         private void LoadTablesToList(IWorkspace workspace)
         {
             listViewExFiles.Items.Clear();
@@ -1153,482 +1712,6 @@ namespace ZJGISOpenData.Forms
             preList.Add(datasetName);
         }
         /// <summary>
-        /// 打开按钮
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void buttonXOpen_Click(object sender, EventArgs e)
-        {
-            ////yjw begin 2016.8.12
-            ////可以批处理，并实现选中打开功能。
-
-            DirectoryInfo directoryInfo = null;
-            //如果在listviewExFiles中选中了，否则打开textBoxXPath中的内容
-            if (listViewExFiles.SelectedItems.Count > 0)
-            {
-                for (int i = 0; i < listViewExFiles.SelectedItems.Count; i++)
-                {
-                    object tempObject = listViewExFiles.SelectedItems[i].Tag;
-                    string temItemName = listViewExFiles.SelectedItems[i].Text;
-
-
-                    if (tempObject == null && temItemName.Length > 0 && !temItemName.Contains("."))
-                    {
-                        string tempstr = currentPath + "\\" + temItemName;
-                        Initiallistviewfiles(tempstr);
-                    }
-                    else
-                    {
-                        if (tempObject is DriveInfo)///////////////////////////////////////////选中的项为磁盘根目录
-                        {
-                            directoryInfo = ((DriveInfo)tempObject).RootDirectory;
-                            currentDirectory = directoryInfo;
-                            LoadFolderFileToList(directoryInfo);
-                            preList.Clear();
-                        }
-                        else if ((tempObject is DirectoryInfo))////////////////////////////////选中的项为文件夹
-                        {
-                            directoryInfo = (DirectoryInfo)tempObject;
-                            currentDirectory = directoryInfo;
-                            //该文件夹不包含子文件夹且该文件夹的后缀为.gdb
-                            DirectoryInfo[] dirs = directoryInfo.GetDirectories();
-                            if (dirs.Length == 0 && temItemName.Length > 4 && temItemName.Substring(temItemName.Length - 4) == ".gdb")
-                            {
-                                IWorkspaceFactory2 pFact = new FileGDBWorkspaceFactory() as IWorkspaceFactory2;
-                                m_pMdbWS = pFact.OpenFromFile(directoryInfo.FullName, 0);
-                                if (!isShowTable)
-                                {
-                                    LoadDatasetToList(m_pMdbWS);
-                                }
-                                else
-                                {
-                                    LoadTablesToList(m_pMdbWS);
-                                }
-                            }
-                            else
-                            {
-                                LoadFolderFileToList(directoryInfo);
-                            }
-                        }
-                        else if (tempObject is IDatasetName)////////////////////////////如果是数据集则将其子集加载到视图中
-                        {
-                            IDatasetName datasetName = tempObject as IDatasetName;
-                            if (datasetName.Type == esriDatasetType.esriDTFeatureDataset)
-                            {
-                                LoadDatasetLayerToList(datasetName);
-                            }
-                            else
-                            {
-                                if (tempObject is IFeatureClassName)///////////////////////////如果是要素类加入到目标地图
-                                {
-                                    IName name = datasetName as IName;
-                                    IFeatureClass featureClass = name.Open() as IFeatureClass;
-
-                                    //加载选中FeatureClass到集合内
-                                    m_FeatClsCollection.Add(featureClass);
-                                    IFeatureLayer featureLayer = new FeatureLayerClass();
-                                    featureLayer.Name = featureClass.AliasName;
-                                    featureLayer.FeatureClass = featureClass;
-                                    if (targetMap != null)
-                                    {
-                                        ClsMapLayer.AddLyrToBasicMap(targetMap, (ILayer)featureLayer);
-                                    }
-                                    this.DialogResult = DialogResult.OK;
-                                }
-                                else if (tempObject is ITableName)
-                                {
-                                    IName name = datasetName as IName;
-                                    ITable table = name.Open() as ITable;
-                                    m_TableCollection.Add(table);
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-            else
-            {
-                string newPath = textBoxXPath.Text.Trim();
-                if (newPath == "")
-                    return;
-                ListUpdate(newPath);
-                pFinallyPath = newPath;
-            }
-            //yjw end
-
-
-
-            if (listViewExFiles.SelectedItems.Count > 0)
-            {
-                if (strFix == ".shp")
-                {
-                    if (targetMap != null)
-                    {
-                        //ClsMapLayer.AddSelectedLayer(targetMap, strFix, m_ListCollection, m_DatasetCol, currentDirectory.FullName, m_blnAddData);
-                        if (currentDirectory != null)
-                        {
-                            ClsMapLayer.AddSelectedLayer(targetMap, strFix, m_ListCollection, m_DatasetCol, currentDirectory.FullName, m_blnAddData);
-                        }
-                        else
-                        {
-                            ClsMapLayer.AddSelectedLayer(targetMap, strFix, m_ListCollection, m_DatasetCol, pFinallyPath, m_blnAddData);
-                        }
-                    }
-                    ////20081201 印骅 获得要素类集合
-                    IWorkspaceFactory pWorkspaceFactory = null;
-                    IFeatureWorkspace pFeatWorkspace = null;
-                    IFeatureClass pFeatCls = null;
-                    string sFileName = null;
-
-                    pWorkspaceFactory = new ESRI.ArcGIS.DataSourcesFile.ShapefileWorkspaceFactory();
-                    if (currentDirectory != null)
-                    {
-                        if (pWorkspaceFactory.IsWorkspace(currentDirectory.FullName))
-                        {
-                            pFeatWorkspace = pWorkspaceFactory.OpenFromFile(currentDirectory.FullName, 0) as IFeatureWorkspace;
-                            for (int i = 0; i < m_ListCollection.Count; i++)
-                            {
-                                sFileName = m_ListCollection[i].ToString();
-                                pFeatCls = pFeatWorkspace.OpenFeatureClass(sFileName);
-                                m_FeatClsCollection.Add(pFeatCls);
-                            }
-                        }
-                    }
-                    else
-                    {
-                        if (pWorkspaceFactory.IsWorkspace(pFinallyPath))
-                        {
-                            pFeatWorkspace = pWorkspaceFactory.OpenFromFile(pFinallyPath, 0) as IFeatureWorkspace;
-                            for (int i = 0; i < m_ListCollection.Count; i++)
-                            {
-                                sFileName = m_ListCollection[i].ToString();
-                                pFeatCls = pFeatWorkspace.OpenFeatureClass(sFileName);
-                                m_FeatClsCollection.Add(pFeatCls);
-                            }
-                        }
-                    }
-
-                    this.DialogResult = DialogResult.OK;
-                }
-                if (strFix == ".mdb")
-                {
-                    //印骅 20081204 没有选择任何项
-                    if (listViewExFiles.SelectedItems.Count == 0)
-                    {
-                        m_FileCollection.Clear();
-                        return;
-                    }
-                    //Strings.Right(lvwDriver.SelectedItems(0).Name, 4) = ".mdb"
-
-                    for (int i = 0; i < listViewExFiles.SelectedItems.Count; i++)
-                    {
-                        string pStr = listViewExFiles.SelectedItems[i].Text;
-                        if (pStr.Length >= 4 && pStr.Substring(pStr.Length - 4) == ".mdb")
-                        {
-                            listViewExFiles_DoubleClick(null, null);
-                        }
-                        else
-                        {
-                            ////按照加载featureclass 和featuredataset 来做
-                            if (targetMap != null)
-                            {
-                                ClsMapLayer.AddSelectedLayer(targetMap, "IDatasetName", m_ListCollection, m_DatasetCol, "", m_blnAddData);
-                            }
-                            //// 获得MDB中要素类集合
-                            IDatasetName pDSN = null;
-                            IName pName = null;
-                            IDataset pDataset = null;
-                            IFeatureClass pFeatCls = null;
-
-                            //If m_ListCollection.Item(i) = esriDatasetType.esriDTFeatureDataset Then Exit Sub '选择要素集，不添加数据
-                            if (listViewExFiles.SelectedItems[i].Tag is IFeatureDatasetName)
-                            {
-                                this.DialogResult = DialogResult.OK;
-                                return;
-                            }
-                            for (int j = 0; j < m_ListCollection.Count; j++)
-                            {
-                                pDSN = m_ListCollection[j] as IDatasetName;
-                                pName = pDSN as IName;
-                                pDataset = pName.Open() as IDataset;
-                                pFeatCls = pDataset as IFeatureClass;
-                                m_FeatClsCollection.Add(pFeatCls);
-                            }
-                            this.DialogResult = DialogResult.OK;
-                        }
-                    }
-                }
-                if (strFix == ".gdb")
-                {
-                    for (int i = 0; i < listViewExFiles.SelectedItems.Count; i++)
-                    {
-                        if (listViewExFiles.SelectedItems[i].Text.ToLower().Contains(".gdb")
-                         && listViewExFiles.SelectedItems[i].Text.Substring(listViewExFiles.SelectedItems[i].Text.Length - 4) == ".gdb")
-                        {
-                            if (listViewExFiles.SelectedItems.Count == 0 || listViewExFiles.SelectedItems.Count > 1)
-                            {
-                                return;
-                            }
-                            else
-                            {
-                                //listViewExFiles_DoubleClick(null, null);
-                                if (currentDirectory != null)
-                                {
-                                    m_sMdbPath = currentDirectory.FullName + "\\" + listViewExFiles.SelectedItems[i].Text;
-                                }
-                                else
-                                {
-                                    if (pFinallyPath != null)
-                                    {
-                                        m_sMdbPath = pFinallyPath + "\\" + listViewExFiles.SelectedItems[i].Text;
-                                    }
-                                    else
-                                    {
-                                        m_sMdbPath = currentPath + "\\" + listViewExFiles.SelectedItems[i].Text;
-
-                                    }
-                                    //m_sMdbPath = pFinallyPath;
-                                }
-                                m_sFilePath = m_sMdbPath;
-                                IWorkspaceFactory2 pFact = new FileGDBWorkspaceFactoryClass();
-
-                                m_pMdbWS = pFact.OpenFromFile(m_sMdbPath, 0);
-                                LoadDatasetToList(m_pMdbWS);
-                            }
-                        }
-                        else
-                        {
-                            ////按照加载featureclass 和featuredataset 来做
-                            if (listViewExFiles.SelectedItems.Count >= 0)
-                            {
-                                object tempObj = listViewExFiles.SelectedItems[i].Tag;
-                                if (tempObj is IFeatureClassName)
-                                {
-                                    IDatasetName datasetName = tempObj as IDatasetName;
-                                    IName name = datasetName as IName;
-
-                                    IFeatureClass featureClass = name.Open() as IFeatureClass;
-                                    //20170515注释掉
-                                    //m_FeatClsCollection.Add(featureClass);
-                                }
-                                if (tempObj is ITableName)
-                                {
-                                    IDatasetName datasetName = tempObj as IDatasetName;
-                                    IName name = datasetName as IName;
-
-                                    ITable table = name.Open() as ITable;
-                                    m_TableCollection.Add(table);
-                                }
-                                if (targetMap != null)
-                                {
-                                    //20170314 gdb数据加载两次，注释掉此行代码
-                                    //ClsMapLayer.AddSelectedLayer(targetMap, "IDatasetName", m_ListCollection, m_DatasetCol, null, m_blnAddData);
-                                }
-                                this.DialogResult = DialogResult.OK;
-                            }
-                            else
-                            {
-                                return;
-                            }
-
-                        }
-                    }
-                }
-                if (strFix == null)
-                {
-                    if (targetMap != null)
-                    {
-                        ClsMapLayer.AddSelectedLayer(targetMap, "IDatasetName", m_ListCollection, m_DatasetCol, null, m_blnAddData);
-                    }
-                    this.DialogResult = DialogResult.OK;
-                }
-            }
-            else
-            {
-                return;
-            }
-
-        }
-
-
-
-
-        private void listViewExFiles_MouseUp(object sender, MouseEventArgs e)
-        {
-
-            if (this.DialogResult == DialogResult.OK)
-            {
-                return;
-            }
-            if (listViewExFiles.SelectedItems.Count == 0)
-            {
-                return;
-            }
-
-            object tempObject = listViewExFiles.SelectedItems[0].Tag;
-            if (tempObject is DirectoryInfo) //////////////////////////////////////////////////////////////////////////选中为 文件夹
-            {
-                textBoxXPath.Text = ((DirectoryInfo)tempObject).FullName;
-                //return;
-            }
-            if (tempObject is FileInfo)//////////////////////////////////////////////////////////////////////////选中为文件
-            {
-                textBoxXPath.Text = ((FileInfo)tempObject).FullName;
-                //return;
-            }
-            if (tempObject is DriveInfo)//////////////////////////////////////////////////////////////////////////选中为磁盘
-            {
-                textBoxXPath.Text = ((DriveInfo)tempObject).Name;
-                //return;
-            }
-
-
-            ListViewItem pListViewItem = null;
-            //int relVal = 0;
-
-            m_ListCollection.Clear();
-            m_FileCollection.Clear();
-            m_FeatClsCollection.Clear();
-            m_TableCollection.Clear();
-
-            string temItem = listViewExFiles.SelectedItems[0].Text;
-            if (strFix == ".mdb")
-            {
-                if (temItem.Length >= 4 && temItem.Substring(temItem.Length - 4).ToLower() == ".mdb")
-                {
-                    return;
-                }
-
-                if (textBoxXPath.Text.ToLower().Contains(".mdb"))
-                {
-                    for (int i = 0; i < listViewExFiles.SelectedItems.Count; i++)
-                    {
-                        pListViewItem = listViewExFiles.SelectedItems[i];
-                        m_ListCollection.Add(pListViewItem.Tag);
-                        ////印骅 20081201 获得MDB中要素类的完整路径
-                        //打开的是要素集
-                        if (this.listViewExFiles.SelectedItems[i].Tag is IFeatureDatasetName)
-                        {
-                            IDatasetName pDSN = default(IDatasetName);
-                            pDSN = this.listViewExFiles.SelectedItems[0].Tag as IDatasetName;
-                            m_sFeatDatasetName = pDSN.Name;
-                            ////获得要素集名称(m_sFeatDatasetName)
-                            //打开的是要素类
-                        }
-                        else
-                        {
-                            m_sFeatClsName = pListViewItem.Text;
-                            //获得要素类名称(m_sFeatClsName)
-                        }
-                        if (m_sFeatDatasetName == null)
-                        {
-                            m_sFullPath = m_sMdbPath + "\\" + m_sFeatClsName;
-                        }
-                        else
-                        {
-                            m_sFullPath = m_sMdbPath + "\\" + m_sFeatDatasetName + "\\" + m_sFeatClsName;
-                        }
-                        m_FileCollection.Add(m_sFullPath);
-                    }
-                }
-            }
-            else
-            {
-                if (strFix == ".gdb")
-                {
-                    if ((temItem.ToLower().Contains(".gdb") && temItem.Substring(temItem.Length - 4).ToLower() == ".gdb")
-                        || currentDirectory == null)
-                    {
-                        return;
-                    }
-                    if (currentDirectory.FullName.ToLower().Contains(".gdb"))
-                    {
-                        for (int i = 0; i < listViewExFiles.SelectedItems.Count; i++)
-                        {
-                            pListViewItem = listViewExFiles.SelectedItems[i];
-                            //txtName.Text = txtName.Text + pListViewItem.Text + ";";
-                            m_ListCollection.Add(pListViewItem.Tag);
-                        }
-                    }
-                }
-                else
-                {
-                    if (strFix == null)
-                    {
-                        if (listViewExFiles.SelectedItems.Count == 0)
-                        {
-                            return;
-                        }
-                        ListViewItem plistviewitem = null;
-                        m_ListCollection.Clear();
-                        for (int i = 0; i < listViewExFiles.SelectedItems.Count; i++)
-                        {
-                            plistviewitem = listViewExFiles.SelectedItems[i];
-                            m_ListCollection.Add(plistviewitem.Tag);
-                        }
-                    }
-                    else
-                    {
-                        for (int i = 0; i <= listViewExFiles.SelectedItems.Count - 1; i++)
-                        {
-                            pListViewItem = listViewExFiles.SelectedItems[i];
-
-                            if (pListViewItem.Text.ToLower().Contains(strFix) &&
-                                pListViewItem.Text.Substring(pListViewItem.Text.Length - 4).ToLower() == strFix)
-                            {
-                                //txtName.Text = txtName.Text + pListViewItem.Text + ";";
-                                m_ListCollection.Add(pListViewItem.Text);
-                                ////印骅 20081129 获得shapefile完整文件路径集合
-                                if (currentDirectory != null)
-                                {
-                                    m_sFullPath = currentDirectory.FullName + "\\" + pListViewItem.Text;
-
-                                }
-                                else
-                                {
-                                    m_sFullPath = pFinallyPath + "\\" + pListViewItem.Text;
-                                }
-                                //m_sFullPath = currentDirectory.FullName + "\\" + pListViewItem.Text;
-                                m_sFilePath = m_sFullPath;
-                                m_FileCollection.Add(m_sFullPath);
-                            }
-                        }
-                    }
-                }
-            }
-
-
-
-
-        }
-
-        private void advTreeFiles_NodeClick(object sender, TreeNodeMouseEventArgs e)
-        {
-            DirectoryInfo directoryInfo = null;
-            if (e.Node.Tag is DriveInfo)///////////////////////////////////节点为磁盘
-            {
-                directoryInfo = ((DriveInfo)e.Node.Tag).RootDirectory;
-                textBoxXPath.Text = directoryInfo.Name;
-            }
-            else
-            {
-                if (e.Node.Tag is DirectoryInfo)///////////////////////////节点为目录
-                {
-                    directoryInfo = (DirectoryInfo)e.Node.Tag;
-                    textBoxXPath.Text = directoryInfo.FullName;
-                }
-                else
-                {
-                    return;
-                }
-            }
-            currentDirectory = directoryInfo;////////////////////////////当前目录
-            //m_LastPathName = directoryInfo.FullName;
-            LoadFolderFileToList(directoryInfo);
-        }
-
-
-        /// <summary>
         /// 鼠标在textbox中的回车事件
         /// </summary>
         /// <param name="sender"></param>
@@ -1664,7 +1747,8 @@ namespace ZJGISOpenData.Forms
                 //删除ImageList中的程序图标
                 foreach (ListViewItem item in listViewExFiles.Items)
                 {
-                    if (item.Text.EndsWith(".exe"))  //是程序
+                    //程序
+                    if (item.Text.EndsWith(".exe"))
                     {
                         imageList2.Images.RemoveByKey(item.Text);
                         imageList3.Images.RemoveByKey(item.Text);
@@ -1685,7 +1769,8 @@ namespace ZJGISOpenData.Forms
                 foreach (FileInfo file in files)
                 {
                     ListViewItem fileItem = listViewExFiles.Items.Add(file.Name);
-                    if (file.Extension == ".exe" || file.Extension == "")   //程序文件或无扩展名
+                    //程序文件或无扩展名
+                    if (file.Extension == ".exe" || file.Extension == "")
                     {
                         System.Drawing.Icon fileIcon = ClsGetSysIcon.GetIconByFileName(file.FullName);
                         imageList2.Images.Add(file.Name, fileIcon);
@@ -1694,7 +1779,8 @@ namespace ZJGISOpenData.Forms
                     }
                     else    //其它文件
                     {
-                        if (!imageList2.Images.ContainsKey(file.Extension))  //ImageList中不存在此类图标
+                        //ImageList中不存在此类图标
+                        if (!imageList2.Images.ContainsKey(file.Extension))
                         {
                             System.Drawing.Icon fileIcon = ClsGetSysIcon.GetIconByFileName(file.FullName);
                             imageList2.Images.Add(file.Extension, fileIcon);
@@ -1708,36 +1794,13 @@ namespace ZJGISOpenData.Forms
                     fileItem.SubItems.Add(file.LastWriteTimeUtc.ToString());
                 }
                 currentPath = newPath;
-                textBoxXPath.Text = currentPath;   //更新地址栏
+                //更新地址栏
+                textBoxXPath.Text = currentPath;
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-        }
-
-        private void FrmOpenData_FormClosed(object sender, FormClosedEventArgs e)
-        {
-            //string path="D\1.txt";//文件的路径，保证文件存在。
-
-            if (File.Exists(opendatapath))
-            {
-                if (!listOPData.Contains(currentPath))
-                {
-                    //System.IO.FileStream fs = new System.IO.FileStream(opendatapath, FileMode.Append);
-                    //StreamWriter sw = new StreamWriter(fs);
-                    StreamWriter sw = new StreamWriter(opendatapath, true);
-                    sw.WriteLine();
-                    sw.Write(currentPath);
-                    sw.Close();
-                    //fs.Close();
-                }
-            }
-            else
-            {
-                MessageBox.Show("文件路径不存在，请检查文件路径！");
-            }
-
         }
 
     }

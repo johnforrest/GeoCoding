@@ -46,7 +46,7 @@ namespace ZJGISOpenData.Classes
         #endregion
 
 
-       public  static Icon GetIcon(string fileName, bool isLargeIcon)
+        public static Icon GetIcon(string fileName, bool isLargeIcon)
         {
             SHFILEINFO shfi = new SHFILEINFO();
             IntPtr hI;

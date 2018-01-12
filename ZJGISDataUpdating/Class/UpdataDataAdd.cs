@@ -362,7 +362,7 @@ namespace ZJGISDataUpdating
             //}
             FrmOpenData frmOpenData = new FrmOpenData();
 
-            frmOpenData.IsUpdateDate = true;
+            //frmOpenData.IsUpdateDate = true;
             if (frmOpenData.ShowDialog() == DialogResult.Cancel)
             {
                 return;

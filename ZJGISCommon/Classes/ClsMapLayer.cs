@@ -1266,7 +1266,11 @@ namespace ZJGISCommon
 
 
         }
-
+        /// <summary>
+        /// 把图层添加到地图中
+        /// </summary>
+        /// <param name="basicMap"></param>
+        /// <param name="addedLayer"></param>
         public static void AddLyrToBasicMap(IBasicMap basicMap, ILayer addedLayer)
         {
             try
@@ -1313,8 +1317,7 @@ namespace ZJGISCommon
         /// <param name="pCurrentFilePath"></param>
         /// <param name="blnAddData"></param>
         /// <returns></returns>
-        public static bool AddSelectedLayer(IBasicMap pMap, string pSuffix, Collection<object> pListCol,
-                Collection<object> m_DatasetCol, string pCurrentFilePath, bool blnAddData)
+        public static bool AddSelectedLayer(IBasicMap pMap, string pSuffix, Collection<object> pListCol,Collection<object> m_DatasetCol, string pCurrentFilePath, bool blnAddData)
         {
             bool functionReturnValue = false;
             System.Windows.Forms.Cursor pCursor = Cursors.Default;
