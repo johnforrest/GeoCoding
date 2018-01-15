@@ -39,14 +39,15 @@ namespace ZJGISGCoding.Class
 
             if (pFeatureLayer != null)
             {
-                progressbar = new FrmProgressBar(pFeatureLayer.FeatureClass.FeatureCount(null));
-                progressbar.Show();
-
+          
                 //检查格网字段是否存在，不存在就添加格网字段GridCode
                 pClsCom.CheckGridField(pFeatureLayer, strField);
-
                 if (pFeatureLayer.FeatureClass.Fields.FindField(ClsConfig.LayerConfigs[(pFeatureLayer.FeatureClass as IDataset).Name].NameField) != -1)
                 {
+                    progressbar = new FrmProgressBar(pFeatureLayer.FeatureClass.FeatureCount(null));
+                    progressbar.Show();
+
+
                     IDataset pDataset = pFeatureLayer.FeatureClass as IDataset;
                     IWorkspaceEdit pWorkspaceEdit = null;
                     if (pDataset != null)
@@ -124,9 +125,6 @@ namespace ZJGISGCoding.Class
             IFeatureLayer pFeatureLayer = (IFeatureLayer)pClsCom.GetLayerByName(pMapControl, cbxLayerName.Text);
             if (pFeatureLayer != null)
             {
-                progressbar = new FrmProgressBar(pFeatureLayer.FeatureClass.FeatureCount(null)*2);
-                progressbar.Show();
-
                 //检查地理实体编码字段是否存在，不存在就添加地理实体编码字段
                 pClsCom.CheckGridField(pFeatureLayer, strField);
 
@@ -134,6 +132,9 @@ namespace ZJGISGCoding.Class
                 IWorkspaceEdit pWorkspaceEdit = null;
                 if (pDataset != null)
                 {
+                    progressbar = new FrmProgressBar(pFeatureLayer.FeatureClass.FeatureCount(null) * 2);
+                    progressbar.Show();
+
                     pWorkspaceEdit = pDataset.Workspace as IWorkspaceEdit;
                     if (pWorkspaceEdit != null || pWorkspaceEdit.IsBeingEdited() == false)
                     {

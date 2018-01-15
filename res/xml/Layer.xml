@@ -3,14 +3,12 @@
   <layer name="poi">
     <layerName>poi</layerName>
     <nameField>biaozhunmi</nameField>
-    <startVersion>
-    </startVersion>
-    <endVersion>
-    </endVersion>
-    <guid>ELEMID</guid>
+    <startVersion></startVersion>
+    <endVersion></endVersion>
+    <guid></guid>
     <sourceName>地名地址库</sourceName>
     <sourceType>p</sourceType>
-    <entiID>ENTIID</entiID>
+    <entiID>PoiEntiID</entiID>
     <shapeType>点</shapeType>
   </layer>
   <layer name="RES_BUD_PY_G">
@@ -166,17 +164,6 @@
     <sourceType>I</sourceType>
     <entiID>ENTIID</entiID>
     <shapeType>线</shapeType>
-  </layer>
-  <layer name="POI">
-    <layerName>POI</layerName>
-    <nameField>NAME</nameField>
-    <startVersion>FROMVERSION</startVersion>
-    <endVersion>TOVERSION</endVersion>
-    <guid>ELEMID</guid>
-    <sourceName>地名地址库</sourceName>
-    <sourceType>P</sourceType>
-    <entiID>ENTIID</entiID>
-    <shapeType>点</shapeType>
   </layer>
   <layer name="RES_PY_I_G">
     <layerName>RES_PY_I_G</layerName>

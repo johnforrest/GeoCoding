@@ -344,6 +344,7 @@ namespace ZJGISOpenData.Forms
             {
                 newPath = dirPath;
             }
+
             if ( Directory.Exists(newPath)&&newPath.Length > 0)
             {
                 DirectoryInfo directoryInfo = new DirectoryInfo(newPath);

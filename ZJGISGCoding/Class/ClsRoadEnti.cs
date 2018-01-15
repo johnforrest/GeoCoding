@@ -54,25 +54,9 @@ namespace ZJGISGCoding.Class
                 //存在路网字段
                 if (pFeatureClass.Fields.FindField(roadField) != -1)
                 {
-                    try
-                    {
                         //没有GridCode字段就创建GridCode字段
-                        if (pFeatureClass.Fields.FindField(gridField) == -1)
-                        {
-                            IField pField = new FieldClass();
-                            IFieldEdit pFieldEdit = pField as IFieldEdit;
-                            pFieldEdit.Name_2 = gridField;
-                            pFieldEdit.Type_2 = esriFieldType.esriFieldTypeString;
-                            pFeatureClass.AddField(pField);
-                        }
-                    }
-                    catch
-                    {
-                        MessageBoxEx.Show("添加字段有误,数据被占用！");
-                        return;
-                    }
-
-
+                    pClsCom.CheckGridField(pFeatureLayer, gridField);
+                   
                     IDataset pDataset = pFeatureLayer.FeatureClass as IDataset;
                     IWorkspaceEdit pWorkspaceEdit = null;
                     if (pDataset != null)

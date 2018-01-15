@@ -44,23 +44,7 @@ namespace ZJGISGCoding.Class
                 progressbar = new FrmProgressBar(pFeatureLayer.FeatureClass.FeatureCount(null));
                 progressbar.Show();
 
-                IClass pTable = pFeatureLayer.FeatureClass as IClass;
-                try
-                {
-                    if (pTable.Fields.FindField(gridField) == -1)
-                    {
-                        IField pField = new FieldClass();
-                        IFieldEdit pFieldEdit = pField as IFieldEdit;
-                        pFieldEdit.Name_2 = gridField;
-                        pFieldEdit.Type_2 = esriFieldType.esriFieldTypeString;
-                        pTable.AddField(pField);
-                    }
-                }
-                catch
-                {
-                    MessageBoxEx.Show("添加字段有误,数据被占用！");
-                    return;
-                }
+                pClsCom.CheckGridField(pFeatureLayer, gridField);
 
                 IDataset pDataset = pFeatureLayer.FeatureClass as IDataset;
                 IWorkspaceEdit pWorkspaceEdit = null;
@@ -133,7 +117,7 @@ namespace ZJGISGCoding.Class
             Dictionary<int, string> pDicAfter = new Dictionary<int, string>();
 
             //要编码的字段——ENTIID
-            string strField = "ENTIID";
+            string entiField = "ENTIID";
 
             IFeatureLayer pFeatureLayer = (IFeatureLayer)pClsCom.GetLayerByName(pMapControl, cbxLayerName.Text);
             if (pFeatureLayer != null)
@@ -141,23 +125,7 @@ namespace ZJGISGCoding.Class
                 progressbar = new FrmProgressBar(pFeatureLayer.FeatureClass.FeatureCount(null));
                 progressbar.Show();
 
-                IClass pTable = pFeatureLayer.FeatureClass as IClass;
-                try
-                {
-                    if (pTable.Fields.FindField(strField) == -1)
-                    {
-                        IField pField = new FieldClass();
-                        IFieldEdit pFieldEdit = pField as IFieldEdit;
-                        pFieldEdit.Name_2 = strField;
-                        pFieldEdit.Type_2 = esriFieldType.esriFieldTypeString;
-                        pTable.AddField(pField);
-                    }
-                }
-                catch
-                {
-                    MessageBoxEx.Show("添加字段有误");
-                    return;
-                }
+                pClsCom.CheckGridField(pFeatureLayer, entiField);
 
                 IDataset pDataset = pFeatureLayer.FeatureClass as IDataset;
                 IWorkspaceEdit pWorkspaceEdit = null;
@@ -270,7 +238,7 @@ namespace ZJGISGCoding.Class
                                                 {
                                                     pDicAfter.Add(j, pEntiidCode);
                                                 }
-                                                pFeature.set_Value(pFeature.Fields.FindField(strField), pEntiidCode);
+                                                pFeature.set_Value(pFeature.Fields.FindField(entiField), pEntiidCode);
                                                 pFeature.Store();
                                                 j++;
                                             }
