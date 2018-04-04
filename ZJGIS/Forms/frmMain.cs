@@ -180,9 +180,6 @@ namespace ZJGIS
 
         private void frmMain_Load(object sender, EventArgs e)
         {
-            //    LicenseInitializer license = new LicenseInitializer();
-            //    if (license.CheckLicenses() == false)
-            //        this.Close();
             try
             {
                 //20170313 注释掉
@@ -254,6 +251,9 @@ namespace ZJGIS
             string textFullPath = startPath + "\\..\\Res\\path\\openedPath.txt";
 
             ReadText(textFullPath);
+
+            //初试化时选择一个图层
+            comboBoxItemToMapControl.SelectedIndex = 0;
         }
         private void m_MapEvent_AfterDraw(IDisplay Display, esriViewDrawPhase phase)
         {
@@ -1280,7 +1280,7 @@ namespace ZJGIS
         #endregion
 
 
-        #region  updating multi-scale linkage updating
+        #region  多尺度联动更新
 
         /// <summary>
         /// 联动更新：大比例尺更新小比例尺
@@ -2435,6 +2435,26 @@ namespace ZJGIS
             }
         }
         /// <summary>
+        /// 分屏对比-全图显示
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void buttonItemFullExtent_Click(object sender, EventArgs e)
+        {
+            if (this.comboBoxItemToMapControl.SelectedItem.ToString() == "源图层")
+            {
+                commandFullExtent = new ControlsMapFullExtentCommandClass();
+                commandFullExtent.OnCreate(MapFrom.Object);
+                commandFullExtent.OnClick();
+            }
+            else if (this.comboBoxItemToMapControl.SelectedItem.ToString() == "待匹配图层")
+            {
+                commandFullExtent = new ControlsMapFullExtentCommandClass();
+                commandFullExtent.OnCreate(MapTo.Object);
+                commandFullExtent.OnClick();
+            }
+        }
+        /// <summary>
         /// 叠加对比-放大
         /// </summary>
         /// <param name="sender"></param>
@@ -2519,7 +2539,17 @@ namespace ZJGIS
             this.btnOverlapPan.Checked = false;
             this.btnOverlapSelectFeat.Checked = true;
         }
-
+        /// <summary>
+        /// 叠加对比-全屏显示
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void btnOverlapFullExtent_Click(object sender, EventArgs e)
+        {
+            commandFullExtent = new ControlsMapFullExtentCommandClass();
+            commandFullExtent.OnCreate(MapOverlapping.Object);
+            commandFullExtent.OnClick();
+        }
 
         string mapName = "";
         IPoint pPoint = null;
@@ -2943,6 +2973,10 @@ namespace ZJGIS
 
             }
         }
+
+     
+
+
 
 
 

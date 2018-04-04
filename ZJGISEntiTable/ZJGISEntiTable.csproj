@@ -119,6 +119,10 @@
       <Project>{b705748d-bfe3-4498-a391-3af88249fed2}</Project>
       <Name>ZJGISCommon</Name>
     </ProjectReference>
+    <ProjectReference Include="..\ZJGISOpenData\ZJGISOpenData.csproj">
+      <Project>{d8c3dbaf-1b4a-4988-ae3f-136d8d20be65}</Project>
+      <Name>ZJGISOpenData</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Froms\FrmEntiDB.resx">

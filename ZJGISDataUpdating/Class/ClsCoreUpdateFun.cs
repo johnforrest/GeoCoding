@@ -183,6 +183,7 @@ namespace ZJGISDataUpdating
             }
 
         }
+        #region 几何属性匹配
         /* 描述: 该函数用于在进行任意对象集成时识别出更新变化的要素
          * （任意对象集成只将新增空间对象和修改空间对象集成到数据库中，主要针对道路，水系，居民地（建构筑物）要素类，它们都有name字段作为空间对象标记）。
          * 通过将两个图层进行叠加分析来查找,首先遍历TU（pSrcFcls）图层中的每个要素通过空间自定义的关系在TE（pTarFcls）图层中查找相应的要素,
@@ -352,9 +353,9 @@ namespace ZJGISDataUpdating
                                     rowBuffer.set_Value(4, pSrcFeature.get_Value(pSrcFeature.Fields.FindField("GCode")));
                                     rowBuffer.set_Value(5, pTarFeature.get_Value(pTarFeature.Fields.FindField("GCode")));
                                 }
-                                ClsMatching clsMatching = new ClsMatching();
-                                clsMatching.TUFeature = pSrcFeature;
-                                clsMatching.CFeature = pTarFeature;
+                                ClsIndicatorFun clsIndicatorFun = new ClsIndicatorFun();
+                                clsIndicatorFun.SourceFeature = pSrcFeature;
+                                clsIndicatorFun.TargetFeature = pTarFeature;
 
                                 double center = 0;
                                 double area = 0;
@@ -363,9 +364,9 @@ namespace ZJGISDataUpdating
                                 int index = 0;
                                 //判断匹配方法
 
-                                shape = clsMatching.ShapeSimilarValue();
-                                area = clsMatching.AreaSimilarValue();
-                                center = clsMatching.CenterSimilarValue();
+                                shape = clsIndicatorFun.ShapeSimilarValue();
+                                area = clsIndicatorFun.AreaSimilarValue();
+                                center = clsIndicatorFun.CenterSimilarValue();
                                 polygonRatio = shape * weight[0] + area * weight[2] + center * weight[1];
                                 string shape1 = string.Format("{0:0.00000000}", shape);
                                 string area1 = string.Format("{0:0.00000000}", area);
@@ -392,514 +393,613 @@ namespace ZJGISDataUpdating
                             }
                             else if (pTarFeature.Shape.GeometryType == esriGeometryType.esriGeometryPolyline)
                             {
-                                string[] array = fields.Split(';');
-                                string test1 = array[0];
-
-                                for (int k = 0; k < array.Length; k++)
+                                if (fields.Length > 0)
                                 {
-                                    if (array[k].Length > 0)
+                                    string[] array = fields.Split(';');
+                                    string test1 = array[0];
+
+                                    for (int k = 0; k < array.Length; k++)
                                     {
-                                        if (array[k].Contains(':'))
+                                        if (array[k].Length > 0)
                                         {
-                                            string[] arr = ClsStatic.SplitStrColon(array[k]);
-                                            string pSrcfield = pSrcFeature.get_Value(pSrcFeature.Fields.FindField(arr[0])).ToString();
-                                            string pTarfield = pTarFeature.get_Value(pTarFeature.Fields.FindField(arr[1])).ToString();
-
-                                            //if (StringSameOrNot(pSrcStr, pTarStr) > 0)
-                                            if (pSrcfield.Length > 0 && pTarfield.Length > 0)
+                                            //两个图层的名称字段名称不同
+                                            if (array[k].Contains(':'))
                                             {
-                                                //test
-                                                //int test0 = StringSameOrNot(pSrcStrName, pTarStrName);
-                                                //int test0 = StringSameOrNot2(pSrcfield, pTarfield);
+                                                string[] arr = ClsStatic.SplitStrColon(array[k]);
+                                                string pSrcfield = pSrcFeature.get_Value(pSrcFeature.Fields.FindField(arr[0])).ToString();
+                                                string pTarfield = pTarFeature.get_Value(pTarFeature.Fields.FindField(arr[1])).ToString();
 
-                                                string tempSrc = "";
-                                                string tempTar = "";
-                                                for (int j = 0; j < resultTable.Fields.FieldCount; j++)
+                                                //if (StringSameOrNot(pSrcStr, pTarStr) > 0)
+                                                if (pSrcfield.Length > 0 && pTarfield.Length > 0)
                                                 {
-                                                    if (resultTable.Fields.get_Field(j).AliasName == "源要素" + arr[0])
-                                                    {
-                                                        tempSrc = resultTable.Fields.get_Field(j).AliasName;
-                                                    }
-                                                    if (resultTable.Fields.get_Field(j).AliasName == "待匹配要素" + arr[1])
-                                                    {
-                                                        tempTar = resultTable.Fields.get_Field(j).AliasName;
-                                                    }
-                                                }
-
-                                                //设置表TRA_PT_I_PtTabl的（待匹配编码）字段的值——cell[5]
-                                                //rowBuffer.set_Value(rowBuffer.Fields.FindField("源图层名称"), pSrcfield);
-                                                rowBuffer.set_Value(rowBuffer.Fields.FindField(tempSrc), pSrcfield);
-
-                                                double Similarity = ClsCosine.getSimilarity(pSrcfield, pTarfield);
-
-                                                //if (StringSameOrNot2(pSrcfield, pTarfield) > 2)
-                                                if (Similarity > 0.7)
-                                                {
-                                                    //设置表TRA_PT_I_PtTabl的（待匹配编码）字段的值——cell[5]
-                                                    //rowBuffer.set_Value(rowBuffer.Fields.FindField("待匹配图层名称"), pTarfield);
-                                                    rowBuffer.set_Value(rowBuffer.Fields.FindField(tempTar), pTarfield);
-                                                    //20170516注释掉
-                                                    //if (MatchCode(pSrcFeature, pTarFeature))
-                                                    //{
-                                                    //    //设置表TRA_PT_I_PtTabl的（源编码）字段的值——cell[4]
-                                                    //    rowBuffer.set_Value(4, pSrcFeature.get_Value(pSrcFeature.Fields.FindField("GCode")));
-                                                    //    //设置表TRA_PT_I_PtTabl的（待匹配编码）字段的值——cell[5]
-                                                    //    rowBuffer.set_Value(5, pTarFeature.get_Value(pTarFeature.Fields.FindField("GCode")));
-                                                    //}
-
-                                                    ClsMatching clsMatching = new ClsMatching();
-                                                    clsMatching.TUFeature = pSrcFeature;
-                                                    clsMatching.CFeature = pTarFeature;
-
-                                                    double matchedPoints = 0;
-                                                    double shape = 0;
-                                                    double polylineRadio = 0;
-
-                                                    int index = 0;
                                                     //test
-                                                    string test3 = pTarFeature.get_Value(index).ToString();
+                                                    //int test0 = StringSameOrNot(pSrcStrName, pTarStrName);
+                                                    //int test0 = StringSameOrNot2(pSrcfield, pTarfield);
 
-
-                                                    //2010104注释掉
-                                                    //形状相似度
-                                                    //shape = clsMatching.PolylineShapeSimilarValue();
-                                                    ////节点相似度
-                                                    //matchedPoints = clsMatching.MatchedPointsSimilarValue(buffer);
-                                                    ////综合相似度
-                                                    //polylineRadio = shape * weight[0] + matchedPoints * weight[1];
-
-                                                    //string shape1 = string.Format("{0:0.00000000}", shape);
-                                                    //string matchedPoints1 = string.Format("{0:0.00000000}", matchedPoints);
-                                                    //string polygonRatio1 = string.Format("{0:0.00000000}", polylineRadio);
-
-                                                    //rowBuffer.set_Value(rowBuffer.Fields.FindField("形状相似度"), shape1);
-                                                    //rowBuffer.set_Value(rowBuffer.Fields.FindField("节点相似度"), matchedPoints1);
-                                                    //rowBuffer.set_Value(rowBuffer.Fields.FindField("综合相似度"), polygonRatio1);
-
-
-                                                    //if (polylineRadio > weight[2])
-                                                    //{
-                                                    //如果两个点之间的距离小于设置的综合相似度
-                                                    //if (distance < weight[0] && MatchCode(pSrcFeature, pTarFeature))
-                                                    //if (MatchCode(pSrcFeature, pTarFeature))
-                                                    //{
-                                                    //设置表TRA_PT_I_PtTabl的（待匹配oid）字段的值为空——cell[2]
-                                                    if (rowBuffer.get_Value(rowBuffer.Fields.FindField("待匹配OID")).ToString() == "")
+                                                    string tempSrc = "";
+                                                    string tempTar = "";
+                                                    for (int j = 0; j < resultTable.Fields.FieldCount; j++)
                                                     {
-                                                        //设置表TRA_PT_I_PtTabl的（待匹配oid）字段的值——cell[2]
-                                                        rowBuffer.set_Value(rowBuffer.Fields.FindField("待匹配OID"), pTarFeature.get_Value(index));
-                                                    }
-                                                    else
-                                                    {
-                                                        string oids = rowBuffer.get_Value(rowBuffer.Fields.FindField("待匹配OID")).ToString() + ";" + pTarFeature.get_Value(index);
-                                                        //设置表TRA_PT_I_PtTabl的（待匹配oid）字段的值——cell[2]
-                                                        rowBuffer.set_Value(rowBuffer.Fields.FindField("待匹配OID"), oids);
+                                                        if (resultTable.Fields.get_Field(j).AliasName == "源要素" + arr[0])
+                                                        {
+                                                            tempSrc = resultTable.Fields.get_Field(j).AliasName;
+                                                        }
+                                                        if (resultTable.Fields.get_Field(j).AliasName == "待匹配要素" + arr[1])
+                                                        {
+                                                            tempTar = resultTable.Fields.get_Field(j).AliasName;
+                                                        }
                                                     }
 
-                                                    //20170912
-                                                    ////设置表TRA_PT_I_PtTabl的（待匹配编码）字段的值——cell[5]
-                                                    //rowBuffer.set_Value(rowBuffer.Fields.FindField("源图层名称"), pSrcFeature.get_Value(pSrcFeature.Fields.FindFieldByAliasName(array[0])));
-                                                    ////设置表TRA_PT_I_PtTabl的（待匹配编码）字段的值——cell[5]
-                                                    //rowBuffer.set_Value(rowBuffer.Fields.FindField("待匹配图层名称"), pTarFeature.get_Value(pTarFeature.Fields.FindFieldByAliasName(array[0])));
+                                                    //设置表TRA_PT_I_PtTabl的（待匹配编码）字段的值——cell[5]
+                                                    //rowBuffer.set_Value(rowBuffer.Fields.FindField("源图层名称"), pSrcfield);
+                                                    rowBuffer.set_Value(rowBuffer.Fields.FindField(tempSrc), pSrcfield);
 
-                                                    if (!pDicCol.ContainsKey(lIdx))
+                                                    double Similarity = ClsCosine.getSimilarity(pSrcfield, pTarfield);
+
+                                                    //if (StringSameOrNot2(pSrcfield, pTarfield) > 2)
+                                                    if (Similarity > 0.7)
                                                     {
-                                                        pDicCol.Add(lIdx, pTarFeature);
+                                                        //设置表TRA_PT_I_PtTabl的（待匹配编码）字段的值——cell[5]
+                                                        //rowBuffer.set_Value(rowBuffer.Fields.FindField("待匹配图层名称"), pTarfield);
+                                                        rowBuffer.set_Value(rowBuffer.Fields.FindField(tempTar), pTarfield);
+                                                        //20170516注释掉
+                                                        //if (MatchCode(pSrcFeature, pTarFeature))
+                                                        //{
+                                                        //    //设置表TRA_PT_I_PtTabl的（源编码）字段的值——cell[4]
+                                                        //    rowBuffer.set_Value(4, pSrcFeature.get_Value(pSrcFeature.Fields.FindField("GCode")));
+                                                        //    //设置表TRA_PT_I_PtTabl的（待匹配编码）字段的值——cell[5]
+                                                        //    rowBuffer.set_Value(5, pTarFeature.get_Value(pTarFeature.Fields.FindField("GCode")));
+                                                        //}
+
+                                                        ClsIndicatorFun clsIndicatorFun = new ClsIndicatorFun();
+                                                        clsIndicatorFun.SourceFeature = pSrcFeature;
+                                                        clsIndicatorFun.TargetFeature = pTarFeature;
+
+                                                        double matchedPoints = 0;
+                                                        double shape = 0;
+                                                        double polylineRadio = 0;
+
+                                                        int index = 0;
+                                                        //test
+                                                        string test3 = pTarFeature.get_Value(index).ToString();
+
+
+                                                        //2010104注释掉
+                                                        //形状相似度
+                                                        //shape = ClsIndicatorFun.PolylineShapeSimilarValue();
+                                                        ////节点相似度
+                                                        //matchedPoints = ClsIndicatorFun.MatchedPointsSimilarValue(buffer);
+                                                        ////综合相似度
+                                                        //polylineRadio = shape * weight[0] + matchedPoints * weight[1];
+
+                                                        //string shape1 = string.Format("{0:0.00000000}", shape);
+                                                        //string matchedPoints1 = string.Format("{0:0.00000000}", matchedPoints);
+                                                        //string polygonRatio1 = string.Format("{0:0.00000000}", polylineRadio);
+
+                                                        //rowBuffer.set_Value(rowBuffer.Fields.FindField("形状相似度"), shape1);
+                                                        //rowBuffer.set_Value(rowBuffer.Fields.FindField("节点相似度"), matchedPoints1);
+                                                        //rowBuffer.set_Value(rowBuffer.Fields.FindField("综合相似度"), polygonRatio1);
+
+
+                                                        //if (polylineRadio > weight[2])
+                                                        //{
+                                                        //如果两个点之间的距离小于设置的综合相似度
+                                                        //if (distance < weight[0] && MatchCode(pSrcFeature, pTarFeature))
+                                                        //if (MatchCode(pSrcFeature, pTarFeature))
+                                                        //{
+                                                        //设置表TRA_PT_I_PtTabl的（待匹配oid）字段的值为空——cell[2]
+                                                        if (rowBuffer.get_Value(rowBuffer.Fields.FindField("待匹配OID")).ToString() == "")
+                                                        {
+                                                            //设置表TRA_PT_I_PtTabl的（待匹配oid）字段的值——cell[2]
+                                                            rowBuffer.set_Value(rowBuffer.Fields.FindField("待匹配OID"), pTarFeature.get_Value(index));
+                                                        }
+                                                        else
+                                                        {
+                                                            string oids = rowBuffer.get_Value(rowBuffer.Fields.FindField("待匹配OID")).ToString() + ";" + pTarFeature.get_Value(index);
+                                                            //设置表TRA_PT_I_PtTabl的（待匹配oid）字段的值——cell[2]
+                                                            rowBuffer.set_Value(rowBuffer.Fields.FindField("待匹配OID"), oids);
+                                                        }
+
+                                                        //20170912
+                                                        ////设置表TRA_PT_I_PtTabl的（待匹配编码）字段的值——cell[5]
+                                                        //rowBuffer.set_Value(rowBuffer.Fields.FindField("源图层名称"), pSrcFeature.get_Value(pSrcFeature.Fields.FindFieldByAliasName(array[0])));
+                                                        ////设置表TRA_PT_I_PtTabl的（待匹配编码）字段的值——cell[5]
+                                                        //rowBuffer.set_Value(rowBuffer.Fields.FindField("待匹配图层名称"), pTarFeature.get_Value(pTarFeature.Fields.FindFieldByAliasName(array[0])));
+
+                                                        if (!pDicCol.ContainsKey(lIdx))
+                                                        {
+                                                            pDicCol.Add(lIdx, pTarFeature);
+                                                        }
+                                                        lIdx = lIdx + 1;
+                                                        //}
                                                     }
-                                                    lIdx = lIdx + 1;
                                                     //}
-                                                }
-                                                //}
 
+                                                }
+                                            }
+                                            //两个图层的名称字段名称相同
+                                            else
+                                            {
+                                                //string pSrcStrName = pSrcFeature.get_Value(pSrcFeature.Fields.FindFieldByAliasName("名称")).ToString();
+                                                //string pSrcStrName = pSrcFeature.get_Value(pSrcFeature.Fields.FindField(ClsConfig.LayerConfigs[(pSrcFcls  as IDataset).Name].NameField)).ToString();
+                                                //string pSrcStrName = pSrcFeature.get_Value(pSrcFeature.Fields.FindFieldByAliasName(array[0])).ToString();
+                                                string pSrcfield = pSrcFeature.get_Value(pSrcFeature.Fields.FindField(array[k])).ToString();
+                                                //string pTarStrName = pTarFeature.get_Value(pTarFeature.Fields.FindFieldByAliasName("名称")).ToString();
+                                                //string pTarStrName = pTarFeature.get_Value(pTarFeature.Fields.FindField(ClsConfig.LayerConfigs[(pTarFcls as IDataset).Name].NameField)).ToString();
+                                                //string pTarStrName = pTarFeature.get_Value(pTarFeature.Fields.FindFieldByAliasName(array[0])).ToString();
+                                                string pTarfield = pTarFeature.get_Value(pTarFeature.Fields.FindField(array[k])).ToString();
+
+
+
+                                                //if (StringSameOrNot(pSrcStr, pTarStr) > 0)
+                                                if (pSrcfield.Length > 0 && pTarfield.Length > 0)
+                                                {
+                                                    //test
+                                                    //int test0 = StringSameOrNot(pSrcStrName, pTarStrName);
+                                                    int test0 = StringSameOrNot2(pSrcfield, pTarfield);
+
+                                                    string tempSrc = "";
+                                                    string tempTar = "";
+                                                    for (int j = 0; j < resultTable.Fields.FieldCount; j++)
+                                                    {
+                                                        if (resultTable.Fields.get_Field(j).AliasName == "源要素" + array[k])
+                                                        {
+                                                            tempSrc = resultTable.Fields.get_Field(j).AliasName;
+                                                        }
+                                                        if (resultTable.Fields.get_Field(j).AliasName == "待匹配要素" + array[k])
+                                                        {
+                                                            tempTar = resultTable.Fields.get_Field(j).AliasName;
+                                                        }
+                                                    }
+
+                                                    //设置表TRA_PT_I_PtTabl的（待匹配编码）字段的值——cell[5]
+                                                    //rowBuffer.set_Value(rowBuffer.Fields.FindField("源图层名称"), pSrcfield);
+                                                    rowBuffer.set_Value(rowBuffer.Fields.FindField(tempSrc), pSrcfield);
+                                                    double Similarity = ClsCosine.getSimilarity(pSrcfield, pTarfield);
+
+                                                    //if (StringSameOrNot2(pSrcfield, pTarfield) > 2)
+                                                    //if (StringSameOrNot2(pSrcfield, pTarfield) > 2)
+                                                    if (Similarity > 0.7)
+                                                    {
+                                                        //设置表TRA_PT_I_PtTabl的（待匹配编码）字段的值——cell[5]
+                                                        //rowBuffer.set_Value(rowBuffer.Fields.FindField("待匹配图层名称"), pTarfield);
+                                                        rowBuffer.set_Value(rowBuffer.Fields.FindField(tempTar), pTarfield);
+                                                        //20170516注释掉
+                                                        //if (MatchCode(pSrcFeature, pTarFeature))
+                                                        //{
+                                                        //    //设置表TRA_PT_I_PtTabl的（源编码）字段的值——cell[4]
+                                                        //    rowBuffer.set_Value(4, pSrcFeature.get_Value(pSrcFeature.Fields.FindField("GCode")));
+                                                        //    //设置表TRA_PT_I_PtTabl的（待匹配编码）字段的值——cell[5]
+                                                        //    rowBuffer.set_Value(5, pTarFeature.get_Value(pTarFeature.Fields.FindField("GCode")));
+                                                        //}
+
+                                                        int index = 0;
+                                                        ClsIndicatorFun clsIndicatorFun = new ClsIndicatorFun();
+                                                        clsIndicatorFun.SourceFeature = pSrcFeature;
+                                                        clsIndicatorFun.TargetFeature = pTarFeature;
+
+                                                        double matchedPoints = 0;
+                                                        double shape = 0;
+                                                        double polylineRadio = 0;
+
+                                                        //test
+                                                        string test3 = pTarFeature.get_Value(index).ToString();
+
+
+                                                        //20170518注释掉
+                                                        //形状相似度
+                                                        shape = clsIndicatorFun.PolylineShapeSimilarValue();
+                                                        //节点相似度
+                                                        matchedPoints = clsIndicatorFun.MatchedPointsSimilarValue(buffer);
+                                                        //综合相似度
+                                                        polylineRadio = shape * weight[0] + matchedPoints * weight[1];
+
+                                                        string shape1 = string.Format("{0:0.00000000}", shape);
+                                                        string matchedPoints1 = string.Format("{0:0.00000000}", matchedPoints);
+                                                        string polygonRatio1 = string.Format("{0:0.00000000}", polylineRadio);
+
+                                                        rowBuffer.set_Value(rowBuffer.Fields.FindField("形状相似度"), shape1);
+                                                        rowBuffer.set_Value(rowBuffer.Fields.FindField("节点相似度"), matchedPoints1);
+                                                        rowBuffer.set_Value(rowBuffer.Fields.FindField("综合相似度"), polygonRatio1);
+                                                        //if (polylineRadio > weight[2])
+                                                        //{
+                                                        //如果两个点之间的距离小于设置的综合相似度
+                                                        //if (distance < weight[0] && MatchCode(pSrcFeature, pTarFeature))
+                                                        //if (MatchCode(pSrcFeature, pTarFeature))
+                                                        //{
+                                                        //设置表TRA_PT_I_PtTabl的（待匹配oid）字段的值为空——cell[2]
+                                                        if (rowBuffer.get_Value(rowBuffer.Fields.FindField("待匹配OID")).ToString() == "")
+                                                        {
+                                                            //设置表TRA_PT_I_PtTabl的（待匹配oid）字段的值——cell[2]
+                                                            rowBuffer.set_Value(rowBuffer.Fields.FindField("待匹配OID"), pTarFeature.get_Value(index));
+                                                        }
+                                                        else
+                                                        {
+                                                            string oids = rowBuffer.get_Value(rowBuffer.Fields.FindField("待匹配OID")).ToString() + ";" + pTarFeature.get_Value(index);
+                                                            //设置表TRA_PT_I_PtTabl的（待匹配oid）字段的值——cell[2]
+                                                            rowBuffer.set_Value(rowBuffer.Fields.FindField("待匹配OID"), oids);
+                                                        }
+
+                                                        //20170912
+                                                        ////设置表TRA_PT_I_PtTabl的（待匹配编码）字段的值——cell[5]
+                                                        //rowBuffer.set_Value(rowBuffer.Fields.FindField("源图层名称"), pSrcFeature.get_Value(pSrcFeature.Fields.FindFieldByAliasName(array[0])));
+                                                        ////设置表TRA_PT_I_PtTabl的（待匹配编码）字段的值——cell[5]
+                                                        //rowBuffer.set_Value(rowBuffer.Fields.FindField("待匹配图层名称"), pTarFeature.get_Value(pTarFeature.Fields.FindFieldByAliasName(array[0])));
+
+                                                        if (!pDicCol.ContainsKey(lIdx))
+                                                        {
+                                                            pDicCol.Add(lIdx, pTarFeature);
+                                                        }
+                                                        lIdx = lIdx + 1;
+                                                        //}
+                                                    }
+                                                    //}
+
+                                                }
                                             }
                                         }
-                                        else
-                                        {
-                                            //string pSrcStrName = pSrcFeature.get_Value(pSrcFeature.Fields.FindFieldByAliasName("名称")).ToString();
-                                            //string pSrcStrName = pSrcFeature.get_Value(pSrcFeature.Fields.FindField(ClsConfig.LayerConfigs[(pSrcFcls  as IDataset).Name].NameField)).ToString();
-                                            //string pSrcStrName = pSrcFeature.get_Value(pSrcFeature.Fields.FindFieldByAliasName(array[0])).ToString();
-                                            string pSrcfield = pSrcFeature.get_Value(pSrcFeature.Fields.FindField(array[k])).ToString();
-                                            //string pTarStrName = pTarFeature.get_Value(pTarFeature.Fields.FindFieldByAliasName("名称")).ToString();
-                                            //string pTarStrName = pTarFeature.get_Value(pTarFeature.Fields.FindField(ClsConfig.LayerConfigs[(pTarFcls as IDataset).Name].NameField)).ToString();
-                                            //string pTarStrName = pTarFeature.get_Value(pTarFeature.Fields.FindFieldByAliasName(array[0])).ToString();
-                                            string pTarfield = pTarFeature.get_Value(pTarFeature.Fields.FindField(array[k])).ToString();
-                                           
+                                        #region 1126注释
+                                        ////tips:只有几何匹配
+                                        ////没有选择属性匹配，那么只是几何匹配，需要用到反向匹配
+                                        //else
+                                        //{
+                                        //    #region 形状相似度等
+                                        //    //ClsIndicatorFun clsMatching = new ClsIndicatorFun();
+                                        //    //clsMatching.SourceFeature = pSrcFeature;
+                                        //    //clsMatching.TargetFeature = pTarFeature;
+
+                                        //    //double matchedPoints = 0;
+                                        //    //double shape = 0;
+                                        //    //double polylineRadio = 0;
+
+                                        //    //int index = 0;
+                                        //    ////test
+                                        //    //string test3 = pTarFeature.get_Value(index).ToString();
 
 
-                                            //if (StringSameOrNot(pSrcStr, pTarStr) > 0)
-                                            if (pSrcfield.Length > 0 && pTarfield.Length > 0)
-                                            {
-                                                //test
-                                                //int test0 = StringSameOrNot(pSrcStrName, pTarStrName);
-                                                int test0 = StringSameOrNot2(pSrcfield, pTarfield);
+                                        //    ////20170518注释掉
+                                        //    ////形状相似度
+                                        //    //shape = clsMatching.PolylineShapeSimilarValue();
+                                        //    ////节点相似度
+                                        //    //matchedPoints = clsMatching.MatchedPointsSimilarValue(buffer);
+                                        //    ////综合相似度
+                                        //    //polylineRadio = shape * weight[0] + matchedPoints * weight[1];
 
-                                                string tempSrc = "";
-                                                string tempTar = "";
-                                                for (int j = 0; j < resultTable.Fields.FieldCount; j++)
-                                                {
-                                                    if (resultTable.Fields.get_Field(j).AliasName == "源要素" + array[k])
-                                                    {
-                                                        tempSrc = resultTable.Fields.get_Field(j).AliasName;
-                                                    }
-                                                    if (resultTable.Fields.get_Field(j).AliasName == "待匹配要素" + array[k])
-                                                    {
-                                                        tempTar = resultTable.Fields.get_Field(j).AliasName;
-                                                    }
-                                                }
+                                        //    //string shape1 = string.Format("{0:0.00000000}", shape);
+                                        //    //string matchedPoints1 = string.Format("{0:0.00000000}", matchedPoints);
+                                        //    //string polygonRatio1 = string.Format("{0:0.00000000}", polylineRadio);
 
-                                                //设置表TRA_PT_I_PtTabl的（待匹配编码）字段的值——cell[5]
-                                                //rowBuffer.set_Value(rowBuffer.Fields.FindField("源图层名称"), pSrcfield);
-                                                rowBuffer.set_Value(rowBuffer.Fields.FindField(tempSrc), pSrcfield);
-                                                double Similarity = ClsCosine.getSimilarity(pSrcfield, pTarfield);
+                                        //    //rowBuffer.set_Value(rowBuffer.Fields.FindField("形状相似度"), shape1);
+                                        //    //rowBuffer.set_Value(rowBuffer.Fields.FindField("节点相似度"), matchedPoints1);
+                                        //    //rowBuffer.set_Value(rowBuffer.Fields.FindField("综合相似度"), polygonRatio1);
+                                        //    #endregion
 
-                                                //if (StringSameOrNot2(pSrcfield, pTarfield) > 2)
-                                                //if (StringSameOrNot2(pSrcfield, pTarfield) > 2)
-                                                if (Similarity > 0.7)
-                                                {
-                                                    //设置表TRA_PT_I_PtTabl的（待匹配编码）字段的值——cell[5]
-                                                    //rowBuffer.set_Value(rowBuffer.Fields.FindField("待匹配图层名称"), pTarfield);
-                                                    rowBuffer.set_Value(rowBuffer.Fields.FindField(tempTar), pTarfield);
-                                                    //20170516注释掉
-                                                    //if (MatchCode(pSrcFeature, pTarFeature))
-                                                    //{
-                                                    //    //设置表TRA_PT_I_PtTabl的（源编码）字段的值——cell[4]
-                                                    //    rowBuffer.set_Value(4, pSrcFeature.get_Value(pSrcFeature.Fields.FindField("GCode")));
-                                                    //    //设置表TRA_PT_I_PtTabl的（待匹配编码）字段的值——cell[5]
-                                                    //    rowBuffer.set_Value(5, pTarFeature.get_Value(pTarFeature.Fields.FindField("GCode")));
-                                                    //}
+                                        //    //if (polylineRadio > weight[2])
+                                        //    //{
+                                        //    //如果两个点之间的距离小于设置的综合相似度
+                                        //    //if (distance < weight[0] && MatchCode(pSrcFeature, pTarFeature))
+                                        //    //if (MatchCode(pSrcFeature, pTarFeature))
+                                        //    //{
+                                        //    int index = 0;
 
-                                                    ClsMatching clsMatching = new ClsMatching();
-                                                    clsMatching.TUFeature = pSrcFeature;
-                                                    clsMatching.CFeature = pTarFeature;
+                                        //    //设置表TRA_PT_I_PtTabl的（待匹配oid）字段的值为空——cell[2]
+                                        //    if (rowBuffer.get_Value(rowBuffer.Fields.FindField("待匹配OID")).ToString() == "")
+                                        //    {
+                                        //        //设置表TRA_PT_I_PtTabl的（待匹配oid）字段的值——cell[2]
+                                        //        rowBuffer.set_Value(rowBuffer.Fields.FindField("待匹配OID"), pTarFeature.get_Value(index));
+                                        //    }
+                                        //    else
+                                        //    {
+                                        //        string oids = rowBuffer.get_Value(rowBuffer.Fields.FindField("待匹配OID")).ToString() + ";" + pTarFeature.get_Value(index);
+                                        //        //设置表TRA_PT_I_PtTabl的（待匹配oid）字段的值——cell[2]
+                                        //        rowBuffer.set_Value(rowBuffer.Fields.FindField("待匹配OID"), oids);
+                                        //    }
 
-                                                    double matchedPoints = 0;
-                                                    double shape = 0;
-                                                    double polylineRadio = 0;
+                                        //    //20170912
+                                        //    ////设置表TRA_PT_I_PtTabl的（待匹配编码）字段的值——cell[5]
+                                        //    //rowBuffer.set_Value(rowBuffer.Fields.FindField("源图层名称"), pSrcFeature.get_Value(pSrcFeature.Fields.FindFieldByAliasName(array[0])));
+                                        //    ////设置表TRA_PT_I_PtTabl的（待匹配编码）字段的值——cell[5]
+                                        //    //rowBuffer.set_Value(rowBuffer.Fields.FindField("待匹配图层名称"), pTarFeature.get_Value(pTarFeature.Fields.FindFieldByAliasName(array[0])));
 
-                                                    int index = 0;
-                                                    //test
-                                                    string test3 = pTarFeature.get_Value(index).ToString();
+                                        //    if (!pDicCol.ContainsKey(lIdx))
+                                        //    {
+                                        //        pDicCol.Add(lIdx, pTarFeature);
+                                        //    }
+                                        //    lIdx = lIdx + 1;
+                                        //    //}
 
-
-                                                    //20170518注释掉
-                                                    //形状相似度
-                                                    shape = clsMatching.PolylineShapeSimilarValue();
-                                                    //节点相似度
-                                                    matchedPoints = clsMatching.MatchedPointsSimilarValue(buffer);
-                                                    //综合相似度
-                                                    polylineRadio = shape * weight[0] + matchedPoints * weight[1];
-
-                                                    string shape1 = string.Format("{0:0.00000000}", shape);
-                                                    string matchedPoints1 = string.Format("{0:0.00000000}", matchedPoints);
-                                                    string polygonRatio1 = string.Format("{0:0.00000000}", polylineRadio);
-
-                                                    rowBuffer.set_Value(rowBuffer.Fields.FindField("形状相似度"), shape1);
-                                                    rowBuffer.set_Value(rowBuffer.Fields.FindField("节点相似度"), matchedPoints1);
-                                                    rowBuffer.set_Value(rowBuffer.Fields.FindField("综合相似度"), polygonRatio1);
-                                                    //if (polylineRadio > weight[2])
-                                                    //{
-                                                    //如果两个点之间的距离小于设置的综合相似度
-                                                    //if (distance < weight[0] && MatchCode(pSrcFeature, pTarFeature))
-                                                    //if (MatchCode(pSrcFeature, pTarFeature))
-                                                    //{
-                                                    //设置表TRA_PT_I_PtTabl的（待匹配oid）字段的值为空——cell[2]
-                                                    if (rowBuffer.get_Value(rowBuffer.Fields.FindField("待匹配OID")).ToString() == "")
-                                                    {
-                                                        //设置表TRA_PT_I_PtTabl的（待匹配oid）字段的值——cell[2]
-                                                        rowBuffer.set_Value(rowBuffer.Fields.FindField("待匹配OID"), pTarFeature.get_Value(index));
-                                                    }
-                                                    else
-                                                    {
-                                                        string oids = rowBuffer.get_Value(rowBuffer.Fields.FindField("待匹配OID")).ToString() + ";" + pTarFeature.get_Value(index);
-                                                        //设置表TRA_PT_I_PtTabl的（待匹配oid）字段的值——cell[2]
-                                                        rowBuffer.set_Value(rowBuffer.Fields.FindField("待匹配OID"), oids);
-                                                    }
-
-                                                    //20170912
-                                                    ////设置表TRA_PT_I_PtTabl的（待匹配编码）字段的值——cell[5]
-                                                    //rowBuffer.set_Value(rowBuffer.Fields.FindField("源图层名称"), pSrcFeature.get_Value(pSrcFeature.Fields.FindFieldByAliasName(array[0])));
-                                                    ////设置表TRA_PT_I_PtTabl的（待匹配编码）字段的值——cell[5]
-                                                    //rowBuffer.set_Value(rowBuffer.Fields.FindField("待匹配图层名称"), pTarFeature.get_Value(pTarFeature.Fields.FindFieldByAliasName(array[0])));
-
-                                                    if (!pDicCol.ContainsKey(lIdx))
-                                                    {
-                                                        pDicCol.Add(lIdx, pTarFeature);
-                                                    }
-                                                    lIdx = lIdx + 1;
-                                                    //}
-                                                }
-                                                //}
-
-                                            }
-                                        }
+                                        //}
+                                        #endregion
                                     }
-                                    #region 1126注释
-                                    ////tips:只有几何匹配
-                                    ////没有选择属性匹配，那么只是几何匹配，需要用到反向匹配
-                                    //else
+                                }
+                                else
+                                {
+                                    int index = 0;
+
+                                    ClsIndicatorFun clsIndicatorFun = new ClsIndicatorFun();
+                                    clsIndicatorFun.SourceFeature = pSrcFeature;
+                                    clsIndicatorFun.TargetFeature = pTarFeature;
+
+                                    double matchedPoints = 0;
+                                    double shape = 0;
+                                    double polylineRadio = 0;
+                                    //test
+                                    //string test3 = pTarFeature.get_Value(index).ToString();
+                                    //20170518注释掉
+                                    //形状相似度
+                                    shape = clsIndicatorFun.PolylineShapeSimilarValue();
+                                    //节点相似度
+                                    matchedPoints = clsIndicatorFun.MatchedPointsSimilarValue(buffer);
+                                    //综合相似度
+                                    polylineRadio = shape * weight[0] + matchedPoints * weight[1];
+                                    string shape1 = string.Format("{0:0.00000000}", shape);
+                                    string matchedPoints1 = string.Format("{0:0.00000000}", matchedPoints);
+                                    string polygonRatio1 = string.Format("{0:0.00000000}", polylineRadio);
+
+                                    rowBuffer.set_Value(rowBuffer.Fields.FindField("形状相似度"), shape1);
+                                    rowBuffer.set_Value(rowBuffer.Fields.FindField("节点相似度"), matchedPoints1);
+                                    rowBuffer.set_Value(rowBuffer.Fields.FindField("综合相似度"), polygonRatio1);
+                                    //if (polylineRadio > weight[2])
                                     //{
-                                    //    #region 形状相似度等
-                                    //    //ClsMatching clsMatching = new ClsMatching();
-                                    //    //clsMatching.TUFeature = pSrcFeature;
-                                    //    //clsMatching.CFeature = pTarFeature;
+                                    //如果两个点之间的距离小于设置的综合相似度
+                                    //if (distance < weight[0] && MatchCode(pSrcFeature, pTarFeature))
+                                    //if (MatchCode(pSrcFeature, pTarFeature))
+                                    //{
+                                    //设置表TRA_PT_I_PtTabl的（待匹配oid）字段的值为空——cell[2]
+                                    if (rowBuffer.get_Value(rowBuffer.Fields.FindField("待匹配OID")).ToString() == "")
+                                    {
+                                        //设置表TRA_PT_I_PtTabl的（待匹配oid）字段的值——cell[2]
+                                        rowBuffer.set_Value(rowBuffer.Fields.FindField("待匹配OID"), pTarFeature.get_Value(index));
+                                    }
+                                    else
+                                    {
+                                        string oids = rowBuffer.get_Value(rowBuffer.Fields.FindField("待匹配OID")).ToString() + ";" + pTarFeature.get_Value(index);
+                                        //设置表TRA_PT_I_PtTabl的（待匹配oid）字段的值——cell[2]
+                                        rowBuffer.set_Value(rowBuffer.Fields.FindField("待匹配OID"), oids);
+                                    }
 
-                                    //    //double matchedPoints = 0;
-                                    //    //double shape = 0;
-                                    //    //double polylineRadio = 0;
+                                    //20170912
+                                    ////设置表TRA_PT_I_PtTabl的（待匹配编码）字段的值——cell[5]
+                                    //rowBuffer.set_Value(rowBuffer.Fields.FindField("源图层名称"), pSrcFeature.get_Value(pSrcFeature.Fields.FindFieldByAliasName(array[0])));
+                                    ////设置表TRA_PT_I_PtTabl的（待匹配编码）字段的值——cell[5]
+                                    //rowBuffer.set_Value(rowBuffer.Fields.FindField("待匹配图层名称"), pTarFeature.get_Value(pTarFeature.Fields.FindFieldByAliasName(array[0])));
 
-                                    //    //int index = 0;
-                                    //    ////test
-                                    //    //string test3 = pTarFeature.get_Value(index).ToString();
-
-
-                                    //    ////20170518注释掉
-                                    //    ////形状相似度
-                                    //    //shape = clsMatching.PolylineShapeSimilarValue();
-                                    //    ////节点相似度
-                                    //    //matchedPoints = clsMatching.MatchedPointsSimilarValue(buffer);
-                                    //    ////综合相似度
-                                    //    //polylineRadio = shape * weight[0] + matchedPoints * weight[1];
-
-                                    //    //string shape1 = string.Format("{0:0.00000000}", shape);
-                                    //    //string matchedPoints1 = string.Format("{0:0.00000000}", matchedPoints);
-                                    //    //string polygonRatio1 = string.Format("{0:0.00000000}", polylineRadio);
-
-                                    //    //rowBuffer.set_Value(rowBuffer.Fields.FindField("形状相似度"), shape1);
-                                    //    //rowBuffer.set_Value(rowBuffer.Fields.FindField("节点相似度"), matchedPoints1);
-                                    //    //rowBuffer.set_Value(rowBuffer.Fields.FindField("综合相似度"), polygonRatio1);
-                                    //    #endregion
-
-                                    //    //if (polylineRadio > weight[2])
-                                    //    //{
-                                    //    //如果两个点之间的距离小于设置的综合相似度
-                                    //    //if (distance < weight[0] && MatchCode(pSrcFeature, pTarFeature))
-                                    //    //if (MatchCode(pSrcFeature, pTarFeature))
-                                    //    //{
-                                    //    int index = 0;
-
-                                    //    //设置表TRA_PT_I_PtTabl的（待匹配oid）字段的值为空——cell[2]
-                                    //    if (rowBuffer.get_Value(rowBuffer.Fields.FindField("待匹配OID")).ToString() == "")
-                                    //    {
-                                    //        //设置表TRA_PT_I_PtTabl的（待匹配oid）字段的值——cell[2]
-                                    //        rowBuffer.set_Value(rowBuffer.Fields.FindField("待匹配OID"), pTarFeature.get_Value(index));
-                                    //    }
-                                    //    else
-                                    //    {
-                                    //        string oids = rowBuffer.get_Value(rowBuffer.Fields.FindField("待匹配OID")).ToString() + ";" + pTarFeature.get_Value(index);
-                                    //        //设置表TRA_PT_I_PtTabl的（待匹配oid）字段的值——cell[2]
-                                    //        rowBuffer.set_Value(rowBuffer.Fields.FindField("待匹配OID"), oids);
-                                    //    }
-
-                                    //    //20170912
-                                    //    ////设置表TRA_PT_I_PtTabl的（待匹配编码）字段的值——cell[5]
-                                    //    //rowBuffer.set_Value(rowBuffer.Fields.FindField("源图层名称"), pSrcFeature.get_Value(pSrcFeature.Fields.FindFieldByAliasName(array[0])));
-                                    //    ////设置表TRA_PT_I_PtTabl的（待匹配编码）字段的值——cell[5]
-                                    //    //rowBuffer.set_Value(rowBuffer.Fields.FindField("待匹配图层名称"), pTarFeature.get_Value(pTarFeature.Fields.FindFieldByAliasName(array[0])));
-
-                                    //    if (!pDicCol.ContainsKey(lIdx))
-                                    //    {
-                                    //        pDicCol.Add(lIdx, pTarFeature);
-                                    //    }
-                                    //    lIdx = lIdx + 1;
-                                    //    //}
-
-                                    //}
-                                    #endregion
+                                    if (!pDicCol.ContainsKey(lIdx))
+                                    {
+                                        pDicCol.Add(lIdx, pTarFeature);
+                                    }
+                                    lIdx = lIdx + 1;
                                 }
                             }
                             else if (pTarFeature.Shape.GeometryType == esriGeometryType.esriGeometryPoint)
                             {
-                                //TODO ：分号4
-                                string[] array = fields.Split(';');
-                                string test1 = array[0];
-
-                                for (int k = 0; k < array.Length; k++)
+                                if (fields.Length > 0)
                                 {
-                                    //选择多个字段
-                                    if (array[k].Length > 0)
+                                    //TODO ：分号4
+                                    string[] array = fields.Split(';');
+                                    //string test1 = array[0];
+
+                                    for (int k = 0; k < array.Length; k++)
                                     {
-                                        //选择一个字段，但是远图层和待匹配图层的字段名称不一样
-                                        if (array[k].Contains(":"))
+                                        //选择多个字段
+                                        if (array[k].Length > 0)
                                         {
-                                            string[] arr = ClsStatic.SplitStrColon(array[k]);
-                                            string pSrcfield = pSrcFeature.get_Value(pSrcFeature.Fields.FindField(arr[0])).ToString();
-                                            string pTarfield = pTarFeature.get_Value(pTarFeature.Fields.FindField(arr[1])).ToString();
-                                            //if (StringSameOrNot(pSrcStr, pTarStr) > 0)
-                                            //if (pSrcfield.Length > 0 && pTarfield.Length > 0 && ClsCosine.hasChinese(pSrcfield) && ClsCosine.hasChinese(pTarfield))
-                                            if (pSrcfield.Length > 0 && pTarfield.Length > 0)
+                                            //选择一个字段，但是源图层和待匹配图层的字段名称不一样
+                                            if (array[k].Contains(":"))
                                             {
-                                                //test
-                                                //int test0 = StringSameOrNot(pSrcfield, pTarfield);
-
-                                                string tempSrc = "";
-                                                string tempTar = "";
-                                                for (int j = 0; j < resultTable.Fields.FieldCount; j++)
+                                                string[] arr = ClsStatic.SplitStrColon(array[k]);
+                                                string pSrcfield = pSrcFeature.get_Value(pSrcFeature.Fields.FindField(arr[0])).ToString();
+                                                string pTarfield = pTarFeature.get_Value(pTarFeature.Fields.FindField(arr[1])).ToString();
+                                                //if (StringSameOrNot(pSrcStr, pTarStr) > 0)
+                                                //if (pSrcfield.Length > 0 && pTarfield.Length > 0 && ClsCosine.hasChinese(pSrcfield) && ClsCosine.hasChinese(pTarfield))
+                                                if (pSrcfield.Length > 0 && pTarfield.Length > 0)
                                                 {
-                                                    if (resultTable.Fields.get_Field(j).Name == "源要素" + arr[0])
+                                                    //test
+                                                    //int test0 = StringSameOrNot(pSrcfield, pTarfield);
+
+                                                    string tempSrcName = "";
+                                                    string tempTarName = "";
+                                                    for (int j = 0; j < resultTable.Fields.FieldCount; j++)
                                                     {
-                                                        tempSrc = resultTable.Fields.get_Field(j).Name;
+                                                        if (resultTable.Fields.get_Field(j).Name == "源要素" + arr[0])
+                                                        {
+                                                            tempSrcName = resultTable.Fields.get_Field(j).Name;
+                                                        }
+                                                        if (resultTable.Fields.get_Field(j).Name == "待匹配要素" + arr[1])
+                                                        {
+                                                            tempTarName = resultTable.Fields.get_Field(j).Name;
+                                                        }
                                                     }
-                                                    if (resultTable.Fields.get_Field(j).Name == "待匹配要素" + arr[1])
-                                                    {
-                                                        tempTar = resultTable.Fields.get_Field(j).Name;
-                                                    }
-                                                }
 
-                                                //设置表TRA_PT_I_PtTabl的（待匹配编码）字段的值——cell[5]
-                                                //rowBuffer.set_Value(rowBuffer.Fields.FindField("源图层名称"), pSrcfield);
-                                                rowBuffer.set_Value(rowBuffer.Fields.FindField(tempSrc), pSrcfield);
-
-
-                                                double Similarity = ClsCosine.getSimilarity(pSrcfield, pTarfield);
-
-                                                //if (StringSameOrNot(pSrcfield, pTarfield) > 1)
-                                                if (Similarity >= 0.7)
-                                                {
                                                     //设置表TRA_PT_I_PtTabl的（待匹配编码）字段的值——cell[5]
-                                                    //rowBuffer.set_Value(rowBuffer.Fields.FindField("待匹配图层名称"), pTarfield);
-                                                    rowBuffer.set_Value(rowBuffer.Fields.FindField(tempTar), pTarfield);
-                                                    //20170516注释掉
-                                                    //if (MatchCode(pSrcFeature, pTarFeature))
-                                                    //{
-                                                    //    //设置表TRA_PT_I_PtTabl的（源编码）字段的值——cell[4]
-                                                    //    rowBuffer.set_Value(4, pSrcFeature.get_Value(pSrcFeature.Fields.FindField("GCode")));
-                                                    //    //设置表TRA_PT_I_PtTabl的（待匹配编码）字段的值——cell[5]
-                                                    //    rowBuffer.set_Value(5, pTarFeature.get_Value(pTarFeature.Fields.FindField("GCode")));
-                                                    //}
-                                                    ClsMatching clsMatching = new ClsMatching();
-                                                    clsMatching.TUFeature = pSrcFeature;
-                                                    clsMatching.CFeature = pTarFeature;
+                                                    //rowBuffer.set_Value(rowBuffer.Fields.FindField("源图层名称"), pSrcfield);
+                                                    rowBuffer.set_Value(rowBuffer.Fields.FindField(tempSrcName), pSrcfield);
 
-                                                    double distance = 0;
-                                                    int index = 0;
-                                                    distance = clsMatching.PointDistance();
-                                                    string distance1 = string.Format("{0:0.0000}", 1 - distance);
-                                                    //设置表TRA_PT_I_PtTabl的（位置相似度）字段的值——cell[6]
-                                                    rowBuffer.set_Value(rowBuffer.Fields.FindField("位置相似度"), distance1);
 
-                                                    //如果两个点之间的距离小于设置的综合相似度
-                                                    //if (distance < weight[0] && MatchCode(pSrcFeature, pTarFeature))
-                                                    //if (MatchCode(pSrcFeature, pTarFeature))
-                                                    //{
-                                                    //设置表TRA_PT_I_PtTabl的（待匹配oid）字段的值为空——cell[2]
-                                                    if (rowBuffer.get_Value(rowBuffer.Fields.FindField("待匹配OID")).ToString() == "")
+                                                    double Similarity = ClsCosine.getSimilarity(pSrcfield, pTarfield);
+
+                                                    //if (StringSameOrNot(pSrcfield, pTarfield) > 1)
+                                                    if (Similarity >= 0.7)
                                                     {
-                                                        //设置表TRA_PT_I_PtTabl的（待匹配oid）字段的值——cell[2]
-                                                        rowBuffer.set_Value(rowBuffer.Fields.FindField("待匹配OID"), pTarFeature.get_Value(index));
-                                                    }
-                                                    else
-                                                    {
-                                                        string oids = rowBuffer.get_Value(rowBuffer.Fields.FindField("待匹配OID")).ToString() + ";" + pTarFeature.get_Value(index);
-                                                        //设置表TRA_PT_I_PtTabl的（待匹配oid）字段的值——cell[2]
-                                                        rowBuffer.set_Value(rowBuffer.Fields.FindField("待匹配OID"), oids);
-                                                    }
+                                                        //设置表TRA_PT_I_PtTabl的（待匹配编码）字段的值——cell[5]
+                                                        //rowBuffer.set_Value(rowBuffer.Fields.FindField("待匹配图层名称"), pTarfield);
+                                                        rowBuffer.set_Value(rowBuffer.Fields.FindField(tempTarName), pTarfield);
+                                                        //20170516注释掉
+                                                        //if (MatchCode(pSrcFeature, pTarFeature))
+                                                        //{
+                                                        //    //设置表TRA_PT_I_PtTabl的（源编码）字段的值——cell[4]
+                                                        //    rowBuffer.set_Value(4, pSrcFeature.get_Value(pSrcFeature.Fields.FindField("GCode")));
+                                                        //    //设置表TRA_PT_I_PtTabl的（待匹配编码）字段的值——cell[5]
+                                                        //    rowBuffer.set_Value(5, pTarFeature.get_Value(pTarFeature.Fields.FindField("GCode")));
+                                                        //}
+                                                        int index = 0;
 
-                                                    //20170912
-                                                    ////设置表TRA_PT_I_PtTabl的（待匹配编码）字段的值——cell[5]
-                                                    //rowBuffer.set_Value(rowBuffer.Fields.FindField("源图层名称"), pSrcFeature.get_Value(pSrcFeature.Fields.FindFieldByAliasName(array[0])));
-                                                    ////设置表TRA_PT_I_PtTabl的（待匹配编码）字段的值——cell[5]
-                                                    //rowBuffer.set_Value(rowBuffer.Fields.FindField("待匹配图层名称"), pTarFeature.get_Value(pTarFeature.Fields.FindFieldByAliasName(array[0])));
+                                                        #region 计算精度
+                                                        //ClsIndicatorFun clsMatching = new ClsIndicatorFun();
+                                                        //clsMatching.SourceFeature = pSrcFeature;
+                                                        //clsMatching.TargetFeature = pTarFeature;
 
-                                                    pDicCol.Add(lIdx, pTarFeature);
-                                                    lIdx = lIdx + 1;
-                                                    //}
+                                                        //double distance = 0;
+                                                        //distance = clsMatching.PointDistance();
+                                                        //string distance1 = string.Format("{0:0.0000}", 1 - distance);
+                                                        ////设置表TRA_PT_I_PtTabl的（位置相似度）字段的值——cell[6]
+                                                        //rowBuffer.set_Value(rowBuffer.Fields.FindField("位置相似度"), distance1);
+                                                        #endregion
+
+                                                        //如果两个点之间的距离小于设置的综合相似度
+                                                        //if (distance < weight[0] && MatchCode(pSrcFeature, pTarFeature))
+                                                        //if (MatchCode(pSrcFeature, pTarFeature))
+                                                        //{
+                                                        //设置表TRA_PT_I_PtTabl的（待匹配oid）字段的值为空——cell[2]
+                                                        if (rowBuffer.get_Value(rowBuffer.Fields.FindField("待匹配OID")).ToString() == "")
+                                                        {
+                                                            //设置表TRA_PT_I_PtTabl的（待匹配oid）字段的值——cell[2]
+                                                            rowBuffer.set_Value(rowBuffer.Fields.FindField("待匹配OID"), pTarFeature.get_Value(index));
+                                                        }
+                                                        else
+                                                        {
+                                                            string oids = rowBuffer.get_Value(rowBuffer.Fields.FindField("待匹配OID")).ToString() + ";" + pTarFeature.get_Value(index);
+                                                            //设置表TRA_PT_I_PtTabl的（待匹配oid）字段的值——cell[2]
+                                                            rowBuffer.set_Value(rowBuffer.Fields.FindField("待匹配OID"), oids);
+                                                        }
+
+                                                        //20170912
+                                                        ////设置表TRA_PT_I_PtTabl的（待匹配编码）字段的值——cell[5]
+                                                        //rowBuffer.set_Value(rowBuffer.Fields.FindField("源图层名称"), pSrcFeature.get_Value(pSrcFeature.Fields.FindFieldByAliasName(array[0])));
+                                                        ////设置表TRA_PT_I_PtTabl的（待匹配编码）字段的值——cell[5]
+                                                        //rowBuffer.set_Value(rowBuffer.Fields.FindField("待匹配图层名称"), pTarFeature.get_Value(pTarFeature.Fields.FindFieldByAliasName(array[0])));
+
+                                                        pDicCol.Add(lIdx, pTarFeature);
+                                                        lIdx = lIdx + 1;
+                                                        //}
+                                                    }
                                                 }
                                             }
-                                        }
-                                        else
-                                        {
-                                            //string pSrcStrName = pSrcFeature.get_Value(pSrcFeature.Fields.FindFieldByAliasName("名称")).ToString();
-                                            //string pSrcStrName = pSrcFeature.get_Value(pSrcFeature.Fields.FindField(ClsConfig.LayerConfigs[(pSrcFcls  as IDataset).Name].NameField)).ToString();
-                                            //string pSrcStrName = pSrcFeature.get_Value(pSrcFeature.Fields.FindFieldByAliasName(array[0])).ToString();
-                                            string pSrcfield = pSrcFeature.get_Value(pSrcFeature.Fields.FindField(array[k])).ToString();
-                                            //string pTarStrName = pTarFeature.get_Value(pTarFeature.Fields.FindFieldByAliasName("名称")).ToString();
-                                            //string pTarStrName = pTarFeature.get_Value(pTarFeature.Fields.FindField(ClsConfig.LayerConfigs[(pTarFcls as IDataset).Name].NameField)).ToString();
-                                            //string pTarStrName = pTarFeature.get_Value(pTarFeature.Fields.FindFieldByAliasName(array[0])).ToString();
-                                            string pTarfield = pTarFeature.get_Value(pTarFeature.Fields.FindField(array[k])).ToString();
-                                            //test
-                                            //int test0 = StringSameOrNot(pSrcStrName, pTarStrName);
-                                            int test0 = StringSameOrNot(pSrcfield, pTarfield);
-
-
-
-                                            //if (StringSameOrNot(pSrcStr, pTarStr) > 0)
-                                            if (pSrcfield.Length > 0 && pTarfield.Length > 0)
+                                            //选择一个字段，源图层和待匹配图层的字段名称一样
+                                            else
                                             {
-                                                string tempSrc = "";
-                                                string tempTar = "";
-                                                for (int j = 0; j < resultTable.Fields.FieldCount; j++)
-                                                {
-                                                    if (resultTable.Fields.get_Field(j).AliasName == "源要素" + array[k])
-                                                    {
-                                                        tempSrc = resultTable.Fields.get_Field(j).AliasName;
-                                                    }
-                                                    if (resultTable.Fields.get_Field(j).AliasName == "待匹配要素" + array[k])
-                                                    {
-                                                        tempTar = resultTable.Fields.get_Field(j).AliasName;
-                                                    }
-                                                }
+                                                //string pSrcStrName = pSrcFeature.get_Value(pSrcFeature.Fields.FindFieldByAliasName("名称")).ToString();
+                                                //string pSrcStrName = pSrcFeature.get_Value(pSrcFeature.Fields.FindField(ClsConfig.LayerConfigs[(pSrcFcls  as IDataset).Name].NameField)).ToString();
+                                                //string pSrcStrName = pSrcFeature.get_Value(pSrcFeature.Fields.FindFieldByAliasName(array[0])).ToString();
+                                                string pSrcfield = pSrcFeature.get_Value(pSrcFeature.Fields.FindField(array[k])).ToString();
+                                                //string pTarStrName = pTarFeature.get_Value(pTarFeature.Fields.FindFieldByAliasName("名称")).ToString();
+                                                //string pTarStrName = pTarFeature.get_Value(pTarFeature.Fields.FindField(ClsConfig.LayerConfigs[(pTarFcls as IDataset).Name].NameField)).ToString();
+                                                //string pTarStrName = pTarFeature.get_Value(pTarFeature.Fields.FindFieldByAliasName(array[0])).ToString();
+                                                string pTarfield = pTarFeature.get_Value(pTarFeature.Fields.FindField(array[k])).ToString();
+                                                //test
+                                                //int test0 = StringSameOrNot(pSrcStrName, pTarStrName);
+                                                int test0 = StringSameOrNot(pSrcfield, pTarfield);
 
-                                                //设置表TRA_PT_I_PtTabl的（待匹配编码）字段的值——cell[5]
-                                                //rowBuffer.set_Value(rowBuffer.Fields.FindField("源图层名称"), pSrcfield);
-                                                rowBuffer.set_Value(rowBuffer.Fields.FindField(tempSrc), pSrcfield);
 
-                                                if (StringSameOrNot(pSrcfield, pTarfield) > 1)
+
+                                                //if (StringSameOrNot(pSrcStr, pTarStr) > 0)
+                                                if (pSrcfield.Length > 0 && pTarfield.Length > 0)
                                                 {
+                                                    string tempSrc = "";
+                                                    string tempTar = "";
+                                                    for (int j = 0; j < resultTable.Fields.FieldCount; j++)
+                                                    {
+                                                        if (resultTable.Fields.get_Field(j).AliasName == "源要素" + array[k])
+                                                        {
+                                                            tempSrc = resultTable.Fields.get_Field(j).AliasName;
+                                                        }
+                                                        if (resultTable.Fields.get_Field(j).AliasName == "待匹配要素" + array[k])
+                                                        {
+                                                            tempTar = resultTable.Fields.get_Field(j).AliasName;
+                                                        }
+                                                    }
+
                                                     //设置表TRA_PT_I_PtTabl的（待匹配编码）字段的值——cell[5]
-                                                    //rowBuffer.set_Value(rowBuffer.Fields.FindField("待匹配图层名称"), pTarfield);
-                                                    rowBuffer.set_Value(rowBuffer.Fields.FindField(tempTar), pTarfield);
-                                                    //20170516注释掉
-                                                    //if (MatchCode(pSrcFeature, pTarFeature))
-                                                    //{
-                                                    //    //设置表TRA_PT_I_PtTabl的（源编码）字段的值——cell[4]
-                                                    //    rowBuffer.set_Value(4, pSrcFeature.get_Value(pSrcFeature.Fields.FindField("GCode")));
-                                                    //    //设置表TRA_PT_I_PtTabl的（待匹配编码）字段的值——cell[5]
-                                                    //    rowBuffer.set_Value(5, pTarFeature.get_Value(pTarFeature.Fields.FindField("GCode")));
-                                                    //}
-                                                    ClsMatching clsMatching = new ClsMatching();
-                                                    clsMatching.TUFeature = pSrcFeature;
-                                                    clsMatching.CFeature = pTarFeature;
+                                                    //rowBuffer.set_Value(rowBuffer.Fields.FindField("源图层名称"), pSrcfield);
+                                                    rowBuffer.set_Value(rowBuffer.Fields.FindField(tempSrc), pSrcfield);
 
-                                                    double distance = 0;
-                                                    int index = 0;
-                                                    distance = clsMatching.PointDistance();
-                                                    string distance1 = string.Format("{0:0.0000}", 1 - distance);
-                                                    //设置表TRA_PT_I_PtTabl的（位置相似度）字段的值——cell[6]
-                                                    rowBuffer.set_Value(rowBuffer.Fields.FindField("位置相似度"), distance1);
-
-                                                    //如果两个点之间的距离小于设置的综合相似度
-                                                    //if (distance < weight[0] && MatchCode(pSrcFeature, pTarFeature))
-                                                    //if (MatchCode(pSrcFeature, pTarFeature))
-                                                    //{
-                                                    //设置表TRA_PT_I_PtTabl的（待匹配oid）字段的值为空——cell[2]
-                                                    if (rowBuffer.get_Value(rowBuffer.Fields.FindField("待匹配OID")).ToString() == "")
+                                                    if (StringSameOrNot(pSrcfield, pTarfield) > 1)
                                                     {
-                                                        //设置表TRA_PT_I_PtTabl的（待匹配oid）字段的值——cell[2]
-                                                        rowBuffer.set_Value(rowBuffer.Fields.FindField("待匹配OID"), pTarFeature.get_Value(index));
-                                                    }
-                                                    else
-                                                    {
-                                                        string oids = rowBuffer.get_Value(rowBuffer.Fields.FindField("待匹配OID")).ToString() + ";" + pTarFeature.get_Value(index);
-                                                        //设置表TRA_PT_I_PtTabl的（待匹配oid）字段的值——cell[2]
-                                                        rowBuffer.set_Value(rowBuffer.Fields.FindField("待匹配OID"), oids);
-                                                    }
+                                                        //设置表TRA_PT_I_PtTabl的（待匹配编码）字段的值——cell[5]
+                                                        //rowBuffer.set_Value(rowBuffer.Fields.FindField("待匹配图层名称"), pTarfield);
+                                                        rowBuffer.set_Value(rowBuffer.Fields.FindField(tempTar), pTarfield);
+                                                        //20170516注释掉
+                                                        //if (MatchCode(pSrcFeature, pTarFeature))
+                                                        //{
+                                                        //    //设置表TRA_PT_I_PtTabl的（源编码）字段的值——cell[4]
+                                                        //    rowBuffer.set_Value(4, pSrcFeature.get_Value(pSrcFeature.Fields.FindField("GCode")));
+                                                        //    //设置表TRA_PT_I_PtTabl的（待匹配编码）字段的值——cell[5]
+                                                        //    rowBuffer.set_Value(5, pTarFeature.get_Value(pTarFeature.Fields.FindField("GCode")));
+                                                        //}
+                                                        ClsIndicatorFun clsIndicatorFun = new ClsIndicatorFun();
+                                                        clsIndicatorFun.SourceFeature = pSrcFeature;
+                                                        clsIndicatorFun.TargetFeature = pTarFeature;
 
-                                                    //20170912
-                                                    ////设置表TRA_PT_I_PtTabl的（待匹配编码）字段的值——cell[5]
-                                                    //rowBuffer.set_Value(rowBuffer.Fields.FindField("源图层名称"), pSrcFeature.get_Value(pSrcFeature.Fields.FindFieldByAliasName(array[0])));
-                                                    ////设置表TRA_PT_I_PtTabl的（待匹配编码）字段的值——cell[5]
-                                                    //rowBuffer.set_Value(rowBuffer.Fields.FindField("待匹配图层名称"), pTarFeature.get_Value(pTarFeature.Fields.FindFieldByAliasName(array[0])));
+                                                        double distance = 0;
+                                                        int index = 0;
+                                                        distance = clsIndicatorFun.PointDistance();
+                                                        string distance1 = string.Format("{0:0.0000}", 1 - distance);
+                                                        //设置表TRA_PT_I_PtTabl的（位置相似度）字段的值——cell[6]
+                                                        rowBuffer.set_Value(rowBuffer.Fields.FindField("位置相似度"), distance1);
 
-                                                    pDicCol.Add(lIdx, pTarFeature);
-                                                    lIdx = lIdx + 1;
-                                                    //}
+                                                        //如果两个点之间的距离小于设置的综合相似度
+                                                        //if (distance < weight[0] && MatchCode(pSrcFeature, pTarFeature))
+                                                        //if (MatchCode(pSrcFeature, pTarFeature))
+                                                        //{
+                                                        //设置表TRA_PT_I_PtTabl的（待匹配oid）字段的值为空——cell[2]
+                                                        if (rowBuffer.get_Value(rowBuffer.Fields.FindField("待匹配OID")).ToString() == "")
+                                                        {
+                                                            //设置表TRA_PT_I_PtTabl的（待匹配oid）字段的值——cell[2]
+                                                            rowBuffer.set_Value(rowBuffer.Fields.FindField("待匹配OID"), pTarFeature.get_Value(index));
+                                                        }
+                                                        else
+                                                        {
+                                                            string oids = rowBuffer.get_Value(rowBuffer.Fields.FindField("待匹配OID")).ToString() + ";" + pTarFeature.get_Value(index);
+                                                            //设置表TRA_PT_I_PtTabl的（待匹配oid）字段的值——cell[2]
+                                                            rowBuffer.set_Value(rowBuffer.Fields.FindField("待匹配OID"), oids);
+                                                        }
+
+                                                        //20170912
+                                                        ////设置表TRA_PT_I_PtTabl的（待匹配编码）字段的值——cell[5]
+                                                        //rowBuffer.set_Value(rowBuffer.Fields.FindField("源图层名称"), pSrcFeature.get_Value(pSrcFeature.Fields.FindFieldByAliasName(array[0])));
+                                                        ////设置表TRA_PT_I_PtTabl的（待匹配编码）字段的值——cell[5]
+                                                        //rowBuffer.set_Value(rowBuffer.Fields.FindField("待匹配图层名称"), pTarFeature.get_Value(pTarFeature.Fields.FindFieldByAliasName(array[0])));
+
+                                                        pDicCol.Add(lIdx, pTarFeature);
+                                                        lIdx = lIdx + 1;
+                                                        //}
+                                                    }
                                                 }
                                             }
                                         }
                                     }
                                 }
+                                else
+                                {
+                                    int index = 0;
+                                    #region 计算精度
+
+                                    //ClsIndicatorFun clsMatching = new ClsIndicatorFun();
+                                    //clsMatching.SourceFeature = pSrcFeature;
+                                    //clsMatching.TargetFeature = pTarFeature;
+
+                                    //double distance = 0;
+                                    //distance = clsMatching.PointDistance();
+                                    //string distance1 = string.Format("{0:0.0000}", 1 - distance);
+                                    ////设置表TRA_PT_I_PtTabl的（位置相似度）字段的值——cell[6]
+                                    //rowBuffer.set_Value(rowBuffer.Fields.FindField("位置相似度"), distance1);
+                                    #endregion
 
 
+                                    if (rowBuffer.get_Value(rowBuffer.Fields.FindField("待匹配OID")).ToString() == "")
+                                    {
+                                        //设置表TRA_PT_I_PtTabl的（待匹配oid）字段的值——cell[2]
+                                        rowBuffer.set_Value(rowBuffer.Fields.FindField("待匹配OID"), pTarFeature.get_Value(index));
+                                    }
+                                    else
+                                    {
+                                        string oids = rowBuffer.get_Value(rowBuffer.Fields.FindField("待匹配OID")).ToString() + ";" + pTarFeature.get_Value(index);
+                                        //设置表TRA_PT_I_PtTabl的（待匹配oid）字段的值——cell[2]
+                                        rowBuffer.set_Value(rowBuffer.Fields.FindField("待匹配OID"), oids);
+                                    }
+                                    pDicCol.Add(lIdx, pTarFeature);
+                                    lIdx = lIdx + 1;
+                                }
                             }
                         }
                         pTarFeature = pTarCursor.NextFeature();
@@ -909,7 +1009,6 @@ namespace ZJGISDataUpdating
                     //找不到对应要素的情况,即为新增的情况。遍历TU找TE中的要素，与以前项目的更新程序查找相反。
                     if (pDicCol.Count == 0)
                     {
-
                         lOutFldIndex = rowBuffer.Fields.FindField("变化标记");
                         if (lOutFldIndex > -1)
                         {
@@ -1102,6 +1201,7 @@ namespace ZJGISDataUpdating
             //return functionReturnValue;
 
         }
+        #endregion
         /// <summary>
         /// 几何匹配
         /// </summary>
@@ -1255,9 +1355,9 @@ namespace ZJGISDataUpdating
                                     rowBuffer.set_Value(4, pSrcFeature.get_Value(pSrcFeature.Fields.FindField("GCode")));
                                     rowBuffer.set_Value(5, pTarFeature.get_Value(pTarFeature.Fields.FindField("GCode")));
                                 }
-                                ClsMatching clsMatching = new ClsMatching();
-                                clsMatching.TUFeature = pSrcFeature;
-                                clsMatching.CFeature = pTarFeature;
+                                ClsIndicatorFun clsIndicatorFun = new ClsIndicatorFun();
+                                clsIndicatorFun.SourceFeature = pSrcFeature;
+                                clsIndicatorFun.TargetFeature = pTarFeature;
 
                                 double center = 0;
                                 double area = 0;
@@ -1266,9 +1366,9 @@ namespace ZJGISDataUpdating
                                 int index = 0;
                                 //判断匹配方法
 
-                                shape = clsMatching.ShapeSimilarValue();
-                                area = clsMatching.AreaSimilarValue();
-                                center = clsMatching.CenterSimilarValue();
+                                shape = clsIndicatorFun.ShapeSimilarValue();
+                                area = clsIndicatorFun.AreaSimilarValue();
+                                center = clsIndicatorFun.CenterSimilarValue();
                                 polygonRatio = shape * weight[0] + area * weight[2] + center * weight[1];
                                 string shape1 = string.Format("{0:0.00000000}", shape);
                                 string area1 = string.Format("{0:0.00000000}", area);
@@ -1350,9 +1450,9 @@ namespace ZJGISDataUpdating
                                                 //    rowBuffer.set_Value(5, pTarFeature.get_Value(pTarFeature.Fields.FindField("GCode")));
                                                 //}
 
-                                                ClsMatching clsMatching = new ClsMatching();
-                                                clsMatching.TUFeature = pSrcFeature;
-                                                clsMatching.CFeature = pTarFeature;
+                                                ClsIndicatorFun clsIndicatorFun = new ClsIndicatorFun();
+                                                clsIndicatorFun.SourceFeature = pSrcFeature;
+                                                clsIndicatorFun.TargetFeature = pTarFeature;
 
                                                 double matchedPoints = 0;
                                                 double shape = 0;
@@ -1365,9 +1465,9 @@ namespace ZJGISDataUpdating
 
                                                 //20170518注释掉
                                                 //形状相似度
-                                                shape = clsMatching.PolylineShapeSimilarValue();
+                                                shape = clsIndicatorFun.PolylineShapeSimilarValue();
                                                 //节点相似度
-                                                matchedPoints = clsMatching.MatchedPointsSimilarValue(buffer);
+                                                matchedPoints = clsIndicatorFun.MatchedPointsSimilarValue(buffer);
                                                 //综合相似度
                                                 polylineRadio = shape * weight[0] + matchedPoints * weight[1];
 
@@ -1418,9 +1518,9 @@ namespace ZJGISDataUpdating
                                     else  //没有选择属性匹配，那么只是几何匹配，需要用到反向匹配
                                     {
                                         #region 形状相似度等
-                                        //ClsMatching clsMatching = new ClsMatching();
-                                        //clsMatching.TUFeature = pSrcFeature;
-                                        //clsMatching.CFeature = pTarFeature;
+                                        //ClsIndicatorFun clsMatching = new ClsIndicatorFun();
+                                        //clsMatching.SourceFeature = pSrcFeature;
+                                        //clsMatching.TargetFeature = pTarFeature;
 
                                         //double matchedPoints = 0;
                                         //double shape = 0;
@@ -1498,7 +1598,7 @@ namespace ZJGISDataUpdating
                                         //string pSrcStrName = pSrcFeature.get_Value(pSrcFeature.Fields.FindField(ClsConfig.LayerConfigs[(pSrcFcls  as IDataset).Name].NameField)).ToString();
                                         //string pSrcStrName = pSrcFeature.get_Value(pSrcFeature.Fields.FindFieldByAliasName(array[0])).ToString();
                                         //string pSrcFeatureName = pSrcFeature.get_Value(pSrcFeature.Fields.FindFieldByAliasName(array[k])).ToString();
-                                        string pSrcFeatureName = pSrcFeature.get_Value(pSrcFeature.Fields.FindField(ClsConfig.LayerConfigs[(pSrcFcls  as IDataset).Name].NameField)).ToString();
+                                        string pSrcFeatureName = pSrcFeature.get_Value(pSrcFeature.Fields.FindField(ClsConfig.LayerConfigs[(pSrcFcls as IDataset).Name].NameField)).ToString();
                                         //string pTarStrName = pTarFeature.get_Value(pTarFeature.Fields.FindFieldByAliasName("名称")).ToString();
                                         //string pTarStrName = pTarFeature.get_Value(pTarFeature.Fields.FindField(ClsConfig.LayerConfigs[(pTarFcls as IDataset).Name].NameField)).ToString();
                                         //string pTarStrName = pTarFeature.get_Value(pTarFeature.Fields.FindFieldByAliasName(array[0])).ToString();
@@ -1546,9 +1646,9 @@ namespace ZJGISDataUpdating
                                                 //}
 
 
-                                                //ClsMatching clsMatching = new ClsMatching();
-                                                //clsMatching.TUFeature = pSrcFeature;
-                                                //clsMatching.CFeature = pTarFeature;
+                                                //ClsIndicatorFun clsMatching = new ClsIndicatorFun();
+                                                //clsMatching.SourceFeature = pSrcFeature;
+                                                //clsMatching.TargetFeature = pTarFeature;
 
                                                 //double distance = 0;
                                                 int index = 0;
@@ -1971,9 +2071,9 @@ namespace ZJGISDataUpdating
                                     rowBuffer.set_Value(5, pTarFeature.get_Value(pTarFeature.Fields.FindField("GCode")));
                                 }
 
-                                ClsMatching clsMatching = new ClsMatching();
-                                clsMatching.TUFeature = pSrcFeature;
-                                clsMatching.CFeature = pTarFeature;
+                                ClsIndicatorFun clsIndicatorFun = new ClsIndicatorFun();
+                                clsIndicatorFun.SourceFeature = pSrcFeature;
+                                clsIndicatorFun.TargetFeature = pTarFeature;
 
                                 double center = 0;
                                 double area = 0;
@@ -1983,9 +2083,9 @@ namespace ZJGISDataUpdating
 
                                 //判断匹配方法
 
-                                shape = clsMatching.ShapeSimilarValue();
-                                area = clsMatching.AreaSimilarValue();
-                                center = clsMatching.CenterSimilarValue();
+                                shape = clsIndicatorFun.ShapeSimilarValue();
+                                area = clsIndicatorFun.AreaSimilarValue();
+                                center = clsIndicatorFun.CenterSimilarValue();
                                 polygonRatio = shape * weight[0] + area * weight[2] + center * weight[1];
                                 string shape1 = string.Format("{0:0.00000000}", shape);
                                 string area1 = string.Format("{0:0.00000000}", area);
@@ -2014,9 +2114,9 @@ namespace ZJGISDataUpdating
                             {
                                 if ((pSrcFeature.Shape != null))
                                 {
-                                    ClsMatching clsMatching = new ClsMatching();
-                                    clsMatching.TUFeature = pSrcFeature;
-                                    clsMatching.CFeature = pTarFeature;
+                                    ClsIndicatorFun clsIndicatorFun = new ClsIndicatorFun();
+                                    clsIndicatorFun.SourceFeature = pSrcFeature;
+                                    clsIndicatorFun.TargetFeature = pTarFeature;
 
                                     double matchedPoints = 0;
                                     double shape = 0;
@@ -2025,7 +2125,7 @@ namespace ZJGISDataUpdating
                                     string oid = pTarFeature.get_Value(index).ToString();
                                     if (matchedMode == 1)
                                     {
-                                        shape = clsMatching.PolylineShapeSimilarValue();
+                                        shape = clsIndicatorFun.PolylineShapeSimilarValue();
                                         polylineRadio = shape;
 
                                         if (polylineRadio > weight[0])
@@ -2046,7 +2146,7 @@ namespace ZJGISDataUpdating
                                     }
                                     else if (matchedMode == 2)
                                     {
-                                        matchedPoints = clsMatching.MatchedPointsSimilarValue(buffer);
+                                        matchedPoints = clsIndicatorFun.MatchedPointsSimilarValue(buffer);
                                         polylineRadio = matchedPoints;
 
                                         if (polylineRadio > weight[1])
@@ -2273,6 +2373,7 @@ namespace ZJGISDataUpdating
             return functionReturnValue;
 
         }
+        #region 拓扑匹配
         /// <summary>
         /// 拓扑匹配（点）
         /// </summary>
@@ -2426,7 +2527,7 @@ namespace ZJGISDataUpdating
                             {
                                 //string testfieldName1 = ClsConfig.LayerConfigs[(pSrcFcls  as IDataset).Name].NameField;
                                 //string pSrcStrName = pSrcFeature.get_Value(pSrcFeature.Fields.FindFieldByAliasName("名称")).ToString();
-                                string pSrcStrName = pSrcFeature.get_Value(pSrcFeature.Fields.FindField(ClsConfig.LayerConfigs[(pSrcFcls  as IDataset).Name].NameField)).ToString();
+                                string pSrcStrName = pSrcFeature.get_Value(pSrcFeature.Fields.FindField(ClsConfig.LayerConfigs[(pSrcFcls as IDataset).Name].NameField)).ToString();
 
                                 //string pTarStrName = pTarFeature.get_Value(pTarFeature.Fields.FindFieldByAliasName("名称")).ToString();
                                 //string testfieldName = ClsConfig.LayerConfigs[(pTarFcls as IDataset).Name].NameField;
@@ -2455,11 +2556,11 @@ namespace ZJGISDataUpdating
                                     //设置表TRA_PT_I_PtTabl的（待匹配编码）字段的值——cell[5]
                                     rowBuffer.set_Value(rowBuffer.Fields.FindField("待匹配图层名称"), pTarStrName);
 
-                                    ClsMatching clsMatching = new ClsMatching();
-                                    clsMatching.TUFeature = pSrcFeature;
-                                    clsMatching.CFeature = pTarFeature;
+                                    ClsIndicatorFun clsIndicatorFun = new ClsIndicatorFun();
+                                    clsIndicatorFun.SourceFeature = pSrcFeature;
+                                    clsIndicatorFun.TargetFeature = pTarFeature;
                                     double distance = 0;
-                                    distance = clsMatching.PointDistance();
+                                    distance = clsIndicatorFun.PointDistance();
                                     string distance1 = string.Format("{0:0.0000}", 1 - distance);
                                     //设置表TRA_PT_I_PtTabl的（位置相似度）字段的值——cell[6]
                                     rowBuffer.set_Value(rowBuffer.Fields.FindField("位置相似度"), distance1);
@@ -2493,9 +2594,9 @@ namespace ZJGISDataUpdating
                                 {
                                     #region 不能写位置相似度，因为是现状实体，所以必须转换为一个代表性的点再计算
                                     ////新增
-                                    //ClsMatching clsMatching = new ClsMatching();
-                                    //clsMatching.TUFeature = pSrcFeature;
-                                    //clsMatching.CFeature = pTarFeature;
+                                    //ClsIndicatorFun clsMatching = new ClsIndicatorFun();
+                                    //clsMatching.SourceFeature = pSrcFeature;
+                                    //clsMatching.TargetFeature = pTarFeature;
 
                                     //double distance = 0;
                                     //distance = clsMatching.PointDistance();
@@ -2813,6 +2914,7 @@ namespace ZJGISDataUpdating
         }
 
 
+        #endregion
         /// <summary>
         /// 两字符串中有几个相同字符
         /// </summary>
@@ -3160,6 +3262,7 @@ namespace ZJGISDataUpdating
             return true;
         }
 
+        #region 多边形正方向匹配
         /// <summary>
         /// 跨尺度匹配要素--算法核心-填充xxx_DifPyTable（面状）
         /// </summary>
@@ -3547,6 +3650,7 @@ namespace ZJGISDataUpdating
             return functionReturnValue;
         }
 
+        #endregion
         /// <summary>
         /// DifScaleSearchChangedPolylineFeatures 跨尺度线要素查询
         /// </summary>

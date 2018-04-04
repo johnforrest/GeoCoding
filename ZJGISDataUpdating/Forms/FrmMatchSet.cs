@@ -262,12 +262,12 @@ namespace ZJGISDataUpdating
                             //    return;
                             //}
 
-                            FrmMatchDif frmMatchDif = new FrmMatchDif();
-                            frmMatchDif.InRowDic = sourceDataAdd.InRowDic;
-                            frmMatchDif.OutRowDic = targetDataAdd.OutRowDic;
-                            frmMatchDif.PreviousForm = this;
+                            FrmMatchPolygonDif frmMatchPolygonDif = new FrmMatchPolygonDif();
+                            frmMatchPolygonDif.InRowDic = sourceDataAdd.InRowDic;
+                            frmMatchPolygonDif.OutRowDic = targetDataAdd.OutRowDic;
+                            frmMatchPolygonDif.PreviousForm = this;
                             this.Visible = false;
-                            frmMatchDif.ShowDialog();
+                            frmMatchPolygonDif.ShowDialog();
                         }
                         //同尺度下的匹配更新（同比例尺下的匹配更新）
                         if (ClsDeclare.g_SameScaleMatch && !ClsDeclare.g_DifScaleMatch)
@@ -285,22 +285,22 @@ namespace ZJGISDataUpdating
                         if (ClsDeclare.g_SameScaleMatch && !ClsDeclare.g_DifScaleMatch)
                         {
 
-                            FrmMatchLine frmMathLine = new FrmMatchLine();
-                            frmMathLine.InRowDic = sourceDataAdd.InRowDic;
-                            frmMathLine.OutRowDic = targetDataAdd.OutRowDic;
-                            frmMathLine.PreviousForm = this;
+                            FrmMatchLineDif frmMathLineDif = new FrmMatchLineDif();
+                            frmMathLineDif.InRowDic = sourceDataAdd.InRowDic;
+                            frmMathLineDif.OutRowDic = targetDataAdd.OutRowDic;
+                            frmMathLineDif.PreviousForm = this;
                             this.Visible = false;
-                            frmMathLine.ShowDialog();
+                            frmMathLineDif.ShowDialog();
                         }
                         //不同比例尺下的
                         else if (!ClsDeclare.g_SameScaleMatch && ClsDeclare.g_DifScaleMatch)
                         {
-                            FrmMatchLine frmMathLine = new FrmMatchLine();
-                            frmMathLine.InRowDic = sourceDataAdd.InRowDic;
-                            frmMathLine.OutRowDic = targetDataAdd.OutRowDic;
-                            frmMathLine.PreviousForm = this;
+                            FrmMatchLineDif frmMathLineDif = new FrmMatchLineDif();
+                            frmMathLineDif.InRowDic = sourceDataAdd.InRowDic;
+                            frmMathLineDif.OutRowDic = targetDataAdd.OutRowDic;
+                            frmMathLineDif.PreviousForm = this;
                             this.Visible = false;
-                            frmMathLine.ShowDialog();
+                            frmMathLineDif.ShowDialog();
 
                             //FrmMatchPolylineParaDifScale frmMatchPolylineParaDifScale = new FrmMatchPolylineParaDifScale();
                             //frmMatchPolylineParaDifScale.DGVCell = cell;
@@ -317,7 +317,7 @@ namespace ZJGISDataUpdating
                         //同比例尺下匹配
                         if (ClsDeclare.g_SameScaleMatch && !ClsDeclare.g_DifScaleMatch)
                         {
-                            FrmMatchPoint frmMathLine = new FrmMatchPoint();
+                            FrmMatchPointDif frmMathLine = new FrmMatchPointDif();
                             frmMathLine.InRowDic = sourceDataAdd.InRowDic;
                             frmMathLine.OutRowDic = targetDataAdd.OutRowDic;
                             frmMathLine.PreviousForm = this;
@@ -327,12 +327,12 @@ namespace ZJGISDataUpdating
                         //不同比例尺下匹配
                         else if (!ClsDeclare.g_SameScaleMatch && ClsDeclare.g_DifScaleMatch)
                         {
-                            FrmMatchPoint frmMatchPoint = new FrmMatchPoint();
-                            frmMatchPoint.InRowDic = sourceDataAdd.InRowDic;
-                            frmMatchPoint.OutRowDic = targetDataAdd.OutRowDic;
-                            frmMatchPoint.PreviousForm = this;
+                            FrmMatchPointDif frmMatchPointDif = new FrmMatchPointDif();
+                            frmMatchPointDif.InRowDic = sourceDataAdd.InRowDic;
+                            frmMatchPointDif.OutRowDic = targetDataAdd.OutRowDic;
+                            frmMatchPointDif.PreviousForm = this;
                             this.Visible = false;
-                            frmMatchPoint.ShowDialog();
+                            frmMatchPointDif.ShowDialog();
                         }
                     }
                 }
@@ -403,11 +403,6 @@ namespace ZJGISDataUpdating
                 txtWorkPath.Text = dgvTarget.CurrentRow.Cells[3].Value.ToString();
 
             }
-        }
-
-        private void txtWorkPath_TextChanged(object sender, EventArgs e)
-        {
-
         }
 
 

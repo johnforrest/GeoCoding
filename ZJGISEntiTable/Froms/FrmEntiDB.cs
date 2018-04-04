@@ -16,6 +16,7 @@ using ESRI.ArcGIS.DataSourcesGDB;
 using ESRI.ArcGIS.esriSystem;
 using ESRI.ArcGIS.Geometry;
 using DevComponents.DotNetBar;
+using System.Collections.ObjectModel;
 
 namespace ZJGISEntiTable.Froms
 {
@@ -39,14 +40,48 @@ namespace ZJGISEntiTable.Froms
         /// <param name="e"></param>
         private void btnOpenPath_Click(object sender, EventArgs e)
         {
-            FolderBrowserDialog fBD = new FolderBrowserDialog();
-            fBD.Description = "选择GDB路径";//控件上显示的说明文本
-            fBD.RootFolder = Environment.SpecialFolder.Desktop;//设置开始浏览的根文件夹
-            fBD.ShowNewFolderButton = true;//是否显示“新建文件夹”按钮
-            if (fBD.ShowDialog() == DialogResult.OK)
+            //FolderBrowserDialog fBD = new FolderBrowserDialog();
+            //fBD.Description = "选择GDB路径";//控件上显示的说明文本
+            //fBD.RootFolder = Environment.SpecialFolder.Desktop;//设置开始浏览的根文件夹
+            //fBD.ShowNewFolderButton = true;//是否显示“新建文件夹”按钮
+            //if (fBD.ShowDialog() == DialogResult.OK)
+            //{
+            //    txbGdbPath.Text = fBD.SelectedPath;
+            //}
+
+            string tempResultTablePath = null;
+            ZJGISOpenData.Forms.FrmOpenData frmOpenData = new ZJGISOpenData.Forms.FrmOpenData();
+            frmOpenData.IsShowTable = true;
+            if (frmOpenData.ShowDialog() == DialogResult.Cancel)
             {
-                txbGdbPath.Text = fBD.SelectedPath;
+                return;
             }
+            Collection<object> tableCol = new Collection<object>();
+            tableCol = frmOpenData.TableCollection;
+            IDataset dataset = null;
+            if (tableCol.Count > 1)
+            {
+                dataset = tableCol[0] as IDataset;
+            }
+            else
+            {
+                MessageBoxEx.Show("请加载数据源", "提示", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+            if (dataset == null)
+            {
+                MessageBoxEx.Show("请加载匹配结果表！", "提示", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+            tempResultTablePath = frmOpenData.PathName + @"\" + dataset.Name;
+            if (string.IsNullOrEmpty(tempResultTablePath))
+            {
+                return;
+            }
+            this.txbGdbPath.Text = tempResultTablePath;
+            //this._entityTable = this.OpenEntityTable(dataset.Name, frmOpenData.PathName);
+
+
         }
         /// <summary>
         /// 数据库版本记录表
@@ -55,14 +90,46 @@ namespace ZJGISEntiTable.Froms
         /// <param name="e"></param>
         private void btnOpenVersionPath_Click(object sender, EventArgs e)
         {
-            OpenFileDialog oFD = new OpenFileDialog();
-            oFD.Title = "数据版本记录表路径";//对话框标题
-            oFD.Filter = "dbf文件(*.dbf)|*.dbf|所有文件(*.*)|*.*";//设置文件名筛选器
-            oFD.Multiselect = true;//是否可以多选文件
-            if (oFD.ShowDialog() == DialogResult.OK)
+            //OpenFileDialog oFD = new OpenFileDialog();
+            //oFD.Title = "数据版本记录表路径";//对话框标题
+            //oFD.Filter = "dbf文件(*.dbf)|*.dbf|所有文件(*.*)|*.*";//设置文件名筛选器
+            //oFD.Multiselect = true;//是否可以多选文件
+            //if (oFD.ShowDialog() == DialogResult.OK)
+            //{
+            //    txbVersionPath.Text = oFD.FileName;
+            //}
+
+            string tempResultTablePath = null;
+            ZJGISOpenData.Forms.FrmOpenData frmOpenData = new ZJGISOpenData.Forms.FrmOpenData();
+            frmOpenData.IsShowTable = true;
+            if (frmOpenData.ShowDialog() == DialogResult.Cancel)
             {
-                txbVersionPath.Text = oFD.FileName;
+                return;
             }
+            Collection<object> tableCol = new Collection<object>();
+            tableCol = frmOpenData.TableCollection;
+            IDataset dataset = null;
+            if (tableCol.Count > 1)
+            {
+                dataset = tableCol[0] as IDataset;
+            }
+            else
+            {
+                MessageBoxEx.Show("请加载数据源", "提示", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+            if (dataset == null)
+            {
+                MessageBoxEx.Show("请加载匹配结果表！", "提示", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+            tempResultTablePath = frmOpenData.PathName + @"\" + dataset.Name;
+            if (string.IsNullOrEmpty(tempResultTablePath))
+            {
+                return;
+            }
+            this.txbVersionPath.Text = tempResultTablePath;
+            //this._entityTable = this.OpenEntityTable(dataset.Name, frmOpenData.PathName);
         }
 
         /// <summary>
@@ -77,11 +144,14 @@ namespace ZJGISEntiTable.Froms
             this.progressBarXEntiDB.Visible = true;
 
             IWorkspaceFactory2 pWorkspaceFactory = new FileGDBWorkspaceFactoryClass() as IWorkspaceFactory2;
-            string path = this.txbGdbPath.Text.ToString();
+            //20180131
+            string path = System.IO.Path.GetDirectoryName(this.txbGdbPath.Text);
+            //string entitableName = this.txbEntiName.Text.ToString();
+            string entitableName = System.IO.Path.GetFileName(this.txbGdbPath.Text);
+
             IWorkspace2 pWorkspace = pWorkspaceFactory.OpenFromFile(path, 0) as IWorkspace2;
             IFeatureWorkspace featureWorkspace = pWorkspace as IFeatureWorkspace;
 
-            string entitableName = this.txbEntiName.Text.ToString();
 
             IMapControl4 pMainMapControl = ClsControl.MapControlMain;
             IMap pMap = pMainMapControl.Map;
@@ -147,7 +217,6 @@ namespace ZJGISEntiTable.Froms
                     //pBarEntiDB.PerformOneStep();
                 }
             }
-
 
             //DialogResult dr = MessageBox.Show("内容？", "对话框标题", MessageBoxButtons.OKCancel, MessageBoxIcon.Question);
             DialogResult dr = MessageBox.Show("实体表创建成功!", "实体表提示信息", MessageBoxButtons.OKCancel, MessageBoxIcon.Question);
@@ -304,7 +373,11 @@ namespace ZJGISEntiTable.Froms
         public void FillEntiTable(IFeatureClass pFeatureCls, ITable entiTable, ITable versionTable, string pFeatureLayname, ClsBarSync pBarEntiDB)
         {
 
-            string nameField = ClsConfig.LayerConfigs[pFeatureLayname].NameField;
+            string nameField = "";
+            if (ClsConfig.LayerConfigs[pFeatureLayname].NameField.ToString()!="null"&&ClsConfig.LayerConfigs[pFeatureLayname].NameField.ToString().Length>0)
+            {
+                nameField=ClsConfig.LayerConfigs[pFeatureLayname].NameField;
+            }
             string entityField = ClsConfig.LayerConfigs[pFeatureLayname].EntityID;
 
 
@@ -542,7 +615,14 @@ namespace ZJGISEntiTable.Froms
             // Create the workspace name object.
             IWorkspaceName workspaceName = new WorkspaceNameClass();
             workspaceName.PathName = pathName;
-            workspaceName.WorkspaceFactoryProgID = "esriDataSourcesFile.shapefileworkspacefactory";
+            if (pathName.Contains(".gdb"))
+            {
+                workspaceName.WorkspaceFactoryProgID = "esriDataSourcesGDB.FileGDBWorkspaceFactory";
+            }
+            else
+            {
+                workspaceName.WorkspaceFactoryProgID = "esriDataSourcesFile.shapefileworkspacefactory";
+            }
             // Create the table name object.
             IDatasetName dataSetName = new TableNameClass();
             dataSetName.Name = tableName;

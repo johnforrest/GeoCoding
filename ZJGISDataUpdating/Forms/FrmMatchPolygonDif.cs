@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -17,7 +18,7 @@ using ZJGISDataUpdating.Class;
 //using System.Text.RegularExpressions;
 namespace ZJGISDataUpdating
 {
-    public partial class FrmMatchDif : DevComponents.DotNetBar.Office2007Form
+    public partial class FrmMatchPolygonDif : DevComponents.DotNetBar.Office2007Form
     {
         Form previousForm;
 
@@ -25,7 +26,7 @@ namespace ZJGISDataUpdating
         Dictionary<int, DataGridViewRow> m_OutRowDic;
         //Dictionary<int, Dictionary<string, IFeatureClass>> m_FeatClsDic;
 
-        public FrmMatchDif()
+        public FrmMatchPolygonDif()
         {
             InitializeComponent();
             m_InRowDic = new Dictionary<int, DataGridViewRow>();
@@ -111,6 +112,7 @@ namespace ZJGISDataUpdating
 
 
         }
+        #region 面实体匹配
         //TODO: 面实体的开始匹配
         /// <summary>
         /// 开始匹配
@@ -119,6 +121,10 @@ namespace ZJGISDataUpdating
         /// <param name="e"></param>
         private void buttonXStartMatch_Click(object sender, EventArgs e)
         {
+            //StopWatch类计时
+            Stopwatch sw = new Stopwatch();
+            sw.Start();
+
             this.Cursor = System.Windows.Forms.Cursors.WaitCursor;
             IWorkspaceFactory2 pWorkspaceFactory = new FileGDBWorkspaceFactoryClass() as IWorkspaceFactory2;
             string gdbPath = ClsDeclare.g_WorkspacePath;
@@ -173,23 +179,26 @@ namespace ZJGISDataUpdating
                 double buffer = 0;
 
 
-                ClsCoreUpdateFun clsCoreUpdateFun = new ClsCoreUpdateFun();
+                //ClsCoreUpdateFun clsCoreUpdateFun = new ClsCoreUpdateFun();
+                ClsPolygonMatch clsPolygonMatch = new ClsPolygonMatch();
                 if (pTUFeatCls.ShapeType == esriGeometryType.esriGeometryPolygon)
                 {
                     //填充结果表xxx_DifPyTable
-                    clsCoreUpdateFun.DifScaleSearchChangedPolygonFeatures(pTUFeatCls, pTEFeatCls, table, 10, 13, progressBarMain, progressBarSub, labelXStatus);
+                    clsPolygonMatch.DifScaleSearchChangedPolygonFeatures(pTUFeatCls, pTEFeatCls, table, 10, 13, progressBarMain, progressBarSub, labelXStatus);
+                    sw.Stop();
+                    MessageBoxEx.Show("几何属性匹配已完成！总需要时间" + sw.ElapsedMilliseconds + "ms", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
-                else if (pTUFeatCls.ShapeType == esriGeometryType.esriGeometryPolyline)
-                {
-                    //填充结果表xxx_DifPyTable
-                    clsCoreUpdateFun.DifScaleSearchChangedPolylineFeatures(pTUFeatCls, pTEFeatCls, table, buffer, 13, progressBarMain, progressBarSub, labelXStatus);
-                }
+                //else if (pTUFeatCls.ShapeType == esriGeometryType.esriGeometryPolyline)
+                //{
+                //    //填充结果表xxx_DifPyTable
+                //    clsCoreUpdateFun.DifScaleSearchChangedPolylineFeatures(pTUFeatCls, pTEFeatCls, table, buffer, 13, progressBarMain, progressBarSub, labelXStatus);
+                //}
             }
             this.Cursor = System.Windows.Forms.Cursors.Default;
             this.Close();
 
-            MessageBox.Show("匹配成功");
         }
+        #endregion
         /// <summary>
         /// 返回
         /// </summary>

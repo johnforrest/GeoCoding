@@ -32,6 +32,7 @@ namespace ZJGISDataUpdating.Forms
                 //this.dataChild.Columns[0].DefaultCellStyle.BackColor = Color.LightSteelBlue;
 
                 this.dataGridView1.Columns[1].SortMode = DataGridViewColumnSortMode.NotSortable;
+                this.dataGridView1.Columns[1].Width = 200;
                 //this.dataChild.Columns[1].DefaultCellStyle.BackColor =Color.LightYellow ;
                 this.dataGridView1.Rows.Clear();
                 //this.dataChild.DefaultCellStyle.BackColor = Color.LightYellow;
@@ -55,6 +56,7 @@ namespace ZJGISDataUpdating.Forms
                 //this.dataChild.Columns[0].DefaultCellStyle.BackColor = Color.LightSteelBlue;
 
                 this.dataGridView2.Columns[1].SortMode = DataGridViewColumnSortMode.NotSortable;
+                this.dataGridView2.Columns[1].Width = 200;
                 //this.dataChild.Columns[1].DefaultCellStyle.BackColor =Color.LightYellow ;
                 this.dataGridView2.Rows.Clear();
                 //this.dataChild.DefaultCellStyle.BackColor = Color.LightYellow;
@@ -87,10 +89,12 @@ namespace ZJGISDataUpdating.Forms
                     this.dataGridView1.Columns.Add("value", list[i].get_Value(0).ToString());
                     //this.dataChild.Columns[0].DefaultCellStyle.BackColor = Color.LightSteelBlue;
                     this.dataGridView1.Columns[i + 1].SortMode = DataGridViewColumnSortMode.NotSortable;
+                    this.dataGridView1.Columns[i + 1].Width = 200;
                     //this.dataChild.Columns[1].DefaultCellStyle.BackColor =Color.LightYellow ;
                     //this.dataGridView1.Rows.Clear();
                     //this.dataChild.DefaultCellStyle.BackColor = Color.LightYellow;
                 }
+
                 //创建行
                 IFields fields2 = list[0].Fields;
                 for (int j = 0; j < fields2.FieldCount; j++)
@@ -132,6 +136,7 @@ namespace ZJGISDataUpdating.Forms
                 //this.dataChild.Columns[0].DefaultCellStyle.BackColor = Color.LightSteelBlue;
 
                 this.dataGridView2.Columns[1].SortMode = DataGridViewColumnSortMode.NotSortable;
+                this.dataGridView2.Columns[1].Width = 200;
                 //this.dataChild.Columns[1].DefaultCellStyle.BackColor =Color.LightYellow ;
                 this.dataGridView2.Rows.Clear();
                 //this.dataChild.DefaultCellStyle.BackColor = Color.LightYellow;

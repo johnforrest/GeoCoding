@@ -668,10 +668,11 @@ namespace ZJGISDataUpdating
                 {
                     DataGridViewRow dgvRow = new DataGridViewRow();
                     dgvRow = this.dataGridViewX1.SelectedRows[i];
-                    string oids = dgvRow.Cells["待匹配OID"].Value.ToString();
-                    string fromOIDs = dgvRow.Cells["源OID"].Value.ToString();
 
-                    if (oids != "" && fromOIDs != "")
+                    string fromOIDs = dgvRow.Cells["源OID"].Value.ToString();
+                    string toOIDS = dgvRow.Cells["待匹配OID"].Value.ToString();
+
+                    if (toOIDS != "" && fromOIDs != "")
                     {
 
                         if (fromOIDs.Contains(";"))
@@ -687,26 +688,41 @@ namespace ZJGISDataUpdating
                             fromIDCol.Add(Convert.ToInt32(dgvRow.Cells["源OID"].Value));
                         }
 
-                        if (dgvRow.Cells["待匹配OID"].Value.ToString() != "")
+                        //if (dgvRow.Cells["待匹配OID"].Value.ToString() != "")
+                        //{
+                        //string oids = dgvRow.Cells["待匹配OID"].Value.ToString();
+                        if (toOIDS.Contains(";"))
                         {
-                            //string oids = dgvRow.Cells["待匹配OID"].Value.ToString();
-                            if (oids.Contains(";"))
+                            string[] array = toOIDS.Split(';');
+                            for (int n = 0; n < array.Length; n++)
                             {
-                                string[] array = oids.Split(';');
-                                for (int n = 0; n < array.Length; n++)
-                                {
-                                    toIDCol.Add(Convert.ToInt32(array[n]));
-                                }
-
+                                toIDCol.Add(Convert.ToInt32(array[n]));
                             }
-                            else
+
+                        }
+                        else
+                        {
+                            toIDCol.Add(Convert.ToInt32(dgvRow.Cells["待匹配OID"].Value));
+                        }
+                        //}
+                    }
+                    else if (fromOIDs!="")
+                    {
+                        if (fromOIDs.Contains(";"))
+                        {
+                            string[] array = fromOIDs.Split(';');
+                            for (int m = 0; m < array.Length; m++)
                             {
-                                toIDCol.Add(Convert.ToInt32(dgvRow.Cells["待匹配OID"].Value));
+                                fromIDCol.Add(Convert.ToInt32(array[m]));
                             }
                         }
+                        else
+                        {
+                            fromIDCol.Add(Convert.ToInt32(dgvRow.Cells["源OID"].Value));
+                        }
                     }
-
                 }
+
                 if (m_MapControlFrom.ActiveView.FocusMap.LayerCount > 0)
                 {
                     fromLayr = m_MapControlFrom.ActiveView.FocusMap.get_Layer(0);
@@ -716,6 +732,7 @@ namespace ZJGISDataUpdating
                 {
                     toLayer = m_MapControlTo.ActiveView.FocusMap.get_Layer(0);
                 }
+
                 IFeatureSelection fromSelection = fromLayr as IFeatureSelection;
                 IFeatureSelection toSelection = toLayer as IFeatureSelection;
                 fromSelection.Clear();
@@ -727,8 +744,6 @@ namespace ZJGISDataUpdating
 
                 if (fromIDCol.Count != 0)
                 {
-
-
                     ITopologicalOperator fromTop = m_TUFeatCls.GetFeature(fromIDCol[0]).Shape as ITopologicalOperator;
 
                     for (i = 0; i < fromIDCol.Count; i++)
@@ -739,12 +754,10 @@ namespace ZJGISDataUpdating
                         tempGeo = feature.Shape as IGeometry;
                         fromGeo = fromTop.Union(tempGeo);
                         fromTop = fromGeo as ITopologicalOperator;
-
                     }
 
                     if (toIDCol.Count > 0)
                     {
-
                         //IQueryFilter queryFilter;
                         if (toIDCol.Count == 1)
                         {

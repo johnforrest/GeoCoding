@@ -33,8 +33,6 @@
             this.label2 = new System.Windows.Forms.Label();
             this.updatedBox = new System.Windows.Forms.ComboBox();
             this.update = new System.Windows.Forms.Button();
-            this.EntityTbName = new System.Windows.Forms.TextBox();
-            this.label5 = new System.Windows.Forms.Label();
             this.VersionTbPathBtn = new System.Windows.Forms.Button();
             this.VersionTbPath = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
@@ -48,7 +46,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(24, 271);
+            this.label1.Location = new System.Drawing.Point(24, 202);
             this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(97, 15);
@@ -58,7 +56,7 @@
             // toUpdateBox
             // 
             this.toUpdateBox.FormattingEnabled = true;
-            this.toUpdateBox.Location = new System.Drawing.Point(167, 265);
+            this.toUpdateBox.Location = new System.Drawing.Point(167, 196);
             this.toUpdateBox.Margin = new System.Windows.Forms.Padding(4);
             this.toUpdateBox.Name = "toUpdateBox";
             this.toUpdateBox.Size = new System.Drawing.Size(276, 23);
@@ -67,7 +65,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(24, 210);
+            this.label2.Location = new System.Drawing.Point(24, 141);
             this.label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(97, 15);
@@ -77,7 +75,7 @@
             // updatedBox
             // 
             this.updatedBox.FormattingEnabled = true;
-            this.updatedBox.Location = new System.Drawing.Point(167, 205);
+            this.updatedBox.Location = new System.Drawing.Point(167, 136);
             this.updatedBox.Margin = new System.Windows.Forms.Padding(4);
             this.updatedBox.Name = "updatedBox";
             this.updatedBox.Size = new System.Drawing.Size(276, 23);
@@ -85,7 +83,7 @@
             // 
             // update
             // 
-            this.update.Location = new System.Drawing.Point(257, 324);
+            this.update.Location = new System.Drawing.Point(257, 255);
             this.update.Margin = new System.Windows.Forms.Padding(4);
             this.update.Name = "update";
             this.update.Size = new System.Drawing.Size(87, 31);
@@ -94,28 +92,9 @@
             this.update.UseVisualStyleBackColor = true;
             this.update.Click += new System.EventHandler(this.update_Click);
             // 
-            // EntityTbName
-            // 
-            this.EntityTbName.Location = new System.Drawing.Point(167, 26);
-            this.EntityTbName.Margin = new System.Windows.Forms.Padding(4);
-            this.EntityTbName.Name = "EntityTbName";
-            this.EntityTbName.Size = new System.Drawing.Size(276, 25);
-            this.EntityTbName.TabIndex = 20;
-            this.EntityTbName.Text = "EntiTable";
-            // 
-            // label5
-            // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(24, 30);
-            this.label5.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(97, 15);
-            this.label5.TabIndex = 19;
-            this.label5.Text = "实体表名称：";
-            // 
             // VersionTbPathBtn
             // 
-            this.VersionTbPathBtn.Location = new System.Drawing.Point(469, 146);
+            this.VersionTbPathBtn.Location = new System.Drawing.Point(469, 77);
             this.VersionTbPathBtn.Margin = new System.Windows.Forms.Padding(4);
             this.VersionTbPathBtn.Name = "VersionTbPathBtn";
             this.VersionTbPathBtn.Size = new System.Drawing.Size(87, 31);
@@ -126,7 +105,7 @@
             // 
             // VersionTbPath
             // 
-            this.VersionTbPath.Location = new System.Drawing.Point(167, 149);
+            this.VersionTbPath.Location = new System.Drawing.Point(167, 80);
             this.VersionTbPath.Margin = new System.Windows.Forms.Padding(4);
             this.VersionTbPath.Name = "VersionTbPath";
             this.VersionTbPath.Size = new System.Drawing.Size(276, 25);
@@ -135,7 +114,7 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(24, 152);
+            this.label4.Location = new System.Drawing.Point(24, 83);
             this.label4.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(127, 15);
@@ -144,7 +123,7 @@
             // 
             // EntityTbPathBtn
             // 
-            this.EntityTbPathBtn.Location = new System.Drawing.Point(469, 86);
+            this.EntityTbPathBtn.Location = new System.Drawing.Point(469, 17);
             this.EntityTbPathBtn.Margin = new System.Windows.Forms.Padding(4);
             this.EntityTbPathBtn.Name = "EntityTbPathBtn";
             this.EntityTbPathBtn.Size = new System.Drawing.Size(87, 31);
@@ -155,7 +134,7 @@
             // 
             // EntityTbPath
             // 
-            this.EntityTbPath.Location = new System.Drawing.Point(167, 89);
+            this.EntityTbPath.Location = new System.Drawing.Point(167, 20);
             this.EntityTbPath.Margin = new System.Windows.Forms.Padding(4);
             this.EntityTbPath.Name = "EntityTbPath";
             this.EntityTbPath.Size = new System.Drawing.Size(276, 25);
@@ -164,7 +143,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(24, 91);
+            this.label3.Location = new System.Drawing.Point(24, 22);
             this.label3.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(97, 15);
@@ -177,7 +156,7 @@
             // 
             // 
             this.progressBarXEntiUpdate.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
-            this.progressBarXEntiUpdate.Location = new System.Drawing.Point(125, 391);
+            this.progressBarXEntiUpdate.Location = new System.Drawing.Point(125, 322);
             this.progressBarXEntiUpdate.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.progressBarXEntiUpdate.Name = "progressBarXEntiUpdate";
             this.progressBarXEntiUpdate.Size = new System.Drawing.Size(419, 22);
@@ -190,7 +169,7 @@
             // 
             // 
             this.labelX1.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
-            this.labelX1.Location = new System.Drawing.Point(27, 391);
+            this.labelX1.Location = new System.Drawing.Point(27, 322);
             this.labelX1.Name = "labelX1";
             this.labelX1.Size = new System.Drawing.Size(94, 23);
             this.labelX1.TabIndex = 22;
@@ -200,11 +179,9 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(573, 434);
+            this.ClientSize = new System.Drawing.Size(573, 371);
             this.Controls.Add(this.labelX1);
             this.Controls.Add(this.progressBarXEntiUpdate);
-            this.Controls.Add(this.EntityTbName);
-            this.Controls.Add(this.label5);
             this.Controls.Add(this.VersionTbPathBtn);
             this.Controls.Add(this.VersionTbPath);
             this.Controls.Add(this.label4);
@@ -233,8 +210,6 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.ComboBox updatedBox;
         private System.Windows.Forms.Button update;
-        private System.Windows.Forms.TextBox EntityTbName;
-        private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Button VersionTbPathBtn;
         private System.Windows.Forms.TextBox VersionTbPath;
         private System.Windows.Forms.Label label4;

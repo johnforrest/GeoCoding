@@ -39,15 +39,13 @@
             this.VersionTbPath = new System.Windows.Forms.TextBox();
             this.VersionTbPathBtn = new System.Windows.Forms.Button();
             this.EntityCodeBtn = new System.Windows.Forms.Button();
-            this.EntityTbName = new System.Windows.Forms.TextBox();
-            this.label5 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.VersionTimeSld)).BeginInit();
             this.SuspendLayout();
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(17, 220);
+            this.label1.Location = new System.Drawing.Point(17, 157);
             this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(127, 15);
@@ -58,8 +56,8 @@
             // 
             this.EntityCode.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend;
             this.EntityCode.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.CustomSource;
-            this.EntityCode.Location = new System.Drawing.Point(160, 216);
-            this.EntityCode.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.EntityCode.Location = new System.Drawing.Point(160, 153);
+            this.EntityCode.Margin = new System.Windows.Forms.Padding(4);
             this.EntityCode.Name = "EntityCode";
             this.EntityCode.Size = new System.Drawing.Size(276, 25);
             this.EntityCode.TabIndex = 1;
@@ -67,7 +65,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(17, 281);
+            this.label2.Location = new System.Drawing.Point(17, 218);
             this.label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(82, 15);
@@ -77,8 +75,8 @@
             // VersionTimeSld
             // 
             this.VersionTimeSld.LargeChange = 2;
-            this.VersionTimeSld.Location = new System.Drawing.Point(149, 262);
-            this.VersionTimeSld.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.VersionTimeSld.Location = new System.Drawing.Point(149, 199);
+            this.VersionTimeSld.Margin = new System.Windows.Forms.Padding(4);
             this.VersionTimeSld.Name = "VersionTimeSld";
             this.VersionTimeSld.Size = new System.Drawing.Size(451, 56);
             this.VersionTimeSld.TabIndex = 3;
@@ -88,7 +86,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(17, 98);
+            this.label3.Location = new System.Drawing.Point(17, 35);
             this.label3.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(97, 15);
@@ -97,16 +95,16 @@
             // 
             // EntityTbPath
             // 
-            this.EntityTbPath.Location = new System.Drawing.Point(160, 95);
-            this.EntityTbPath.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.EntityTbPath.Location = new System.Drawing.Point(160, 32);
+            this.EntityTbPath.Margin = new System.Windows.Forms.Padding(4);
             this.EntityTbPath.Name = "EntityTbPath";
             this.EntityTbPath.Size = new System.Drawing.Size(276, 25);
             this.EntityTbPath.TabIndex = 5;
             // 
             // EntityTbPathBtn
             // 
-            this.EntityTbPathBtn.Location = new System.Drawing.Point(463, 92);
-            this.EntityTbPathBtn.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.EntityTbPathBtn.Location = new System.Drawing.Point(463, 29);
+            this.EntityTbPathBtn.Margin = new System.Windows.Forms.Padding(4);
             this.EntityTbPathBtn.Name = "EntityTbPathBtn";
             this.EntityTbPathBtn.Size = new System.Drawing.Size(84, 31);
             this.EntityTbPathBtn.TabIndex = 6;
@@ -117,7 +115,7 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(17, 159);
+            this.label4.Location = new System.Drawing.Point(17, 96);
             this.label4.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(127, 15);
@@ -126,16 +124,16 @@
             // 
             // VersionTbPath
             // 
-            this.VersionTbPath.Location = new System.Drawing.Point(160, 155);
-            this.VersionTbPath.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.VersionTbPath.Location = new System.Drawing.Point(160, 92);
+            this.VersionTbPath.Margin = new System.Windows.Forms.Padding(4);
             this.VersionTbPath.Name = "VersionTbPath";
             this.VersionTbPath.Size = new System.Drawing.Size(276, 25);
             this.VersionTbPath.TabIndex = 8;
             // 
             // VersionTbPathBtn
             // 
-            this.VersionTbPathBtn.Location = new System.Drawing.Point(463, 152);
-            this.VersionTbPathBtn.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.VersionTbPathBtn.Location = new System.Drawing.Point(463, 89);
+            this.VersionTbPathBtn.Margin = new System.Windows.Forms.Padding(4);
             this.VersionTbPathBtn.Name = "VersionTbPathBtn";
             this.VersionTbPathBtn.Size = new System.Drawing.Size(84, 31);
             this.VersionTbPathBtn.TabIndex = 9;
@@ -145,8 +143,8 @@
             // 
             // EntityCodeBtn
             // 
-            this.EntityCodeBtn.Location = new System.Drawing.Point(463, 214);
-            this.EntityCodeBtn.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.EntityCodeBtn.Location = new System.Drawing.Point(463, 151);
+            this.EntityCodeBtn.Margin = new System.Windows.Forms.Padding(4);
             this.EntityCodeBtn.Name = "EntityCodeBtn";
             this.EntityCodeBtn.Size = new System.Drawing.Size(84, 31);
             this.EntityCodeBtn.TabIndex = 10;
@@ -154,33 +152,12 @@
             this.EntityCodeBtn.UseVisualStyleBackColor = true;
             this.EntityCodeBtn.Click += new System.EventHandler(this.EntityCodeBtn_Click);
             // 
-            // EntityTbName
-            // 
-            this.EntityTbName.Location = new System.Drawing.Point(160, 32);
-            this.EntityTbName.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
-            this.EntityTbName.Name = "EntityTbName";
-            this.EntityTbName.Size = new System.Drawing.Size(276, 25);
-            this.EntityTbName.TabIndex = 12;
-            this.EntityTbName.Text = "EntiTable";
-            // 
-            // label5
-            // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(17, 36);
-            this.label5.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(97, 15);
-            this.label5.TabIndex = 11;
-            this.label5.Text = "实体表名称：";
-            // 
             // FrmEntitySearch
             // 
             this.AllowDrop = true;
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(620, 378);
-            this.Controls.Add(this.EntityTbName);
-            this.Controls.Add(this.label5);
+            this.ClientSize = new System.Drawing.Size(620, 320);
             this.Controls.Add(this.EntityCodeBtn);
             this.Controls.Add(this.VersionTbPathBtn);
             this.Controls.Add(this.VersionTbPath);
@@ -193,7 +170,7 @@
             this.Controls.Add(this.label1);
             this.Controls.Add(this.VersionTimeSld);
             this.DoubleBuffered = true;
-            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "FrmEntitySearch";
             this.Text = "实体查询";
             this.Load += new System.EventHandler(this.FrmEntitySearch_Load);
@@ -216,7 +193,5 @@
         private System.Windows.Forms.TextBox VersionTbPath;
         private System.Windows.Forms.Button VersionTbPathBtn;
         private System.Windows.Forms.Button EntityCodeBtn;
-        private System.Windows.Forms.TextBox EntityTbName;
-        private System.Windows.Forms.Label label5;
     }
 }

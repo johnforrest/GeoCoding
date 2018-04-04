@@ -740,19 +740,19 @@ namespace ZJGISDataUpdating
 
                 ClsCoreUpdateFun clsCoreUpdateFun = new ClsCoreUpdateFun();
 
-                //matchedMay为1 代表拓扑匹配
-                //if (matchedMay == 1)
-                if (this.tabControl1.Tabs[1].Visible == true)
-                {
-                    clsCoreUpdateFun.SearchChangedFeaturesByTop(pSourceFeatCls, pTargetFeatCls, table, buffer, fields, progressBarMain, progressBarSub, labelXStatus);
-                    MessageBoxEx.Show("拓扑匹配已完成！", "提示");
-                }
                 //matchedMay为0 代表几何匹配
                 //else if (matchedMay == 0)
-                else if (this.tabControl1.Tabs[0].Visible == true)
+                if (this.tabControl1.Tabs[0].Visible == true)
                 {
                     clsCoreUpdateFun.SearchChangedFeaturesDifShape(pSourceFeatCls, pTargetFeatCls, table, matchedMode, weight, buffer, fields, progressBarMain, progressBarSub, labelXStatus);
                     MessageBoxEx.Show("几何匹配已完成！", "提示");
+                }
+                //matchedMay为1 代表拓扑匹配
+                //if (matchedMay == 1)
+                else if (this.tabControl1.Tabs[1].Visible == true)
+                {
+                    clsCoreUpdateFun.SearchChangedFeaturesByTop(pSourceFeatCls, pTargetFeatCls, table, buffer, fields, progressBarMain, progressBarSub, labelXStatus);
+                    MessageBoxEx.Show("拓扑匹配已完成！", "提示");
                 }
 
             }

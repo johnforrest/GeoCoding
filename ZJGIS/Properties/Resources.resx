@@ -359,6 +359,9 @@
         BAQEBAQBAQQEBAQEBAQ=
 </value>
   </data>
+  <data name="全图" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\全图.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="timeline1" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\timeline1.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -398,6 +401,9 @@
   <data name="refresh32" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\refresh.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="checkEntiTable" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\checkEntiTable.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="data_out" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\data_out.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -410,7 +416,7 @@
   <data name="AddData1" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\AddData1.PNG;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="checkEntiTable" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\checkEntiTable.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="全图显示" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\全图显示.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
 </root>

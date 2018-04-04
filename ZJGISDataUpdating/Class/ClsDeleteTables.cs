@@ -46,6 +46,29 @@ namespace ZJGISDataUpdating.Class
                 }
             }
         }
-
+        
+               /// <summary>
+        /// 删除特定数据集下的表
+        /// </summary>
+        /// <param name="gdbPath">workspace</param>
+        /// <param name="tableName">表名称</param>
+        public static void DeleteFeatureClass(IWorkspace workspace,string tableName)
+        {
+            IFeatureWorkspace featureWorkspace = workspace as IFeatureWorkspace;
+            IFeatureWorkspaceManage featureWorkspaceMange = (IFeatureWorkspaceManage)featureWorkspace;
+            //得到的数据集是FeatureClass
+            //IEnumDatasetName enumDatasetName = workspace.get_DatasetNames(esriDatasetType.esriDTFeatureClass);
+            IEnumDatasetName enumDatasetName = workspace.get_DatasetNames(esriDatasetType.esriDTTable);
+            IDatasetName datasetName = null;
+            while ((datasetName = enumDatasetName.Next()) != null)
+            {
+                if (datasetName.Name.Equals(tableName))
+                {
+                    //删除指定要素类(表)
+                    featureWorkspaceMange.DeleteByName(datasetName);
+                    break;
+                }
+            }
+        }
     }
 }

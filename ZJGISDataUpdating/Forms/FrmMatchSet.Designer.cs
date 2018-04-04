@@ -431,7 +431,6 @@
             this.txtWorkPath.Name = "txtWorkPath";
             this.txtWorkPath.Size = new System.Drawing.Size(575, 25);
             this.txtWorkPath.TabIndex = 8;
-            this.txtWorkPath.TextChanged += new System.EventHandler(this.txtWorkPath_TextChanged);
             // 
             // btnNext
             // 

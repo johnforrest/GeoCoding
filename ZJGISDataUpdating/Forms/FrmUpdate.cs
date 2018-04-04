@@ -9,6 +9,7 @@ using DevComponents.DotNetBar.Controls;
 using System.Collections.ObjectModel;
 using ZJGISCommon;
 using ESRI.ArcGIS.DataSourcesGDB;
+using ZJGISDataUpdating.Class;
 
 namespace ZJGISDataUpdating
 {
@@ -71,7 +72,7 @@ namespace ZJGISDataUpdating
             textBoxXLayerPath.Text = sourceFeatureclassPath;
 
             wizardPage1.NextButtonEnabled = eWizardButtonState.True;
-            sourceFields = ClsUpdateCommon.GetAttribute(sourceFeatureclass);
+            sourceFields = ClsStatic.GetAttribute(sourceFeatureclass);
         }
         /// <summary>
         ///  浏览待匹配图层
@@ -119,7 +120,7 @@ namespace ZJGISDataUpdating
             //targetFields = ClsUpdateCommon.GetAttribute(targetFeatureClass);
 
             wizardPage1.NextButtonEnabled = eWizardButtonState.True;
-            targetFields = ClsUpdateCommon.GetAttribute(targetFeatureClass);
+            targetFields = ClsStatic.GetAttribute(targetFeatureClass);
         }
         //TODO :打开实体表dbf
         /// <summary>

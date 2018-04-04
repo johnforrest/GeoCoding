@@ -167,7 +167,7 @@ namespace ZJGISDataUpdating
             }
         }
         /// <summary>
-        /// 得到缓冲区范围
+        /// 得到弧度缓冲区半径(长度转弧度)
         /// </summary>
         /// <param name="vSpatialReference">空间参考</param>
         /// <param name="buffer">缓冲区距离</param>

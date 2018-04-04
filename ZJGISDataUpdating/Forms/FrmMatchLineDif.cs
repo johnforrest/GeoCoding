@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -14,10 +15,11 @@ using DevComponents.DotNetBar;
 using ZJGISCommon;
 using ESRI.ArcGIS.Carto;
 using ZJGISDataUpdating.Class;
+using System.Diagnostics;
 //using System.Text.RegularExpressions;
 namespace ZJGISDataUpdating
 {
-    public partial class FrmMatchLine : DevComponents.DotNetBar.Office2007Form
+    public partial class FrmMatchLineDif : DevComponents.DotNetBar.Office2007Form
     {
         Form previousForm;
         Dictionary<int, DataGridViewRow> m_InRowDic;
@@ -26,7 +28,7 @@ namespace ZJGISDataUpdating
 
 
 
-        public FrmMatchLine()
+        public FrmMatchLineDif()
         {
             InitializeComponent();
             m_InRowDic = new Dictionary<int, DataGridViewRow>();
@@ -292,7 +294,7 @@ namespace ZJGISDataUpdating
             return table;
         }
         /// <summary>
-        /// 设置匹配多边形字段
+        /// 设置线匹配字段
         /// </summary>
         /// <param name="workspace"></param>
         /// <returns></returns>
@@ -437,7 +439,7 @@ namespace ZJGISDataUpdating
             return fields;
         }
         /// <summary>
-        /// 生成字段
+        /// 匹配结果表字段
         /// </summary>
         /// <param name="workspace">工作区路径</param>
         /// <returns>返回的字段集合</returns>
@@ -746,6 +748,7 @@ namespace ZJGISDataUpdating
 
 
         }
+        #region 线实体的开始匹配
         //TODO :线实体的开始匹配
         /// <summary>
         /// 开始（线）匹配
@@ -754,6 +757,10 @@ namespace ZJGISDataUpdating
         /// <param name="e"></param>
         private void buttonXStartMatch_Click(object sender, EventArgs e)
         {
+            //StopWatch类计时
+            Stopwatch sw = new Stopwatch();
+            sw.Start();
+
             double Total = Convert.ToDouble(labelCenterNum.Text) + Convert.ToDouble(labelSpNum.Text);
             if (Total != 1)
             {
@@ -767,15 +774,14 @@ namespace ZJGISDataUpdating
             IWorkspace2 pWorkspace = pWorkspaceFactory.OpenFromFile(gdbPath, 0) as IWorkspace2;
             IFeatureWorkspace featureWorkspace = pWorkspace as IFeatureWorkspace;
 
-            IFeatureClass pSourceFeatCls2 = this.dataGridViewX1[1, 0].Tag as IFeatureClass;
+            IFeatureClass sourceFeatureClass = this.dataGridViewX1[1, 0].Tag as IFeatureClass;
             string targetFeatureName = this.dataGridViewX1[2, 0].Value.ToString();
 
-            //创建设置表
-            loadFeatSetting(gdbPath, targetFeatureName, pSourceFeatCls2);
+            //创建设置表MatchedPolylineFCSetting
+            loadFeatSetting(gdbPath, targetFeatureName, sourceFeatureClass);
 
             ITable table = null;
             IFields fileds = null;
-
             string tempFieldsName = "";
 
             //TODO ：设置选择的字段
@@ -796,23 +802,22 @@ namespace ZJGISDataUpdating
                 }
 
             }
-
-
             for (int i = 0; i < this.dataGridViewX1.Rows.Count; i++)
             {
-                IFeatureClass pTUFeatCls = this.dataGridViewX1.Rows[i].Cells[1].Tag as IFeatureClass;
+                IFeatureClass pSrcFcls = this.dataGridViewX1.Rows[i].Cells[1].Tag as IFeatureClass;
 
-                if (pTUFeatCls.ShapeType == esriGeometryType.esriGeometryPolyline || pTUFeatCls.ShapeType == esriGeometryType.esriGeometryLine)
+                if (pSrcFcls.ShapeType == esriGeometryType.esriGeometryPolyline ||
+                    pSrcFcls.ShapeType == esriGeometryType.esriGeometryLine)
                 {
                     //创建表所需要的所有字段值
                     fileds = CreateMatchPolylineTFields(pWorkspace, tempFieldsName);
                 }
 
-                //创建空表
+                //表如果存在，创建空表
                 if (pWorkspace.get_NameExists(esriDatasetType.esriDTTable, this.dataGridViewX1.Rows[i].Cells[3].Value.ToString()))
                 {
                     //table = featureWorkspace.OpenTable(this.dataGridViewX1.Rows[i].Cells[3].Value.ToString());
-                    ClsDeleteTables.DeleteFeatureClass(gdbPath,this.dataGridViewX1.Rows[i].Cells[3].Value.ToString());
+                    ClsDeleteTables.DeleteFeatureClass(gdbPath, this.dataGridViewX1.Rows[i].Cells[3].Value.ToString());
                     table = CreateTable(pWorkspace, this.dataGridViewX1.Rows[i].Cells[3].Value.ToString(), fileds);
 
                     //IWorkspaceEdit workspaceEdit = pWorkspace as IWorkspaceEdit;
@@ -829,13 +834,14 @@ namespace ZJGISDataUpdating
                     //workspaceEdit.StopEditOperation();
                     //workspaceEdit.StopEditing(true);
                 }
+                //表不存在，就创建空表
                 else
                 {
                     table = CreateTable(pWorkspace, this.dataGridViewX1.Rows[i].Cells[3].Value.ToString(), fileds);
                 }
 
                 this.dataGridViewX1[3, i].Tag = table;
-                IFeatureClass pTEFeatCls = featureWorkspace.OpenFeatureClass(this.dataGridViewX1.Rows[i].Cells[2].Value.ToString());
+                IFeatureClass pTarFcls = featureWorkspace.OpenFeatureClass(this.dataGridViewX1.Rows[i].Cells[2].Value.ToString());
 
                 ITable tableSetting = null;
                 int matchedMode = -1;
@@ -844,241 +850,11 @@ namespace ZJGISDataUpdating
                 double buffer = 0;
                 string fields = "";
 
-                IDataset dataset = pTEFeatCls as IDataset;
+                IDataset dataset = pTarFcls as IDataset;
                 string matchedFCName = dataset.Name;
 
-                #region 原有的匹配方式
-                ////设置匹配选择方式，matchedMay为0 代表几何匹配  为1代表拓扑匹配  为2代表属性匹配 
-                //if (pTEFeatCls.ShapeType == esriGeometryType.esriGeometryPolyline)
-                //{
-                //    tableSetting = featureWorkspace.OpenTable(ClsConstant.lineSettingTable);
-                //    ICursor cursor = tableSetting.Search(null, false);
-                //    IRow row = cursor.NextRow();
-                //    while (row != null)
-                //    {
-                //        if (row.get_Value(row.Fields.FindField("MatchedFCName")).ToString() == matchedFCName)
-                //        {
-                //            //拓扑匹配
-                //            if (row.get_Value(row.Fields.FindField("Top")).ToString() == "1")
-                //            {
-                //                matchedMay = 1;
-                //                matchedMode = -1;
-                //                //weight = 0;
-                //                string temp = row.get_Value(row.Fields.FindField("Buffer")).ToString();
-                //                if (temp.Contains("米"))
-                //                {
-                //                    temp = temp.Substring(0, temp.LastIndexOf("米")).Trim();
-                //                }
-                //                buffer = Convert.ToDouble(temp);
-                //                fields = row.get_Value(row.Fields.FindField("MatchedFields")).ToString();
 
-                //                break;
-                //            }
-                //            //属性匹配
-                //            else
-                //            {
-                //                fields = row.get_Value(row.Fields.FindField("MatchedFields")).ToString();
-                //                matchedMay = 0;
-                //                matchedMode = 10;
-                //                weight[0] = Convert.ToDouble(row.get_Value(row.Fields.FindField("SP")));
-                //                string temp = row.get_Value(row.Fields.FindField("MatchedPointsBuffer")).ToString();
-                //                if (temp.Contains("米"))
-                //                {
-                //                    temp = temp.Substring(0, temp.LastIndexOf("米")).Trim();
-                //                }
-                //                buffer = Convert.ToDouble(temp);
-
-                //                weight[1] = Convert.ToDouble(row.get_Value(row.Fields.FindField("MatchedPoints")));
-                //                weight[2] = Convert.ToDouble(row.get_Value(row.Fields.FindField("TotalNum")));
-
-                //            }
-                //        }
-                //        row = cursor.NextRow();
-                //    }
-                //}
-
-
-                //ClsCoreUpdateFun clsCoreUpdateFun = new ClsCoreUpdateFun();
-
-
-                //////几何匹配
-                //if (matchedMay == 0)
-                //{
-                //    clsCoreUpdateFun.SearchChangedFeatures(pTUFeatCls, pTEFeatCls, table, matchedMode, weight, buffer, fields, progressBarMain, progressBarSub, labelXStatus);
-                //    if (ckbEachMatch.Checked)
-                //    {
-                //        //读取匹配改变的要素的ID
-                //        ICursor cursor2 = table.Search(null, false);
-                //        IRow row = cursor2.NextRow();
-                //        List<int> UpdataDataID = new List<int>();
-                //        while (row != null)
-                //        {
-                //            string strResult = row.get_Value(3).ToString();
-                //            if (strResult != "未变化" && strResult != "新增要素")
-                //            {
-                //                string str = row.get_Value(2).ToString();//获得更新要素ID
-                //                if (str != null && str != "")
-                //                {
-                //                    if (str.Contains(";"))
-                //                    {
-                //                        string[] strArray = str.Split(';');
-                //                        foreach (string strID in strArray)
-                //                            UpdataDataID.Add(Convert.ToInt32(strID));
-                //                    }
-                //                    else
-                //                        UpdataDataID.Add(Convert.ToInt32(str));
-                //                }
-                //            }
-                //            row = cursor2.NextRow();
-                //        }
-                //        if (UpdataDataID.Count == 0)
-                //        {
-                //            return;
-                //        }
-                //        //添加一行用于反向隔开
-                //        IWorkspaceEdit workspaceEdit = pWorkspace as IWorkspaceEdit;
-                //        workspaceEdit.StartEditing(true);
-                //        workspaceEdit.StartEditOperation();
-
-                //        IRowBuffer invalidRowBuffer = table.CreateRowBuffer();
-                //        ICursor invalidRowCursor = table.Insert(true);
-                //        //invalidRowBuffer.set_Value(1, "11111");
-                //        invalidRowCursor.InsertRow(invalidRowBuffer);
-
-                //        workspaceEdit.StopEditOperation();
-                //        workspaceEdit.StopEditing(true);
-
-                //        clsCoreUpdateFun.ReverseSearchChangedFeatures(pTEFeatCls, UpdataDataID, pTUFeatCls, table, matchedMode, weight, buffer, fields, progressBarMain, progressBarSub, labelXStatus);
-                //    }
-                //    MessageBoxEx.Show("属性匹配已完成！", "提示");
-                //}
-                ////拓扑匹配
-                //else if (matchedMay == 1)
-                //{
-                //    clsCoreUpdateFun.SearchChangedFeaturesByTop(pTUFeatCls, pTEFeatCls, table, buffer, fields, progressBarMain, progressBarSub, labelXStatus);
-                //}
-                #endregion
-                #region 20170916注释掉-自己设置的匹配方式
-                //if (this.comboBoxExMatchType.Text == "几何匹配")
-                //{
-                //    if (pTEFeatCls.ShapeType == esriGeometryType.esriGeometryLine || pTEFeatCls.ShapeType == esriGeometryType.esriGeometryPolyline)
-                //    {
-                //        tableSetting = featureWorkspace.OpenTable(ClsConstant.lineSettingTable);
-                //        ICursor cursor = tableSetting.Search(null, false);
-                //        IRow row = cursor.NextRow();
-                //        while (row != null)
-                //        {
-
-                //            fields = row.get_Value(row.Fields.FindField("MatchedFields")).ToString();
-                //            matchedMay = 0;
-                //            matchedMode = 10;
-                //            weight[0] = Convert.ToDouble(row.get_Value(row.Fields.FindField("SP")));
-                //            string temp = row.get_Value(row.Fields.FindField("MatchedPointsBuffer")).ToString();
-                //            if (temp.Contains("米"))
-                //            {
-                //                temp = temp.Substring(0, temp.LastIndexOf("米")).Trim();
-                //            }
-                //            buffer = Convert.ToDouble(temp);
-
-                //            weight[1] = Convert.ToDouble(row.get_Value(row.Fields.FindField("MatchedPoints")));
-                //            weight[2] = Convert.ToDouble(row.get_Value(row.Fields.FindField("TotalNum")));
-
-                //            row = cursor.NextRow();
-
-                //        }
-                //    }
-                //    clsCoreUpdateFun.SearchChangedFeatures(pTUFeatCls, pTEFeatCls, table, matchedMode, weight, buffer, fields, progressBarMain, progressBarSub, labelXStatus);
-
-                //    if (ckbEachMatch.Checked)
-                //    {
-                //        //读取匹配改变的要素的ID
-                //        ICursor cursor2 = table.Search(null, false);
-                //        IRow row = cursor2.NextRow();
-                //        List<int> UpdataDataID = new List<int>();
-                //        while (row != null)
-                //        {
-                //            string strResult = row.get_Value(3).ToString();
-                //            if (strResult != "未变化" && strResult != "新增要素")
-                //            {
-                //                string str = row.get_Value(2).ToString();//获得更新要素ID
-                //                if (str != null && str != "")
-                //                {
-                //                    if (str.Contains(";"))
-                //                    {
-                //                        string[] strArray = str.Split(';');
-                //                        foreach (string strID in strArray)
-                //                            UpdataDataID.Add(Convert.ToInt32(strID));
-                //                    }
-                //                    else
-                //                    {
-                //                        UpdataDataID.Add(Convert.ToInt32(str));
-                //                    }
-                //                }
-                //            }
-                //            row = cursor2.NextRow();
-                //        }
-                //        if (UpdataDataID.Count == 0)
-                //        {
-                //            return;
-                //        }
-                //        //添加一行用于反向隔开
-                //        IWorkspaceEdit workspaceEdit = pWorkspace as IWorkspaceEdit;
-                //        workspaceEdit.StartEditing(true);
-                //        workspaceEdit.StartEditOperation();
-
-                //        IRowBuffer invalidRowBuffer = table.CreateRowBuffer();
-                //        ICursor invalidRowCursor = table.Insert(true);
-                //        //invalidRowBuffer.set_Value(1, "11111");
-                //        invalidRowCursor.InsertRow(invalidRowBuffer);
-
-                //        workspaceEdit.StopEditOperation();
-                //        workspaceEdit.StopEditing(true);
-
-                //        clsCoreUpdateFun.ReverseSearchChangedFeatures(pTEFeatCls, UpdataDataID, pTUFeatCls, table, matchedMode, weight, buffer, fields, progressBarMain, progressBarSub, labelXStatus);
-                //    }
-                //    MessageBoxEx.Show("匹配已完成！", "提示");
-
-                //}
-                //else if (this.comboBoxExMatchType.Text == "拓扑匹配")
-                //{
-                //    if (pTEFeatCls.ShapeType == esriGeometryType.esriGeometryLine || pTEFeatCls.ShapeType == esriGeometryType.esriGeometryPolyline)
-                //    {
-
-                //        tableSetting = featureWorkspace.OpenTable(ClsConstant.lineSettingTable);
-                //        ICursor cursor = tableSetting.Search(null, false);
-                //        IRow row = cursor.NextRow();
-                //        while (row != null)
-                //        {
-                //            //matchedMay = 1;
-                //            matchedMode = -1;
-                //            //weight = 0;
-                //            string temp = row.get_Value(row.Fields.FindField("Buffer")).ToString();
-                //            if (temp.Contains("米"))
-                //            {
-                //                temp = temp.Substring(0, temp.LastIndexOf("米")).Trim();
-                //            }
-                //            buffer = Convert.ToDouble(temp);
-                //            fields = row.get_Value(row.Fields.FindField("MatchedFields")).ToString();
-
-                //            //break;
-
-                //            row = cursor.NextRow();
-
-                //        }
-                //    }
-
-                //    clsCoreUpdateFun.SearchChangedFeaturesByTop(pTUFeatCls, pTEFeatCls, table, buffer, fields, progressBarMain, progressBarSub, labelXStatus);
-
-
-                //}
-                //else if (this.comboBoxExMatchType.Text == "属性匹配")
-                //{
-
-                //}
-                #endregion
-
-                //设置匹配选择方式，matchedMay为0 代表几何匹配  为1代表拓扑匹配  为2代表属性匹配 
-                if (pTEFeatCls.ShapeType == esriGeometryType.esriGeometryPolyline)
+                if (pTarFcls.ShapeType == esriGeometryType.esriGeometryPolyline)
                 {
                     tableSetting = featureWorkspace.OpenTable(ClsConstant.lineSettingTable);
                     ICursor cursor = tableSetting.Search(null, false);
@@ -1127,16 +903,12 @@ namespace ZJGISDataUpdating
                     }
                 }
 
-
-                ClsCoreUpdateFun clsCoreUpdateFun = new ClsCoreUpdateFun();
-
-
-                ////几何匹配
-                //if (matchedMay == 0)
+                ClsLineMatch clsLineMatch = new ClsLineMatch();
+                //几何匹配
                 if (this.tabControl1.Tabs[0].Visible == true)
                 {
-                    clsCoreUpdateFun.SearchChangedFeatures(pTUFeatCls, pTEFeatCls, table, matchedMode, weight, buffer, fields, progressBarMain, progressBarSub, labelXStatus);
-                    //反向匹配
+                    clsLineMatch.SearchChangedFeatures(pSrcFcls, pTarFcls, table, weight, buffer, fields, progressBarMain, progressBarSub, labelXStatus, chkBoxLineIndicator);
+                    sw.Stop();
                     #region 反向匹配
                     //if (ckbEachMatch.Checked)
                     //{
@@ -1184,13 +956,14 @@ namespace ZJGISDataUpdating
                     //    clsCoreUpdateFun.ReverseSearchChangedFeatures(pTEFeatCls, UpdataDataID, pTUFeatCls, table, matchedMode, weight, buffer, fields, progressBarMain, progressBarSub, labelXStatus);
                     //} 
                     #endregion
-                    MessageBoxEx.Show("几何属性匹配已完成！", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    MessageBoxEx.Show("几何属性匹配已完成！总需要时间" + sw.ElapsedMilliseconds + "ms", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
                 //拓扑匹配
                 else if (this.tabControl1.Tabs[1].Visible == true)
                 {
-                    clsCoreUpdateFun.SearchChangedFeaturesByTop(pTUFeatCls, pTEFeatCls, table, buffer, fields, progressBarMain, progressBarSub, labelXStatus);
-                    MessageBox.Show("拓扑匹配已完成！", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    clsLineMatch.SearchChangedFeaturesByTop(pSrcFcls, pTarFcls, table, buffer, fields, progressBarMain, progressBarSub, labelXStatus);
+                    sw.Stop();
+                    MessageBox.Show("拓扑匹配已完成！总需要时间" + sw.ElapsedMilliseconds + "ms", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
             }
 
@@ -1198,6 +971,7 @@ namespace ZJGISDataUpdating
             this.Close();
         }
 
+        #endregion
         private void buttonXPrevious_Click(object sender, EventArgs e)
         {
             if (previousForm != null)
@@ -1212,7 +986,7 @@ namespace ZJGISDataUpdating
         }
 
         /// <summary>
-        /// 设置匹配参数
+        /// 创建设置表MatchedPolylineFCSetting
         /// </summary>
         /// <param name="gdbPath"></param>
         /// <param name="targetFeatureName"></param>
@@ -1229,12 +1003,10 @@ namespace ZJGISDataUpdating
                     {
                         if (this.dataGridViewX2[2, i].Value == null)
                         {
-                            //MessageBox.Show("所选字段没有完全对应，请重新检查！", "提示", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                            MessageBox.Show("没有选择属性匹配字段，请选择一个属性字段！", "提示", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            MessageBox.Show("没有选择属性匹配字段，只进行几何匹配！", "提示", MessageBoxButtons.OK, MessageBoxIcon.Error);
                             return;
                         }
                     }
-
                 }
 
                 IWorkspaceFactory pWorkspaceFactory = new FileGDBWorkspaceFactory();
@@ -1243,41 +1015,7 @@ namespace ZJGISDataUpdating
                 ITable table = null;
                 IFields fields = null;
 
-                if (sourceFeatCls.ShapeType == esriGeometryType.esriGeometryPolyline || sourceFeatCls.ShapeType == esriGeometryType.esriGeometryLine)
-                {
-                    //如果表存在，那么清空表
-                    if (workspace.get_NameExists(esriDatasetType.esriDTTable, ClsConstant.lineSettingTable))
-                    {
-                        table = featureWorkspace.OpenTable(ClsConstant.lineSettingTable);
-                        //table = featureWorkspace.OpenTable(this.dataGridViewX1.Rows[i].Cells[3].Value.ToString());
-                        IWorkspaceEdit workspaceEdit = workspace as IWorkspaceEdit;
-                        workspaceEdit.StartEditing(true);
-                        workspaceEdit.StartEditOperation();
-
-                        ICursor cursor = table.Search(null, false);
-                        IRow r = cursor.NextRow();
-                        while (r != null)
-                        {
-                            r.Delete();
-                            r = cursor.NextRow();
-                        }
-                        workspaceEdit.StopEditOperation();
-                        workspaceEdit.StopEditing(true);
-                    }
-                    else
-                    {
-                        fields = CreateMatchedPolylineFCSettingFields(workspace);
-                        UID uid = new UIDClass();
-                        uid.Value = "esriGeoDatabase.Object";
-                        IFieldChecker fieldChecker = new FieldCheckerClass();
-                        IEnumFieldError enumFieldError = null;
-                        IFields validatedFields = null;
-                        fieldChecker.ValidateWorkspace = (IWorkspace)workspace;
-                        fieldChecker.Validate(fields, out enumFieldError, out validatedFields);
-
-                        table = featureWorkspace.CreateTable(ClsConstant.lineSettingTable, validatedFields, uid, null, "");
-                    }
-                }
+                table = TableIsExist(sourceFeatCls, workspace, table, featureWorkspace);
 
                 IWorkspaceEdit pWorkspaceEdit = featureWorkspace as IWorkspaceEdit;
                 pWorkspaceEdit.StartEditing(true);
@@ -1290,35 +1028,35 @@ namespace ZJGISDataUpdating
                 string tempBuffer = "";
                 DataGridViewCheckBoxCell dgvCheckBoxCell = new DataGridViewCheckBoxCell();
 
-                int index = table.FindField("MatchedFCName");
 
                 ICursor pCursor = table.Search(null, false);
                 IRow pRow = pCursor.NextRow();
                 while (pRow != null)
                 {
-                    if (pRow.get_Value(index).ToString() != "")
+                    //表中某行的 待匹配图层名不为空
+                    if (pRow.get_Value(table.FindField("MatchedFCName")).ToString() != "")
                     {
-                        pDic.Add(pRow.get_Value(index).ToString(), pRow.OID);
+                        pDic.Add(pRow.get_Value(table.FindField("MatchedFCName")).ToString(), pRow.OID);
                     }
                     pRow = pCursor.NextRow();
                 }
                 //几何匹配
                 if (this.tabControl1.Tabs[0].Visible)
                 {
+                    //表中某行的 待匹配图层名为空，也就是没有相应的记录
                     if (!pDic.ContainsKey(targetFeatureName))
                     {
-
+                        //创建匹配的新记录
                         IRow tempRow = table.CreateRow();
 
-                        IDataset dataset = sourceFeatCls as IDataset;
-                        if (ClsDeclare.g_SourceFeatClsPathDic.ContainsKey(dataset.Name))
+                        if (ClsDeclare.g_SourceFeatClsPathDic.ContainsKey((sourceFeatCls as IDataset).Name))
                         {
-                            tempRow.set_Value(tempRow.Fields.FindField("SourceFCName"), dataset.Name);
-                            tempRow.set_Value(tempRow.Fields.FindField("SourcePath"), ClsDeclare.g_SourceFeatClsPathDic[dataset.Name]);
+                            tempRow.set_Value(tempRow.Fields.FindField("SourceFCName"), (sourceFeatCls as IDataset).Name);
+                            tempRow.set_Value(tempRow.Fields.FindField("SourcePath"), ClsDeclare.g_SourceFeatClsPathDic[(sourceFeatCls as IDataset).Name]);
                             tempRow.set_Value(tempRow.Fields.FindField("WorkspacePath"), ClsDeclare.g_WorkspacePath);
                         }
 
-                        tempRow.set_Value(index, targetFeatureName);
+                        tempRow.set_Value(table.FindField("MatchedFCName"), targetFeatureName);
                         tempRow.set_Value(tempRow.Fields.FindField("FCSettingID"), table.RowCount(null) - 1);
                         //权重
                         tempRow.set_Value(tempRow.Fields.FindField("MatchedPoints"), Convert.ToDouble(labelCenterNum.Text));
@@ -1352,7 +1090,7 @@ namespace ZJGISDataUpdating
                         //TODO :读取选择的字段
 
                         //修改属性
-                        tempRow.set_Value(tempRow.Fields.FindField("Attribute"), 1);
+                        //tempRow.set_Value(tempRow.Fields.FindField("Attribute"), 1);
 
                         for (int i = 0; i < dataGridViewX2.RowCount; i++)
                         {
@@ -1371,32 +1109,32 @@ namespace ZJGISDataUpdating
 
                         }
 
-                        if (tempFieldsName == "")
+                        if (tempFieldsName != "")
                         {
-                            //tRow.set_Value(tRow.Fields.FindField("Attribute"), 0);
-                            //MessageBoxEx.Show("没有选择属性匹配对应字段！", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            tempRow.set_Value(tempRow.Fields.FindField("Attribute"), 1);
+                            tempRow.set_Value(tempRow.Fields.FindField("MatchedFields"), tempFieldsName.Trim());
                         }
                         else
                         {
-                            //tRow.set_Value(tRow.Fields.FindField("Attribute"), 1);
-                            tempRow.set_Value(tempRow.Fields.FindField("MatchedFields"), tempFieldsName.Trim());
+                            tempRow.set_Value(tempRow.Fields.FindField("Attribute"), 0);
+                            MessageBox.Show("没有选择属性匹配对应字段！", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
                         }
                         tempRow.Store();
                     }
+                    //表中某行的 待匹配图层名不为空，也就是含有之前的匹配记录                    
                     else
                     {
+                        //通过待匹配图层名获取该记录
                         IRow tRow = table.GetRow(pDic[targetFeatureName]);
 
-                        IDataset dataset = sourceFeatCls as IDataset;
-                        if (ClsDeclare.g_SourceFeatClsPathDic.ContainsKey(dataset.Name))
+                        if (ClsDeclare.g_SourceFeatClsPathDic.ContainsKey((sourceFeatCls as IDataset).Name))
                         {
-
-                            tRow.set_Value(tRow.Fields.FindField("SourceFCName"), dataset.Name);
-                            tRow.set_Value(tRow.Fields.FindField("SourcePath"), ClsDeclare.g_SourceFeatClsPathDic[dataset.Name]);
+                            tRow.set_Value(tRow.Fields.FindField("SourceFCName"), (sourceFeatCls as IDataset).Name);
+                            tRow.set_Value(tRow.Fields.FindField("SourcePath"), ClsDeclare.g_SourceFeatClsPathDic[(sourceFeatCls as IDataset).Name]);
                             tRow.set_Value(tRow.Fields.FindField("WorkspacePath"), ClsDeclare.g_WorkspacePath);
                         }
 
-                        tRow.set_Value(index, targetFeatureName);
+                        tRow.set_Value(table.FindField("MatchedFCName"), targetFeatureName);
                         tRow.set_Value(tRow.Fields.FindField("FCSettingID"), table.RowCount(null) - 1);
                         //权重
                         tRow.set_Value(tRow.Fields.FindField("MatchedPoints"), Convert.ToDouble(labelCenterNum.Text));
@@ -1428,7 +1166,7 @@ namespace ZJGISDataUpdating
                         }
 
                         //修改属性
-                        tRow.set_Value(tRow.Fields.FindField("Attribute"), 1);
+                        //tRow.set_Value(tRow.Fields.FindField("Attribute"), 1);
                         for (int i = 0; i < dataGridViewX1.RowCount; i++)
                         {
                             dgvCheckBoxCell = dataGridViewX2[0, i] as DataGridViewCheckBoxCell;
@@ -1449,11 +1187,13 @@ namespace ZJGISDataUpdating
                         if (tempFieldsName == "")
                         {
                             //tRow.set_Value(tRow.Fields.FindField("Attribute"), 0);
-                            //MessageBoxEx.Show("没有选择属性匹配对应字段！", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            tRow.set_Value(tRow.Fields.FindField("Attribute"), 0);
+                            MessageBoxEx.Show("没有选择属性匹配对应字段！", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
                         }
                         else
                         {
                             //tRow.set_Value(tRow.Fields.FindField("Attribute"), 1);
+                            tRow.set_Value(tRow.Fields.FindField("Attribute"), 1);
                             tRow.set_Value(tRow.Fields.FindField("MatchedFields"), tempFieldsName.Trim());
                         }
 
@@ -1467,7 +1207,7 @@ namespace ZJGISDataUpdating
                     {
                         IRow tempRow = table.CreateRow();
 
-                        tempRow.set_Value(index, targetFeatureName);
+                        tempRow.set_Value(table.FindField("MatchedFCName"), targetFeatureName);
                         tempRow.set_Value(tempRow.Fields.FindField("FCSettingID"), table.RowCount(null) - 1);
                         tempRow.set_Value(tempRow.Fields.FindField("Top"), 1);
 
@@ -1596,66 +1336,64 @@ namespace ZJGISDataUpdating
                         }
                         tRow.Store();
                     }
-
                 }
-
                 pWorkspaceEdit.StopEditOperation();
                 pWorkspaceEdit.StopEditing(true);
             }
 
         }
-        private void comboBoxExMatchType_SelectedIndexChanged(object sender, EventArgs e)
+        /// <summary>
+        /// 判断表是否为空，并进行相应的操作
+        /// </summary>
+        /// <param name="sourceFeatCls"></param>
+        /// <param name="workspace"></param>
+        /// <param name="table"></param>
+        /// <param name="featureWorkspace"></param>
+        /// <returns></returns>
+        private ITable TableIsExist(IFeatureClass sourceFeatCls, IWorkspace2 workspace, ITable table,
+            IFeatureWorkspace featureWorkspace)
         {
-            //if (this.comboBoxExMatchType.Text != "")
-            //{
-            //    //if (this.comboBoxExMatchType.Text == "几何匹配")
-            //    //{
-            //    //    if (!this.tabControl1.Tabs[0].Visible)
-            //    //    {
-            //    //        this.tabControl1.Tabs[0].Visible = true;
-            //    //    }
-            //    //    this.tabControl1.Tabs[1].Visible = false;
+            IFields fields;
+            if (sourceFeatCls.ShapeType == esriGeometryType.esriGeometryPolyline ||
+                sourceFeatCls.ShapeType == esriGeometryType.esriGeometryLine)
+            {
+                //如果表存在，那么打开表
+                if (workspace.get_NameExists(esriDatasetType.esriDTTable, ClsConstant.lineSettingTable))
+                {
+                    table = featureWorkspace.OpenTable(ClsConstant.lineSettingTable);
+                    IWorkspaceEdit workspaceEdit = workspace as IWorkspaceEdit;
+                    workspaceEdit.StartEditing(true);
+                    workspaceEdit.StartEditOperation();
 
-            //    //}
-            //    //else if (this.comboBoxExMatchType.Text == "拓扑匹配")
-            //    //{
-            //    //    if (!this.tabControl1.Tabs[1].Visible)
-            //    //    {
-            //    //        this.tabControl1.Tabs[1].Visible = true;
-            //    //    }
-            //    //    this.tabControl1.Tabs[0].Visible = false;
+                    ICursor cursor = table.Search(null, false);
+                    IRow r = cursor.NextRow();
+                    while (r != null)
+                    {
+                        r.Delete();
+                        r = cursor.NextRow();
+                    }
+                    workspaceEdit.StopEditOperation();
+                    workspaceEdit.StopEditing(true);
 
-            //    //}
-            //    if (this.comboBoxExMatchType.Text == "几何匹配")
-            //    {
-            //        if (!this.tabItem1.Visible)
-            //        {
-            //            this.tabItem1.Visible = true;
-            //        }
-            //        this.tabItem2.Visible = false;
-            //        this.tabItem3.Visible = false;
+                    //ClsDeleteTables.DeleteFeatureClass(workspace, this.dataGridViewX1.Rows[i].Cells[3].Value.ToString());
 
-            //    }
-            //    else if (this.comboBoxExMatchType.Text == "拓扑匹配")
-            //    {
-            //        if (!this.tabItem2.Visible)
-            //        {
-            //            this.tabItem2.Visible = true;
-            //        }
-            //        this.tabItem1.Visible = false;
-            //        this.tabItem3.Visible = false;
+                }
+                //如果不存在表就创建表
+                else
+                {
+                    fields = CreateMatchedPolylineFCSettingFields(workspace);
+                    UID uid = new UIDClass();
+                    uid.Value = "esriGeoDatabase.Object";
+                    IFieldChecker fieldChecker = new FieldCheckerClass();
+                    IEnumFieldError enumFieldError = null;
+                    IFields validatedFields = null;
+                    fieldChecker.ValidateWorkspace = (IWorkspace)workspace;
+                    fieldChecker.Validate(fields, out enumFieldError, out validatedFields);
 
-            //    }
-            //    else if (this.comboBoxExMatchType.Text == "属性匹配")
-            //    {
-            //        if (!this.tabItem3.Visible)
-            //        {
-            //            this.tabItem3.Visible = true;
-            //        }
-            //        this.tabItem1.Visible = false;
-            //        this.tabItem2.Visible = false;
-            //    }
-            //}
+                    table = featureWorkspace.CreateTable(ClsConstant.lineSettingTable, validatedFields, uid, null, "");
+                }
+            }
+            return table;
         }
 
         private void radioButtonShape_CheckedChanged(object sender, EventArgs e)

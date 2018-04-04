@@ -30,8 +30,6 @@
         {
             this.txbGdbPath = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
-            this.txbEntiName = new System.Windows.Forms.TextBox();
-            this.label2 = new System.Windows.Forms.Label();
             this.btnOpenPath = new System.Windows.Forms.Button();
             this.btnCreateEntiTable = new System.Windows.Forms.Button();
             this.btnOpenVersionPath = new System.Windows.Forms.Button();
@@ -58,24 +56,6 @@
             this.label1.TabIndex = 1;
             this.label1.Text = "实体表路径：";
             // 
-            // txbEntiName
-            // 
-            this.txbEntiName.Location = new System.Drawing.Point(17, 174);
-            this.txbEntiName.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.txbEntiName.Name = "txbEntiName";
-            this.txbEntiName.Size = new System.Drawing.Size(341, 25);
-            this.txbEntiName.TabIndex = 2;
-            this.txbEntiName.Text = "EntiTable";
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(15, 141);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(97, 15);
-            this.label2.TabIndex = 3;
-            this.label2.Text = "实体表名称：";
-            // 
             // btnOpenPath
             // 
             this.btnOpenPath.Location = new System.Drawing.Point(363, 44);
@@ -89,7 +69,7 @@
             // 
             // btnCreateEntiTable
             // 
-            this.btnCreateEntiTable.Location = new System.Drawing.Point(363, 168);
+            this.btnCreateEntiTable.Location = new System.Drawing.Point(177, 168);
             this.btnCreateEntiTable.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.btnCreateEntiTable.Name = "btnCreateEntiTable";
             this.btnCreateEntiTable.Size = new System.Drawing.Size(75, 25);
@@ -162,8 +142,6 @@
             this.Controls.Add(this.txbVersionPath);
             this.Controls.Add(this.btnCreateEntiTable);
             this.Controls.Add(this.btnOpenPath);
-            this.Controls.Add(this.label2);
-            this.Controls.Add(this.txbEntiName);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.txbGdbPath);
             this.DoubleBuffered = true;
@@ -180,8 +158,6 @@
 
         private System.Windows.Forms.TextBox txbGdbPath;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.TextBox txbEntiName;
-        private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Button btnOpenPath;
         private System.Windows.Forms.Button btnCreateEntiTable;
         private System.Windows.Forms.Button btnOpenVersionPath;

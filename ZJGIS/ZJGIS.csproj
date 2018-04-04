@@ -452,6 +452,12 @@
   <ItemGroup>
     <None Include="Resources\checkEntiTable.png" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\全图.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\全图显示.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

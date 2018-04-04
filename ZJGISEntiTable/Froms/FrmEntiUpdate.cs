@@ -15,6 +15,7 @@ using System.Windows.Forms;
 using ZJGISCommon;
 using ZJGISCommon.Classes;
 using ZJGISEntiTable.Classes;
+using System.Collections.ObjectModel;
 
 namespace ZJGISEntiTable.Froms
 {
@@ -65,8 +66,9 @@ namespace ZJGISEntiTable.Froms
             this.progressBarXEntiUpdate.Visible = true;
             this.labelX1.Visible = true;
 
-
+            //待更新图层
             IFeatureLayer toUpdateLyr = this.GetFeatureLayerByName(this._pFeatlayerList, this.toUpdateBox.SelectedItem.ToString());
+            //更新后的图层
             IFeatureLayer updatedLyr = this.GetFeatureLayerByName(this._pFeatlayerList, this.updatedBox.SelectedItem.ToString());
 
             List<ClsUpdateInfo> updateInfos = this.GetUpdateInfo(toUpdateLyr, updatedLyr);
@@ -76,12 +78,7 @@ namespace ZJGISEntiTable.Froms
                 this._frm = new FrmUpdateResult();
             }
             this._frm.LoadData(processedUpdateInfos, this._entityTable, this._versionTable);
-
-           
-
             this._frm.Show();
-
-
         }
         /// <summary>
         /// 打开实体表路径
@@ -90,16 +87,56 @@ namespace ZJGISEntiTable.Froms
         /// <param name="e"></param>
         private void EntityTbPathBtn_Click(object sender, EventArgs e)
         {
-            FolderBrowserDialog fBD = new FolderBrowserDialog();
-            fBD.Description = "选择GDB路径";//控件上显示的说明文本
-            fBD.RootFolder = Environment.SpecialFolder.Desktop;//设置开始浏览的根文件夹
-            fBD.ShowNewFolderButton = true;//是否显示“新建文件夹”按钮
-            if (fBD.ShowDialog() == DialogResult.OK)
+            //FolderBrowserDialog fBD = new FolderBrowserDialog();
+            //fBD.Description = "选择GDB路径";//控件上显示的说明文本
+            //fBD.RootFolder = Environment.SpecialFolder.Desktop;//设置开始浏览的根文件夹
+            //fBD.ShowNewFolderButton = true;//是否显示“新建文件夹”按钮
+            //if (fBD.ShowDialog() == DialogResult.OK)
+            //{
+            //    this.EntityTbPath.Text = fBD.SelectedPath;
+            //    this._entityTable = this.OpenEntityTable(this.EntityTbName.Text, fBD.SelectedPath);
+            //}
+
+            string tempResultTablePath = null;
+            //relationTable = ClsUpdateCommon.OpenRelateTable(out tempResultTablePath);
+            ZJGISOpenData.Forms.FrmOpenData frmOpenData = new ZJGISOpenData.Forms.FrmOpenData();
+            frmOpenData.IsShowTable = true;
+            if (frmOpenData.ShowDialog() == DialogResult.Cancel)
             {
-                this.EntityTbPath.Text = fBD.SelectedPath;
-                this._entityTable = this.OpenEntityTable(this.EntityTbName.Text, fBD.SelectedPath);
+                return;
             }
+
+            //sourceFeatureclass = ClsUpdateCommon.OpenSourceLayer(out sourceFeatureclassPath);
+            Collection<object> tableCol = new Collection<object>();
+
+            tableCol = frmOpenData.TableCollection;
+            IDataset dataset = null;
+            //if (tableCol.Count == 1)
+            if (tableCol.Count > 1)
+            {
+                dataset = tableCol[0] as IDataset;
+                //relationTable = tableCol[0] as ITable;
+            }
+            else
+            {
+                MessageBoxEx.Show("请加载数据源", "提示", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            if (dataset == null)
+            {
+                MessageBoxEx.Show("请加载匹配结果表！", "提示", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+            tempResultTablePath = frmOpenData.PathName + @"\" + dataset.Name;
+            if (string.IsNullOrEmpty(tempResultTablePath))
+            {
+                return;
+            }
+            this.EntityTbPath.Text = tempResultTablePath;
+            this._entityTable = this.OpenEntityTable(dataset.Name, frmOpenData.PathName);
         }
+        //TODO: 打开版本与记录表的两种方式
         /// <summary>
         /// 打开版本记录表
         /// </summary>
@@ -107,15 +144,54 @@ namespace ZJGISEntiTable.Froms
         /// <param name="e"></param>
         private void VersionTbPathBtn_Click(object sender, EventArgs e)
         {
-            OpenFileDialog oFD = new OpenFileDialog();
-            oFD.Title = "数据版本记录表路径";//对话框标题
-            oFD.Filter = "dbf文件(*.dbf)|*.dbf|所有文件(*.*)|*.*";//设置文件名筛选器
-            oFD.Multiselect = true;//是否可以多选文件
-            if (oFD.ShowDialog() == DialogResult.OK)
+            //OpenFileDialog oFD = new OpenFileDialog();
+            //oFD.Title = "数据版本记录表路径";//对话框标题
+            //oFD.Filter = "dbf文件(*.dbf)|*.dbf|所有文件(*.*)|*.*";//设置文件名筛选器
+            //oFD.Multiselect = true;//是否可以多选文件
+            //if (oFD.ShowDialog() == DialogResult.OK)
+            //{
+            //    this.VersionTbPath.Text = oFD.FileName;
+            //    this._versionTable = this.OpenVersionTable(oFD.FileName);
+            //}
+
+            string tempResultTablePath = null;
+            //relationTable = ClsUpdateCommon.OpenRelateTable(out tempResultTablePath);
+            ZJGISOpenData.Forms.FrmOpenData frmOpenData = new ZJGISOpenData.Forms.FrmOpenData();
+            frmOpenData.IsShowTable = true;
+            if (frmOpenData.ShowDialog() == DialogResult.Cancel)
             {
-                this.VersionTbPath.Text = oFD.FileName;
-                this._versionTable = this.OpenVersionTable(oFD.FileName);
+                return;
             }
+
+            //sourceFeatureclass = ClsUpdateCommon.OpenSourceLayer(out sourceFeatureclassPath);
+            Collection<object> tableCol = new Collection<object>();
+
+            tableCol = frmOpenData.TableCollection;
+            IDataset dataset = null;
+            //if (tableCol.Count == 1)
+            if (tableCol.Count > 1)
+            {
+                dataset = tableCol[0] as IDataset;
+                //relationTable = tableCol[0] as ITable;
+            }
+            else
+            {
+                MessageBoxEx.Show("请加载数据源", "提示", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            if (dataset == null)
+            {
+                MessageBoxEx.Show("请加载匹配结果表！", "提示", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+            tempResultTablePath = frmOpenData.PathName + @"\" + dataset.Name;
+            if (string.IsNullOrEmpty(tempResultTablePath))
+            {
+                return;
+            }
+            this.VersionTbPath.Text = tempResultTablePath;
+            this._versionTable = this.OpenEntityTable(dataset.Name, frmOpenData.PathName);
         }
         /// <summary>
         /// 打开实体表
@@ -335,7 +411,8 @@ namespace ZJGISEntiTable.Froms
                 string startVersion = pFeature.get_Value(pFeature.Fields.FindField(fromVersionField)).ToString();
                 string endVersion = pFeature.get_Value(pFeature.Fields.FindField(toVersionField)).ToString();
                 string guid = pFeature.get_Value(pFeature.Fields.FindField(guidField)).ToString();
-                if (startVersion == currentVersion.ToString() && endVersion == "99999")//起始号为当前版本，终止号为99999的话就是新增的要素
+                //起始号为当前版本，终止号为99999的话就是新增的要素
+                if (startVersion == currentVersion.ToString() && endVersion == "99999")
                 {
                     ClsUpdateInfo ui = new ClsUpdateInfo();
                     ui.UpdateState = "New";
@@ -345,7 +422,8 @@ namespace ZJGISEntiTable.Froms
                     ui.UpdatedLyr = updatedLyr;
                     updateInfos.Add(ui);
                 }
-                else if (startVersion != currentVersion.ToString()&&endVersion == currentVersion.ToString())//起始号不同，终止号为当前版本，则为删除
+                //起始号不同，终止号为当前版本，则为删除
+                else if (startVersion != currentVersion.ToString() && endVersion == currentVersion.ToString())
                 {
                     ClsUpdateInfo ui = new ClsUpdateInfo();
                     ui.UpdateState = "Delete";
@@ -355,9 +433,9 @@ namespace ZJGISEntiTable.Froms
                     ui.UpdatedLyr = updatedLyr;
                     updateInfos.Add(ui);
                 }
-                else 
+                else
                 {
-                   
+
                 }
 
                 pBarEntiUpdate.PerformOneStep();
@@ -400,7 +478,10 @@ namespace ZJGISEntiTable.Froms
                         if (processResult[key][j].UpdateState == "New")
                         {
                             processResult[key][j].UpdateState = "Update";
-                            result.Add(key, processResult[key][j]);
+                            if (!result.ContainsKey(key))
+                            {
+                            	result.Add(key, processResult[key][j]);
+                            }
                         }
                     }
                 }

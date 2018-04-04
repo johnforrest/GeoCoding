@@ -14,16 +14,17 @@ using DevComponents.DotNetBar;
 using ZJGISCommon;
 using ESRI.ArcGIS.Carto;
 using ZJGISDataUpdating.Class;
+using System.Diagnostics;
 //using System.Text.RegularExpressions;
 namespace ZJGISDataUpdating
 {
-    public partial class FrmMatchPoint : DevComponents.DotNetBar.Office2007Form
+    public partial class FrmMatchPointDif : DevComponents.DotNetBar.Office2007Form
     {
         Form previousForm;
         Dictionary<int, DataGridViewRow> m_InRowDic;
         Dictionary<int, DataGridViewRow> m_OutRowDic;
 
-        public FrmMatchPoint()
+        public FrmMatchPointDif()
         {
             InitializeComponent();
             m_InRowDic = new Dictionary<int, DataGridViewRow>();
@@ -470,6 +471,7 @@ namespace ZJGISDataUpdating
             return fields;
 
         }
+        #region 点实体匹配
         //TODO ：点实体的开始匹配按钮
         /// <summary>
         /// 开始匹配（点）
@@ -478,7 +480,12 @@ namespace ZJGISDataUpdating
         /// <param name="e"></param>
         private void buttonXStartMatch_Click(object sender, EventArgs e)
         {
+            //StopWatch类计时
+            Stopwatch sw = new Stopwatch();
+            sw.Start();
+            
             this.Cursor = System.Windows.Forms.Cursors.WaitCursor;
+
             IWorkspaceFactory2 pWorkspaceFactory = new FileGDBWorkspaceFactoryClass() as IWorkspaceFactory2;
             string gdbPath = ClsDeclare.g_WorkspacePath;
             IWorkspace2 pWorkspace = pWorkspaceFactory.OpenFromFile(gdbPath, 0) as IWorkspace2;
@@ -780,21 +787,24 @@ namespace ZJGISDataUpdating
                     }
                 }
 
-                ClsCoreUpdateFun clsCoreUpdateFun = new ClsCoreUpdateFun();
+                ClsPointMatch clsPointMatch = new ClsPointMatch();
 
-                //matchedMay为1 代表拓扑匹配
-                //if (matchedMay == 1)
-                if (this.tabControl1.Tabs[1].Visible == true)
-                {
-                    clsCoreUpdateFun.SearchChangedFeaturesByTop(pSourceFeatCls, pTargetFeatCls, table, buffer, fields, progressBarMain, progressBarSub, labelXStatus);
-                    MessageBoxEx.Show("拓扑匹配已完成！", "提示");
-                }
                 //matchedMay为0 代表几何匹配
                 //else if (matchedMay == 0)
-                else if (this.tabControl1.Tabs[0].Visible == true)
+                if (this.tabControl1.Tabs[0].Visible == true)
                 {
-                    clsCoreUpdateFun.SearchChangedFeatures(pSourceFeatCls, pTargetFeatCls, table, matchedMode, weight, buffer, fields, progressBarMain, progressBarSub, labelXStatus);
-                    MessageBoxEx.Show("几何匹配已完成！", "提示");
+                    clsPointMatch.SearchChangedFeatures(pSourceFeatCls, pTargetFeatCls, table, matchedMode, weight, buffer, fields, progressBarMain, progressBarSub, labelXStatus,chkBoxPointIndicator);
+                    sw.Stop();
+                    //Console.WriteLine("Stopwatch 时间精度：{0}ms", sw.ElapsedMilliseconds);
+                    MessageBoxEx.Show("几何匹配已完成！总需要时间" + sw.ElapsedMilliseconds+"ms", "提示");
+                }
+                //matchedMay为1 代表拓扑匹配
+                //if (matchedMay == 1)
+                else if (this.tabControl1.Tabs[1].Visible == true)
+                {
+                    clsPointMatch.SearchChangedFeaturesByTop(pSourceFeatCls, pTargetFeatCls, table, buffer, fields, progressBarMain, progressBarSub, labelXStatus);
+                    sw.Stop();
+                    MessageBoxEx.Show("拓扑匹配已完成！总需要时间" + sw.ElapsedMilliseconds + "ms", "提示");
                 }
 
             }
@@ -804,6 +814,7 @@ namespace ZJGISDataUpdating
 
 
         }
+        #endregion
         /// <summary>
         /// 上一步
         /// </summary>
@@ -1209,7 +1220,7 @@ namespace ZJGISDataUpdating
                             dgvCheckBoxCell = dataGridViewX2[0, i] as DataGridViewCheckBoxCell;
                             if (Convert.ToBoolean(dgvCheckBoxCell.Value) == true)
                             {
-                                if (this.dataGridViewX2[1, i].Value.ToString()== this.dataGridViewX2[2, i].Value.ToString())
+                                if (this.dataGridViewX2[1, i].Value.ToString() == this.dataGridViewX2[2, i].Value.ToString())
                                 {
                                     tempFieldsName = tempFieldsName + dataGridViewX2[1, i].Value.ToString() + ";";
                                 }
