@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using ESRI.ArcGIS.Geometry;
@@ -7,9 +8,9 @@ using ESRI.ArcGIS.esriSystem;
 using ESRI.ArcGIS.Geodatabase;
 using System.Windows.Forms;
 
-namespace ZJGISDataUpdating 
+namespace ZJGISDataUpdating
 {
-    public class ClsConvertUnit
+    public static class ClsConvertUnit
     {
         /// <summary>
         /// 转换点坐标，从默认坐标转换当前坐标
@@ -18,7 +19,7 @@ namespace ZJGISDataUpdating
         /// <param name="defaultUnit"></param>
         /// <param name="currentUnit"></param>
         /// <returns></returns>
-        public IPoint ConvertPointCoordinate(IPoint vPoint, esriUnits defaultUnit, esriUnits currentUnit)
+        public static IPoint ConvertPointCoordinate(IPoint vPoint, esriUnits defaultUnit, esriUnits currentUnit)
         {
             IUnitConverter pUnitConverter = new UnitConverter();
             IPoint pPt = new PointClass();
@@ -34,7 +35,7 @@ namespace ZJGISDataUpdating
         /// <param name="defaultUnit"></param>
         /// <param name="currentUnit"></param>
         /// <returns></returns>
-        public IPolyline ConvertLineCoordinate(IPolyline vPolyline, esriUnits defaultUnit, esriUnits currentUnit)
+        public static IPolyline ConvertLineCoordinate(IPolyline vPolyline, esriUnits defaultUnit, esriUnits currentUnit)
         {
             IPointCollection pPointColl;
             IPolyline pNewPolyline;
@@ -54,25 +55,32 @@ namespace ZJGISDataUpdating
             pNewPolyline = (IPolyline)pNewPointColl;
             return pNewPolyline;
         }
-        ////转换面坐标，从默认坐标转换当前坐标
-        //public IPolygon ConvertPolyonCoordinate(IPolygon vPolygon)
-        //{
-        //    IPointCollection pPointColl;
-        //    IPolygon pNewPolygon;
-        //    IPointCollection pNewPointColl;
 
-        //    pNewPolygon = new PolygonClass();
-        //    pNewPointColl = (IPointCollection)pNewPolygon;
-        //    pPointColl = (IPointCollection)vPolygon;
-        //    object Missing = Type.Missing;
-        //    object Missing1 = Type.Missing;
-        //    for (int i = 0; i < pPointColl.PointCount; i++)
-        //    {
-        //        pNewPointColl.AddPoint(ConvertPointCoordinate(pPointColl.get_Point(i)), ref Missing, ref Missing1);
-        //    }
-        //    pNewPolygon = (IPolygon)pNewPointColl;
-        //    return pNewPolygon;
-        //}
+        /// <summary>
+        /// 转换面坐标，从默认坐标转换当前坐标
+        /// </summary>
+        /// <param name="vPolygon"></param>
+        /// <param name="defaultUnit"></param>
+        /// <param name="currentUnit"></param>
+        /// <returns></returns>
+        public static IPolygon ConvertPolyonCoordinate(IPolygon vPolygon, esriUnits defaultUnit, esriUnits currentUnit)
+        {
+            IPointCollection pPointColl;
+            IPolygon pNewPolygon;
+            IPointCollection pNewPointColl;
+
+            pNewPolygon = new PolygonClass();
+            pNewPointColl = (IPointCollection)pNewPolygon;
+            pPointColl = (IPointCollection)vPolygon;
+            object Missing = Type.Missing;
+            object Missing1 = Type.Missing;
+            for (int i = 0; i < pPointColl.PointCount; i++)
+            {
+                pNewPointColl.AddPoint(ConvertPointCoordinate(pPointColl.get_Point(i), defaultUnit, currentUnit), ref Missing, ref Missing1);
+            }
+            pNewPolygon = (IPolygon)pNewPointColl;
+            return pNewPolygon;
+        }
 
         /// <summary>
         /// 检查坐标系统
@@ -80,7 +88,7 @@ namespace ZJGISDataUpdating
         /// <param name="cFeatCls">源数据要素</param>
         /// <param name="tuFeatCls">待匹配数据要素</param>
         /// <returns></returns>
-        public bool CheckCoordinateSystem(IFeatureClass cFeatCls, IFeatureClass tuFeatCls)
+        public static bool CheckCoordinateSystem(IFeatureClass cFeatCls, IFeatureClass tuFeatCls)
         {
             try
             {
@@ -92,7 +100,7 @@ namespace ZJGISDataUpdating
                 IGeoDataset tuGeoDataset = tuDataset as IGeoDataset;
                 ISpatialReference tuSpatialReference = tuGeoDataset.SpatialReference;
 
-                if (cSpatialReference is IGeographicCoordinateSystem)               
+                if (cSpatialReference is IGeographicCoordinateSystem)
                 {
                     if (tuSpatialReference is IGeographicCoordinateSystem)
                     {
@@ -172,19 +180,21 @@ namespace ZJGISDataUpdating
         /// <param name="vSpatialReference">空间参考</param>
         /// <param name="buffer">缓冲区距离</param>
         /// <returns></returns>
-        public double GetBufferValueByUnit(ISpatialReference vSpatialReference,double buffer)
+        public static double GetBufferValueByUnit(ISpatialReference vSpatialReference, double buffer)
         {
             IGeographicCoordinateSystem pGeographicCoordinateSystem = null;
             IProjectedCoordinateSystem pProjectedCoordinateSystem = null;
             string sUnitName = null;
             if ((vSpatialReference != null))
             {
-                if (vSpatialReference is IGeographicCoordinateSystem)//如果是大地坐标系则获得其对应的名称
+                //如果是大地坐标系则获得其对应的名称
+                if (vSpatialReference is IGeographicCoordinateSystem)
                 {
                     pGeographicCoordinateSystem = vSpatialReference as IGeographicCoordinateSystem;
                     sUnitName = pGeographicCoordinateSystem.CoordinateUnit.Name;
                 }
-                else if (vSpatialReference is IProjectedCoordinateSystem)//如果是投影坐标则获得对应的名称
+                //如果是投影坐标则获得对应的名称
+                else if (vSpatialReference is IProjectedCoordinateSystem)
                 {
                     pProjectedCoordinateSystem = vSpatialReference as IProjectedCoordinateSystem;
                     sUnitName = pProjectedCoordinateSystem.CoordinateUnit.Name;
@@ -206,7 +216,7 @@ namespace ZJGISDataUpdating
                     return buffer;
                 case "CENTIMETRE":
                     IUnitConverter pUnitConverter = new UnitConverter();
-                    revalue=pUnitConverter.ConvertUnits(buffer,esriUnits.esriMeters,esriUnits.esriCentimeters);
+                    revalue = pUnitConverter.ConvertUnits(buffer, esriUnits.esriMeters, esriUnits.esriCentimeters);
                     return revalue;
                 case "KILOMETRES":
                     IUnitConverter pUnitConverter2 = new UnitConverter();
@@ -214,14 +224,45 @@ namespace ZJGISDataUpdating
                     return revalue;
                 case "DEGREE":
                     IUnitConverter pUnitConverter1 = new UnitConverter();
-                    revalue = pUnitConverter1.ConvertUnits(buffer, esriUnits.esriMeters,esriUnits.esriDecimalDegrees);
+                    revalue = pUnitConverter1.ConvertUnits(buffer, esriUnits.esriMeters, esriUnits.esriDecimalDegrees);
                     return revalue;
                 default:
-                    MessageBox.Show("坐标系统单位未知！","提示",MessageBoxButtons.OK,MessageBoxIcon.Warning);
+                    MessageBox.Show("坐标系统单位未知！", "提示", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     return 0;
             }
 
         }
+        /// <summary>
+        /// 经纬度转投影坐标
+        /// </summary>
+        /// <param name="pPoint"></param>
+        /// <param name="GCSType"></param>
+        /// <param name="PRJType"></param>
+        /// <returns></returns>
+        private static IPoint GCStoPRJ(IPoint pPoint, int GCSType, int PRJType)
+        {
+            ISpatialReferenceFactory pSRF = new SpatialReferenceEnvironmentClass();
+            pPoint.SpatialReference = pSRF.CreateGeographicCoordinateSystem(GCSType);
+            pPoint.Project(pSRF.CreateProjectedCoordinateSystem(PRJType));
+            return pPoint;
+        }
+        /// <summary>
+        /// 投影坐标转经纬坐标
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <returns></returns>
+        private static IPoint PRJtoGCS(double x, double y)
+        {
+            IPoint pPoint = new PointClass();
+            pPoint.PutCoords(x, y);
+            ISpatialReferenceFactory pSRF = new SpatialReferenceEnvironmentClass();
+            pPoint.SpatialReference = pSRF.CreateProjectedCoordinateSystem(2414);
+            pPoint.Project(pSRF.CreateGeographicCoordinateSystem((int)esriSRGeoCSType.esriSRGeoCS_Beijing1954));
+            return pPoint;
+        }
+
+    
 
     }
 }

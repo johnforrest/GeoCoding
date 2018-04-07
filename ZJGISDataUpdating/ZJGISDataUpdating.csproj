@@ -112,6 +112,8 @@
   <ItemGroup>
     <Compile Include="Class\ClsConstant.cs" />
     <Compile Include="Class\ClsDeleteTables.cs" />
+    <Compile Include="Class\ClsGeoEcluDistance.cs" />
+    <Compile Include="Class\ClsIndicatorFunStatic.cs" />
     <Compile Include="Class\ClsLineMatch.cs" />
     <Compile Include="Class\ClsPointMatch.cs" />
     <Compile Include="Class\ClsPolygonMatch.cs" />
@@ -122,7 +124,6 @@
     <Compile Include="Class\ClsCoreUpdateFun.cs" />
     <Compile Include="Class\ClsDeclare.cs" />
     <Compile Include="Class\ClsFieldPropertyDescriptor.cs" />
-    <Compile Include="Class\ClsIndicatorFun.cs" />
     <Compile Include="Class\ClsTableWrapper.cs" />
     <Compile Include="Class\ClsUpdate.cs" />
     <Compile Include="Class\SourceDataAdd.cs" />

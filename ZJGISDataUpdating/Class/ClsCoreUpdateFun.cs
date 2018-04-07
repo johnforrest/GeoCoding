@@ -353,10 +353,7 @@ namespace ZJGISDataUpdating
                                     rowBuffer.set_Value(4, pSrcFeature.get_Value(pSrcFeature.Fields.FindField("GCode")));
                                     rowBuffer.set_Value(5, pTarFeature.get_Value(pTarFeature.Fields.FindField("GCode")));
                                 }
-                                ClsIndicatorFun clsIndicatorFun = new ClsIndicatorFun();
-                                clsIndicatorFun.SourceFeature = pSrcFeature;
-                                clsIndicatorFun.TargetFeature = pTarFeature;
-
+                         
                                 double center = 0;
                                 double area = 0;
                                 double shape = 0;
@@ -364,9 +361,9 @@ namespace ZJGISDataUpdating
                                 int index = 0;
                                 //判断匹配方法
 
-                                shape = clsIndicatorFun.ShapeSimilarValue();
-                                area = clsIndicatorFun.AreaSimilarValue();
-                                center = clsIndicatorFun.CenterSimilarValue();
+                                shape = ClsIndicatorFunStatic.ShapeSimilarValue(pSrcFeature,pTarFeature);
+                                area = ClsIndicatorFunStatic.AreaSimilarValue(pSrcFeature, pTarFeature);
+                                center = ClsIndicatorFunStatic.CenterSimilarValue(pSrcFeature, pTarFeature);
                                 polygonRatio = shape * weight[0] + area * weight[2] + center * weight[1];
                                 string shape1 = string.Format("{0:0.00000000}", shape);
                                 string area1 = string.Format("{0:0.00000000}", area);
@@ -451,24 +448,16 @@ namespace ZJGISDataUpdating
                                                         //    rowBuffer.set_Value(5, pTarFeature.get_Value(pTarFeature.Fields.FindField("GCode")));
                                                         //}
 
-                                                        ClsIndicatorFun clsIndicatorFun = new ClsIndicatorFun();
-                                                        clsIndicatorFun.SourceFeature = pSrcFeature;
-                                                        clsIndicatorFun.TargetFeature = pTarFeature;
+                                                     
+                                                        //double matchedPoints = 0;
+                                                        //double shape = 0;
+                                                        //double polylineRadio = 0;
 
-                                                        double matchedPoints = 0;
-                                                        double shape = 0;
-                                                        double polylineRadio = 0;
-
-                                                        int index = 0;
-                                                        //test
-                                                        string test3 = pTarFeature.get_Value(index).ToString();
-
-
-                                                        //2010104注释掉
-                                                        //形状相似度
-                                                        //shape = ClsIndicatorFun.PolylineShapeSimilarValue();
+                                                        ////2010104注释掉
+                                                        ////形状相似度
+                                                        //shape = ClsIndicatorFunStatic.PolylineShapeSimilarValue(pSrcFeature, pTarFeature);
                                                         ////节点相似度
-                                                        //matchedPoints = ClsIndicatorFun.MatchedPointsSimilarValue(buffer);
+                                                        //matchedPoints = ClsIndicatorFunStatic.MatchedPointsSimilarValue(pSrcFeature, pTarFeature, buffer);
                                                         ////综合相似度
                                                         //polylineRadio = shape * weight[0] + matchedPoints * weight[1];
 
@@ -481,6 +470,7 @@ namespace ZJGISDataUpdating
                                                         //rowBuffer.set_Value(rowBuffer.Fields.FindField("综合相似度"), polygonRatio1);
 
 
+                                                        int index = 0;
                                                         //if (polylineRadio > weight[2])
                                                         //{
                                                         //如果两个点之间的距离小于设置的综合相似度
@@ -573,24 +563,16 @@ namespace ZJGISDataUpdating
                                                         //    rowBuffer.set_Value(5, pTarFeature.get_Value(pTarFeature.Fields.FindField("GCode")));
                                                         //}
 
-                                                        int index = 0;
-                                                        ClsIndicatorFun clsIndicatorFun = new ClsIndicatorFun();
-                                                        clsIndicatorFun.SourceFeature = pSrcFeature;
-                                                        clsIndicatorFun.TargetFeature = pTarFeature;
-
                                                         double matchedPoints = 0;
                                                         double shape = 0;
                                                         double polylineRadio = 0;
 
-                                                        //test
-                                                        string test3 = pTarFeature.get_Value(index).ToString();
-
 
                                                         //20170518注释掉
                                                         //形状相似度
-                                                        shape = clsIndicatorFun.PolylineShapeSimilarValue();
+                                                        shape = ClsIndicatorFunStatic.PolylineShapeSimilarValue(pSrcFeature, pTarFeature);
                                                         //节点相似度
-                                                        matchedPoints = clsIndicatorFun.MatchedPointsSimilarValue(buffer);
+                                                        matchedPoints = ClsIndicatorFunStatic.MatchedPointsSimilarValue(pSrcFeature, pTarFeature, buffer);
                                                         //综合相似度
                                                         polylineRadio = shape * weight[0] + matchedPoints * weight[1];
 
@@ -601,6 +583,9 @@ namespace ZJGISDataUpdating
                                                         rowBuffer.set_Value(rowBuffer.Fields.FindField("形状相似度"), shape1);
                                                         rowBuffer.set_Value(rowBuffer.Fields.FindField("节点相似度"), matchedPoints1);
                                                         rowBuffer.set_Value(rowBuffer.Fields.FindField("综合相似度"), polygonRatio1);
+
+
+                                                        int index = 0;                                                        
                                                         //if (polylineRadio > weight[2])
                                                         //{
                                                         //如果两个点之间的距离小于设置的综合相似度
@@ -714,12 +699,6 @@ namespace ZJGISDataUpdating
                                 }
                                 else
                                 {
-                                    int index = 0;
-
-                                    ClsIndicatorFun clsIndicatorFun = new ClsIndicatorFun();
-                                    clsIndicatorFun.SourceFeature = pSrcFeature;
-                                    clsIndicatorFun.TargetFeature = pTarFeature;
-
                                     double matchedPoints = 0;
                                     double shape = 0;
                                     double polylineRadio = 0;
@@ -727,9 +706,9 @@ namespace ZJGISDataUpdating
                                     //string test3 = pTarFeature.get_Value(index).ToString();
                                     //20170518注释掉
                                     //形状相似度
-                                    shape = clsIndicatorFun.PolylineShapeSimilarValue();
+                                    shape = ClsIndicatorFunStatic.PolylineShapeSimilarValue(pSrcFeature, pTarFeature);
                                     //节点相似度
-                                    matchedPoints = clsIndicatorFun.MatchedPointsSimilarValue(buffer);
+                                    matchedPoints = ClsIndicatorFunStatic.MatchedPointsSimilarValue(pSrcFeature, pTarFeature,buffer);
                                     //综合相似度
                                     polylineRadio = shape * weight[0] + matchedPoints * weight[1];
                                     string shape1 = string.Format("{0:0.00000000}", shape);
@@ -739,6 +718,8 @@ namespace ZJGISDataUpdating
                                     rowBuffer.set_Value(rowBuffer.Fields.FindField("形状相似度"), shape1);
                                     rowBuffer.set_Value(rowBuffer.Fields.FindField("节点相似度"), matchedPoints1);
                                     rowBuffer.set_Value(rowBuffer.Fields.FindField("综合相似度"), polygonRatio1);
+
+                                    int index = 0;                                    
                                     //if (polylineRadio > weight[2])
                                     //{
                                     //如果两个点之间的距离小于设置的综合相似度
@@ -926,17 +907,14 @@ namespace ZJGISDataUpdating
                                                         //    //设置表TRA_PT_I_PtTabl的（待匹配编码）字段的值——cell[5]
                                                         //    rowBuffer.set_Value(5, pTarFeature.get_Value(pTarFeature.Fields.FindField("GCode")));
                                                         //}
-                                                        ClsIndicatorFun clsIndicatorFun = new ClsIndicatorFun();
-                                                        clsIndicatorFun.SourceFeature = pSrcFeature;
-                                                        clsIndicatorFun.TargetFeature = pTarFeature;
-
+                                               
                                                         double distance = 0;
-                                                        int index = 0;
-                                                        distance = clsIndicatorFun.PointDistance();
+                                                        distance = ClsIndicatorFunStatic.EuclideanMetricDistance(pSrcFeature, pTarFeature);
                                                         string distance1 = string.Format("{0:0.0000}", 1 - distance);
                                                         //设置表TRA_PT_I_PtTabl的（位置相似度）字段的值——cell[6]
                                                         rowBuffer.set_Value(rowBuffer.Fields.FindField("位置相似度"), distance1);
 
+                                                        int index = 0;
                                                         //如果两个点之间的距离小于设置的综合相似度
                                                         //if (distance < weight[0] && MatchCode(pSrcFeature, pTarFeature))
                                                         //if (MatchCode(pSrcFeature, pTarFeature))
@@ -1355,20 +1333,16 @@ namespace ZJGISDataUpdating
                                     rowBuffer.set_Value(4, pSrcFeature.get_Value(pSrcFeature.Fields.FindField("GCode")));
                                     rowBuffer.set_Value(5, pTarFeature.get_Value(pTarFeature.Fields.FindField("GCode")));
                                 }
-                                ClsIndicatorFun clsIndicatorFun = new ClsIndicatorFun();
-                                clsIndicatorFun.SourceFeature = pSrcFeature;
-                                clsIndicatorFun.TargetFeature = pTarFeature;
-
+                    
                                 double center = 0;
                                 double area = 0;
                                 double shape = 0;
                                 double polygonRatio = 0;
-                                int index = 0;
                                 //判断匹配方法
 
-                                shape = clsIndicatorFun.ShapeSimilarValue();
-                                area = clsIndicatorFun.AreaSimilarValue();
-                                center = clsIndicatorFun.CenterSimilarValue();
+                                shape = ClsIndicatorFunStatic.ShapeSimilarValue(pSrcFeature, pTarFeature);
+                                area = ClsIndicatorFunStatic.AreaSimilarValue(pSrcFeature, pTarFeature);
+                                center = ClsIndicatorFunStatic.CenterSimilarValue(pSrcFeature, pTarFeature);
                                 polygonRatio = shape * weight[0] + area * weight[2] + center * weight[1];
                                 string shape1 = string.Format("{0:0.00000000}", shape);
                                 string area1 = string.Format("{0:0.00000000}", area);
@@ -1378,6 +1352,8 @@ namespace ZJGISDataUpdating
                                 rowBuffer.set_Value(7, area1);
                                 rowBuffer.set_Value(8, shape1);
                                 rowBuffer.set_Value(9, polygonRatio1);
+
+                                int index = 0;                                
                                 if (polygonRatio > weight[3])
                                 {
                                     if (rowBuffer.get_Value(2).ToString() == "")
@@ -1450,24 +1426,18 @@ namespace ZJGISDataUpdating
                                                 //    rowBuffer.set_Value(5, pTarFeature.get_Value(pTarFeature.Fields.FindField("GCode")));
                                                 //}
 
-                                                ClsIndicatorFun clsIndicatorFun = new ClsIndicatorFun();
-                                                clsIndicatorFun.SourceFeature = pSrcFeature;
-                                                clsIndicatorFun.TargetFeature = pTarFeature;
 
                                                 double matchedPoints = 0;
                                                 double shape = 0;
                                                 double polylineRadio = 0;
 
-                                                int index = 0;
-                                                //test
-                                                string test3 = pTarFeature.get_Value(index).ToString();
 
 
                                                 //20170518注释掉
                                                 //形状相似度
-                                                shape = clsIndicatorFun.PolylineShapeSimilarValue();
+                                                shape = ClsIndicatorFunStatic.PolylineShapeSimilarValue(pSrcFeature, pTarFeature);
                                                 //节点相似度
-                                                matchedPoints = clsIndicatorFun.MatchedPointsSimilarValue(buffer);
+                                                matchedPoints = ClsIndicatorFunStatic.MatchedPointsSimilarValue(pSrcFeature, pTarFeature,buffer);
                                                 //综合相似度
                                                 polylineRadio = shape * weight[0] + matchedPoints * weight[1];
 
@@ -1478,6 +1448,8 @@ namespace ZJGISDataUpdating
                                                 rowBuffer.set_Value(rowBuffer.Fields.FindField("形状相似度"), shape1);
                                                 rowBuffer.set_Value(rowBuffer.Fields.FindField("节点相似度"), matchedPoints1);
                                                 rowBuffer.set_Value(rowBuffer.Fields.FindField("综合相似度"), polygonRatio1);
+
+                                                int index = 0;                                                
                                                 //if (polylineRadio > weight[2])
                                                 //{
                                                 //如果两个点之间的距离小于设置的综合相似度
@@ -2071,21 +2043,17 @@ namespace ZJGISDataUpdating
                                     rowBuffer.set_Value(5, pTarFeature.get_Value(pTarFeature.Fields.FindField("GCode")));
                                 }
 
-                                ClsIndicatorFun clsIndicatorFun = new ClsIndicatorFun();
-                                clsIndicatorFun.SourceFeature = pSrcFeature;
-                                clsIndicatorFun.TargetFeature = pTarFeature;
-
+                        
                                 double center = 0;
                                 double area = 0;
                                 double shape = 0;
                                 double polygonRatio = 0;
-                                int index = 0; //........///?
 
                                 //判断匹配方法
 
-                                shape = clsIndicatorFun.ShapeSimilarValue();
-                                area = clsIndicatorFun.AreaSimilarValue();
-                                center = clsIndicatorFun.CenterSimilarValue();
+                                shape = ClsIndicatorFunStatic.ShapeSimilarValue(pSrcFeature, pTarFeature);
+                                area = ClsIndicatorFunStatic.AreaSimilarValue(pSrcFeature, pTarFeature);
+                                center = ClsIndicatorFunStatic.CenterSimilarValue(pSrcFeature, pTarFeature);
                                 polygonRatio = shape * weight[0] + area * weight[2] + center * weight[1];
                                 string shape1 = string.Format("{0:0.00000000}", shape);
                                 string area1 = string.Format("{0:0.00000000}", area);
@@ -2095,6 +2063,8 @@ namespace ZJGISDataUpdating
                                 rowBuffer.set_Value(7, area1);
                                 rowBuffer.set_Value(8, shape1);
                                 rowBuffer.set_Value(9, polygonRatio1);
+
+                                int index = 0;
                                 if (polygonRatio > weight[3])
                                 {
                                     if (rowBuffer.get_Value(1).ToString() == "")
@@ -2114,10 +2084,6 @@ namespace ZJGISDataUpdating
                             {
                                 if ((pSrcFeature.Shape != null))
                                 {
-                                    ClsIndicatorFun clsIndicatorFun = new ClsIndicatorFun();
-                                    clsIndicatorFun.SourceFeature = pSrcFeature;
-                                    clsIndicatorFun.TargetFeature = pTarFeature;
-
                                     double matchedPoints = 0;
                                     double shape = 0;
                                     double polylineRadio = 0;
@@ -2125,7 +2091,7 @@ namespace ZJGISDataUpdating
                                     string oid = pTarFeature.get_Value(index).ToString();
                                     if (matchedMode == 1)
                                     {
-                                        shape = clsIndicatorFun.PolylineShapeSimilarValue();
+                                        shape = ClsIndicatorFunStatic.PolylineShapeSimilarValue(pSrcFeature, pTarFeature);
                                         polylineRadio = shape;
 
                                         if (polylineRadio > weight[0])
@@ -2146,7 +2112,7 @@ namespace ZJGISDataUpdating
                                     }
                                     else if (matchedMode == 2)
                                     {
-                                        matchedPoints = clsIndicatorFun.MatchedPointsSimilarValue(buffer);
+                                        matchedPoints = ClsIndicatorFunStatic.MatchedPointsSimilarValue(pSrcFeature, pTarFeature,buffer);
                                         polylineRadio = matchedPoints;
 
                                         if (polylineRadio > weight[1])
@@ -2556,11 +2522,9 @@ namespace ZJGISDataUpdating
                                     //设置表TRA_PT_I_PtTabl的（待匹配编码）字段的值——cell[5]
                                     rowBuffer.set_Value(rowBuffer.Fields.FindField("待匹配图层名称"), pTarStrName);
 
-                                    ClsIndicatorFun clsIndicatorFun = new ClsIndicatorFun();
-                                    clsIndicatorFun.SourceFeature = pSrcFeature;
-                                    clsIndicatorFun.TargetFeature = pTarFeature;
+                             
                                     double distance = 0;
-                                    distance = clsIndicatorFun.PointDistance();
+                                    distance = ClsIndicatorFunStatic.EuclideanMetricDistance(pSrcFeature, pTarFeature);
                                     string distance1 = string.Format("{0:0.0000}", 1 - distance);
                                     //设置表TRA_PT_I_PtTabl的（位置相似度）字段的值——cell[6]
                                     rowBuffer.set_Value(rowBuffer.Fields.FindField("位置相似度"), distance1);
@@ -3174,7 +3138,7 @@ namespace ZJGISDataUpdating
             proSub.Value = 0;
             proMain.Value = 0;
 
-            ClsConvertUnit clsConvertUnit = new ClsConvertUnit();
+            //ClsConvertUnit clsConvertUnit = new ClsConvertUnit();
             switch (pTUFeatCls.ShapeType)
             {
                 case esriGeometryType.esriGeometryPoint:

@@ -261,7 +261,6 @@ namespace ZJGISDataUpdating
                 }
                 else
                 {
-                    //MessageBox.Show("不存在此类对应情况！"); 
                     MessageBox.Show("不存在此类对应情况！", "提示");
                 }
             }
@@ -645,6 +644,7 @@ namespace ZJGISDataUpdating
             }
         }
 
+        #region DataGridView事件
         private void dataGridViewX1_MouseUp(object sender, MouseEventArgs e)
         {
             //如果选择某行，则所选要素合并显示
@@ -1540,30 +1540,17 @@ namespace ZJGISDataUpdating
             }
 
         }
-        private void buttonItemDelRow_Click(object sender, EventArgs e)
+        private void dataGridViewX1_CellMouseDown(object sender, DataGridViewCellMouseEventArgs e)
         {
-            if (dataGridViewX1.SelectedRows.Count > 0)
+            if (e.Button == MouseButtons.Right)
             {
-                IDataset pTempDataset = m_Table as IDataset;
-                IWorkspaceEdit pWorkspaceEdit = pTempDataset.Workspace as IWorkspaceEdit;
-                pWorkspaceEdit.StartEditing(true);
-                pWorkspaceEdit.StartEditOperation();
-                for (int i = 0; i < dataGridViewX1.SelectedRows.Count; i++)
+                if (e.RowIndex >= 0)
                 {
-                    int index = dataGridViewX1.SelectedRows[i].Index;
-                    int oid = Convert.ToInt32(dataGridViewX1.Rows[index].Cells[0].Value);
-                    m_Table.GetRow(oid).Delete();
-
+                    dataGridViewX1.ClearSelection();
+                    dataGridViewX1.Rows[e.RowIndex].Selected = true;
+                    dataGridViewX1.CurrentCell = dataGridViewX1.Rows[e.RowIndex].Cells[e.ColumnIndex];
+                    this.contextMenuStrip1.Show(MousePosition.X, MousePosition.Y);
                 }
-                pWorkspaceEdit.StopEditOperation();
-                pWorkspaceEdit.StopEditing(true);
-
-                AddITableToDGV(m_Table, null);
-            }
-            else
-            {
-                MessageBox.Show("请选择要删除的行！", "提示", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
             }
         }
 
@@ -1596,6 +1583,34 @@ namespace ZJGISDataUpdating
                 }
             }
 
+        }
+
+        #endregion
+        private void buttonItemDelRow_Click(object sender, EventArgs e)
+        {
+            if (dataGridViewX1.SelectedRows.Count > 0)
+            {
+                IDataset pTempDataset = m_Table as IDataset;
+                IWorkspaceEdit pWorkspaceEdit = pTempDataset.Workspace as IWorkspaceEdit;
+                pWorkspaceEdit.StartEditing(true);
+                pWorkspaceEdit.StartEditOperation();
+                for (int i = 0; i < dataGridViewX1.SelectedRows.Count; i++)
+                {
+                    int index = dataGridViewX1.SelectedRows[i].Index;
+                    int oid = Convert.ToInt32(dataGridViewX1.Rows[index].Cells[0].Value);
+                    m_Table.GetRow(oid).Delete();
+
+                }
+                pWorkspaceEdit.StopEditOperation();
+                pWorkspaceEdit.StopEditing(true);
+
+                AddITableToDGV(m_Table, null);
+            }
+            else
+            {
+                MessageBox.Show("请选择要删除的行！", "提示", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
         }
 
         /// <summary>
@@ -1842,20 +1857,6 @@ namespace ZJGISDataUpdating
             m_WorkspaceEdit.StopEditOperation();
             m_WorkspaceEdit.StopEditing(true);
             MessageBox.Show("保存成功！", "提示", MessageBoxButtons.OK);
-        }
-
-        private void dataGridViewX1_CellMouseDown(object sender, DataGridViewCellMouseEventArgs e)
-        {
-            if (e.Button == MouseButtons.Right)
-            {
-                if (e.RowIndex >= 0)
-                {
-                    dataGridViewX1.ClearSelection();
-                    dataGridViewX1.Rows[e.RowIndex].Selected = true;
-                    dataGridViewX1.CurrentCell = dataGridViewX1.Rows[e.RowIndex].Cells[e.ColumnIndex];
-                    this.contextMenuStrip1.Show(MousePosition.X, MousePosition.Y);
-                }
-            }
         }
 
     }

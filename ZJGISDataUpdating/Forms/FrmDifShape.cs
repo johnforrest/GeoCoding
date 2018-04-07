@@ -1099,8 +1099,7 @@ namespace ZJGISDataUpdating
                             }
                             IDataset dataset1 = pSourceFeatCls as IDataset;
                             IGeoDataset geoDataset = dataset1 as IGeoDataset;
-                            ClsConvertUnit clsConvertUnit = new ClsConvertUnit();
-                            double a = clsConvertUnit.GetBufferValueByUnit(geoDataset.SpatialReference, Convert.ToDouble(temStr));
+                            double a = ClsConvertUnit.GetBufferValueByUnit(geoDataset.SpatialReference, Convert.ToDouble(temStr));
                             string sa = a.ToString("#0.00000");
                             //综合相似度阈值
                             tempRow.set_Value(tempRow.Fields.FindField("TotalNum"), sa);
@@ -1119,8 +1118,7 @@ namespace ZJGISDataUpdating
                             IDataset dataset1 = pSourceFeatCls as IDataset;
                             IGeoDataset geoDataset = dataset1 as IGeoDataset;
 
-                            ClsConvertUnit clsConvertUnit = new ClsConvertUnit();
-                            double b = clsConvertUnit.GetBufferValueByUnit(geoDataset.SpatialReference, Convert.ToDouble(tempBuffer));
+                            double b = ClsConvertUnit.GetBufferValueByUnit(geoDataset.SpatialReference, Convert.ToDouble(tempBuffer));
                             string sb = b.ToString("#0.000000");
                             tempRow.set_Value(tempRow.Fields.FindField("buffer"), sb);
                         }
@@ -1144,8 +1142,7 @@ namespace ZJGISDataUpdating
                             }
                             IDataset dataset1 = pSourceFeatCls as IDataset;
                             IGeoDataset geoDataset = dataset1 as IGeoDataset;
-                            ClsConvertUnit clsConvertUnit = new ClsConvertUnit();
-                            double b = clsConvertUnit.GetBufferValueByUnit(geoDataset.SpatialReference, Convert.ToDouble(tempBuffer));
+                            double b = ClsConvertUnit.GetBufferValueByUnit(geoDataset.SpatialReference, Convert.ToDouble(tempBuffer));
                             string sb = b.ToString("#0.00000");
                             tempRow.set_Value(tempRow.Fields.FindField("SearchedRadius"), sb);
                         }
@@ -1226,8 +1223,7 @@ namespace ZJGISDataUpdating
                             IDataset dataset1 = pSourceFeatCls as IDataset;
                             IGeoDataset geoDataset = dataset1 as IGeoDataset;
 
-                            ClsConvertUnit clsConvertUnit = new ClsConvertUnit();
-                            double b = clsConvertUnit.GetBufferValueByUnit(geoDataset.SpatialReference, Convert.ToDouble(tempBuffer));
+                            double b = ClsConvertUnit.GetBufferValueByUnit(geoDataset.SpatialReference, Convert.ToDouble(tempBuffer));
                             string sb = b.ToString("#0.000000");
                             tRow.set_Value(tRow.Fields.FindField("buffer"), sb);
                         }
@@ -1252,8 +1248,7 @@ namespace ZJGISDataUpdating
                             IDataset dataset1 = pSourceFeatCls as IDataset;
                             IGeoDataset geoDataset = dataset1 as IGeoDataset;
 
-                            ClsConvertUnit clsConvertUnit = new ClsConvertUnit();
-                            double b = clsConvertUnit.GetBufferValueByUnit(geoDataset.SpatialReference, Convert.ToDouble(tempBuffer));
+                            double b = ClsConvertUnit.GetBufferValueByUnit(geoDataset.SpatialReference, Convert.ToDouble(tempBuffer));
                             string sb = b.ToString("#0.000000");
                             tRow.set_Value(tRow.Fields.FindField("SearchedRadius"), sb);
                         }

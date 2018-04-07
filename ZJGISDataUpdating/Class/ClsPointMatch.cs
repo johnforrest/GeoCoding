@@ -584,12 +584,8 @@ namespace ZJGISDataUpdating.Class
         {
             if (chkBoxPointIndicator.Checked == true)
             {
-                ClsIndicatorFun clsMatching = new ClsIndicatorFun();
-                clsMatching.SourceFeature = pSrcFeature;
-                clsMatching.TargetFeature = pTarFeature;
-
                 double distance = 0;
-                distance = clsMatching.PointDistance();
+                distance = ClsIndicatorFunStatic.EuclideanMetricDistance(pSrcFeature, pTarFeature);
                 string distance1 = string.Format("{0:0.0000}", 1 - distance);
                 //设置表TRA_PT_I_PtTabl的（位置相似度）字段的值——cell[6]
                 rowBuffer.set_Value(rowBuffer.Fields.FindField("位置相似度"), distance1);
@@ -778,11 +774,8 @@ namespace ZJGISDataUpdating.Class
                                     //设置表TRA_PT_I_PtTabl的（待匹配编码）字段的值——cell[5]
                                     rowBuffer.set_Value(rowBuffer.Fields.FindField("待匹配图层名称"), pTarStrName);
 
-                                    ClsIndicatorFun clsIndicatorFun = new ClsIndicatorFun();
-                                    clsIndicatorFun.SourceFeature = pSrcFeature;
-                                    clsIndicatorFun.TargetFeature = pTarFeature;
                                     double distance = 0;
-                                    distance = clsIndicatorFun.PointDistance();
+                                    distance = ClsIndicatorFunStatic.EuclideanMetricDistance(pSrcFeature, pTarFeature);
                                     string distance1 = string.Format("{0:0.0000}", 1 - distance);
                                     //设置表TRA_PT_I_PtTabl的（位置相似度）字段的值——cell[6]
                                     rowBuffer.set_Value(rowBuffer.Fields.FindField("位置相似度"), distance1);

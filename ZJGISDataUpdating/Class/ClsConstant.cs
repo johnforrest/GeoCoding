@@ -12,6 +12,7 @@ namespace ZJGISDataUpdating.Class
         public const string One2One = "一对一";
         public const string One2More = "一对多";
 
+        public const string Zero2One = "零对一";
         public const string More2One = "多对一";
         public const string More2More = "多对多";
 

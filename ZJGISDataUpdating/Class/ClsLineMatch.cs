@@ -54,7 +54,7 @@ namespace ZJGISDataUpdating.Class
         /// <param name="prgSub">子进度条</param>
         /// <param name="stateLabel">状态信息</param>
         /// <returns></returns>
-        public bool SearchChangedFeatures(IFeatureClass pSrcFcls, IFeatureClass pTarFcls, ITable resultTable, double[] weight, 
+        public bool SearchChangedFeaturesGeoAttr(IFeatureClass pSrcFcls, IFeatureClass pTarFcls, ITable resultTable, double[] weight,
             double buffer, string fields, ProgressBar prgMain, ProgressBar prgSub, LabelX stateLabel, CheckBox chkBoxIndicator)
         {
             IFeature pSrcFeature = null;
@@ -64,18 +64,19 @@ namespace ZJGISDataUpdating.Class
             IRelationalOperator pRelOp;
             bool blnShpEqual = false;  //形状匹配
             bool blnAttriEqual = false;//属性匹配
+
             int i = 0;
             int indexChangeMaker = -1;
 
-            int lFeatcount = 0;  //临时层要素个数
+            int tempfeatcount = 0;  //临时层要素个数
 
             int idx = 0;
             //找到的与源要素有关的目标要素
             Dictionary<int, IFeature> pDicCol = null;
-            ISpatialFilter pSFilter = null; 
+            ISpatialFilter pSFilter = null;
 
             //处理的临时要素
-            int tempFeatCount = 0; 
+            int tempFeatCount = 0;
 
             ////进入编辑状态
             //匹配表
@@ -112,7 +113,7 @@ namespace ZJGISDataUpdating.Class
                 while (pSrcFeature != null)
                 {
                     pDicCol = new Dictionary<int, IFeature>();
-                    pSFilter = new SpatialFilter(); 
+                    pSFilter = new SpatialFilter();
                     resultTableRowBuffer = resultTable.CreateRowBuffer();
                     resultTableRowCursor = resultTable.Insert(true);
                     indexChangeMaker = resultTableRowBuffer.Fields.FindField("变化标记");
@@ -144,7 +145,7 @@ namespace ZJGISDataUpdating.Class
                     //查询在原图层多边形边界处的工作层的元素
                     pTarCursor = pTarFcls.Search(pSFilter, false);
                     //得到对应pSrcFeature的TE图层上的要素个数
-                    lFeatcount = pTarFcls.FeatureCount(pSFilter);
+                    tempfeatcount = pTarFcls.FeatureCount(pSFilter);
                     pTarFeature = pTarCursor.NextFeature();
                     idx = 0;
 
@@ -232,7 +233,7 @@ namespace ZJGISDataUpdating.Class
                                                         {
                                                             pDicCol.Add(idx, pTarFeature);
                                                         }
-                                                        idx+=1;
+                                                        idx += 1;
                                                         //}
                                                     }
                                                     //}
@@ -411,7 +412,22 @@ namespace ZJGISDataUpdating.Class
                                 }
                                 else
                                 {
-                                    CalculateIndcators(weight, buffer, chkBoxIndicator, pSrcFeature, pTarFeature, resultTableRowBuffer);
+                                    //CalculateIndcators(weight, buffer, chkBoxIndicator, pSrcFeature, pTarFeature, resultTableRowBuffer);
+
+                                    //形状相似度
+                                    double shape = ClsIndicatorFunStatic.PolylineShapeSimilarValue(pSrcFeature, pTarFeature);
+                                    //节点相似度
+                                    double matchedPoints = ClsIndicatorFunStatic.MatchedPointsSimilarValue(pSrcFeature, pTarFeature, buffer);
+                                    //综合相似度
+                                    double polylineRadio = shape * weight[0] + matchedPoints * weight[1];
+
+                                    string shape1 = string.Format("{0:0.00000000}", shape);
+                                    string matchedPoints1 = string.Format("{0:0.00000000}", matchedPoints);
+                                    string polygonRatio1 = string.Format("{0:0.00000000}", polylineRadio);
+
+                                    //resultTableRowBuffer.set_Value(resultTableRowBuffer.Fields.FindField("形状相似度"), shape1);
+                                    //resultTableRowBuffer.set_Value(resultTableRowBuffer.Fields.FindField("节点相似度"), matchedPoints1);
+                                    //resultTableRowBuffer.set_Value(resultTableRowBuffer.Fields.FindField("综合相似度"), polygonRatio1);
 
                                     //if (polylineRadio > weight[2])
                                     //{
@@ -420,23 +436,35 @@ namespace ZJGISDataUpdating.Class
                                     //if (MatchCode(pSrcFeature, pTarFeature))
                                     //{
                                     //设置表TRA_PT_I_PtTabl的（待匹配oid）字段的值为空——cell[2]
-                                    int index = 0;
-                                    if (resultTableRowBuffer.get_Value(resultTableRowBuffer.Fields.FindField("待匹配OID")).ToString() == "")
+
+                                    //角度判断30
+                                    if (ClsIndicatorFunStatic.IncludedAngle(pSrcFeature, pTarFeature) < 30)
                                     {
-                                        //设置表TRA_PT_I_PtTabl的（待匹配oid）字段的值——cell[2]
-                                        resultTableRowBuffer.set_Value(resultTableRowBuffer.Fields.FindField("待匹配OID"), pTarFeature.get_Value(index));
+                                        if (polylineRadio > 0.5)
+                                        {
+                                            resultTableRowBuffer.set_Value(resultTableRowBuffer.Fields.FindField("形状相似度"), shape1);
+                                            resultTableRowBuffer.set_Value(resultTableRowBuffer.Fields.FindField("节点相似度"), matchedPoints1);
+                                            resultTableRowBuffer.set_Value(resultTableRowBuffer.Fields.FindField("综合相似度"), polygonRatio1);
+
+                                            int index = 0;
+                                            if (resultTableRowBuffer.get_Value(resultTableRowBuffer.Fields.FindField("待匹配OID")).ToString() == "")
+                                            {
+                                                //设置表TRA_PT_I_PtTabl的（待匹配oid）字段的值——cell[2]
+                                                resultTableRowBuffer.set_Value(resultTableRowBuffer.Fields.FindField("待匹配OID"), pTarFeature.get_Value(index));
+                                            }
+                                            else
+                                            {
+                                                string oids = resultTableRowBuffer.get_Value(resultTableRowBuffer.Fields.FindField("待匹配OID")).ToString() + ";" + pTarFeature.get_Value(index);
+                                                //设置表TRA_PT_I_PtTabl的（待匹配oid）字段的值——cell[2]
+                                                resultTableRowBuffer.set_Value(resultTableRowBuffer.Fields.FindField("待匹配OID"), oids);
+                                            }
+                                            if (!pDicCol.ContainsKey(idx))
+                                            {
+                                                pDicCol.Add(idx, pTarFeature);
+                                            }
+                                            idx = idx + 1;
+                                        }
                                     }
-                                    else
-                                    {
-                                        string oids = resultTableRowBuffer.get_Value(resultTableRowBuffer.Fields.FindField("待匹配OID")).ToString() + ";" + pTarFeature.get_Value(index);
-                                        //设置表TRA_PT_I_PtTabl的（待匹配oid）字段的值——cell[2]
-                                        resultTableRowBuffer.set_Value(resultTableRowBuffer.Fields.FindField("待匹配OID"), oids);
-                                    }
-                                    if (!pDicCol.ContainsKey(idx))
-                                    {
-                                        pDicCol.Add(idx, pTarFeature);
-                                    }
-                                    idx = idx + 1;
                                 }
                             }
                         }
@@ -450,9 +478,7 @@ namespace ZJGISDataUpdating.Class
                         {
                             resultTableRowBuffer.set_Value(indexChangeMaker, ClsConstant.One2Zero);
                         }
-                        //resultTableRowCursor.InsertRow(resultTableRowBuffer);
                     }
-
                     /**情况2：通过用代码构建缓冲区分析，找到1条对应要素的情况（源图层和待匹配图层要素是1对1的情况），
                      * 需要判断属性图形是否发生变化。*/
                     else if (pDicCol.Count == 1)
@@ -541,7 +567,6 @@ namespace ZJGISDataUpdating.Class
                                 ////只图形变化
                                 if (blnShpEqual == false && blnAttriEqual)
                                 {
-                                    //indexChangeMaker = resultTableRowBuffer.Fields.FindField("变化标记");
                                     if (indexChangeMaker > -1)
                                     {
                                         //rowBuffer.set_Value(intFieldIndex, "图形变化");
@@ -553,7 +578,6 @@ namespace ZJGISDataUpdating.Class
                                 }
                                 else if (blnShpEqual && blnAttriEqual == false)
                                 {
-                                    //indexChangeMaker = resultTableRowBuffer.Fields.FindField("变化标记");
                                     if (indexChangeMaker > -1)
                                     {
                                         resultTableRowBuffer.set_Value(indexChangeMaker, "属性变化");
@@ -563,7 +587,6 @@ namespace ZJGISDataUpdating.Class
                                 }
                                 else if (blnShpEqual == false && blnAttriEqual == false)
                                 {
-                                    //indexChangeMaker = resultTableRowBuffer.Fields.FindField("变化标记");
                                     if (indexChangeMaker > -1)
                                     {
                                         resultTableRowBuffer.set_Value(indexChangeMaker, "属性图形变化");
@@ -594,7 +617,7 @@ namespace ZJGISDataUpdating.Class
                             //resultTableRowCursor.InsertRow(resultTableRowBuffer);
                         }
                     }
-                    
+
                     resultTableRowCursor.InsertRow(resultTableRowBuffer);
 
 
@@ -634,6 +657,377 @@ namespace ZJGISDataUpdating.Class
             prgSub.Value = 0;
             return true;
         }
+        /* 描述: 该函数用于在进行任意对象集成时识别出更新变化的要素
+         * （任意对象集成只将新增空间对象和修改空间对象集成到数据库中，主要针对道路，水系，居民地（建构筑物）要素类，它们都有name字段作为空间对象标记）。
+         * 通过将两个图层进行叠加分析来查找,首先遍历TU（pSrcFcls）图层中的每个要素通过空间自定义的关系在TE（pTarFcls）图层中查找相应的要素,
+           如果找不到对应要素,则标记为4表示该要素为新增的空间对象， 
+           如果找到一个要素看它们的图形和属性是否发生变化,如果图形属性都发生变化，则在TR图层中创建一个新要素，该要素获得TE图层中要素的FIXOID号，
+         *                  获取TU图层中的图形属性，TAGID标记为2；
+         *     只图形变化，则在TR图层中创建一个新要素，该要素获得TE图层中要素的FIXOID号及属性，获取TU图层中的图形，TAGID标记为5；
+         *     只属性变化，则在TR图层中创建一个新要素，该要素获得TE图层中要素的FIXOID号及图形，获取TU图层中的属性，TAGID标记为6。 
+        方法与步骤：
+         * 遍历TU中的每个要素通过自定义关系查找，
+         *      如果没找到则为新增；
+         *      如果找到了几个要素，根据匹配属性项和几何测度求出同名实体，如果没有匹配实体则则标记为新增，找到几个要素标记为冲突要素，如果找到一个同名实体，
+         *      则候选集中的其他要素标记为冲突要素；如果这些被标记为冲突的要素后来被替换更新，则取消冲突标记，冲突要素临时存放到内存中，
+         *      最后这些标记的新要素都存放到TR层.
+         *      图形变化为1,属性变化为2，图形属性均变化为3 新增要素为4，未变化为0， 要素冲突为5；
+         */
+        /// <summary>
+        /// 几何匹配
+        /// </summary>
+        /// <param name="pSrcFcls">源图层</param>
+        /// <param name="pTarFcls">待匹配图层</param>
+        /// <param name="resultTable">保存结果的表TRA_PT_I_PtTable</param>
+        /// <param name="matchedMode">匹配模式：设置匹配选择方式，0 代表几何匹配，1代表拓扑匹配，2代表属性匹配 </param>
+        /// <param name="weight">表MatchedPointFCSetting中的（综合相似度阈值）</param>
+        /// <param name="buffer">表MatchedPointFCSetting中的（搜索半径）字段值</param>
+        /// <param name="fields">表MatchedPointFCSetting中的（匹配属性）字段值</param>
+        /// <param name="prgMain">总进度条</param>
+        /// <param name="prgSub">子进度条</param>
+        /// <param name="stateLabel">状态信息</param>
+        /// <returns></returns>
+        public bool SearchChangedFeaturesGeo(IFeatureClass pSrcFcls, IFeatureClass pTarFcls, ITable resultTable, double[] weight,
+            double buffer, string fields, ProgressBar prgMain, ProgressBar prgSub, LabelX stateLabel, CheckBox chkBoxIndicator,
+            double includeAngel,double hausdorff)
+        {
+            IFeature srcFeature = null;
+            IFeatureCursor pSourCursor = null;//工作区数据指针
+
+            //根据特定的控件过滤条件，源图层查询到的待匹配图层的游标
+            IFeatureCursor pTargetCursor = null;
+            IFeature tarFeature = null;
+            IFeature revSrcFeature = null;
+
+            int i = 0;
+            int indexChangeMaker = -1;
+            int targetOID = 0;
+            int sourceOID = 0;
+
+            int targetFeatcount = 0;  //待匹配图层要素个数
+
+            int idx = 0;
+            //找到的与源要素有关的目标要素
+            List<IFeature> pListTarOne2One = null;
+            List<IFeature> pListTarMore2One = null;
+            List<IFeature> pListTarMore2More = null;
+
+            ISpatialFilter spatialFilter = null;
+            //反向查询源图层要素
+            ISpatialFilter revSpatialFilter;
+
+            //处理的临时要素
+            int tempFeatCount = 0;
+
+            ////进入编辑状态
+            IWorkspace workspace = (resultTable as IDataset).Workspace;
+            IWorkspaceEdit workspaceEdit = workspace as IWorkspaceEdit;
+            workspaceEdit.StartEditing(true);
+            workspaceEdit.StartEditOperation();
+
+            //源图层要素个数
+            int sourceFeatCount = pSrcFcls.FeatureCount(null);
+            //源图层要素指针
+            IFeatureCursor pOutSrcCursor = pSrcFcls.Search(null, false);
+
+            //设置进度条
+            if (sourceFeatCount > 0)
+            {
+                prgMain.Maximum = sourceFeatCount;
+            }
+            prgSub.Maximum = 100;
+            prgSub.Value = 0;
+            prgMain.Value = 0;
+
+            if ((pOutSrcCursor != null))
+            {
+                srcFeature = pOutSrcCursor.NextFeature();
+            }
+
+            IRowBuffer resultTableRowBuffer = null;
+            ICursor resultTableRowCursor = null;
+            //源要素总的循环
+            try
+            {
+                while (srcFeature != null)
+                {
+                    pListTarMore2One = new List<IFeature>();
+                    pListTarMore2More = new List<IFeature>();
+                    pListTarOne2One = new List<IFeature>();
+
+                    spatialFilter = new SpatialFilter();
+
+                    resultTableRowBuffer = resultTable.CreateRowBuffer();
+                    resultTableRowCursor = resultTable.Insert(true);
+
+                    sourceOID = resultTableRowBuffer.Fields.FindField("源OID");
+                    targetOID = resultTableRowBuffer.Fields.FindField("待匹配OID");
+                    indexChangeMaker = resultTableRowBuffer.Fields.FindField("变化标记");
+
+                    //记录在由源图层查询待匹配图层是1对1的情况下，
+                    //再由待匹配的图层反向查询源图层获得的源图层的个数
+                    int revSourFeatCount = 0;
+
+                    /**通过用代码构建缓冲区分析，来判断是否是同一个要素*/
+                    if (srcFeature.Shape.GeometryType == esriGeometryType.esriGeometryPolyline)
+                    {
+                        ITopologicalOperator top = srcFeature.Shape as ITopologicalOperator;
+                        spatialFilter.Geometry = top.Buffer(buffer) as IGeometry;
+                        //自定义空间查询,减少查询次数,提高查询速度
+                        spatialFilter.SpatialRel = esriSpatialRelEnum.esriSpatialRelIntersects;
+                    }
+
+                    //得到对应pSrcFeature的TE图层上的要素个数
+                    targetFeatcount = pTarFcls.FeatureCount(spatialFilter);
+                    //设置表TRA_PT_I_PtTabl的（源OID）字段的值——cell[1]
+                    resultTableRowBuffer.set_Value(sourceOID, srcFeature.OID);
+                    //Returns an object cursor that can be used to fetch feature objects selected by the specified query.
+                    //pTargetCursor是根据特定的控件过滤条件，源图层查询到的待匹配图层的游标
+                    pTargetCursor = pTarFcls.Search(spatialFilter, false);
+                    tarFeature = pTargetCursor.NextFeature();
+                    if (targetFeatcount == 0)
+                    {
+                        resultTableRowBuffer.set_Value(indexChangeMaker, ClsConstant.One2Zero);
+                    }
+                    else
+                    {
+                        #region 综合相似度
+                        ////形状相似度
+                        //double shape = ClsIndicatorFunStatic.PolylineShapeSimilarValue(srcFeature, tarFeature);
+                        ////节点相似度
+                        //double matchedPoints = ClsIndicatorFunStatic.MatchedPointsSimilarValue(srcFeature, tarFeature, buffer);
+                        ////综合相似度
+                        //double polylineRadio = shape * weight[0] + matchedPoints * weight[1];
+
+                        //string shape1 = string.Format("{0:0.00000000}", shape);
+                        //string matchedPoints1 = string.Format("{0:0.00000000}", matchedPoints);
+                        //string polygonRatio1 = string.Format("{0:0.00000000}", polylineRadio);
+
+                        //resultTableRowBuffer.set_Value(resultTableRowBuffer.Fields.FindField("形状相似度"), shape1);
+                        //resultTableRowBuffer.set_Value(resultTableRowBuffer.Fields.FindField("节点相似度"), matchedPoints1);
+                        //resultTableRowBuffer.set_Value(resultTableRowBuffer.Fields.FindField("综合相似度"), polygonRatio1);
+                        //if (polylineRadio > 0.5)
+                        //double test = ClsIndicatorFunStatic.(int)hausdorffDistance(pSrcFeature, pTarFeature);
+                        //IPolyline planeSour = ClsConvertUnit.ConvertLineCoordinate(
+                        //    (IPolyline) pSrcFeature, ESRI.ArcGIS.esriSystem.esriUnits.esriDecimalDegrees
+                        //    , ESRI.ArcGIS.esriSystem.esriUnits.esriMeters);
+                        //}
+                        #endregion
+                        //角度判断30
+                        if (targetFeatcount == 1)
+                        {
+                            if (ClsIndicatorFunStatic.IncludedAngle(srcFeature, tarFeature) < (int)includeAngel)
+                            {
+                                if (ClsIndicatorFunStatic.HausdorffDistance(srcFeature, tarFeature) < (int)hausdorff)
+                                {
+                                    //TODO :正反向匹配的反向查询：根据待匹配图层查询源图层
+                                    revSpatialFilter = new SpatialFilterClass();
+                                    ITopologicalOperator top = tarFeature.Shape as ITopologicalOperator;
+                                    revSpatialFilter.Geometry = top.Buffer(buffer) as IGeometry;
+                                    //revSpatialFilter.Geometry = tarFeature.Shape;
+                                    revSpatialFilter.SpatialRel = esriSpatialRelEnum.esriSpatialRelIntersects;
+                                    revSourFeatCount = pSrcFcls.FeatureCount(revSpatialFilter);
+                                    pSourCursor = pSrcFcls.Search(revSpatialFilter, false);
+                                    revSrcFeature = pSourCursor.NextFeature();
+
+
+                                    if (revSourFeatCount == 1)
+                                    {
+                                        resultTableRowBuffer.set_Value(targetOID, tarFeature.get_Value(0));
+                                        //rowBuffer.set_Value(index, "一对一");
+                                        resultTableRowBuffer.set_Value(indexChangeMaker, ClsConstant.One2One);
+                                    }
+                                    else
+                                    {
+                                        while (revSrcFeature != null)
+                                        {
+                                            if (ClsIndicatorFunStatic.IncludedAngle(revSrcFeature, tarFeature) < (int)includeAngel)
+                                            {
+                                                //if (polylineRadio > 0.5)
+                                                //double test = ClsIndicatorFunStatic.(int)hausdorffDistance(pSrcFeature, pTarFeature);
+                                                //IPolyline planeSour = ClsConvertUnit.ConvertLineCoordinate(
+                                                //    (IPolyline) pSrcFeature, ESRI.ArcGIS.esriSystem.esriUnits.esriDecimalDegrees
+                                                //    , ESRI.ArcGIS.esriSystem.esriUnits.esriMeters);
+                                                if (ClsIndicatorFunStatic.HausdorffDistance(revSrcFeature, tarFeature) < (int)hausdorff)
+                                                {
+                                                    pListTarOne2One.Add(revSrcFeature);
+                                                }
+                                            }
+                                            revSrcFeature = pSourCursor.NextFeature();
+                                        }
+
+                                        resultTableRowBuffer.set_Value(targetOID, tarFeature.get_Value(0));
+
+                                        if (pListTarOne2One.Count == 1)
+                                        {
+                                            resultTableRowBuffer.set_Value(indexChangeMaker, ClsConstant.One2One);
+                                        }
+                                        else
+                                        {
+                                            resultTableRowBuffer.set_Value(indexChangeMaker, ClsConstant.More2One);
+                                        }
+                                    }
+                                }
+                                else
+                                {
+                                    resultTableRowBuffer.set_Value(indexChangeMaker, ClsConstant.One2Zero);
+                                }
+                            }
+                            else
+                            {
+                                resultTableRowBuffer.set_Value(indexChangeMaker, ClsConstant.One2Zero);
+                            }
+
+                        }
+                        else if (targetFeatcount > 1)
+                        {
+                            ////Returns an object cursor that can be used to fetch feature objects selected by the specified query.
+                            ////teFeatCursor是根据特定的控件过滤条件，源图层查询到的待匹配图层的游标
+                            //pTargetCursor = pTarFcls.Search(spatialFilter, false);
+                            //tarFeature = pTargetCursor.NextFeature();
+                            while (tarFeature != null)
+                            {
+                                if (ClsIndicatorFunStatic.IncludedAngle(srcFeature, tarFeature) < (int)includeAngel)
+                                {
+                                    //if (polylineRadio > 0.5)
+                                    //double test = ClsIndicatorFunStatic.(int)hausdorffDistance(pSrcFeature, pTarFeature);
+                                    //IPolyline planeSour = ClsConvertUnit.ConvertLineCoordinate(
+                                    //    (IPolyline) pSrcFeature, ESRI.ArcGIS.esriSystem.esriUnits.esriDecimalDegrees
+                                    //    , ESRI.ArcGIS.esriSystem.esriUnits.esriMeters);
+                                    if (ClsIndicatorFunStatic.HausdorffDistance(srcFeature, tarFeature) < (int)hausdorff)
+                                    {
+                                        pListTarMore2More.Add(tarFeature);
+
+                                        //TODO :正反向匹配的反向查询：根据待匹配图层查询源图层
+                                        revSpatialFilter = new SpatialFilterClass();
+                                        ITopologicalOperator top = tarFeature.Shape as ITopologicalOperator;
+                                        revSpatialFilter.Geometry = top.Buffer(buffer) as IGeometry;
+                                        //revSpatialFilter.Geometry = tarFeature.Shape;
+                                        revSpatialFilter.SpatialRel = esriSpatialRelEnum.esriSpatialRelIntersects;
+                                        revSourFeatCount = pSrcFcls.FeatureCount(revSpatialFilter);
+                                        pSourCursor = pSrcFcls.Search(revSpatialFilter, false);
+                                        revSrcFeature = pSourCursor.NextFeature();
+
+                                        if (revSourFeatCount == 1)
+                                        {
+                                            //if (!pListTarOne2One.Contains(tarFeature))
+                                            //{
+                                            //    pListTarOne2One.Add(tarFeature);
+                                            //}
+                                            resultTableRowBuffer.set_Value(indexChangeMaker, ClsConstant.One2One);
+
+                                        }
+                                        else if (revSourFeatCount > 1)
+                                        {
+                                            while (revSrcFeature != null)
+                                            {
+                                                if (ClsIndicatorFunStatic.IncludedAngle(revSrcFeature, tarFeature) < (int)includeAngel)
+                                                {
+                                                    if (ClsIndicatorFunStatic.HausdorffDistance(revSrcFeature,tarFeature) < (int)hausdorff)
+                                                    {
+                                                        if (!pListTarMore2One.Contains(revSrcFeature))
+                                                        {
+                                                            pListTarMore2One.Add(revSrcFeature);
+                                                        }
+                                                    }
+                                                }
+                                                revSrcFeature = pSourCursor.NextFeature();
+                                            }
+                                        }
+
+                                        if (resultTableRowBuffer.get_Value(targetOID).ToString() == "")
+                                        {
+                                            //设置表TRA_PT_I_PtTabl的（待匹配oid）字段的值——cell[2]
+                                            resultTableRowBuffer.set_Value(targetOID, tarFeature.get_Value(0).ToString());
+                                        }
+                                        else
+                                        {
+                                            string oids = resultTableRowBuffer.get_Value(targetOID).ToString() + ";" +
+                                                          tarFeature.get_Value(0).ToString();
+                                            //设置表TRA_PT_I_PtTabl的（待匹配oid）字段的值——cell[2]
+                                            resultTableRowBuffer.set_Value(targetOID, oids);
+                                        }
+
+                                        tarFeature = pTargetCursor.NextFeature();
+                                    }
+
+                                    foreach (IFeature feature in pListTarMore2One)
+                                    {
+                                        if (!resultTableRowBuffer.get_Value(sourceOID).ToString().Contains(feature.OID.ToString()))
+                                        {
+                                            string oids = resultTableRowBuffer.get_Value(sourceOID).ToString() + ";" +feature.OID.ToString();
+                                            resultTableRowBuffer.set_Value(sourceOID, oids);
+                                        }
+                                    }
+                                }
+                                tarFeature = pTargetCursor.NextFeature();
+                            }
+                           
+                            //当且仅当所有反向匹配，匹配的源图层要素都为1时，说明匹配对应关系为一对多
+                            if (pListTarMore2One.Count == 1 && pListTarMore2More.Count == 1)
+                            {
+                                resultTableRowBuffer.set_Value(indexChangeMaker, ClsConstant.One2One);
+                            }
+                            //否则说明匹配关系为多对多
+                            else if (pListTarMore2One.Count > 1 && pListTarMore2More.Count == 1)
+                            {
+                                resultTableRowBuffer.set_Value(indexChangeMaker, ClsConstant.More2One);
+
+                            }
+                            else if (pListTarMore2One.Count==1&& pListTarMore2More.Count>1)
+                            {
+                                resultTableRowBuffer.set_Value(indexChangeMaker, ClsConstant.One2More);
+                            }
+                            else
+                            {
+                                resultTableRowBuffer.set_Value(indexChangeMaker, ClsConstant.More2More);
+                            }
+
+                            if (pListTarMore2More.Count == 0)
+                            {
+                                resultTableRowBuffer.set_Value(indexChangeMaker, ClsConstant.One2Zero);
+                            }
+                        }
+                    }
+
+                    resultTableRowCursor.InsertRow(resultTableRowBuffer);
+
+                    //进程条处理
+                    ClsStatic.AboutProcessBar(sourceFeatCount, prgMain, prgSub);
+
+                    //每1千个要素就把缓冲区内的要素类写入目标层
+                    if (tempFeatCount >= 500)
+                    {
+                        resultTableRowCursor.Flush();
+                        tempFeatCount = 0;
+                    }
+
+                    stateLabel.Text = "正在对" + (pSrcFcls as IDataset).Name + "图层和" + (pTarFcls as IDataset).Name + "图层进行数据变化分析，已经处理" + prgMain.Value + "(" + sourceFeatCount + ")个要素。";
+                    stateLabel.Refresh();
+                    prgMain.Update();
+                    prgSub.Update();
+                    tempFeatCount = tempFeatCount + 1;
+                    srcFeature = pOutSrcCursor.NextFeature();
+                }
+            }
+            catch (System.Exception ex)
+            {
+                //MessageBox.Show(ex.Message);
+                MessageBox.Show(ex.StackTrace);
+            }
+            if (resultTableRowCursor != null)
+            {
+                resultTableRowCursor.Flush();
+            }
+
+            workspaceEdit.StopEditOperation();
+            workspaceEdit.StopEditing(true);
+
+            stateLabel.Text = "";
+            prgMain.Value = 0;
+            prgSub.Value = 0;
+            return true;
+        }
         /// <summary>
         /// 计算指标值
         /// </summary>
@@ -644,32 +1038,24 @@ namespace ZJGISDataUpdating.Class
         /// <param name="pTarFeature"></param>
         /// <param name="rowBuffer"></param>
         private static void CalculateIndcators(double[] weight, double buffer, CheckBox chkBoxIndicator, IFeature pSrcFeature,
-            IFeature pTarFeature, IRowBuffer rowBuffer)
+            IFeature pTarFeature, IRowBuffer resultTableRowBuffer)
         {
             if (chkBoxIndicator.Checked == true)
             {
-                ClsIndicatorFun clsIndicatorFun = new ClsIndicatorFun();
-                clsIndicatorFun.SourceFeature = pSrcFeature;
-                clsIndicatorFun.TargetFeature = pTarFeature;
-
-                double matchedPoints = 0;
-                double shape = 0;
-                double polylineRadio = 0;
-             
                 //形状相似度
-                shape = clsIndicatorFun.PolylineShapeSimilarValue();
+                double shape = ClsIndicatorFunStatic.PolylineShapeSimilarValue(pSrcFeature, pTarFeature);
                 //节点相似度
-                matchedPoints = clsIndicatorFun.MatchedPointsSimilarValue(buffer);
+                double matchedPoints = ClsIndicatorFunStatic.MatchedPointsSimilarValue(pSrcFeature, pTarFeature, buffer);
                 //综合相似度
-                polylineRadio = shape*weight[0] + matchedPoints*weight[1];
+                double polylineRadio = shape * weight[0] + matchedPoints * weight[1];
 
                 string shape1 = string.Format("{0:0.00000000}", shape);
                 string matchedPoints1 = string.Format("{0:0.00000000}", matchedPoints);
                 string polygonRatio1 = string.Format("{0:0.00000000}", polylineRadio);
 
-                rowBuffer.set_Value(rowBuffer.Fields.FindField("形状相似度"), shape1);
-                rowBuffer.set_Value(rowBuffer.Fields.FindField("节点相似度"), matchedPoints1);
-                rowBuffer.set_Value(rowBuffer.Fields.FindField("综合相似度"), polygonRatio1);
+                resultTableRowBuffer.set_Value(resultTableRowBuffer.Fields.FindField("形状相似度"), shape1);
+                resultTableRowBuffer.set_Value(resultTableRowBuffer.Fields.FindField("节点相似度"), matchedPoints1);
+                resultTableRowBuffer.set_Value(resultTableRowBuffer.Fields.FindField("综合相似度"), polygonRatio1);
             }
         }
 
@@ -806,14 +1192,7 @@ namespace ZJGISDataUpdating.Class
                     pTarFeature = pTarCursor.NextFeature();
 
                     lIdx = 0;
-                    #region 算法说明
-                    //*******************************************************************************
-                    //算法说明:
-                    //获取相交面的面积或相交线的长度.最后以P匹配参数来找出与pSrcFeature
-                    //最匹配的pTarFeature,其中A表示pTarFeature的面积或长度,B表示pSrcFeature的面积或长度.
-                    //当P值最大时,此时的pTarFeature即为找到的要素.
-                    //*******************************************************************************
-                    #endregion
+
                     rowBuffer.set_Value(rowBuffer.Fields.FindField("源OID"), pSrcFeature.OID);
 
                     while ((pTarFeature != null))
@@ -824,12 +1203,7 @@ namespace ZJGISDataUpdating.Class
                         {
                             if (pTarFeature.Shape.GeometryType == esriGeometryType.esriGeometryPoint)
                             {
-                                //string testfieldName1 = ClsConfig.LayerConfigs[(pSrcFcls  as IDataset).Name].NameField;
-                                //string pSrcStrName = pSrcFeature.get_Value(pSrcFeature.Fields.FindFieldByAliasName("名称")).ToString();
                                 string pSrcStrName = pSrcFeature.get_Value(pSrcFeature.Fields.FindField(ClsConfig.LayerConfigs[(pSrcFcls as IDataset).Name].NameField)).ToString();
-
-                                //string pTarStrName = pTarFeature.get_Value(pTarFeature.Fields.FindFieldByAliasName("名称")).ToString();
-                                //string testfieldName = ClsConfig.LayerConfigs[(pTarFcls as IDataset).Name].NameField;
                                 string pTarStrName = pTarFeature.get_Value(pTarFeature.Fields.FindField(ClsConfig.LayerConfigs[(pTarFcls as IDataset).Name].NameField)).ToString();
 
                                 //test
@@ -837,9 +1211,7 @@ namespace ZJGISDataUpdating.Class
                                 //if (StringSameOrNot(pSrcStr, pTarStr) > 0)
                                 if (pSrcStrName.Length > 0 && pTarStrName.Length > 0 && ClsStatic.StringSameOrNot(pSrcStrName, pTarStrName) > 1)
                                 {
-                                    //index=0代表待匹配feature的第一个字段oid
                                     int index = 0;
-
                                     if (rowBuffer.get_Value(rowBuffer.Fields.FindField("待匹配OID")).ToString() == "")
                                     {
                                         rowBuffer.set_Value(rowBuffer.Fields.FindField("待匹配OID"), pTarFeature.get_Value(index));
@@ -855,11 +1227,9 @@ namespace ZJGISDataUpdating.Class
                                     //设置表TRA_PT_I_PtTabl的（待匹配编码）字段的值——cell[5]
                                     rowBuffer.set_Value(rowBuffer.Fields.FindField("待匹配图层名称"), pTarStrName);
 
-                                    ClsIndicatorFun clsIndicatorFun = new ClsIndicatorFun();
-                                    clsIndicatorFun.SourceFeature = pSrcFeature;
-                                    clsIndicatorFun.TargetFeature = pTarFeature;
+
                                     double distance = 0;
-                                    distance = clsIndicatorFun.PointDistance();
+                                    distance = ClsIndicatorFunStatic.EuclideanMetricDistance(pSrcFeature, pTarFeature);
                                     string distance1 = string.Format("{0:0.0000}", 1 - distance);
                                     //设置表TRA_PT_I_PtTabl的（位置相似度）字段的值——cell[6]
                                     rowBuffer.set_Value(rowBuffer.Fields.FindField("位置相似度"), distance1);

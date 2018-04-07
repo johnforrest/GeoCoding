@@ -36,7 +36,7 @@ namespace ZJGISDataUpdating.Class
         /// <param name="prgSub">当前进度条</param>
         /// <param name="stateLabel">状体提示信息</param>
         /// <returns>返回类型，布尔型</returns>
-        public bool DifScaleSearchChangedPolygonFeatures(IFeatureClass SrcFeatCls, IFeatureClass TarFeatCls, ITable resultTable, int buffer, double area, ProgressBar prgMain, ProgressBar prgSub, LabelX stateLabel)
+        public bool SearchChangedPolygonFeaturesDifScale(IFeatureClass SrcFeatCls, IFeatureClass TarFeatCls, ITable resultTable, int buffer, double area, ProgressBar prgMain, ProgressBar prgSub, LabelX stateLabel)
         {
 
             //源图层的要素个数
@@ -110,17 +110,20 @@ namespace ZJGISDataUpdating.Class
                     rowCursor = resultTable.Insert(true);
 
                     spatialFilter = new SpatialFilterClass();
-                    //esriSpatialRelIntersects：Returns a feature if any spatial relationship is found. Applies to all shape type combinations. 
+                    //esriSpatialRelIntersects：Returns a feature if any spatial relationship is found. 
+                    //Applies to all shape type combinations. 
                     spatialFilter.SpatialRel = esriSpatialRelEnum.esriSpatialRelIntersects;
                     //查询tu要素
                     spatialFilter.Geometry = srcFeature.Shape;
 
-                    int indexFID = rowBuffer.Fields.FindField("源OID");
-                    int indexOID = rowBuffer.Fields.FindField("待匹配OID");
+                    int sourceOID = rowBuffer.Fields.FindField("源OID");
+                    int targetOID = rowBuffer.Fields.FindField("待匹配OID");
                     //rowBuffer.set_Value(indexFID, tuFeat.OID);
-                    int index = rowBuffer.Fields.FindField("变化标记");
-                    //记录在由源图层查询待匹配图层是1对1的情况下，再由待匹配的图层反向查询源图层获得的源图层的个数
-                    int revFeatCount = 0;
+                    int changeIndex = rowBuffer.Fields.FindField("变化标记");
+
+                    //记录在由源图层查询待匹配图层是1对1的情况下，
+                    //再由待匹配的图层反向查询源图层获得的源图层的个数
+                    int revSourFeatCount = 0;
 
                     //查看进度
                     ClsStatic.AboutProcessBar(srcFeatCount, prgMain, prgSub);
@@ -130,9 +133,16 @@ namespace ZJGISDataUpdating.Class
                         //The number of features selected by the specified query.
                         //featureCount记录在特定的查询条件下，每个源图层要素查询得到的待匹配图层的要素个数
                         featureCount = TarFeatCls.FeatureCount(spatialFilter);
-
+                        //源图层一个要素对应0个目标图层要素（1对0关系）                        
+                        if (featureCount == 0)
+                        {
+                            rowBuffer.set_Value(sourceOID, srcFeature.OID);
+                            //rowBuffer.set_Value(index, "新增要素");
+                            rowBuffer.set_Value(changeIndex, ClsConstant.One2Zero);
+                            rowCursor.InsertRow(rowBuffer);
+                        }
                         //源图层一个要素对应1个目标图层要素（一对一关系）
-                        if (featureCount == 1)
+                        else if (featureCount == 1)
                         {
                             //Returns an object cursor that can be used to fetch feature objects selected by the specified query.
                             //teFeatCursor是根据特定的控件过滤条件，源图层查询到的待匹配图层的游标
@@ -140,15 +150,14 @@ namespace ZJGISDataUpdating.Class
                             tarFeature = tarFeatCursor.NextFeature();
                             int oid = Convert.ToInt32(tarFeature.get_Value(fixoid));
 
-                            //TODO :正反向匹配的反向查询：根据待匹配图层查询源图层
-
+                            //TODO :反向查询：根据待匹配图层查询源图层
                             revSpatialFilter = new SpatialFilterClass();
                             revSpatialFilter.Geometry = tarFeature.Shape;
                             revSpatialFilter.SpatialRel = esriSpatialRelEnum.esriSpatialRelIntersects;
-                            revFeatCount = SrcFeatCls.FeatureCount(revSpatialFilter);
+                            revSourFeatCount = SrcFeatCls.FeatureCount(revSpatialFilter);
 
                             //反向查询也是一对一的关系
-                            if (revFeatCount == 1)
+                            if (revSourFeatCount == 1)
                             {
                                 //插入分类码
                                 if (srcFeature != null)
@@ -160,10 +169,10 @@ namespace ZJGISDataUpdating.Class
                                     rowBuffer.set_Value(rowBuffer.Fields.FindField("待匹配要素分类码"), tarFeature.get_Value(tarFeature.Fields.FindField("FCODE")));
                                 }
 
-                                rowBuffer.set_Value(indexFID, srcFeature.OID);
-                                rowBuffer.set_Value(indexOID, oid);
+                                rowBuffer.set_Value(sourceOID, srcFeature.OID);
+                                rowBuffer.set_Value(targetOID, oid);
                                 //rowBuffer.set_Value(index, "一对一");
-                                rowBuffer.set_Value(index, ClsConstant.One2One);
+                                rowBuffer.set_Value(changeIndex, ClsConstant.One2One);
                                 rowCursor.InsertRow(rowBuffer);
                                 featCount++;
                             }
@@ -224,10 +233,10 @@ namespace ZJGISDataUpdating.Class
                                         {
                                             rowBuffer = resultTable.CreateRowBuffer();
                                             rowCursor = resultTable.Insert(true);
-                                            rowBuffer.set_Value(indexFID, revFeat.OID);
-                                            rowBuffer.set_Value(indexOID, oid);
+                                            rowBuffer.set_Value(sourceOID, revFeat.OID);
+                                            rowBuffer.set_Value(targetOID, oid);
                                             ////rowBuffer.set_Value(index, "多对一");
-                                            rowBuffer.set_Value(index, ClsConstant.More2One);
+                                            rowBuffer.set_Value(changeIndex, ClsConstant.More2One);
                                             rowCursor.InsertRow(rowBuffer);
                                             //记录待匹配图层要素包含源图层要素时，把包含的源图层要素添加到集合中
                                             revCol.Add(revFeat.OID);
@@ -257,10 +266,10 @@ namespace ZJGISDataUpdating.Class
 
                                         rowBuffer = resultTable.CreateRowBuffer();
                                         rowCursor = resultTable.Insert(true);
-                                        rowBuffer.set_Value(indexFID, tempCol[0].OID);
-                                        rowBuffer.set_Value(indexOID, oid);
+                                        rowBuffer.set_Value(sourceOID, tempCol[0].OID);
+                                        rowBuffer.set_Value(targetOID, oid);
                                         //rowBuffer.set_Value(index, "一对一");
-                                        rowBuffer.set_Value(index, ClsConstant.One2One);
+                                        rowBuffer.set_Value(changeIndex, ClsConstant.One2One);
                                         rowCursor.InsertRow(rowBuffer);
 
                                         revCol.Add(tempCol[0].OID);
@@ -276,10 +285,10 @@ namespace ZJGISDataUpdating.Class
                                     {
                                         rowBuffer = resultTable.CreateRowBuffer();
                                         rowCursor = resultTable.Insert(true);
-                                        rowBuffer.set_Value(indexFID, tempCol[0].OID);
-                                        rowBuffer.set_Value(indexOID, oid);
+                                        rowBuffer.set_Value(sourceOID, tempCol[0].OID);
+                                        rowBuffer.set_Value(targetOID, oid);
                                         //rowBuffer.set_Value(index, "多对一");
-                                        rowBuffer.set_Value(index, ClsConstant.More2One);
+                                        rowBuffer.set_Value(changeIndex, ClsConstant.More2One);
                                         rowCursor.InsertRow(rowBuffer);
 
                                         revCol.Add(tempCol[0].OID);
@@ -295,10 +304,10 @@ namespace ZJGISDataUpdating.Class
                                     {
                                         rowBuffer = resultTable.CreateRowBuffer();
                                         rowCursor = resultTable.Insert(true);
-                                        rowBuffer.set_Value(indexFID, tempCol[k].OID);
-                                        rowBuffer.set_Value(indexOID, oid);
+                                        rowBuffer.set_Value(sourceOID, tempCol[k].OID);
+                                        rowBuffer.set_Value(targetOID, oid);
                                         //rowBuffer.set_Value(index, "多对一");
-                                        rowBuffer.set_Value(index, ClsConstant.More2One);
+                                        rowBuffer.set_Value(changeIndex, ClsConstant.More2One);
                                         rowCursor.InsertRow(rowBuffer);
 
                                         revCol.Add(tempCol[k].OID);
@@ -306,14 +315,6 @@ namespace ZJGISDataUpdating.Class
                                     }
                                 }
                             }
-                        }
-                        //源图层一个要素对应0个目标图层要素（1对0关系）                        
-                        else if (featureCount == 0)
-                        {
-                            rowBuffer.set_Value(indexFID, srcFeature.OID);
-                            //rowBuffer.set_Value(index, "新增要素");
-                            rowBuffer.set_Value(index, ClsConstant.One2Zero);
-                            rowCursor.InsertRow(rowBuffer);
                         }
                         //源图层一个要素对应多个目标图层要素（1对多关系）                        
                         else if (featureCount > 1)
@@ -355,10 +356,10 @@ namespace ZJGISDataUpdating.Class
                                 rowBuffer.set_Value(rowBuffer.Fields.FindField("待匹配要素分类码"), maxAreaFeat.get_Value(maxAreaFeat.Fields.FindField("FCODE")));
                             }
 
-                            rowBuffer.set_Value(indexFID, srcFeature.OID);
-                            rowBuffer.set_Value(indexOID, maxAreaFeat.get_Value(fixoid));
+                            rowBuffer.set_Value(sourceOID, srcFeature.OID);
+                            rowBuffer.set_Value(targetOID, maxAreaFeat.get_Value(fixoid));
                             //rowBuffer.set_Value(index, "一对一");
-                            rowBuffer.set_Value(index, ClsConstant.One2One);
+                            rowBuffer.set_Value(changeIndex, ClsConstant.One2One);
                             rowCursor.InsertRow(rowBuffer);
 
                             targetCol.Add(srcFeature.OID);

@@ -106,14 +106,15 @@ namespace ZJGISDataUpdating
             }
 
             //设置页面初始化
-            IFeatureClass pTUFeatCls = this.dataGridViewX1[1, 0].Tag as IFeatureClass;
+            IFeatureClass sourceFeatCls = this.dataGridViewX1[1, 0].Tag as IFeatureClass;
             IWorkspaceFactory2 pWorkspaceFactory = new FileGDBWorkspaceFactoryClass() as IWorkspaceFactory2;
             string path = ClsDeclare.g_WorkspacePath;
             //path需要GDB
             IWorkspace2 pWorkspace = pWorkspaceFactory.OpenFromFile(path, 0) as IWorkspace2;
             IFeatureWorkspace featureWorkspace = pWorkspace as IFeatureWorkspace;
-            IFeatureClass pTEFeatCls = featureWorkspace.OpenFeatureClass(this.dataGridViewX1[2, 0].Value.ToString());
-            Initload(pTUFeatCls, pTEFeatCls);
+            IFeatureClass targetFeatCls = featureWorkspace.OpenFeatureClass(this.dataGridViewX1[2, 0].Value.ToString());
+
+            Initload(sourceFeatCls, targetFeatCls);
         }
         /// <summary>
         /// 初始化匹配界面设置
@@ -122,32 +123,45 @@ namespace ZJGISDataUpdating
         /// <param name="targetFeatCls"></param>
         private void Initload(IFeatureClass sourceFeatCls, IFeatureClass targetFeatCls)
         {
-            //if (this.comboBoxExMatchType.Items.Count > 0)
-            //{
-            //    //this.comboBoxExMatchType.Text = this.comboBoxExMatchType.Items[0].ToString();
-            //    this.comboBoxExMatchType.Text = this.comboBoxExMatchType.Items[1].ToString();
-            //}
-
             if (this.comboBoxExBuffer.Items.Count > 0)
             {
                 this.comboBoxExBuffer.Text = this.comboBoxExBuffer.Items[3].ToString();
             }
 
-            this.tabControl1.Tabs[0].Visible = true;
-            this.tabControl1.Tabs[1].Visible = false;
-            //this.tabControl1.Tabs[1].Visible = true;
-            this.tabControl1.Tabs[2].Visible = true;
+            //tab显示设置
+            //this.tabControl1.Tabs[0].Visible = true;
+            //this.tabControl1.Tabs[1].Visible = false;
+            ////this.tabControl1.Tabs[1].Visible = true;
+            //this.tabControl1.Tabs[2].Visible = true;
+            this.tabItemGeo.Visible = true;
+            this.tabItemGAGeo.Visible = false;
+            this.tabItemGAttr.Visible = false;
+            this.tabItemTopo.Visible = false;
+
             //权重界面设置
             this.radioButtonShape.Checked = true;
-            this.radioButtonVertex.Checked = false;
-            this.radioButtonArea.Checked = false;
+            this.radioButtonNode.Checked = false;
+            this.radioButtonBuffer.Checked = false;
 
+            this.rBtnShapeGeo.Checked = true;
+            this.rBtnNodeGeo.Checked = false;
+            this.rBtnbufferGeo.Checked = false;
 
-            this.Weightslider2.Enabled = false;
-            this.labelCenterNum.Enabled = false;
-            this.Weightslider3.Enabled = false;
-            this.labelTotalNum.Enabled = true;
-            this.Weightslider4.Enabled = true;
+            //进度条设置
+            this.WeightsliderNode.Enabled = false;
+            this.WeightsliderBuffer.Enabled = false;
+            this.WeightsliderTotal.Enabled = true;
+
+            this.sliderNodeGeo.Enabled = false;
+            this.sliderBufferGeo.Enabled = false;
+            this.sliderTotalGeo.Enabled = true;
+
+            //label设置
+            this.labelNode.Enabled = false;
+            this.labelTotal.Enabled = true;
+
+            this.labelNodeGeo.Enabled = false;
+            this.labelTotalGeo.Enabled = true;
 
             DataGridViewCheckBoxColumn dgvCheckColumn = new DataGridViewCheckBoxColumn();
             dgvCheckColumn.Name = "CheckBoxColumn";
@@ -434,6 +448,22 @@ namespace ZJGISDataUpdating
             fieldEdit10.AliasName_2 = "综合相似度阈值";
             fieldEdit10.IsNullable_2 = true;
             fieldsEdit.AddField(field10);
+
+            IField fieldInclude = new FieldClass();
+            IFieldEdit fieldEditInclude = fieldInclude as IFieldEdit;
+            fieldEditInclude.Name_2 = "IncludeAngle";
+            fieldEditInclude.Type_2 = esriFieldType.esriFieldTypeDouble;
+            fieldEditInclude.AliasName_2 = "夹角";
+            fieldEditInclude.IsNullable_2 = true;
+            fieldsEdit.AddField(fieldInclude);
+
+            IField fieldHausdorff = new FieldClass();
+            IFieldEdit fieldEditHausdorff = fieldHausdorff as IFieldEdit;
+            fieldEditHausdorff.Name_2 = "Hausdorff";
+            fieldEditHausdorff.Type_2 = esriFieldType.esriFieldTypeDouble;
+            fieldEditHausdorff.AliasName_2 = "豪斯多夫距离";
+            fieldEditHausdorff.IsNullable_2 = true;
+            fieldsEdit.AddField(fieldHausdorff);
 
             fields = fieldsEdit as IFields;
             return fields;
@@ -761,7 +791,7 @@ namespace ZJGISDataUpdating
             Stopwatch sw = new Stopwatch();
             sw.Start();
 
-            double Total = Convert.ToDouble(labelCenterNum.Text) + Convert.ToDouble(labelSpNum.Text);
+            double Total = Convert.ToDouble(labelNode.Text) + Convert.ToDouble(labelShape.Text);
             if (Total != 1)
             {
                 MessageBoxEx.Show("综合权重之和不为1 ！");
@@ -816,23 +846,23 @@ namespace ZJGISDataUpdating
                 //表如果存在，创建空表
                 if (pWorkspace.get_NameExists(esriDatasetType.esriDTTable, this.dataGridViewX1.Rows[i].Cells[3].Value.ToString()))
                 {
-                    //table = featureWorkspace.OpenTable(this.dataGridViewX1.Rows[i].Cells[3].Value.ToString());
-                    ClsDeleteTables.DeleteFeatureClass(gdbPath, this.dataGridViewX1.Rows[i].Cells[3].Value.ToString());
-                    table = CreateTable(pWorkspace, this.dataGridViewX1.Rows[i].Cells[3].Value.ToString(), fileds);
+                    table = featureWorkspace.OpenTable(this.dataGridViewX1.Rows[i].Cells[3].Value.ToString());
+                    //ClsDeleteTables.DeleteFeatureClass(gdbPath, this.dataGridViewX1.Rows[i].Cells[3].Value.ToString());
+                    //table = CreateTable(pWorkspace, this.dataGridViewX1.Rows[i].Cells[3].Value.ToString(), fileds);
 
-                    //IWorkspaceEdit workspaceEdit = pWorkspace as IWorkspaceEdit;
-                    //workspaceEdit.StartEditing(true);
-                    //workspaceEdit.StartEditOperation();
+                    IWorkspaceEdit workspaceEdit = pWorkspace as IWorkspaceEdit;
+                    workspaceEdit.StartEditing(true);
+                    workspaceEdit.StartEditOperation();
 
-                    //ICursor cursor = table.Search(null, false);
-                    //IRow r = cursor.NextRow();
-                    //while (r != null)
-                    //{
-                    //    r.Delete();
-                    //    r = cursor.NextRow();
-                    //}
-                    //workspaceEdit.StopEditOperation();
-                    //workspaceEdit.StopEditing(true);
+                    ICursor cursor = table.Search(null, false);
+                    IRow r = cursor.NextRow();
+                    while (r != null)
+                    {
+                        r.Delete();
+                        r = cursor.NextRow();
+                    }
+                    workspaceEdit.StopEditOperation();
+                    workspaceEdit.StopEditing(true);
                 }
                 //表不存在，就创建空表
                 else
@@ -847,6 +877,8 @@ namespace ZJGISDataUpdating
                 int matchedMode = -1;
                 int matchedMay = -1;
                 double[] weight = new double[4];
+                double includeAngel = 0.0;
+                double hausdorff = 0.0;
                 double buffer = 0;
                 string fields = "";
 
@@ -863,25 +895,8 @@ namespace ZJGISDataUpdating
                     {
                         if (row.get_Value(row.Fields.FindField("MatchedFCName")).ToString() == matchedFCName)
                         {
-                            //拓扑匹配
-                            //if (row.get_Value(row.Fields.FindField("Top")).ToString() == "1")
-                            if (this.tabControl1.Tabs[1].Visible == true)
-                            {
-                                matchedMay = 1;
-                                matchedMode = -1;
-                                //weight = 0;
-                                string temp = row.get_Value(row.Fields.FindField("Buffer")).ToString();
-                                if (temp.Contains("米"))
-                                {
-                                    temp = temp.Substring(0, temp.LastIndexOf("米")).Trim();
-                                }
-                                buffer = Convert.ToDouble(temp);
-                                fields = row.get_Value(row.Fields.FindField("MatchedFields")).ToString();
-
-                                break;
-                            }
-                            //属性匹配
-                            else if (this.tabControl1.Tabs[0].Visible == true)
+                            //几何+属性匹配
+                            if (this.tabItemGAGeo.Visible == true)
                             {
                                 fields = row.get_Value(row.Fields.FindField("MatchedFields")).ToString();
                                 matchedMay = 0;
@@ -898,16 +913,56 @@ namespace ZJGISDataUpdating
                                 weight[2] = Convert.ToDouble(row.get_Value(row.Fields.FindField("TotalNum")));
 
                             }
+                            //几何匹配
+                            else if (this.tabItemGeo.Visible == true)
+                            {
+                                fields = row.get_Value(row.Fields.FindField("MatchedFields")).ToString();
+                                matchedMay = 0;
+                                matchedMode = 10;
+                                weight[0] = Convert.ToDouble(row.get_Value(row.Fields.FindField("SP")));
+                                string temp = row.get_Value(row.Fields.FindField("MatchedPointsBuffer")).ToString();
+                                if (temp.Contains("米"))
+                                {
+                                    temp = temp.Substring(0, temp.LastIndexOf("米")).Trim();
+                                }
+                                buffer = Convert.ToDouble(temp);
+
+                                weight[1] = Convert.ToDouble(row.get_Value(row.Fields.FindField("MatchedPoints")));
+                                weight[2] = Convert.ToDouble(row.get_Value(row.Fields.FindField("TotalNum")));
+
+                                includeAngel = Convert.ToDouble(row.get_Value(row.Fields.FindField("IncludeAngle")));
+                                hausdorff = Convert.ToDouble(row.get_Value(row.Fields.FindField("Hausdorff")));
+
+                            }
+                            //拓扑匹配
+                            //if (row.get_Value(row.Fields.FindField("Top")).ToString() == "1")
+                            else if (this.tabItemTopo.Visible == true)
+                            {
+                                matchedMay = 1;
+                                matchedMode = -1;
+                                //weight = 0;
+                                string temp = row.get_Value(row.Fields.FindField("Buffer")).ToString();
+                                if (temp.Contains("米"))
+                                {
+                                    temp = temp.Substring(0, temp.LastIndexOf("米")).Trim();
+                                }
+                                buffer = Convert.ToDouble(temp);
+                                fields = row.get_Value(row.Fields.FindField("MatchedFields")).ToString();
+
+                                break;
+                            }
+
+
                         }
                         row = cursor.NextRow();
                     }
                 }
 
                 ClsLineMatch clsLineMatch = new ClsLineMatch();
-                //几何匹配
-                if (this.tabControl1.Tabs[0].Visible == true)
+                //几何+属性匹配
+                if (this.tabItemGAGeo.Visible == true)
                 {
-                    clsLineMatch.SearchChangedFeatures(pSrcFcls, pTarFcls, table, weight, buffer, fields, progressBarMain, progressBarSub, labelXStatus, chkBoxLineIndicator);
+                    clsLineMatch.SearchChangedFeaturesGeoAttr(pSrcFcls, pTarFcls, table, weight, buffer, fields, progressBarMain, progressBarSub, labelXStatus, chkBoxLineIndicator);
                     sw.Stop();
                     #region 反向匹配
                     //if (ckbEachMatch.Checked)
@@ -958,8 +1013,16 @@ namespace ZJGISDataUpdating
                     #endregion
                     MessageBoxEx.Show("几何属性匹配已完成！总需要时间" + sw.ElapsedMilliseconds + "ms", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
+                //几何匹配
+                else if (this.tabItemGeo.Visible == true)
+                {
+                    clsLineMatch.SearchChangedFeaturesGeo(pSrcFcls, pTarFcls, table, weight, buffer, fields, progressBarMain, progressBarSub, 
+                        labelXStatus, chkBoxLineIndicator,includeAngel,hausdorff);
+                    sw.Stop();
+                    MessageBoxEx.Show("几何匹配已完成！总需要时间" + sw.ElapsedMilliseconds + "ms", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
                 //拓扑匹配
-                else if (this.tabControl1.Tabs[1].Visible == true)
+                else if (this.tabItemTopo.Visible == true)
                 {
                     clsLineMatch.SearchChangedFeaturesByTop(pSrcFcls, pTarFcls, table, buffer, fields, progressBarMain, progressBarSub, labelXStatus);
                     sw.Stop();
@@ -1015,7 +1078,7 @@ namespace ZJGISDataUpdating
                 ITable table = null;
                 IFields fields = null;
 
-                table = TableIsExist(sourceFeatCls, workspace, table, featureWorkspace);
+                table = TableIsExist(sourceFeatCls, gdbPath, table, featureWorkspace);
 
                 IWorkspaceEdit pWorkspaceEdit = featureWorkspace as IWorkspaceEdit;
                 pWorkspaceEdit.StartEditing(true);
@@ -1028,7 +1091,6 @@ namespace ZJGISDataUpdating
                 string tempBuffer = "";
                 DataGridViewCheckBoxCell dgvCheckBoxCell = new DataGridViewCheckBoxCell();
 
-
                 ICursor pCursor = table.Search(null, false);
                 IRow pRow = pCursor.NextRow();
                 while (pRow != null)
@@ -1040,8 +1102,8 @@ namespace ZJGISDataUpdating
                     }
                     pRow = pCursor.NextRow();
                 }
-                //几何匹配
-                if (this.tabControl1.Tabs[0].Visible)
+                //几何+属性匹配
+                if (this.tabControl1.Controls[1].Visible)
                 {
                     //表中某行的 待匹配图层名为空，也就是没有相应的记录
                     if (!pDic.ContainsKey(targetFeatureName))
@@ -1059,16 +1121,16 @@ namespace ZJGISDataUpdating
                         tempRow.set_Value(table.FindField("MatchedFCName"), targetFeatureName);
                         tempRow.set_Value(tempRow.Fields.FindField("FCSettingID"), table.RowCount(null) - 1);
                         //权重
-                        tempRow.set_Value(tempRow.Fields.FindField("MatchedPoints"), Convert.ToDouble(labelCenterNum.Text));
+                        tempRow.set_Value(tempRow.Fields.FindField("MatchedPoints"), Convert.ToDouble(labelNode.Text));
 
-                        tempRow.set_Value(tempRow.Fields.FindField("SearchedRadius"), Convert.ToDouble(labelRadius.Text));
+                        tempRow.set_Value(tempRow.Fields.FindField("SearchedRadius"), Convert.ToDouble(labelBufferRadius.Text));
 
-                        tempRow.set_Value(tempRow.Fields.FindField("SP"), Convert.ToDouble(labelSpNum.Text));
-                        tempRow.set_Value(tempRow.Fields.FindField("TotalNum"), Convert.ToDouble(labelTotalNum.Text));
+                        tempRow.set_Value(tempRow.Fields.FindField("SP"), Convert.ToDouble(labelShape.Text));
+                        tempRow.set_Value(tempRow.Fields.FindField("TotalNum"), Convert.ToDouble(labelTotal.Text));
 
-                        if (this.labelRadius.Text != "")
+                        if (this.labelBufferRadius.Text != "")
                         {
-                            tempBuffer = this.labelRadius.Text;
+                            tempBuffer = this.labelBufferRadius.Text;
                             if (tempBuffer.Contains("米"))
                             {
                                 tempBuffer = tempBuffer.Substring(0, tempBuffer.LastIndexOf("米"));
@@ -1076,8 +1138,7 @@ namespace ZJGISDataUpdating
                             IDataset dataset1 = sourceFeatCls as IDataset;
                             IGeoDataset geoDataset = dataset1 as IGeoDataset;
 
-                            ClsConvertUnit clsConvertUnit = new ClsConvertUnit();
-                            double b = clsConvertUnit.GetBufferValueByUnit(geoDataset.SpatialReference, Convert.ToDouble(tempBuffer));
+                            double b = ClsConvertUnit.GetBufferValueByUnit(geoDataset.SpatialReference, Convert.ToDouble(tempBuffer));
                             string sb = b.ToString("#0.000000");
                             tempRow.set_Value(tempRow.Fields.FindField("MatchedPointsBuffer"), sb);
                         }
@@ -1137,16 +1198,16 @@ namespace ZJGISDataUpdating
                         tRow.set_Value(table.FindField("MatchedFCName"), targetFeatureName);
                         tRow.set_Value(tRow.Fields.FindField("FCSettingID"), table.RowCount(null) - 1);
                         //权重
-                        tRow.set_Value(tRow.Fields.FindField("MatchedPoints"), Convert.ToDouble(labelCenterNum.Text));
+                        tRow.set_Value(tRow.Fields.FindField("MatchedPoints"), Convert.ToDouble(labelNode.Text));
 
-                        tRow.set_Value(tRow.Fields.FindField("SearchedRadius"), Convert.ToDouble(labelRadius.Text));
+                        tRow.set_Value(tRow.Fields.FindField("SearchedRadius"), Convert.ToDouble(labelBufferRadius.Text));
 
-                        tRow.set_Value(tRow.Fields.FindField("SP"), Convert.ToDouble(labelSpNum.Text));
-                        tRow.set_Value(tRow.Fields.FindField("TotalNum"), Convert.ToDouble(labelTotalNum.Text));
+                        tRow.set_Value(tRow.Fields.FindField("SP"), Convert.ToDouble(labelShape.Text));
+                        tRow.set_Value(tRow.Fields.FindField("TotalNum"), Convert.ToDouble(labelTotal.Text));
 
-                        if (this.labelRadius.Text != "")
+                        if (this.labelBufferRadius.Text != "")
                         {
-                            tempBuffer = this.labelRadius.Text;
+                            tempBuffer = this.labelBufferRadius.Text;
                             if (tempBuffer.Contains("米"))
                             {
                                 tempBuffer = tempBuffer.Substring(0, tempBuffer.LastIndexOf("米"));
@@ -1154,8 +1215,7 @@ namespace ZJGISDataUpdating
                             IDataset dataset1 = sourceFeatCls as IDataset;
                             IGeoDataset geoDataset = dataset1 as IGeoDataset;
 
-                            ClsConvertUnit clsConvertUnit = new ClsConvertUnit();
-                            double b = clsConvertUnit.GetBufferValueByUnit(geoDataset.SpatialReference, Convert.ToDouble(tempBuffer));
+                            double b = ClsConvertUnit.GetBufferValueByUnit(geoDataset.SpatialReference, Convert.ToDouble(tempBuffer));
                             string sb = b.ToString("#0.000000");
                             tRow.set_Value(tRow.Fields.FindField("MatchedPointsBuffer"), sb);
                         }
@@ -1200,8 +1260,172 @@ namespace ZJGISDataUpdating
                         tRow.Store();
                     }
                 }
+                //几何匹配
+                else if (this.tabControl1.Controls[0].Visible)
+                {
+                    //表中某行的 待匹配图层名为空，也就是没有相应的记录
+                    if (!pDic.ContainsKey(targetFeatureName))
+                    {
+                        //创建匹配的新记录
+                        IRow tempRow = table.CreateRow();
+
+                        if (ClsDeclare.g_SourceFeatClsPathDic.ContainsKey((sourceFeatCls as IDataset).Name))
+                        {
+                            tempRow.set_Value(tempRow.Fields.FindField("SourceFCName"), (sourceFeatCls as IDataset).Name);
+                            tempRow.set_Value(tempRow.Fields.FindField("SourcePath"), ClsDeclare.g_SourceFeatClsPathDic[(sourceFeatCls as IDataset).Name]);
+                            tempRow.set_Value(tempRow.Fields.FindField("WorkspacePath"), ClsDeclare.g_WorkspacePath);
+                        }
+
+                        tempRow.set_Value(table.FindField("MatchedFCName"), targetFeatureName);
+                        tempRow.set_Value(tempRow.Fields.FindField("FCSettingID"), table.RowCount(null) - 1);
+                        //权重
+                        tempRow.set_Value(tempRow.Fields.FindField("MatchedPoints"), Convert.ToDouble(labelNodeGeo.Text));
+
+                        tempRow.set_Value(tempRow.Fields.FindField("SearchedRadius"), Convert.ToDouble(labelBufferGeo.Text));
+
+                        tempRow.set_Value(tempRow.Fields.FindField("SP"), Convert.ToDouble(labelShapeGeo.Text));
+                        tempRow.set_Value(tempRow.Fields.FindField("TotalNum"), Convert.ToDouble(labelTotalGeo.Text));
+
+                        if (this.labelBufferGeo.Text != "")
+                        {
+                            tempBuffer = this.labelBufferGeo.Text;
+                            if (tempBuffer.Contains("米"))
+                            {
+                                tempBuffer = tempBuffer.Substring(0, tempBuffer.LastIndexOf("米"));
+                            }
+                            IDataset dataset1 = sourceFeatCls as IDataset;
+                            IGeoDataset geoDataset = dataset1 as IGeoDataset;
+
+                            double b = ClsConvertUnit.GetBufferValueByUnit(geoDataset.SpatialReference, Convert.ToDouble(tempBuffer));
+                            string sb = b.ToString("#0.000000");
+                            tempRow.set_Value(tempRow.Fields.FindField("MatchedPointsBuffer"), sb);
+                        }
+                        else
+                        {
+                            MessageBoxEx.Show("请选择缓冲区半径！");
+                            return;
+                        }
+
+                        //TODO :读取选择的字段
+
+                        //修改属性
+                        //tempRow.set_Value(tempRow.Fields.FindField("Attribute"), 1);
+
+                        for (int i = 0; i < dataGridViewX2.RowCount; i++)
+                        {
+                            dgvCheckBoxCell = dataGridViewX2[0, i] as DataGridViewCheckBoxCell;
+                            if (Convert.ToBoolean(dgvCheckBoxCell.Value) == true)
+                            {
+                                if (this.dataGridViewX2[1, i].Value.ToString().ToUpper() == this.dataGridViewX2[2, i].Value.ToString().ToUpper())
+                                {
+                                    tempFieldsName = tempFieldsName + dataGridViewX2[1, i].Value.ToString() + ";";
+                                }
+                                else
+                                {
+                                    tempFieldsName = tempFieldsName + dataGridViewX2[1, i].Value.ToString() + ":" + dataGridViewX2[2, i].Value.ToString() + ";";
+                                }
+                            }
+
+                        }
+
+                        if (tempFieldsName != "")
+                        {
+                            tempRow.set_Value(tempRow.Fields.FindField("Attribute"), 1);
+                            tempRow.set_Value(tempRow.Fields.FindField("MatchedFields"), tempFieldsName.Trim());
+                        }
+                        else
+                        {
+                            tempRow.set_Value(tempRow.Fields.FindField("Attribute"), 0);
+                            //MessageBox.Show("没有选择属性匹配对应字段！", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        }
+
+                        tempRow.set_Value(table.FindField("IncludeAngle"), Convert.ToDouble(labelIncludeGeo.Text));
+                        tempRow.set_Value(table.FindField("Hausdorff"), Convert.ToDouble(labelHausdorffGeo.Text));
+
+
+                        tempRow.Store();
+                    }
+                    //表中某行的 待匹配图层名不为空，也就是含有之前的匹配记录                    
+                    else
+                    {
+                        //通过待匹配图层名获取该记录
+                        IRow tRow = table.GetRow(pDic[targetFeatureName]);
+
+                        if (ClsDeclare.g_SourceFeatClsPathDic.ContainsKey((sourceFeatCls as IDataset).Name))
+                        {
+                            tRow.set_Value(tRow.Fields.FindField("SourceFCName"), (sourceFeatCls as IDataset).Name);
+                            tRow.set_Value(tRow.Fields.FindField("SourcePath"), ClsDeclare.g_SourceFeatClsPathDic[(sourceFeatCls as IDataset).Name]);
+                            tRow.set_Value(tRow.Fields.FindField("WorkspacePath"), ClsDeclare.g_WorkspacePath);
+                        }
+
+                        tRow.set_Value(table.FindField("MatchedFCName"), targetFeatureName);
+                        tRow.set_Value(tRow.Fields.FindField("FCSettingID"), table.RowCount(null) - 1);
+                        //权重
+                        tRow.set_Value(tRow.Fields.FindField("MatchedPoints"), Convert.ToDouble(labelNodeGeo.Text));
+
+                        tRow.set_Value(tRow.Fields.FindField("SearchedRadius"), Convert.ToDouble(labelBufferGeo.Text));
+
+                        tRow.set_Value(tRow.Fields.FindField("SP"), Convert.ToDouble(labelShapeGeo.Text));
+                        tRow.set_Value(tRow.Fields.FindField("TotalNum"), Convert.ToDouble(labelTotalGeo.Text));
+
+                        if (this.labelBufferGeo.Text != "")
+                        {
+                            tempBuffer = this.labelBufferGeo.Text;
+                            if (tempBuffer.Contains("米"))
+                            {
+                                tempBuffer = tempBuffer.Substring(0, tempBuffer.LastIndexOf("米"));
+                            }
+                            IDataset dataset1 = sourceFeatCls as IDataset;
+                            IGeoDataset geoDataset = dataset1 as IGeoDataset;
+
+                            double b = ClsConvertUnit.GetBufferValueByUnit(geoDataset.SpatialReference, Convert.ToDouble(tempBuffer));
+                            string sb = b.ToString("#0.000000");
+                            tRow.set_Value(tRow.Fields.FindField("MatchedPointsBuffer"), sb);
+                        }
+                        else
+                        {
+                            MessageBoxEx.Show("请选择缓冲区半径！");
+                            return;
+                        }
+
+                        //修改属性
+                        //tRow.set_Value(tRow.Fields.FindField("Attribute"), 1);
+                        for (int i = 0; i < dataGridViewX1.RowCount; i++)
+                        {
+                            dgvCheckBoxCell = dataGridViewX2[0, i] as DataGridViewCheckBoxCell;
+                            if (Convert.ToBoolean(dgvCheckBoxCell.Value) == true)
+                            {
+                                if (this.dataGridViewX2[1, i].Value.ToString().ToUpper() == this.dataGridViewX2[2, i].Value.ToString().ToUpper())
+                                {
+                                    tempFieldsName = tempFieldsName + dataGridViewX2[1, i].Value.ToString() + ";";
+                                }
+                                else
+                                {
+                                    tempFieldsName = tempFieldsName + dataGridViewX2[1, i].Value.ToString() + "(" + dataGridViewX2[2, i].Value.ToString() + ")";
+                                }
+                            }
+
+                        }
+
+                        if (tempFieldsName == "")
+                        {
+                            tRow.set_Value(tRow.Fields.FindField("Attribute"), 0);
+                            MessageBoxEx.Show("没有选择属性匹配对应字段！", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        }
+                        else
+                        {
+                            tRow.set_Value(tRow.Fields.FindField("Attribute"), 1);
+                            tRow.set_Value(tRow.Fields.FindField("MatchedFields"), tempFieldsName.Trim());
+                        }
+
+                        tRow.set_Value(tRow.Fields.FindField("IncludeAngle"), Convert.ToDouble(labelIncludeGeo.Text));
+                        tRow.set_Value(tRow.Fields.FindField("Hausdorff"), Convert.ToDouble(labelHausdorffGeo.Text));
+
+                        tRow.Store();
+                    }
+                }
                 //拓扑匹配
-                else if (this.tabControl1.Tabs[1].Visible)
+                else if (this.tabControl1.Controls[3].Visible)
                 {
                     if (!pDic.ContainsKey(targetFeatureName))
                     {
@@ -1221,8 +1445,7 @@ namespace ZJGISDataUpdating
                             IDataset dataset1 = sourceFeatCls as IDataset;
                             IGeoDataset geoDataset = dataset1 as IGeoDataset;
 
-                            ClsConvertUnit clsConvertUnit = new ClsConvertUnit();
-                            double b = clsConvertUnit.GetBufferValueByUnit(geoDataset.SpatialReference, Convert.ToDouble(tempBuffer));
+                            double b = ClsConvertUnit.GetBufferValueByUnit(geoDataset.SpatialReference, Convert.ToDouble(tempBuffer));
                             string sb = b.ToString("#0.000000");
                             tempRow.set_Value(tempRow.Fields.FindField("Buffer"), sb);
                         }
@@ -1286,8 +1509,7 @@ namespace ZJGISDataUpdating
                             IDataset dataset1 = sourceFeatCls as IDataset;
                             IGeoDataset geoDataset = dataset1 as IGeoDataset;
 
-                            ClsConvertUnit clsConvertUnit = new ClsConvertUnit();
-                            double b = clsConvertUnit.GetBufferValueByUnit(geoDataset.SpatialReference, Convert.ToDouble(tempBuffer));
+                            double b = ClsConvertUnit.GetBufferValueByUnit(geoDataset.SpatialReference, Convert.ToDouble(tempBuffer));
                             string sb = b.ToString("#0.000000");
                             tRow.set_Value(tRow.Fields.FindField("Buffer"), sb);
                         }
@@ -1350,9 +1572,12 @@ namespace ZJGISDataUpdating
         /// <param name="table"></param>
         /// <param name="featureWorkspace"></param>
         /// <returns></returns>
-        private ITable TableIsExist(IFeatureClass sourceFeatCls, IWorkspace2 workspace, ITable table,
+        private ITable TableIsExist(IFeatureClass sourceFeatCls, string gdbPath, ITable table,
             IFeatureWorkspace featureWorkspace)
         {
+            IWorkspaceFactory pWorkspaceFactory = new FileGDBWorkspaceFactory();
+            IWorkspace2 workspace = pWorkspaceFactory.OpenFromFile(gdbPath, 0) as IWorkspace2;
+
             IFields fields;
             if (sourceFeatCls.ShapeType == esriGeometryType.esriGeometryPolyline ||
                 sourceFeatCls.ShapeType == esriGeometryType.esriGeometryLine)
@@ -1375,8 +1600,17 @@ namespace ZJGISDataUpdating
                     workspaceEdit.StopEditOperation();
                     workspaceEdit.StopEditing(true);
 
-                    //ClsDeleteTables.DeleteFeatureClass(workspace, this.dataGridViewX1.Rows[i].Cells[3].Value.ToString());
+                    //ClsDeleteTables.DeleteFeatureClass(gdbPath, ClsConstant.lineSettingTable);
+                    //fields = CreateMatchedPolylineFCSettingFields(workspace);
+                    //UID uid = new UIDClass();
+                    //uid.Value = "esriGeoDatabase.Object";
+                    //IFieldChecker fieldChecker = new FieldCheckerClass();
+                    //IEnumFieldError enumFieldError = null;
+                    //IFields validatedFields = null;
+                    //fieldChecker.ValidateWorkspace = (IWorkspace)workspace;
+                    //fieldChecker.Validate(fields, out enumFieldError, out validatedFields);
 
+                    //table = featureWorkspace.CreateTable(ClsConstant.lineSettingTable, validatedFields, uid, null, "");
                 }
                 //如果不存在表就创建表
                 else
@@ -1396,105 +1630,310 @@ namespace ZJGISDataUpdating
             return table;
         }
 
+        #region radio按钮1
         private void radioButtonShape_CheckedChanged(object sender, EventArgs e)
         {
             if (this.radioButtonShape.Checked)
             {
-
-                this.labelSpNum.Enabled = true;
-
-                this.Weightslider1.Enabled = true;
-
+                this.labelShape.Enabled = true;
+                this.WeightsliderShape.Enabled = true;
             }
             else
             {
-
-                this.labelRadius.Enabled = false;
-
-                this.Weightslider1.Enabled = false;
-
+                this.labelShape.Enabled = false;
+                this.WeightsliderShape.Enabled = false;
             }
         }
 
         private void radioButtonCenter_CheckedChanged(object sender, EventArgs e)
         {
-            if (this.radioButtonVertex.Checked)
+            if (this.radioButtonNode.Checked)
             {
-
-                this.Weightslider2.Enabled = true;
-                this.labelCenterNum.Enabled = true;
+                this.WeightsliderNode.Enabled = true;
+                this.labelNode.Enabled = true;
             }
             else
             {
-
-                this.Weightslider2.Enabled = false;
-                this.labelCenterNum.Enabled = false;
+                this.WeightsliderNode.Enabled = false;
+                this.labelNode.Enabled = false;
             }
-        }
-
-        private void Weightslider_ValueChanged(object sender, EventArgs e)
-        {
-            this.labelSpNum.Text = Convert.ToDouble((Weightslider1.Value / 100.00)).ToString();
-            Weightslider2.Value = (100 - Weightslider1.Value);
-            //Weightslider2.Maximum = 100 - Weightslider1.Value;
-            this.labelCenterNum.Text = Convert.ToDouble((Weightslider2.Value / 100.00)).ToString();
-
-        }
-
-        private void Weightslider2_ValueChanged(object sender, EventArgs e)
-        {
-
-            this.labelCenterNum.Text = Convert.ToDouble((Weightslider2.Value / 100.00)).ToString();
-
-        }
-
-        private void Weightslider4_ValueChanged(object sender, EventArgs e)
-        {
-            this.labelTotalNum.Text = Convert.ToDouble((Weightslider4.Value / 100.00)).ToString();
-        }
-
-        private void Weightslider3_ValueChanged(object sender, EventArgs e)
-        {
-            this.labelRadius.Text = Convert.ToDouble((Weightslider3.Value)).ToString();
         }
 
         private void radioButtonArea_CheckedChanged(object sender, EventArgs e)
         {
-            if (this.radioButtonArea.Checked == true)
+            if (this.radioButtonBuffer.Checked == true)
             {
-                this.Weightslider3.Enabled = true;
-                labelRadius.Enabled = true;
+                this.WeightsliderBuffer.Enabled = true;
+                labelBufferRadius.Enabled = true;
             }
             else
             {
-                this.Weightslider3.Enabled = false;
-                labelRadius.Enabled = false;
+                this.WeightsliderBuffer.Enabled = false;
+                labelBufferRadius.Enabled = false;
             }
 
         }
 
-        private void checkBoxXGeoAttr_Click(object sender, EventArgs e)
+        #endregion
+        #region 进度条
+        /// <summary>
+        /// 形状相似度
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Weightslider_ValueChanged(object sender, EventArgs e)
         {
-            this.tabControl1.Tabs[0].Visible = true;
-            this.tabControl1.Tabs[1].Visible = false;
-            //this.tabControl1.Tabs[1].Visible = true;
-            this.tabControl1.Tabs[2].Visible = true;
+            this.labelShape.Text = Convert.ToDouble((WeightsliderShape.Value / 100.00)).ToString();
+            WeightsliderNode.Value = (100 - WeightsliderShape.Value);
+            //Weightslider2.Maximum = 100 - Weightslider1.Value;
+            this.labelNode.Text = Convert.ToDouble((WeightsliderNode.Value / 100.00)).ToString();
+
+        }
+        /// <summary>
+        /// 节点相似度
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Weightslider2_ValueChanged(object sender, EventArgs e)
+        {
+            this.labelNode.Text = Convert.ToDouble((WeightsliderNode.Value / 100.00)).ToString();
+        }
+        /// <summary>
+        /// 缓冲区半径
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Weightslider3_ValueChanged(object sender, EventArgs e)
+        {
+            this.labelBufferRadius.Text = Convert.ToDouble((WeightsliderBuffer.Value)).ToString();
+        }
+        /// <summary>
+        /// 综合相似度阈值
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Weightslider4_ValueChanged(object sender, EventArgs e)
+        {
+            this.labelTotal.Text = Convert.ToDouble((WeightsliderTotal.Value / 100.00)).ToString();
         }
 
+        #endregion
+        #region radio按钮2
+        /// <summary>
+        /// 形状
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void rBtnShapeGeo_CheckedChanged(object sender, EventArgs e)
+        {
+            if (this.rBtnShapeGeo.Checked)
+            {
+                this.sliderShapeGeo.Enabled = true;
+                this.labelShapeGeo.Enabled = true;
+            }
+            else
+            {
+                this.sliderShapeGeo.Enabled = false;
+                this.labelShapeGeo.Enabled = false;
+            }
+        }
+        /// <summary>
+        /// 节点
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void rBtnNodeGeo_CheckedChanged(object sender, EventArgs e)
+        {
+            if (this.rBtnNodeGeo.Checked)
+            {
+                this.sliderNodeGeo.Enabled = true;
+                this.labelNodeGeo.Enabled = true;
+            }
+            else
+            {
+                this.sliderNodeGeo.Enabled = false;
+                this.labelNodeGeo.Enabled = false;
+            }
+        }
+        /// <summary>
+        /// 缓冲区
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void rBtnbufferGeo_CheckedChanged(object sender, EventArgs e)
+        {
+            if (this.rBtnbufferGeo.Checked)
+            {
+                this.sliderBufferGeo.Enabled = true;
+                this.labelBufferGeo.Enabled = true;
+            }
+            else
+            {
+                this.sliderBufferGeo.Enabled = false;
+                this.labelBufferGeo.Enabled = false;
+            }
+        }
+        /// <summary>
+        /// 夹角
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void rBtnIncludeAngleGeo_CheckedChanged(object sender, EventArgs e)
+        {
+            if (this.rBtnIncludeAngleGeo.Checked)
+            {
+                this.sliderIncludeAngleGeo.Enabled = true;
+                this.labelIncludeGeo.Enabled = true;
+            }
+            else
+            {
+                this.sliderIncludeAngleGeo.Enabled = false;
+                this.labelIncludeGeo.Enabled = false;
+            }
+        }
+        /// <summary>
+        /// Hausdorff距离
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void rBtnHausdorffGeo_CheckedChanged(object sender, EventArgs e)
+        {
+            if (this.rBtnHausdorffGeo.Checked)
+            {
+                this.sliderHausdorffGeo.Enabled = true;
+                this.labelHausdorffGeo.Enabled = true;
+            }
+            else
+            {
+                this.sliderHausdorffGeo.Enabled = false;
+                this.labelHausdorffGeo.Enabled = false;
+            }
+        }
+        #endregion
+
+        #region 进度条2
+        /// <summary>
+        /// 形状相似度
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void sliderShapeGeo_ValueChanged(object sender, EventArgs e)
+        {
+            this.labelShapeGeo.Text = Convert.ToDouble((sliderShapeGeo.Value / 100.00)).ToString();
+            sliderShapeGeo.Value = (100 - sliderShapeGeo.Value);
+            //Weightslider2.Maximum = 100 - Weightslider1.Value;
+            this.labelNodeGeo.Text = Convert.ToDouble((sliderNodeGeo.Value / 100.00)).ToString();
+        }
+        /// <summary>
+        /// 节点相似度
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void sliderNodeGeo_ValueChanged(object sender, EventArgs e)
+        {
+            this.labelNodeGeo.Text = Convert.ToDouble((sliderNodeGeo.Value / 100.00)).ToString();
+        }
+        /// <summary>
+        /// 缓冲区半径
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void sliderBufferGeo_ValueChanged(object sender, EventArgs e)
+        {
+            this.labelBufferGeo.Text = Convert.ToDouble((sliderBufferGeo.Value)).ToString();
+        }
+        /// <summary>
+        /// 综合相似度
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void sliderTotalGeo_ValueChanged(object sender, EventArgs e)
+        {
+            this.labelTotalGeo.Text = Convert.ToDouble((sliderTotalGeo.Value / 100.00)).ToString();
+        }
+        /// <summary>
+        /// 夹角进度条
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void sliderIncludeAngleGeo_ValueChanged(object sender, EventArgs e)
+        {
+            this.labelIncludeGeo.Text = Convert.ToDouble(sliderIncludeAngleGeo.Value).ToString();
+        }
+        /// <summary>
+        /// Hausdorff距离进度条
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void sliderHausdorffGeo_ValueChanged(object sender, EventArgs e)
+        {
+            this.labelHausdorffGeo.Text = Convert.ToDouble(sliderHausdorffGeo.Value).ToString();
+        }
+        #endregion
+        #region checkbox事件
+        /// <summary>
+        /// 纯粹几何匹配
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void checkBoxXGeo_Click(object sender, EventArgs e)
+        {
+            this.tabItemGeo.Visible = true;
+            this.tabItemTopo.Visible = false;
+            this.tabItemGAGeo.Visible = false;
+            this.tabItemGAttr.Visible = false;
+        }
+        /// <summary>
+        /// 几何属性匹配
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void checkBoxXGeoAttr_Click(object sender, EventArgs e)
+        {
+            //this.tabControl1.Tabs[0].Visible = true;
+            //this.tabControl1.Tabs[2].Visible = true;
+            //this.tabControl1.Tabs[1].Visible = false;
+            ////this.tabControl1.Tabs[1].Visible = true;
+
+            this.tabItemGeo.Visible = false;
+            this.tabItemTopo.Visible = false;
+            this.tabItemGAGeo.Visible = true;
+            this.tabItemGAttr.Visible = true;
+        }
+        /// <summary>
+        /// 拓扑匹配
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void checkBoxXTopo_Click(object sender, EventArgs e)
         {
-            this.tabControl1.Tabs[0].Visible = false;
-            //this.tabControl1.Tabs[1].Visible = false;
-            this.tabControl1.Tabs[1].Visible = true;
-            this.tabControl1.Tabs[2].Visible = false;
+            //this.tabControl1.Tabs[0].Visible = false;
+            ////this.tabControl1.Tabs[1].Visible = false;
+            //this.tabControl1.Tabs[1].Visible = true;
+            //this.tabControl1.Tabs[2].Visible = false;
+            this.tabItemGeo.Visible = false;
+            this.tabItemTopo.Visible = true;
+            this.tabItemGAGeo.Visible = false;
+            this.tabItemGAttr.Visible = false;
+        }
+
+        private void checkBoxXGeo_CheckedChanged(object sender, EventArgs e)
+        {
+            if (checkBoxXGeo.Checked)
+            {
+                checkBoxXGeo.Checked = true;
+                checkBoxXGeoAttr.Checked = false;
+                checkBoxXTopo.Checked = false;
+            }
         }
 
         private void checkBoxXGeoAttr_CheckedChanged(object sender, EventArgs e)
         {
             if (checkBoxXGeoAttr.Checked)
             {
-                checkBoxXTopo.Checked = false;
+                checkBoxXGeo.Checked = false;
                 checkBoxXGeoAttr.Checked = true;
+                checkBoxXTopo.Checked = false;
             }
         }
 
@@ -1502,11 +1941,16 @@ namespace ZJGISDataUpdating
         {
             if (checkBoxXTopo.Checked)
             {
+                checkBoxXGeo.Checked = false;
                 checkBoxXGeoAttr.Checked = false;
                 checkBoxXTopo.Checked = true;
             }
         }
-        //加载匹配参数
+        #endregion
+
+   
+
+    
 
     }
 }

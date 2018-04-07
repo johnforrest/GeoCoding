@@ -13,9 +13,13 @@ namespace ZJGISDataUpdating
         [STAThread]
         static void Main()
         {
-            Application.EnableVisualStyles();
-            Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new FrmMatchSet());
+            //Application.EnableVisualStyles();
+            //Application.SetCompatibleTextRenderingDefault(false);
+            //Application.Run(new FrmMatchSet());
+
+
+
+
         }
     }
 }

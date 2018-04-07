@@ -184,7 +184,7 @@ namespace ZJGISDataUpdating
                 if (pTUFeatCls.ShapeType == esriGeometryType.esriGeometryPolygon)
                 {
                     //填充结果表xxx_DifPyTable
-                    clsPolygonMatch.DifScaleSearchChangedPolygonFeatures(pTUFeatCls, pTEFeatCls, table, 10, 13, progressBarMain, progressBarSub, labelXStatus);
+                    clsPolygonMatch.SearchChangedPolygonFeaturesDifScale(pTUFeatCls, pTEFeatCls, table, 10, 13, progressBarMain, progressBarSub, labelXStatus);
                     sw.Stop();
                     MessageBoxEx.Show("几何属性匹配已完成！总需要时间" + sw.ElapsedMilliseconds + "ms", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }

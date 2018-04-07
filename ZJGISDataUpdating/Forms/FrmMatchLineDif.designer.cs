@@ -29,12 +29,12 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle37 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle38 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle39 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle40 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle41 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle42 = new System.Windows.Forms.DataGridViewCellStyle();
             this.panelEx1 = new DevComponents.DotNetBar.PanelEx();
             this.progressBarMain = new System.Windows.Forms.ProgressBar();
             this.progressBarSub = new System.Windows.Forms.ProgressBar();
@@ -53,23 +53,20 @@
             this.labelX3 = new DevComponents.DotNetBar.LabelX();
             this.labelX9 = new DevComponents.DotNetBar.LabelX();
             this.labelX8 = new DevComponents.DotNetBar.LabelX();
-            this.labelTotalNum = new DevComponents.DotNetBar.LabelX();
-            this.Weightslider4 = new DevComponents.DotNetBar.Controls.Slider();
+            this.labelTotal = new DevComponents.DotNetBar.LabelX();
+            this.WeightsliderTotal = new DevComponents.DotNetBar.Controls.Slider();
             this.radioButtonToatl = new System.Windows.Forms.RadioButton();
-            this.Weightslider3 = new DevComponents.DotNetBar.Controls.Slider();
-            this.Weightslider2 = new DevComponents.DotNetBar.Controls.Slider();
-            this.labelCenterNum = new DevComponents.DotNetBar.LabelX();
-            this.labelRadius = new DevComponents.DotNetBar.LabelX();
-            this.labelSpNum = new DevComponents.DotNetBar.LabelX();
+            this.WeightsliderBuffer = new DevComponents.DotNetBar.Controls.Slider();
+            this.WeightsliderNode = new DevComponents.DotNetBar.Controls.Slider();
+            this.labelNode = new DevComponents.DotNetBar.LabelX();
+            this.labelBufferRadius = new DevComponents.DotNetBar.LabelX();
+            this.labelShape = new DevComponents.DotNetBar.LabelX();
             this.labelX7 = new DevComponents.DotNetBar.LabelX();
-            this.Weightslider1 = new DevComponents.DotNetBar.Controls.Slider();
-            this.radioButtonArea = new System.Windows.Forms.RadioButton();
-            this.radioButtonVertex = new System.Windows.Forms.RadioButton();
+            this.WeightsliderShape = new DevComponents.DotNetBar.Controls.Slider();
+            this.radioButtonBuffer = new System.Windows.Forms.RadioButton();
+            this.radioButtonNode = new System.Windows.Forms.RadioButton();
             this.radioButtonShape = new System.Windows.Forms.RadioButton();
-            this.tabItem1 = new DevComponents.DotNetBar.TabItem(this.components);
-            this.tabControlPanel3 = new DevComponents.DotNetBar.TabControlPanel();
-            this.dataGridViewX2 = new DevComponents.DotNetBar.Controls.DataGridViewX();
-            this.tabItem3 = new DevComponents.DotNetBar.TabItem(this.components);
+            this.tabItemGAGeo = new DevComponents.DotNetBar.TabItem(this.components);
             this.tabControlPanel2 = new DevComponents.DotNetBar.TabControlPanel();
             this.panelEx3 = new DevComponents.DotNetBar.PanelEx();
             this.labelX6 = new DevComponents.DotNetBar.LabelX();
@@ -79,11 +76,42 @@
             this.comboItem5 = new DevComponents.Editors.ComboItem();
             this.comboItem6 = new DevComponents.Editors.ComboItem();
             this.comboItem7 = new DevComponents.Editors.ComboItem();
-            this.tabItem2 = new DevComponents.DotNetBar.TabItem(this.components);
+            this.tabItemTopo = new DevComponents.DotNetBar.TabItem(this.components);
+            this.tabControlPanel3 = new DevComponents.DotNetBar.TabControlPanel();
+            this.dataGridViewX2 = new DevComponents.DotNetBar.Controls.DataGridViewX();
+            this.tabItemGAttr = new DevComponents.DotNetBar.TabItem(this.components);
+            this.tabControlPanel4 = new DevComponents.DotNetBar.TabControlPanel();
+            this.chkBoxGeo = new System.Windows.Forms.CheckBox();
+            this.labelX10 = new DevComponents.DotNetBar.LabelX();
+            this.labelX11 = new DevComponents.DotNetBar.LabelX();
+            this.labelX12 = new DevComponents.DotNetBar.LabelX();
+            this.labelTotalGeo = new DevComponents.DotNetBar.LabelX();
+            this.sliderTotalGeo = new DevComponents.DotNetBar.Controls.Slider();
+            this.rBtnTotalGeo = new System.Windows.Forms.RadioButton();
+            this.sliderBufferGeo = new DevComponents.DotNetBar.Controls.Slider();
+            this.sliderNodeGeo = new DevComponents.DotNetBar.Controls.Slider();
+            this.labelNodeGeo = new DevComponents.DotNetBar.LabelX();
+            this.labelBufferGeo = new DevComponents.DotNetBar.LabelX();
+            this.labelShapeGeo = new DevComponents.DotNetBar.LabelX();
+            this.labelX17 = new DevComponents.DotNetBar.LabelX();
+            this.sliderShapeGeo = new DevComponents.DotNetBar.Controls.Slider();
+            this.rBtnbufferGeo = new System.Windows.Forms.RadioButton();
+            this.rBtnNodeGeo = new System.Windows.Forms.RadioButton();
+            this.rBtnShapeGeo = new System.Windows.Forms.RadioButton();
+            this.tabItemGeo = new DevComponents.DotNetBar.TabItem(this.components);
             this.panelEx5 = new DevComponents.DotNetBar.PanelEx();
+            this.checkBoxXGeo = new DevComponents.DotNetBar.Controls.CheckBoxX();
             this.checkBoxXTopo = new DevComponents.DotNetBar.Controls.CheckBoxX();
             this.checkBoxXGeoAttr = new DevComponents.DotNetBar.Controls.CheckBoxX();
             this.labelX4 = new DevComponents.DotNetBar.LabelX();
+            this.labelX13 = new DevComponents.DotNetBar.LabelX();
+            this.sliderIncludeAngleGeo = new DevComponents.DotNetBar.Controls.Slider();
+            this.labelIncludeGeo = new DevComponents.DotNetBar.LabelX();
+            this.rBtnIncludeAngleGeo = new System.Windows.Forms.RadioButton();
+            this.labelX15 = new DevComponents.DotNetBar.LabelX();
+            this.sliderHausdorffGeo = new DevComponents.DotNetBar.Controls.Slider();
+            this.labelHausdorffGeo = new DevComponents.DotNetBar.LabelX();
+            this.rBtnHausdorffGeo = new System.Windows.Forms.RadioButton();
             this.panelEx1.SuspendLayout();
             this.panelEx2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
@@ -95,10 +123,11 @@
             this.tabControl1.SuspendLayout();
             this.tabControlPanel1.SuspendLayout();
             this.panelEx4.SuspendLayout();
-            this.tabControlPanel3.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewX2)).BeginInit();
             this.tabControlPanel2.SuspendLayout();
             this.panelEx3.SuspendLayout();
+            this.tabControlPanel3.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewX2)).BeginInit();
+            this.tabControlPanel4.SuspendLayout();
             this.panelEx5.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -114,10 +143,10 @@
             this.panelEx1.Controls.Add(this.labelX2);
             this.panelEx1.Controls.Add(this.labelX1);
             this.panelEx1.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panelEx1.Location = new System.Drawing.Point(0, 451);
+            this.panelEx1.Location = new System.Drawing.Point(0, 483);
             this.panelEx1.Margin = new System.Windows.Forms.Padding(4);
             this.panelEx1.Name = "panelEx1";
-            this.panelEx1.Size = new System.Drawing.Size(1230, 126);
+            this.panelEx1.Size = new System.Drawing.Size(1294, 126);
             this.panelEx1.Style.Alignment = System.Drawing.StringAlignment.Center;
             this.panelEx1.Style.BackColor1.ColorSchemePart = DevComponents.DotNetBar.eColorSchemePart.PanelBackground;
             this.panelEx1.Style.BackColor2.ColorSchemePart = DevComponents.DotNetBar.eColorSchemePart.PanelBackground2;
@@ -216,7 +245,7 @@
             this.panelEx2.Location = new System.Drawing.Point(0, 0);
             this.panelEx2.Margin = new System.Windows.Forms.Padding(4);
             this.panelEx2.Name = "panelEx2";
-            this.panelEx2.Size = new System.Drawing.Size(1230, 451);
+            this.panelEx2.Size = new System.Drawing.Size(1294, 483);
             this.panelEx2.Style.Alignment = System.Drawing.StringAlignment.Center;
             this.panelEx2.Style.BackColor1.ColorSchemePart = DevComponents.DotNetBar.eColorSchemePart.PanelBackground;
             this.panelEx2.Style.BackColor2.ColorSchemePart = DevComponents.DotNetBar.eColorSchemePart.PanelBackground2;
@@ -242,8 +271,8 @@
             // 
             this.splitContainer1.Panel2.Controls.Add(this.tabControl1);
             this.splitContainer1.Panel2.Controls.Add(this.panelEx5);
-            this.splitContainer1.Size = new System.Drawing.Size(1230, 451);
-            this.splitContainer1.SplitterDistance = 63;
+            this.splitContainer1.Size = new System.Drawing.Size(1294, 483);
+            this.splitContainer1.SplitterDistance = 67;
             this.splitContainer1.SplitterWidth = 5;
             this.splitContainer1.TabIndex = 1;
             // 
@@ -251,61 +280,63 @@
             // 
             this.dataGridViewX1.AllowUserToAddRows = false;
             this.dataGridViewX1.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle1.Font = new System.Drawing.Font("SimSun", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dataGridViewX1.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle37.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle37.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle37.Font = new System.Drawing.Font("SimSun", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            dataGridViewCellStyle37.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle37.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle37.SelectionForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle37.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dataGridViewX1.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle37;
             this.dataGridViewX1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle2.Font = new System.Drawing.Font("SimSun", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(21)))), ((int)(((byte)(110)))));
-            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.dataGridViewX1.DefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle38.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle38.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle38.Font = new System.Drawing.Font("SimSun", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            dataGridViewCellStyle38.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle38.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle38.SelectionForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(21)))), ((int)(((byte)(110)))));
+            dataGridViewCellStyle38.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.dataGridViewX1.DefaultCellStyle = dataGridViewCellStyle38;
             this.dataGridViewX1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dataGridViewX1.EnableHeadersVisualStyles = false;
             this.dataGridViewX1.GridColor = System.Drawing.Color.FromArgb(((int)(((byte)(208)))), ((int)(((byte)(215)))), ((int)(((byte)(229)))));
             this.dataGridViewX1.Location = new System.Drawing.Point(0, 0);
             this.dataGridViewX1.Margin = new System.Windows.Forms.Padding(4);
             this.dataGridViewX1.Name = "dataGridViewX1";
-            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle3.Font = new System.Drawing.Font("SimSun", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            dataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dataGridViewX1.RowHeadersDefaultCellStyle = dataGridViewCellStyle3;
+            dataGridViewCellStyle39.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle39.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle39.Font = new System.Drawing.Font("SimSun", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            dataGridViewCellStyle39.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle39.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle39.SelectionForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle39.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dataGridViewX1.RowHeadersDefaultCellStyle = dataGridViewCellStyle39;
             this.dataGridViewX1.RowTemplate.Height = 23;
-            this.dataGridViewX1.Size = new System.Drawing.Size(1230, 63);
+            this.dataGridViewX1.Size = new System.Drawing.Size(1294, 67);
             this.dataGridViewX1.TabIndex = 1;
             // 
             // tabControl1
             // 
             this.tabControl1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(194)))), ((int)(((byte)(217)))), ((int)(((byte)(247)))));
             this.tabControl1.CanReorderTabs = true;
+            this.tabControl1.Controls.Add(this.tabControlPanel4);
             this.tabControl1.Controls.Add(this.tabControlPanel1);
-            this.tabControl1.Controls.Add(this.tabControlPanel3);
             this.tabControl1.Controls.Add(this.tabControlPanel2);
+            this.tabControl1.Controls.Add(this.tabControlPanel3);
             this.tabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabControl1.Location = new System.Drawing.Point(0, 44);
             this.tabControl1.Margin = new System.Windows.Forms.Padding(4);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedTabFont = new System.Drawing.Font("SimSun", 9F, System.Drawing.FontStyle.Bold);
             this.tabControl1.SelectedTabIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(1230, 339);
+            this.tabControl1.Size = new System.Drawing.Size(1294, 367);
             this.tabControl1.TabAlignment = DevComponents.DotNetBar.eTabStripAlignment.Bottom;
             this.tabControl1.TabIndex = 7;
             this.tabControl1.TabLayoutType = DevComponents.DotNetBar.eTabLayoutType.FixedWithNavigationBox;
-            this.tabControl1.Tabs.Add(this.tabItem1);
-            this.tabControl1.Tabs.Add(this.tabItem2);
-            this.tabControl1.Tabs.Add(this.tabItem3);
+            this.tabControl1.Tabs.Add(this.tabItemGAGeo);
+            this.tabControl1.Tabs.Add(this.tabItemTopo);
+            this.tabControl1.Tabs.Add(this.tabItemGAttr);
+            this.tabControl1.Tabs.Add(this.tabItemGeo);
             this.tabControl1.Text = "tabControl1";
             // 
             // tabControlPanel1
@@ -316,7 +347,7 @@
             this.tabControlPanel1.Margin = new System.Windows.Forms.Padding(4);
             this.tabControlPanel1.Name = "tabControlPanel1";
             this.tabControlPanel1.Padding = new System.Windows.Forms.Padding(1);
-            this.tabControlPanel1.Size = new System.Drawing.Size(1230, 311);
+            this.tabControlPanel1.Size = new System.Drawing.Size(1294, 339);
             this.tabControlPanel1.Style.BackColor1.Color = System.Drawing.Color.FromArgb(((int)(((byte)(142)))), ((int)(((byte)(179)))), ((int)(((byte)(231)))));
             this.tabControlPanel1.Style.BackColor2.Color = System.Drawing.Color.FromArgb(((int)(((byte)(223)))), ((int)(((byte)(237)))), ((int)(((byte)(254)))));
             this.tabControlPanel1.Style.Border = DevComponents.DotNetBar.eBorderType.SingleLine;
@@ -325,7 +356,7 @@
             | DevComponents.DotNetBar.eBorderSide.Top)));
             this.tabControlPanel1.Style.GradientAngle = -90;
             this.tabControlPanel1.TabIndex = 1;
-            this.tabControlPanel1.TabItem = this.tabItem1;
+            this.tabControlPanel1.TabItem = this.tabItemGAGeo;
             // 
             // panelEx4
             // 
@@ -335,24 +366,24 @@
             this.panelEx4.Controls.Add(this.labelX3);
             this.panelEx4.Controls.Add(this.labelX9);
             this.panelEx4.Controls.Add(this.labelX8);
-            this.panelEx4.Controls.Add(this.labelTotalNum);
-            this.panelEx4.Controls.Add(this.Weightslider4);
+            this.panelEx4.Controls.Add(this.labelTotal);
+            this.panelEx4.Controls.Add(this.WeightsliderTotal);
             this.panelEx4.Controls.Add(this.radioButtonToatl);
-            this.panelEx4.Controls.Add(this.Weightslider3);
-            this.panelEx4.Controls.Add(this.Weightslider2);
-            this.panelEx4.Controls.Add(this.labelCenterNum);
-            this.panelEx4.Controls.Add(this.labelRadius);
-            this.panelEx4.Controls.Add(this.labelSpNum);
+            this.panelEx4.Controls.Add(this.WeightsliderBuffer);
+            this.panelEx4.Controls.Add(this.WeightsliderNode);
+            this.panelEx4.Controls.Add(this.labelNode);
+            this.panelEx4.Controls.Add(this.labelBufferRadius);
+            this.panelEx4.Controls.Add(this.labelShape);
             this.panelEx4.Controls.Add(this.labelX7);
-            this.panelEx4.Controls.Add(this.Weightslider1);
-            this.panelEx4.Controls.Add(this.radioButtonArea);
-            this.panelEx4.Controls.Add(this.radioButtonVertex);
+            this.panelEx4.Controls.Add(this.WeightsliderShape);
+            this.panelEx4.Controls.Add(this.radioButtonBuffer);
+            this.panelEx4.Controls.Add(this.radioButtonNode);
             this.panelEx4.Controls.Add(this.radioButtonShape);
             this.panelEx4.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panelEx4.Location = new System.Drawing.Point(1, 1);
             this.panelEx4.Margin = new System.Windows.Forms.Padding(4);
             this.panelEx4.Name = "panelEx4";
-            this.panelEx4.Size = new System.Drawing.Size(1228, 309);
+            this.panelEx4.Size = new System.Drawing.Size(1292, 337);
             this.panelEx4.Style.Alignment = System.Drawing.StringAlignment.Center;
             this.panelEx4.Style.BackColor1.ColorSchemePart = DevComponents.DotNetBar.eColorSchemePart.PanelBackground;
             this.panelEx4.Style.BackColor2.ColorSchemePart = DevComponents.DotNetBar.eColorSchemePart.PanelBackground2;
@@ -415,36 +446,36 @@
             this.labelX8.TabIndex = 56;
             this.labelX8.Text = "权值设置条";
             // 
-            // labelTotalNum
+            // labelTotal
             // 
-            this.labelTotalNum.BackColor = System.Drawing.Color.Transparent;
-            // 
-            // 
-            // 
-            this.labelTotalNum.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
-            this.labelTotalNum.Location = new System.Drawing.Point(547, 191);
-            this.labelTotalNum.Margin = new System.Windows.Forms.Padding(4);
-            this.labelTotalNum.Name = "labelTotalNum";
-            this.labelTotalNum.Size = new System.Drawing.Size(57, 29);
-            this.labelTotalNum.TabIndex = 55;
-            this.labelTotalNum.Text = "0.8";
-            this.labelTotalNum.TextAlignment = System.Drawing.StringAlignment.Far;
-            // 
-            // Weightslider4
+            this.labelTotal.BackColor = System.Drawing.Color.Transparent;
             // 
             // 
             // 
+            this.labelTotal.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
+            this.labelTotal.Location = new System.Drawing.Point(547, 191);
+            this.labelTotal.Margin = new System.Windows.Forms.Padding(4);
+            this.labelTotal.Name = "labelTotal";
+            this.labelTotal.Size = new System.Drawing.Size(57, 29);
+            this.labelTotal.TabIndex = 55;
+            this.labelTotal.Text = "0.5";
+            this.labelTotal.TextAlignment = System.Drawing.StringAlignment.Far;
             // 
-            this.Weightslider4.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
-            this.Weightslider4.LabelPosition = DevComponents.DotNetBar.eSliderLabelPosition.Top;
-            this.Weightslider4.Location = new System.Drawing.Point(208, 174);
-            this.Weightslider4.Margin = new System.Windows.Forms.Padding(4);
-            this.Weightslider4.Name = "Weightslider4";
-            this.Weightslider4.Size = new System.Drawing.Size(331, 42);
-            this.Weightslider4.Style = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled;
-            this.Weightslider4.TabIndex = 54;
-            this.Weightslider4.Value = 80;
-            this.Weightslider4.ValueChanged += new System.EventHandler(this.Weightslider4_ValueChanged);
+            // WeightsliderTotal
+            // 
+            // 
+            // 
+            // 
+            this.WeightsliderTotal.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
+            this.WeightsliderTotal.LabelPosition = DevComponents.DotNetBar.eSliderLabelPosition.Top;
+            this.WeightsliderTotal.Location = new System.Drawing.Point(208, 174);
+            this.WeightsliderTotal.Margin = new System.Windows.Forms.Padding(4);
+            this.WeightsliderTotal.Name = "WeightsliderTotal";
+            this.WeightsliderTotal.Size = new System.Drawing.Size(331, 42);
+            this.WeightsliderTotal.Style = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled;
+            this.WeightsliderTotal.TabIndex = 54;
+            this.WeightsliderTotal.Value = 50;
+            this.WeightsliderTotal.ValueChanged += new System.EventHandler(this.Weightslider4_ValueChanged);
             // 
             // radioButtonToatl
             // 
@@ -458,83 +489,83 @@
             this.radioButtonToatl.Text = "综合相似度阈值";
             this.radioButtonToatl.UseVisualStyleBackColor = false;
             // 
-            // Weightslider3
+            // WeightsliderBuffer
             // 
             // 
             // 
             // 
-            this.Weightslider3.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
-            this.Weightslider3.LabelPosition = DevComponents.DotNetBar.eSliderLabelPosition.Top;
-            this.Weightslider3.Location = new System.Drawing.Point(208, 124);
-            this.Weightslider3.Margin = new System.Windows.Forms.Padding(4);
-            this.Weightslider3.Name = "Weightslider3";
-            this.Weightslider3.Size = new System.Drawing.Size(331, 42);
-            this.Weightslider3.Step = 5;
-            this.Weightslider3.Style = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled;
-            this.Weightslider3.TabIndex = 52;
-            this.Weightslider3.Value = 100;
-            this.Weightslider3.ValueChanged += new System.EventHandler(this.Weightslider3_ValueChanged);
+            this.WeightsliderBuffer.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
+            this.WeightsliderBuffer.LabelPosition = DevComponents.DotNetBar.eSliderLabelPosition.Top;
+            this.WeightsliderBuffer.Location = new System.Drawing.Point(208, 124);
+            this.WeightsliderBuffer.Margin = new System.Windows.Forms.Padding(4);
+            this.WeightsliderBuffer.Name = "WeightsliderBuffer";
+            this.WeightsliderBuffer.Size = new System.Drawing.Size(331, 42);
+            this.WeightsliderBuffer.Step = 5;
+            this.WeightsliderBuffer.Style = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled;
+            this.WeightsliderBuffer.TabIndex = 52;
+            this.WeightsliderBuffer.Value = 100;
+            this.WeightsliderBuffer.ValueChanged += new System.EventHandler(this.Weightslider3_ValueChanged);
             // 
-            // Weightslider2
-            // 
-            // 
-            // 
-            // 
-            this.Weightslider2.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
-            this.Weightslider2.LabelPosition = DevComponents.DotNetBar.eSliderLabelPosition.Top;
-            this.Weightslider2.Location = new System.Drawing.Point(208, 74);
-            this.Weightslider2.Margin = new System.Windows.Forms.Padding(4);
-            this.Weightslider2.Name = "Weightslider2";
-            this.Weightslider2.Size = new System.Drawing.Size(331, 42);
-            this.Weightslider2.Style = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled;
-            this.Weightslider2.TabIndex = 51;
-            this.Weightslider2.Value = 20;
-            this.Weightslider2.ValueChanged += new System.EventHandler(this.Weightslider2_ValueChanged);
-            // 
-            // labelCenterNum
-            // 
-            this.labelCenterNum.BackColor = System.Drawing.Color.Transparent;
+            // WeightsliderNode
             // 
             // 
             // 
-            this.labelCenterNum.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
-            this.labelCenterNum.Location = new System.Drawing.Point(547, 94);
-            this.labelCenterNum.Margin = new System.Windows.Forms.Padding(4);
-            this.labelCenterNum.Name = "labelCenterNum";
-            this.labelCenterNum.Size = new System.Drawing.Size(57, 29);
-            this.labelCenterNum.TabIndex = 50;
-            this.labelCenterNum.Text = "0.4";
-            this.labelCenterNum.TextAlignment = System.Drawing.StringAlignment.Far;
             // 
-            // labelRadius
+            this.WeightsliderNode.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
+            this.WeightsliderNode.LabelPosition = DevComponents.DotNetBar.eSliderLabelPosition.Top;
+            this.WeightsliderNode.Location = new System.Drawing.Point(208, 74);
+            this.WeightsliderNode.Margin = new System.Windows.Forms.Padding(4);
+            this.WeightsliderNode.Name = "WeightsliderNode";
+            this.WeightsliderNode.Size = new System.Drawing.Size(331, 42);
+            this.WeightsliderNode.Style = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled;
+            this.WeightsliderNode.TabIndex = 51;
+            this.WeightsliderNode.Value = 20;
+            this.WeightsliderNode.ValueChanged += new System.EventHandler(this.Weightslider2_ValueChanged);
             // 
-            this.labelRadius.BackColor = System.Drawing.Color.Transparent;
+            // labelNode
             // 
-            // 
-            // 
-            this.labelRadius.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
-            this.labelRadius.Location = new System.Drawing.Point(549, 142);
-            this.labelRadius.Margin = new System.Windows.Forms.Padding(4);
-            this.labelRadius.Name = "labelRadius";
-            this.labelRadius.Size = new System.Drawing.Size(55, 29);
-            this.labelRadius.TabIndex = 49;
-            this.labelRadius.Text = "100";
-            this.labelRadius.TextAlignment = System.Drawing.StringAlignment.Far;
-            // 
-            // labelSpNum
-            // 
-            this.labelSpNum.BackColor = System.Drawing.Color.Transparent;
+            this.labelNode.BackColor = System.Drawing.Color.Transparent;
             // 
             // 
             // 
-            this.labelSpNum.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
-            this.labelSpNum.Location = new System.Drawing.Point(547, 41);
-            this.labelSpNum.Margin = new System.Windows.Forms.Padding(4);
-            this.labelSpNum.Name = "labelSpNum";
-            this.labelSpNum.Size = new System.Drawing.Size(57, 29);
-            this.labelSpNum.TabIndex = 48;
-            this.labelSpNum.Text = "0.6";
-            this.labelSpNum.TextAlignment = System.Drawing.StringAlignment.Far;
+            this.labelNode.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
+            this.labelNode.Location = new System.Drawing.Point(547, 94);
+            this.labelNode.Margin = new System.Windows.Forms.Padding(4);
+            this.labelNode.Name = "labelNode";
+            this.labelNode.Size = new System.Drawing.Size(57, 29);
+            this.labelNode.TabIndex = 50;
+            this.labelNode.Text = "0.4";
+            this.labelNode.TextAlignment = System.Drawing.StringAlignment.Far;
+            // 
+            // labelBufferRadius
+            // 
+            this.labelBufferRadius.BackColor = System.Drawing.Color.Transparent;
+            // 
+            // 
+            // 
+            this.labelBufferRadius.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
+            this.labelBufferRadius.Location = new System.Drawing.Point(549, 142);
+            this.labelBufferRadius.Margin = new System.Windows.Forms.Padding(4);
+            this.labelBufferRadius.Name = "labelBufferRadius";
+            this.labelBufferRadius.Size = new System.Drawing.Size(55, 29);
+            this.labelBufferRadius.TabIndex = 49;
+            this.labelBufferRadius.Text = "100";
+            this.labelBufferRadius.TextAlignment = System.Drawing.StringAlignment.Far;
+            // 
+            // labelShape
+            // 
+            this.labelShape.BackColor = System.Drawing.Color.Transparent;
+            // 
+            // 
+            // 
+            this.labelShape.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
+            this.labelShape.Location = new System.Drawing.Point(547, 41);
+            this.labelShape.Margin = new System.Windows.Forms.Padding(4);
+            this.labelShape.Name = "labelShape";
+            this.labelShape.Size = new System.Drawing.Size(57, 29);
+            this.labelShape.TabIndex = 48;
+            this.labelShape.Text = "0.6";
+            this.labelShape.TextAlignment = System.Drawing.StringAlignment.Far;
             // 
             // labelX7
             // 
@@ -550,47 +581,47 @@
             this.labelX7.TabIndex = 47;
             this.labelX7.Text = "当前值";
             // 
-            // Weightslider1
+            // WeightsliderShape
             // 
             // 
             // 
             // 
-            this.Weightslider1.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
-            this.Weightslider1.LabelPosition = DevComponents.DotNetBar.eSliderLabelPosition.Top;
-            this.Weightslider1.Location = new System.Drawing.Point(208, 24);
-            this.Weightslider1.Margin = new System.Windows.Forms.Padding(4);
-            this.Weightslider1.Name = "Weightslider1";
-            this.Weightslider1.Size = new System.Drawing.Size(331, 42);
-            this.Weightslider1.Style = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled;
-            this.Weightslider1.TabIndex = 45;
-            this.Weightslider1.Value = 60;
-            this.Weightslider1.ValueChanged += new System.EventHandler(this.Weightslider_ValueChanged);
+            this.WeightsliderShape.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
+            this.WeightsliderShape.LabelPosition = DevComponents.DotNetBar.eSliderLabelPosition.Top;
+            this.WeightsliderShape.Location = new System.Drawing.Point(208, 24);
+            this.WeightsliderShape.Margin = new System.Windows.Forms.Padding(4);
+            this.WeightsliderShape.Name = "WeightsliderShape";
+            this.WeightsliderShape.Size = new System.Drawing.Size(331, 42);
+            this.WeightsliderShape.Style = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled;
+            this.WeightsliderShape.TabIndex = 45;
+            this.WeightsliderShape.Value = 60;
+            this.WeightsliderShape.ValueChanged += new System.EventHandler(this.Weightslider_ValueChanged);
             // 
-            // radioButtonArea
+            // radioButtonBuffer
             // 
-            this.radioButtonArea.AutoSize = true;
-            this.radioButtonArea.BackColor = System.Drawing.Color.Transparent;
-            this.radioButtonArea.Location = new System.Drawing.Point(69, 142);
-            this.radioButtonArea.Margin = new System.Windows.Forms.Padding(4);
-            this.radioButtonArea.Name = "radioButtonArea";
-            this.radioButtonArea.Size = new System.Drawing.Size(103, 19);
-            this.radioButtonArea.TabIndex = 44;
-            this.radioButtonArea.Text = "缓冲区半径";
-            this.radioButtonArea.UseVisualStyleBackColor = false;
-            this.radioButtonArea.CheckedChanged += new System.EventHandler(this.radioButtonArea_CheckedChanged);
+            this.radioButtonBuffer.AutoSize = true;
+            this.radioButtonBuffer.BackColor = System.Drawing.Color.Transparent;
+            this.radioButtonBuffer.Location = new System.Drawing.Point(69, 142);
+            this.radioButtonBuffer.Margin = new System.Windows.Forms.Padding(4);
+            this.radioButtonBuffer.Name = "radioButtonBuffer";
+            this.radioButtonBuffer.Size = new System.Drawing.Size(103, 19);
+            this.radioButtonBuffer.TabIndex = 44;
+            this.radioButtonBuffer.Text = "缓冲区半径";
+            this.radioButtonBuffer.UseVisualStyleBackColor = false;
+            this.radioButtonBuffer.CheckedChanged += new System.EventHandler(this.radioButtonArea_CheckedChanged);
             // 
-            // radioButtonVertex
+            // radioButtonNode
             // 
-            this.radioButtonVertex.AutoSize = true;
-            this.radioButtonVertex.BackColor = System.Drawing.Color.Transparent;
-            this.radioButtonVertex.Location = new System.Drawing.Point(69, 94);
-            this.radioButtonVertex.Margin = new System.Windows.Forms.Padding(4);
-            this.radioButtonVertex.Name = "radioButtonVertex";
-            this.radioButtonVertex.Size = new System.Drawing.Size(103, 19);
-            this.radioButtonVertex.TabIndex = 43;
-            this.radioButtonVertex.Text = "节点相似度";
-            this.radioButtonVertex.UseVisualStyleBackColor = false;
-            this.radioButtonVertex.CheckedChanged += new System.EventHandler(this.radioButtonCenter_CheckedChanged);
+            this.radioButtonNode.AutoSize = true;
+            this.radioButtonNode.BackColor = System.Drawing.Color.Transparent;
+            this.radioButtonNode.Location = new System.Drawing.Point(69, 94);
+            this.radioButtonNode.Margin = new System.Windows.Forms.Padding(4);
+            this.radioButtonNode.Name = "radioButtonNode";
+            this.radioButtonNode.Size = new System.Drawing.Size(103, 19);
+            this.radioButtonNode.TabIndex = 43;
+            this.radioButtonNode.Text = "节点相似度";
+            this.radioButtonNode.UseVisualStyleBackColor = false;
+            this.radioButtonNode.CheckedChanged += new System.EventHandler(this.radioButtonCenter_CheckedChanged);
             // 
             // radioButtonShape
             // 
@@ -607,75 +638,11 @@
             this.radioButtonShape.UseVisualStyleBackColor = false;
             this.radioButtonShape.CheckedChanged += new System.EventHandler(this.radioButtonShape_CheckedChanged);
             // 
-            // tabItem1
+            // tabItemGAGeo
             // 
-            this.tabItem1.AttachedControl = this.tabControlPanel1;
-            this.tabItem1.Name = "tabItem1";
-            this.tabItem1.Text = "几何匹配";
-            // 
-            // tabControlPanel3
-            // 
-            this.tabControlPanel3.Controls.Add(this.dataGridViewX2);
-            this.tabControlPanel3.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tabControlPanel3.Location = new System.Drawing.Point(0, 0);
-            this.tabControlPanel3.Margin = new System.Windows.Forms.Padding(4);
-            this.tabControlPanel3.Name = "tabControlPanel3";
-            this.tabControlPanel3.Padding = new System.Windows.Forms.Padding(1);
-            this.tabControlPanel3.Size = new System.Drawing.Size(1230, 311);
-            this.tabControlPanel3.Style.BackColor1.Color = System.Drawing.Color.FromArgb(((int)(((byte)(142)))), ((int)(((byte)(179)))), ((int)(((byte)(231)))));
-            this.tabControlPanel3.Style.BackColor2.Color = System.Drawing.Color.FromArgb(((int)(((byte)(223)))), ((int)(((byte)(237)))), ((int)(((byte)(254)))));
-            this.tabControlPanel3.Style.Border = DevComponents.DotNetBar.eBorderType.SingleLine;
-            this.tabControlPanel3.Style.BorderColor.Color = System.Drawing.Color.FromArgb(((int)(((byte)(59)))), ((int)(((byte)(97)))), ((int)(((byte)(156)))));
-            this.tabControlPanel3.Style.BorderSide = ((DevComponents.DotNetBar.eBorderSide)(((DevComponents.DotNetBar.eBorderSide.Left | DevComponents.DotNetBar.eBorderSide.Right) 
-            | DevComponents.DotNetBar.eBorderSide.Top)));
-            this.tabControlPanel3.Style.GradientAngle = -90;
-            this.tabControlPanel3.TabIndex = 3;
-            this.tabControlPanel3.TabItem = this.tabItem3;
-            // 
-            // dataGridViewX2
-            // 
-            this.dataGridViewX2.AllowUserToAddRows = false;
-            this.dataGridViewX2.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle4.Font = new System.Drawing.Font("SimSun", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            dataGridViewCellStyle4.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle4.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dataGridViewX2.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle4;
-            this.dataGridViewX2.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle5.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle5.Font = new System.Drawing.Font("SimSun", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            dataGridViewCellStyle5.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle5.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle5.SelectionForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(21)))), ((int)(((byte)(110)))));
-            dataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.dataGridViewX2.DefaultCellStyle = dataGridViewCellStyle5;
-            this.dataGridViewX2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.dataGridViewX2.EnableHeadersVisualStyles = false;
-            this.dataGridViewX2.GridColor = System.Drawing.Color.FromArgb(((int)(((byte)(208)))), ((int)(((byte)(215)))), ((int)(((byte)(229)))));
-            this.dataGridViewX2.Location = new System.Drawing.Point(1, 1);
-            this.dataGridViewX2.Margin = new System.Windows.Forms.Padding(4);
-            this.dataGridViewX2.Name = "dataGridViewX2";
-            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle6.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle6.Font = new System.Drawing.Font("SimSun", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            dataGridViewCellStyle6.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle6.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle6.SelectionForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle6.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dataGridViewX2.RowHeadersDefaultCellStyle = dataGridViewCellStyle6;
-            this.dataGridViewX2.RowTemplate.Height = 23;
-            this.dataGridViewX2.Size = new System.Drawing.Size(1228, 309);
-            this.dataGridViewX2.TabIndex = 0;
-            // 
-            // tabItem3
-            // 
-            this.tabItem3.AttachedControl = this.tabControlPanel3;
-            this.tabItem3.Name = "tabItem3";
-            this.tabItem3.Text = "属性匹配";
+            this.tabItemGAGeo.AttachedControl = this.tabControlPanel1;
+            this.tabItemGAGeo.Name = "tabItemGAGeo";
+            this.tabItemGAGeo.Text = "几何匹配";
             // 
             // tabControlPanel2
             // 
@@ -685,7 +652,7 @@
             this.tabControlPanel2.Margin = new System.Windows.Forms.Padding(4);
             this.tabControlPanel2.Name = "tabControlPanel2";
             this.tabControlPanel2.Padding = new System.Windows.Forms.Padding(1);
-            this.tabControlPanel2.Size = new System.Drawing.Size(1230, 311);
+            this.tabControlPanel2.Size = new System.Drawing.Size(1294, 339);
             this.tabControlPanel2.Style.BackColor1.Color = System.Drawing.Color.FromArgb(((int)(((byte)(142)))), ((int)(((byte)(179)))), ((int)(((byte)(231)))));
             this.tabControlPanel2.Style.BackColor2.Color = System.Drawing.Color.FromArgb(((int)(((byte)(223)))), ((int)(((byte)(237)))), ((int)(((byte)(254)))));
             this.tabControlPanel2.Style.Border = DevComponents.DotNetBar.eBorderType.SingleLine;
@@ -694,7 +661,7 @@
             | DevComponents.DotNetBar.eBorderSide.Top)));
             this.tabControlPanel2.Style.GradientAngle = -90;
             this.tabControlPanel2.TabIndex = 2;
-            this.tabControlPanel2.TabItem = this.tabItem2;
+            this.tabControlPanel2.TabItem = this.tabItemTopo;
             // 
             // panelEx3
             // 
@@ -707,7 +674,7 @@
             this.panelEx3.Location = new System.Drawing.Point(1, 1);
             this.panelEx3.Margin = new System.Windows.Forms.Padding(4);
             this.panelEx3.Name = "panelEx3";
-            this.panelEx3.Size = new System.Drawing.Size(1228, 309);
+            this.panelEx3.Size = new System.Drawing.Size(1292, 337);
             this.panelEx3.Style.Alignment = System.Drawing.StringAlignment.Center;
             this.panelEx3.Style.BackColor1.ColorSchemePart = DevComponents.DotNetBar.eColorSchemePart.PanelBackground;
             this.panelEx3.Style.BackColor2.ColorSchemePart = DevComponents.DotNetBar.eColorSchemePart.PanelBackground2;
@@ -777,17 +744,380 @@
             // 
             this.comboItem7.Text = "100";
             // 
-            // tabItem2
+            // tabItemTopo
             // 
-            this.tabItem2.AttachedControl = this.tabControlPanel2;
-            this.tabItem2.Name = "tabItem2";
-            this.tabItem2.Text = "拓扑匹配";
-            this.tabItem2.Visible = false;
+            this.tabItemTopo.AttachedControl = this.tabControlPanel2;
+            this.tabItemTopo.Name = "tabItemTopo";
+            this.tabItemTopo.Text = "拓扑匹配";
+            this.tabItemTopo.Visible = false;
+            // 
+            // tabControlPanel3
+            // 
+            this.tabControlPanel3.Controls.Add(this.dataGridViewX2);
+            this.tabControlPanel3.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tabControlPanel3.Location = new System.Drawing.Point(0, 0);
+            this.tabControlPanel3.Margin = new System.Windows.Forms.Padding(4);
+            this.tabControlPanel3.Name = "tabControlPanel3";
+            this.tabControlPanel3.Padding = new System.Windows.Forms.Padding(1);
+            this.tabControlPanel3.Size = new System.Drawing.Size(1294, 339);
+            this.tabControlPanel3.Style.BackColor1.Color = System.Drawing.Color.FromArgb(((int)(((byte)(142)))), ((int)(((byte)(179)))), ((int)(((byte)(231)))));
+            this.tabControlPanel3.Style.BackColor2.Color = System.Drawing.Color.FromArgb(((int)(((byte)(223)))), ((int)(((byte)(237)))), ((int)(((byte)(254)))));
+            this.tabControlPanel3.Style.Border = DevComponents.DotNetBar.eBorderType.SingleLine;
+            this.tabControlPanel3.Style.BorderColor.Color = System.Drawing.Color.FromArgb(((int)(((byte)(59)))), ((int)(((byte)(97)))), ((int)(((byte)(156)))));
+            this.tabControlPanel3.Style.BorderSide = ((DevComponents.DotNetBar.eBorderSide)(((DevComponents.DotNetBar.eBorderSide.Left | DevComponents.DotNetBar.eBorderSide.Right) 
+            | DevComponents.DotNetBar.eBorderSide.Top)));
+            this.tabControlPanel3.Style.GradientAngle = -90;
+            this.tabControlPanel3.TabIndex = 3;
+            this.tabControlPanel3.TabItem = this.tabItemGAttr;
+            // 
+            // dataGridViewX2
+            // 
+            this.dataGridViewX2.AllowUserToAddRows = false;
+            this.dataGridViewX2.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            dataGridViewCellStyle40.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle40.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle40.Font = new System.Drawing.Font("SimSun", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            dataGridViewCellStyle40.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle40.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle40.SelectionForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle40.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dataGridViewX2.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle40;
+            this.dataGridViewX2.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dataGridViewCellStyle41.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle41.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle41.Font = new System.Drawing.Font("SimSun", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            dataGridViewCellStyle41.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle41.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle41.SelectionForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(21)))), ((int)(((byte)(110)))));
+            dataGridViewCellStyle41.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.dataGridViewX2.DefaultCellStyle = dataGridViewCellStyle41;
+            this.dataGridViewX2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.dataGridViewX2.EnableHeadersVisualStyles = false;
+            this.dataGridViewX2.GridColor = System.Drawing.Color.FromArgb(((int)(((byte)(208)))), ((int)(((byte)(215)))), ((int)(((byte)(229)))));
+            this.dataGridViewX2.Location = new System.Drawing.Point(1, 1);
+            this.dataGridViewX2.Margin = new System.Windows.Forms.Padding(4);
+            this.dataGridViewX2.Name = "dataGridViewX2";
+            dataGridViewCellStyle42.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle42.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle42.Font = new System.Drawing.Font("SimSun", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            dataGridViewCellStyle42.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle42.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle42.SelectionForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle42.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dataGridViewX2.RowHeadersDefaultCellStyle = dataGridViewCellStyle42;
+            this.dataGridViewX2.RowTemplate.Height = 23;
+            this.dataGridViewX2.Size = new System.Drawing.Size(1292, 337);
+            this.dataGridViewX2.TabIndex = 0;
+            // 
+            // tabItemGAttr
+            // 
+            this.tabItemGAttr.AttachedControl = this.tabControlPanel3;
+            this.tabItemGAttr.Name = "tabItemGAttr";
+            this.tabItemGAttr.Text = "属性匹配";
+            // 
+            // tabControlPanel4
+            // 
+            this.tabControlPanel4.Controls.Add(this.labelX15);
+            this.tabControlPanel4.Controls.Add(this.sliderHausdorffGeo);
+            this.tabControlPanel4.Controls.Add(this.labelHausdorffGeo);
+            this.tabControlPanel4.Controls.Add(this.rBtnHausdorffGeo);
+            this.tabControlPanel4.Controls.Add(this.labelX13);
+            this.tabControlPanel4.Controls.Add(this.sliderIncludeAngleGeo);
+            this.tabControlPanel4.Controls.Add(this.labelIncludeGeo);
+            this.tabControlPanel4.Controls.Add(this.rBtnIncludeAngleGeo);
+            this.tabControlPanel4.Controls.Add(this.chkBoxGeo);
+            this.tabControlPanel4.Controls.Add(this.labelX10);
+            this.tabControlPanel4.Controls.Add(this.labelX11);
+            this.tabControlPanel4.Controls.Add(this.labelX12);
+            this.tabControlPanel4.Controls.Add(this.labelTotalGeo);
+            this.tabControlPanel4.Controls.Add(this.sliderTotalGeo);
+            this.tabControlPanel4.Controls.Add(this.rBtnTotalGeo);
+            this.tabControlPanel4.Controls.Add(this.sliderBufferGeo);
+            this.tabControlPanel4.Controls.Add(this.sliderNodeGeo);
+            this.tabControlPanel4.Controls.Add(this.labelNodeGeo);
+            this.tabControlPanel4.Controls.Add(this.labelBufferGeo);
+            this.tabControlPanel4.Controls.Add(this.labelShapeGeo);
+            this.tabControlPanel4.Controls.Add(this.labelX17);
+            this.tabControlPanel4.Controls.Add(this.sliderShapeGeo);
+            this.tabControlPanel4.Controls.Add(this.rBtnbufferGeo);
+            this.tabControlPanel4.Controls.Add(this.rBtnNodeGeo);
+            this.tabControlPanel4.Controls.Add(this.rBtnShapeGeo);
+            this.tabControlPanel4.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tabControlPanel4.Location = new System.Drawing.Point(0, 0);
+            this.tabControlPanel4.Name = "tabControlPanel4";
+            this.tabControlPanel4.Padding = new System.Windows.Forms.Padding(1);
+            this.tabControlPanel4.Size = new System.Drawing.Size(1294, 339);
+            this.tabControlPanel4.Style.BackColor1.Color = System.Drawing.Color.FromArgb(((int)(((byte)(142)))), ((int)(((byte)(179)))), ((int)(((byte)(231)))));
+            this.tabControlPanel4.Style.BackColor2.Color = System.Drawing.Color.FromArgb(((int)(((byte)(223)))), ((int)(((byte)(237)))), ((int)(((byte)(254)))));
+            this.tabControlPanel4.Style.Border = DevComponents.DotNetBar.eBorderType.SingleLine;
+            this.tabControlPanel4.Style.BorderColor.Color = System.Drawing.Color.FromArgb(((int)(((byte)(59)))), ((int)(((byte)(97)))), ((int)(((byte)(156)))));
+            this.tabControlPanel4.Style.BorderSide = ((DevComponents.DotNetBar.eBorderSide)(((DevComponents.DotNetBar.eBorderSide.Left | DevComponents.DotNetBar.eBorderSide.Right) 
+            | DevComponents.DotNetBar.eBorderSide.Top)));
+            this.tabControlPanel4.Style.GradientAngle = -90;
+            this.tabControlPanel4.TabIndex = 4;
+            this.tabControlPanel4.TabItem = this.tabItemGeo;
+            // 
+            // chkBoxGeo
+            // 
+            this.chkBoxGeo.AutoSize = true;
+            this.chkBoxGeo.BackColor = System.Drawing.Color.Transparent;
+            this.chkBoxGeo.Location = new System.Drawing.Point(817, 43);
+            this.chkBoxGeo.Name = "chkBoxGeo";
+            this.chkBoxGeo.Size = new System.Drawing.Size(119, 19);
+            this.chkBoxGeo.TabIndex = 59;
+            this.chkBoxGeo.Text = "是否计算参数";
+            this.chkBoxGeo.UseVisualStyleBackColor = false;
+            // 
+            // labelX10
+            // 
+            this.labelX10.BackColor = System.Drawing.Color.Transparent;
+            // 
+            // 
+            // 
+            this.labelX10.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
+            this.labelX10.Location = new System.Drawing.Point(564, 197);
+            this.labelX10.Margin = new System.Windows.Forms.Padding(4);
+            this.labelX10.Name = "labelX10";
+            this.labelX10.Size = new System.Drawing.Size(71, 29);
+            this.labelX10.TabIndex = 75;
+            this.labelX10.Text = "(单位：米)";
+            this.labelX10.TextAlignment = System.Drawing.StringAlignment.Far;
+            // 
+            // labelX11
+            // 
+            this.labelX11.BackColor = System.Drawing.Color.Transparent;
+            // 
+            // 
+            // 
+            this.labelX11.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
+            this.labelX11.Location = new System.Drawing.Point(12, 61);
+            this.labelX11.Margin = new System.Windows.Forms.Padding(4);
+            this.labelX11.Name = "labelX11";
+            this.labelX11.Size = new System.Drawing.Size(93, 29);
+            this.labelX11.TabIndex = 74;
+            this.labelX11.Text = "权值名称";
+            // 
+            // labelX12
+            // 
+            this.labelX12.BackColor = System.Drawing.Color.Transparent;
+            // 
+            // 
+            // 
+            this.labelX12.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
+            this.labelX12.Location = new System.Drawing.Point(259, 61);
+            this.labelX12.Margin = new System.Windows.Forms.Padding(4);
+            this.labelX12.Name = "labelX12";
+            this.labelX12.Size = new System.Drawing.Size(93, 29);
+            this.labelX12.TabIndex = 73;
+            this.labelX12.Text = "权值设置条";
+            // 
+            // labelTotalGeo
+            // 
+            this.labelTotalGeo.BackColor = System.Drawing.Color.Transparent;
+            // 
+            // 
+            // 
+            this.labelTotalGeo.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
+            this.labelTotalGeo.Location = new System.Drawing.Point(490, 245);
+            this.labelTotalGeo.Margin = new System.Windows.Forms.Padding(4);
+            this.labelTotalGeo.Name = "labelTotalGeo";
+            this.labelTotalGeo.Size = new System.Drawing.Size(57, 29);
+            this.labelTotalGeo.TabIndex = 72;
+            this.labelTotalGeo.Text = "0.5";
+            this.labelTotalGeo.TextAlignment = System.Drawing.StringAlignment.Far;
+            // 
+            // sliderTotalGeo
+            // 
+            this.sliderTotalGeo.BackColor = System.Drawing.Color.Transparent;
+            // 
+            // 
+            // 
+            this.sliderTotalGeo.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
+            this.sliderTotalGeo.LabelPosition = DevComponents.DotNetBar.eSliderLabelPosition.Top;
+            this.sliderTotalGeo.Location = new System.Drawing.Point(151, 229);
+            this.sliderTotalGeo.Margin = new System.Windows.Forms.Padding(4);
+            this.sliderTotalGeo.Name = "sliderTotalGeo";
+            this.sliderTotalGeo.Size = new System.Drawing.Size(331, 42);
+            this.sliderTotalGeo.Style = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled;
+            this.sliderTotalGeo.TabIndex = 71;
+            this.sliderTotalGeo.Value = 50;
+            this.sliderTotalGeo.ValueChanged += new System.EventHandler(this.sliderTotalGeo_ValueChanged);
+            // 
+            // rBtnTotalGeo
+            // 
+            this.rBtnTotalGeo.AutoSize = true;
+            this.rBtnTotalGeo.BackColor = System.Drawing.Color.Transparent;
+            this.rBtnTotalGeo.Location = new System.Drawing.Point(12, 251);
+            this.rBtnTotalGeo.Margin = new System.Windows.Forms.Padding(4);
+            this.rBtnTotalGeo.Name = "rBtnTotalGeo";
+            this.rBtnTotalGeo.Size = new System.Drawing.Size(133, 19);
+            this.rBtnTotalGeo.TabIndex = 70;
+            this.rBtnTotalGeo.Text = "综合相似度阈值";
+            this.rBtnTotalGeo.UseVisualStyleBackColor = false;
+            // 
+            // sliderBufferGeo
+            // 
+            this.sliderBufferGeo.BackColor = System.Drawing.Color.Transparent;
+            // 
+            // 
+            // 
+            this.sliderBufferGeo.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
+            this.sliderBufferGeo.LabelPosition = DevComponents.DotNetBar.eSliderLabelPosition.Top;
+            this.sliderBufferGeo.Location = new System.Drawing.Point(151, 179);
+            this.sliderBufferGeo.Margin = new System.Windows.Forms.Padding(4);
+            this.sliderBufferGeo.Name = "sliderBufferGeo";
+            this.sliderBufferGeo.Size = new System.Drawing.Size(331, 42);
+            this.sliderBufferGeo.Step = 5;
+            this.sliderBufferGeo.Style = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled;
+            this.sliderBufferGeo.TabIndex = 69;
+            this.sliderBufferGeo.Value = 100;
+            this.sliderBufferGeo.ValueChanged += new System.EventHandler(this.sliderBufferGeo_ValueChanged);
+            // 
+            // sliderNodeGeo
+            // 
+            this.sliderNodeGeo.BackColor = System.Drawing.Color.Transparent;
+            // 
+            // 
+            // 
+            this.sliderNodeGeo.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
+            this.sliderNodeGeo.LabelPosition = DevComponents.DotNetBar.eSliderLabelPosition.Top;
+            this.sliderNodeGeo.Location = new System.Drawing.Point(151, 129);
+            this.sliderNodeGeo.Margin = new System.Windows.Forms.Padding(4);
+            this.sliderNodeGeo.Name = "sliderNodeGeo";
+            this.sliderNodeGeo.Size = new System.Drawing.Size(331, 42);
+            this.sliderNodeGeo.Style = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled;
+            this.sliderNodeGeo.TabIndex = 68;
+            this.sliderNodeGeo.Value = 20;
+            this.sliderNodeGeo.ValueChanged += new System.EventHandler(this.sliderNodeGeo_ValueChanged);
+            // 
+            // labelNodeGeo
+            // 
+            this.labelNodeGeo.BackColor = System.Drawing.Color.Transparent;
+            // 
+            // 
+            // 
+            this.labelNodeGeo.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
+            this.labelNodeGeo.Location = new System.Drawing.Point(490, 149);
+            this.labelNodeGeo.Margin = new System.Windows.Forms.Padding(4);
+            this.labelNodeGeo.Name = "labelNodeGeo";
+            this.labelNodeGeo.Size = new System.Drawing.Size(57, 29);
+            this.labelNodeGeo.TabIndex = 67;
+            this.labelNodeGeo.Text = "0.4";
+            this.labelNodeGeo.TextAlignment = System.Drawing.StringAlignment.Far;
+            // 
+            // labelBufferGeo
+            // 
+            this.labelBufferGeo.BackColor = System.Drawing.Color.Transparent;
+            // 
+            // 
+            // 
+            this.labelBufferGeo.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
+            this.labelBufferGeo.Location = new System.Drawing.Point(492, 197);
+            this.labelBufferGeo.Margin = new System.Windows.Forms.Padding(4);
+            this.labelBufferGeo.Name = "labelBufferGeo";
+            this.labelBufferGeo.Size = new System.Drawing.Size(55, 29);
+            this.labelBufferGeo.TabIndex = 66;
+            this.labelBufferGeo.Text = "100";
+            this.labelBufferGeo.TextAlignment = System.Drawing.StringAlignment.Far;
+            // 
+            // labelShapeGeo
+            // 
+            this.labelShapeGeo.BackColor = System.Drawing.Color.Transparent;
+            // 
+            // 
+            // 
+            this.labelShapeGeo.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
+            this.labelShapeGeo.Location = new System.Drawing.Point(490, 96);
+            this.labelShapeGeo.Margin = new System.Windows.Forms.Padding(4);
+            this.labelShapeGeo.Name = "labelShapeGeo";
+            this.labelShapeGeo.Size = new System.Drawing.Size(57, 29);
+            this.labelShapeGeo.TabIndex = 65;
+            this.labelShapeGeo.Text = "0.6";
+            this.labelShapeGeo.TextAlignment = System.Drawing.StringAlignment.Far;
+            // 
+            // labelX17
+            // 
+            this.labelX17.BackColor = System.Drawing.Color.Transparent;
+            // 
+            // 
+            // 
+            this.labelX17.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
+            this.labelX17.Location = new System.Drawing.Point(500, 61);
+            this.labelX17.Margin = new System.Windows.Forms.Padding(4);
+            this.labelX17.Name = "labelX17";
+            this.labelX17.Size = new System.Drawing.Size(60, 29);
+            this.labelX17.TabIndex = 64;
+            this.labelX17.Text = "当前值";
+            // 
+            // sliderShapeGeo
+            // 
+            this.sliderShapeGeo.BackColor = System.Drawing.Color.Transparent;
+            // 
+            // 
+            // 
+            this.sliderShapeGeo.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
+            this.sliderShapeGeo.LabelPosition = DevComponents.DotNetBar.eSliderLabelPosition.Top;
+            this.sliderShapeGeo.Location = new System.Drawing.Point(151, 79);
+            this.sliderShapeGeo.Margin = new System.Windows.Forms.Padding(4);
+            this.sliderShapeGeo.Name = "sliderShapeGeo";
+            this.sliderShapeGeo.Size = new System.Drawing.Size(331, 42);
+            this.sliderShapeGeo.Style = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled;
+            this.sliderShapeGeo.TabIndex = 63;
+            this.sliderShapeGeo.Value = 60;
+            this.sliderShapeGeo.ValueChanged += new System.EventHandler(this.sliderShapeGeo_ValueChanged);
+            // 
+            // rBtnbufferGeo
+            // 
+            this.rBtnbufferGeo.AutoSize = true;
+            this.rBtnbufferGeo.BackColor = System.Drawing.Color.Transparent;
+            this.rBtnbufferGeo.Location = new System.Drawing.Point(12, 197);
+            this.rBtnbufferGeo.Margin = new System.Windows.Forms.Padding(4);
+            this.rBtnbufferGeo.Name = "rBtnbufferGeo";
+            this.rBtnbufferGeo.Size = new System.Drawing.Size(103, 19);
+            this.rBtnbufferGeo.TabIndex = 62;
+            this.rBtnbufferGeo.Text = "缓冲区半径";
+            this.rBtnbufferGeo.UseVisualStyleBackColor = false;
+            this.rBtnbufferGeo.CheckedChanged += new System.EventHandler(this.rBtnbufferGeo_CheckedChanged);
+            // 
+            // rBtnNodeGeo
+            // 
+            this.rBtnNodeGeo.AutoSize = true;
+            this.rBtnNodeGeo.BackColor = System.Drawing.Color.Transparent;
+            this.rBtnNodeGeo.Location = new System.Drawing.Point(12, 149);
+            this.rBtnNodeGeo.Margin = new System.Windows.Forms.Padding(4);
+            this.rBtnNodeGeo.Name = "rBtnNodeGeo";
+            this.rBtnNodeGeo.Size = new System.Drawing.Size(103, 19);
+            this.rBtnNodeGeo.TabIndex = 61;
+            this.rBtnNodeGeo.Text = "节点相似度";
+            this.rBtnNodeGeo.UseVisualStyleBackColor = false;
+            this.rBtnNodeGeo.CheckedChanged += new System.EventHandler(this.rBtnNodeGeo_CheckedChanged);
+            // 
+            // rBtnShapeGeo
+            // 
+            this.rBtnShapeGeo.AutoSize = true;
+            this.rBtnShapeGeo.BackColor = System.Drawing.Color.Transparent;
+            this.rBtnShapeGeo.Checked = true;
+            this.rBtnShapeGeo.Location = new System.Drawing.Point(12, 101);
+            this.rBtnShapeGeo.Margin = new System.Windows.Forms.Padding(4);
+            this.rBtnShapeGeo.Name = "rBtnShapeGeo";
+            this.rBtnShapeGeo.Size = new System.Drawing.Size(103, 19);
+            this.rBtnShapeGeo.TabIndex = 60;
+            this.rBtnShapeGeo.TabStop = true;
+            this.rBtnShapeGeo.Text = "形状相似度";
+            this.rBtnShapeGeo.UseVisualStyleBackColor = false;
+            this.rBtnShapeGeo.CheckedChanged += new System.EventHandler(this.rBtnShapeGeo_CheckedChanged);
+            // 
+            // tabItemGeo
+            // 
+            this.tabItemGeo.AttachedControl = this.tabControlPanel4;
+            this.tabItemGeo.Name = "tabItemGeo";
+            this.tabItemGeo.Text = "几何匹配";
             // 
             // panelEx5
             // 
             this.panelEx5.CanvasColor = System.Drawing.SystemColors.Control;
             this.panelEx5.ColorSchemeStyle = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled;
+            this.panelEx5.Controls.Add(this.checkBoxXGeo);
             this.panelEx5.Controls.Add(this.checkBoxXTopo);
             this.panelEx5.Controls.Add(this.checkBoxXGeoAttr);
             this.panelEx5.Controls.Add(this.labelX4);
@@ -795,7 +1125,7 @@
             this.panelEx5.Location = new System.Drawing.Point(0, 0);
             this.panelEx5.Margin = new System.Windows.Forms.Padding(4);
             this.panelEx5.Name = "panelEx5";
-            this.panelEx5.Size = new System.Drawing.Size(1230, 44);
+            this.panelEx5.Size = new System.Drawing.Size(1294, 44);
             this.panelEx5.Style.Alignment = System.Drawing.StringAlignment.Center;
             this.panelEx5.Style.BackColor1.ColorSchemePart = DevComponents.DotNetBar.eColorSchemePart.PanelBackground;
             this.panelEx5.Style.BackColor2.ColorSchemePart = DevComponents.DotNetBar.eColorSchemePart.PanelBackground2;
@@ -805,15 +1135,33 @@
             this.panelEx5.Style.GradientAngle = 90;
             this.panelEx5.TabIndex = 6;
             // 
+            // checkBoxXGeo
+            // 
+            // 
+            // 
+            // 
+            this.checkBoxXGeo.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
+            this.checkBoxXGeo.Checked = true;
+            this.checkBoxXGeo.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.checkBoxXGeo.CheckValue = "Y";
+            this.checkBoxXGeo.Location = new System.Drawing.Point(129, 9);
+            this.checkBoxXGeo.Name = "checkBoxXGeo";
+            this.checkBoxXGeo.Size = new System.Drawing.Size(116, 23);
+            this.checkBoxXGeo.Style = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled;
+            this.checkBoxXGeo.TabIndex = 6;
+            this.checkBoxXGeo.Text = "几何匹配";
+            this.checkBoxXGeo.CheckedChanged += new System.EventHandler(this.checkBoxXGeo_CheckedChanged);
+            this.checkBoxXGeo.Click += new System.EventHandler(this.checkBoxXGeo_Click);
+            // 
             // checkBoxXTopo
             // 
             // 
             // 
             // 
             this.checkBoxXTopo.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
-            this.checkBoxXTopo.Location = new System.Drawing.Point(316, 10);
+            this.checkBoxXTopo.Location = new System.Drawing.Point(376, 9);
             this.checkBoxXTopo.Name = "checkBoxXTopo";
-            this.checkBoxXTopo.Size = new System.Drawing.Size(126, 23);
+            this.checkBoxXTopo.Size = new System.Drawing.Size(102, 23);
             this.checkBoxXTopo.Style = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled;
             this.checkBoxXTopo.TabIndex = 5;
             this.checkBoxXTopo.Text = "拓扑匹配";
@@ -826,12 +1174,9 @@
             // 
             // 
             this.checkBoxXGeoAttr.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
-            this.checkBoxXGeoAttr.Checked = true;
-            this.checkBoxXGeoAttr.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkBoxXGeoAttr.CheckValue = "Y";
-            this.checkBoxXGeoAttr.Location = new System.Drawing.Point(139, 10);
+            this.checkBoxXGeoAttr.Location = new System.Drawing.Point(251, 9);
             this.checkBoxXGeoAttr.Name = "checkBoxXGeoAttr";
-            this.checkBoxXGeoAttr.Size = new System.Drawing.Size(150, 23);
+            this.checkBoxXGeoAttr.Size = new System.Drawing.Size(110, 23);
             this.checkBoxXGeoAttr.Style = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled;
             this.checkBoxXGeoAttr.TabIndex = 4;
             this.checkBoxXGeoAttr.Text = "几何属性匹配";
@@ -851,11 +1196,135 @@
             this.labelX4.TabIndex = 2;
             this.labelX4.Text = "匹配依据类型：";
             // 
+            // labelX13
+            // 
+            this.labelX13.BackColor = System.Drawing.Color.Transparent;
+            // 
+            // 
+            // 
+            this.labelX13.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
+            this.labelX13.Location = new System.Drawing.Point(1169, 107);
+            this.labelX13.Margin = new System.Windows.Forms.Padding(4);
+            this.labelX13.Name = "labelX13";
+            this.labelX13.Size = new System.Drawing.Size(89, 29);
+            this.labelX13.TabIndex = 79;
+            this.labelX13.Text = "(单位：度)";
+            this.labelX13.TextAlignment = System.Drawing.StringAlignment.Far;
+            // 
+            // sliderIncludeAngleGeo
+            // 
+            this.sliderIncludeAngleGeo.BackColor = System.Drawing.Color.Transparent;
+            // 
+            // 
+            // 
+            this.sliderIncludeAngleGeo.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
+            this.sliderIncludeAngleGeo.LabelPosition = DevComponents.DotNetBar.eSliderLabelPosition.Top;
+            this.sliderIncludeAngleGeo.Location = new System.Drawing.Point(765, 89);
+            this.sliderIncludeAngleGeo.Margin = new System.Windows.Forms.Padding(4);
+            this.sliderIncludeAngleGeo.Maximum = 90;
+            this.sliderIncludeAngleGeo.Name = "sliderIncludeAngleGeo";
+            this.sliderIncludeAngleGeo.Size = new System.Drawing.Size(331, 42);
+            this.sliderIncludeAngleGeo.Step = 5;
+            this.sliderIncludeAngleGeo.Style = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled;
+            this.sliderIncludeAngleGeo.TabIndex = 78;
+            this.sliderIncludeAngleGeo.Value = 100;
+            this.sliderIncludeAngleGeo.ValueChanged += new System.EventHandler(this.sliderIncludeAngleGeo_ValueChanged);
+            // 
+            // labelIncludeGeo
+            // 
+            this.labelIncludeGeo.BackColor = System.Drawing.Color.Transparent;
+            // 
+            // 
+            // 
+            this.labelIncludeGeo.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
+            this.labelIncludeGeo.Location = new System.Drawing.Point(1106, 107);
+            this.labelIncludeGeo.Margin = new System.Windows.Forms.Padding(4);
+            this.labelIncludeGeo.Name = "labelIncludeGeo";
+            this.labelIncludeGeo.Size = new System.Drawing.Size(55, 29);
+            this.labelIncludeGeo.TabIndex = 77;
+            this.labelIncludeGeo.Text = "30";
+            this.labelIncludeGeo.TextAlignment = System.Drawing.StringAlignment.Far;
+            // 
+            // rBtnIncludeAngleGeo
+            // 
+            this.rBtnIncludeAngleGeo.AutoSize = true;
+            this.rBtnIncludeAngleGeo.BackColor = System.Drawing.Color.Transparent;
+            this.rBtnIncludeAngleGeo.Location = new System.Drawing.Point(626, 111);
+            this.rBtnIncludeAngleGeo.Margin = new System.Windows.Forms.Padding(4);
+            this.rBtnIncludeAngleGeo.Name = "rBtnIncludeAngleGeo";
+            this.rBtnIncludeAngleGeo.Size = new System.Drawing.Size(58, 19);
+            this.rBtnIncludeAngleGeo.TabIndex = 76;
+            this.rBtnIncludeAngleGeo.Text = "夹角";
+            this.rBtnIncludeAngleGeo.UseVisualStyleBackColor = false;
+            this.rBtnIncludeAngleGeo.CheckedChanged += new System.EventHandler(this.rBtnIncludeAngleGeo_CheckedChanged);
+            // 
+            // labelX15
+            // 
+            this.labelX15.BackColor = System.Drawing.Color.Transparent;
+            // 
+            // 
+            // 
+            this.labelX15.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
+            this.labelX15.Location = new System.Drawing.Point(1169, 162);
+            this.labelX15.Margin = new System.Windows.Forms.Padding(4);
+            this.labelX15.Name = "labelX15";
+            this.labelX15.Size = new System.Drawing.Size(89, 29);
+            this.labelX15.TabIndex = 83;
+            this.labelX15.Text = "(单位：米)";
+            this.labelX15.TextAlignment = System.Drawing.StringAlignment.Far;
+            // 
+            // sliderHausdorffGeo
+            // 
+            this.sliderHausdorffGeo.BackColor = System.Drawing.Color.Transparent;
+            // 
+            // 
+            // 
+            this.sliderHausdorffGeo.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
+            this.sliderHausdorffGeo.LabelPosition = DevComponents.DotNetBar.eSliderLabelPosition.Top;
+            this.sliderHausdorffGeo.Location = new System.Drawing.Point(767, 149);
+            this.sliderHausdorffGeo.Margin = new System.Windows.Forms.Padding(4);
+            this.sliderHausdorffGeo.Maximum = 1000;
+            this.sliderHausdorffGeo.Name = "sliderHausdorffGeo";
+            this.sliderHausdorffGeo.Size = new System.Drawing.Size(331, 42);
+            this.sliderHausdorffGeo.Step = 5;
+            this.sliderHausdorffGeo.Style = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled;
+            this.sliderHausdorffGeo.TabIndex = 82;
+            this.sliderHausdorffGeo.Value = 100;
+            this.sliderHausdorffGeo.ValueChanged += new System.EventHandler(this.sliderHausdorffGeo_ValueChanged);
+            // 
+            // labelHausdorffGeo
+            // 
+            this.labelHausdorffGeo.BackColor = System.Drawing.Color.Transparent;
+            // 
+            // 
+            // 
+            this.labelHausdorffGeo.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
+            this.labelHausdorffGeo.Location = new System.Drawing.Point(1106, 162);
+            this.labelHausdorffGeo.Margin = new System.Windows.Forms.Padding(4);
+            this.labelHausdorffGeo.Name = "labelHausdorffGeo";
+            this.labelHausdorffGeo.Size = new System.Drawing.Size(55, 29);
+            this.labelHausdorffGeo.TabIndex = 81;
+            this.labelHausdorffGeo.Text = "30";
+            this.labelHausdorffGeo.TextAlignment = System.Drawing.StringAlignment.Far;
+            // 
+            // rBtnHausdorffGeo
+            // 
+            this.rBtnHausdorffGeo.AutoSize = true;
+            this.rBtnHausdorffGeo.BackColor = System.Drawing.Color.Transparent;
+            this.rBtnHausdorffGeo.Location = new System.Drawing.Point(626, 162);
+            this.rBtnHausdorffGeo.Margin = new System.Windows.Forms.Padding(4);
+            this.rBtnHausdorffGeo.Name = "rBtnHausdorffGeo";
+            this.rBtnHausdorffGeo.Size = new System.Drawing.Size(118, 19);
+            this.rBtnHausdorffGeo.TabIndex = 80;
+            this.rBtnHausdorffGeo.Text = "豪斯多夫距离";
+            this.rBtnHausdorffGeo.UseVisualStyleBackColor = false;
+            this.rBtnHausdorffGeo.CheckedChanged += new System.EventHandler(this.rBtnHausdorffGeo_CheckedChanged);
+            // 
             // FrmMatchLineDif
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1230, 577);
+            this.ClientSize = new System.Drawing.Size(1294, 609);
             this.Controls.Add(this.panelEx2);
             this.Controls.Add(this.panelEx1);
             this.DoubleBuffered = true;
@@ -878,10 +1347,12 @@
             this.tabControlPanel1.ResumeLayout(false);
             this.panelEx4.ResumeLayout(false);
             this.panelEx4.PerformLayout();
-            this.tabControlPanel3.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewX2)).EndInit();
             this.tabControlPanel2.ResumeLayout(false);
             this.panelEx3.ResumeLayout(false);
+            this.tabControlPanel3.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewX2)).EndInit();
+            this.tabControlPanel4.ResumeLayout(false);
+            this.tabControlPanel4.PerformLayout();
             this.panelEx5.ResumeLayout(false);
             this.ResumeLayout(false);
 
@@ -905,23 +1376,23 @@
         private DevComponents.DotNetBar.PanelEx panelEx4;
         private DevComponents.DotNetBar.LabelX labelX9;
         private DevComponents.DotNetBar.LabelX labelX8;
-        private DevComponents.DotNetBar.LabelX labelTotalNum;
-        private DevComponents.DotNetBar.Controls.Slider Weightslider4;
+        private DevComponents.DotNetBar.LabelX labelTotal;
+        private DevComponents.DotNetBar.Controls.Slider WeightsliderTotal;
         private System.Windows.Forms.RadioButton radioButtonToatl;
-        private DevComponents.DotNetBar.Controls.Slider Weightslider3;
-        private DevComponents.DotNetBar.Controls.Slider Weightslider2;
-        private DevComponents.DotNetBar.LabelX labelCenterNum;
-        private DevComponents.DotNetBar.LabelX labelRadius;
-        private DevComponents.DotNetBar.LabelX labelSpNum;
+        private DevComponents.DotNetBar.Controls.Slider WeightsliderBuffer;
+        private DevComponents.DotNetBar.Controls.Slider WeightsliderNode;
+        private DevComponents.DotNetBar.LabelX labelNode;
+        private DevComponents.DotNetBar.LabelX labelBufferRadius;
+        private DevComponents.DotNetBar.LabelX labelShape;
         private DevComponents.DotNetBar.LabelX labelX7;
-        private DevComponents.DotNetBar.Controls.Slider Weightslider1;
-        private System.Windows.Forms.RadioButton radioButtonArea;
-        private System.Windows.Forms.RadioButton radioButtonVertex;
+        private DevComponents.DotNetBar.Controls.Slider WeightsliderShape;
+        private System.Windows.Forms.RadioButton radioButtonBuffer;
+        private System.Windows.Forms.RadioButton radioButtonNode;
         private System.Windows.Forms.RadioButton radioButtonShape;
-        private DevComponents.DotNetBar.TabItem tabItem1;
+        private DevComponents.DotNetBar.TabItem tabItemGAGeo;
         private DevComponents.DotNetBar.TabControlPanel tabControlPanel3;
         private DevComponents.DotNetBar.Controls.DataGridViewX dataGridViewX2;
-        private DevComponents.DotNetBar.TabItem tabItem3;
+        private DevComponents.DotNetBar.TabItem tabItemGAttr;
         private DevComponents.DotNetBar.TabControlPanel tabControlPanel2;
         private DevComponents.DotNetBar.PanelEx panelEx3;
         private DevComponents.DotNetBar.LabelX labelX6;
@@ -931,12 +1402,40 @@
         private DevComponents.Editors.ComboItem comboItem5;
         private DevComponents.Editors.ComboItem comboItem6;
         private DevComponents.Editors.ComboItem comboItem7;
-        private DevComponents.DotNetBar.TabItem tabItem2;
+        private DevComponents.DotNetBar.TabItem tabItemTopo;
         private DevComponents.DotNetBar.PanelEx panelEx5;
         private DevComponents.DotNetBar.LabelX labelX4;
         private DevComponents.DotNetBar.LabelX labelX3;
         private DevComponents.DotNetBar.Controls.CheckBoxX checkBoxXTopo;
         private DevComponents.DotNetBar.Controls.CheckBoxX checkBoxXGeoAttr;
         private System.Windows.Forms.CheckBox chkBoxLineIndicator;
+        private DevComponents.DotNetBar.TabControlPanel tabControlPanel4;
+        private System.Windows.Forms.CheckBox chkBoxGeo;
+        private DevComponents.DotNetBar.LabelX labelX10;
+        private DevComponents.DotNetBar.LabelX labelX11;
+        private DevComponents.DotNetBar.LabelX labelX12;
+        private DevComponents.DotNetBar.LabelX labelTotalGeo;
+        private DevComponents.DotNetBar.Controls.Slider sliderTotalGeo;
+        private System.Windows.Forms.RadioButton rBtnTotalGeo;
+        private DevComponents.DotNetBar.Controls.Slider sliderBufferGeo;
+        private DevComponents.DotNetBar.Controls.Slider sliderNodeGeo;
+        private DevComponents.DotNetBar.LabelX labelNodeGeo;
+        private DevComponents.DotNetBar.LabelX labelBufferGeo;
+        private DevComponents.DotNetBar.LabelX labelShapeGeo;
+        private DevComponents.DotNetBar.LabelX labelX17;
+        private DevComponents.DotNetBar.Controls.Slider sliderShapeGeo;
+        private System.Windows.Forms.RadioButton rBtnbufferGeo;
+        private System.Windows.Forms.RadioButton rBtnNodeGeo;
+        private System.Windows.Forms.RadioButton rBtnShapeGeo;
+        private DevComponents.DotNetBar.TabItem tabItemGeo;
+        private DevComponents.DotNetBar.Controls.CheckBoxX checkBoxXGeo;
+        private DevComponents.DotNetBar.LabelX labelX15;
+        private DevComponents.DotNetBar.Controls.Slider sliderHausdorffGeo;
+        private DevComponents.DotNetBar.LabelX labelHausdorffGeo;
+        private System.Windows.Forms.RadioButton rBtnHausdorffGeo;
+        private DevComponents.DotNetBar.LabelX labelX13;
+        private DevComponents.DotNetBar.Controls.Slider sliderIncludeAngleGeo;
+        private DevComponents.DotNetBar.LabelX labelIncludeGeo;
+        private System.Windows.Forms.RadioButton rBtnIncludeAngleGeo;
     }
 }

@@ -78,10 +78,10 @@
             this.panelEx1.Controls.Add(this.labelX2);
             this.panelEx1.Controls.Add(this.labelX1);
             this.panelEx1.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panelEx1.Location = new System.Drawing.Point(0, 530);
+            this.panelEx1.Location = new System.Drawing.Point(0, 546);
             this.panelEx1.Margin = new System.Windows.Forms.Padding(4);
             this.panelEx1.Name = "panelEx1";
-            this.panelEx1.Size = new System.Drawing.Size(1401, 126);
+            this.panelEx1.Size = new System.Drawing.Size(1433, 126);
             this.panelEx1.Style.Alignment = System.Drawing.StringAlignment.Center;
             this.panelEx1.Style.BackColor1.ColorSchemePart = DevComponents.DotNetBar.eColorSchemePart.PanelBackground;
             this.panelEx1.Style.BackColor2.ColorSchemePart = DevComponents.DotNetBar.eColorSchemePart.PanelBackground2;
@@ -194,7 +194,7 @@
             this.panelEx2.Location = new System.Drawing.Point(0, 0);
             this.panelEx2.Margin = new System.Windows.Forms.Padding(4);
             this.panelEx2.Name = "panelEx2";
-            this.panelEx2.Size = new System.Drawing.Size(1401, 530);
+            this.panelEx2.Size = new System.Drawing.Size(1433, 546);
             this.panelEx2.Style.Alignment = System.Drawing.StringAlignment.Center;
             this.panelEx2.Style.BackColor1.ColorSchemePart = DevComponents.DotNetBar.eColorSchemePart.PanelBackground;
             this.panelEx2.Style.BackColor2.ColorSchemePart = DevComponents.DotNetBar.eColorSchemePart.PanelBackground2;
@@ -220,8 +220,8 @@
             // 
             this.splitContainer1.Panel2.Controls.Add(this.panelEx3);
             this.splitContainer1.Panel2.Controls.Add(this.panelEx4);
-            this.splitContainer1.Size = new System.Drawing.Size(1401, 530);
-            this.splitContainer1.SplitterDistance = 80;
+            this.splitContainer1.Size = new System.Drawing.Size(1433, 546);
+            this.splitContainer1.SplitterDistance = 82;
             this.splitContainer1.SplitterWidth = 5;
             this.splitContainer1.TabIndex = 1;
             // 
@@ -261,7 +261,7 @@
             dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
             this.dataGridViewX1.RowHeadersDefaultCellStyle = dataGridViewCellStyle3;
             this.dataGridViewX1.RowTemplate.Height = 23;
-            this.dataGridViewX1.Size = new System.Drawing.Size(1401, 80);
+            this.dataGridViewX1.Size = new System.Drawing.Size(1433, 82);
             this.dataGridViewX1.TabIndex = 1;
             // 
             // panelEx3
@@ -275,7 +275,7 @@
             this.panelEx3.Location = new System.Drawing.Point(0, 64);
             this.panelEx3.Margin = new System.Windows.Forms.Padding(4);
             this.panelEx3.Name = "panelEx3";
-            this.panelEx3.Size = new System.Drawing.Size(1401, 381);
+            this.panelEx3.Size = new System.Drawing.Size(1433, 395);
             this.panelEx3.Style.Alignment = System.Drawing.StringAlignment.Center;
             this.panelEx3.Style.BackColor1.ColorSchemePart = DevComponents.DotNetBar.eColorSchemePart.PanelBackground;
             this.panelEx3.Style.BackColor2.ColorSchemePart = DevComponents.DotNetBar.eColorSchemePart.PanelBackground2;
@@ -321,7 +321,7 @@
             this.panelEx4.Location = new System.Drawing.Point(0, 0);
             this.panelEx4.Margin = new System.Windows.Forms.Padding(4);
             this.panelEx4.Name = "panelEx4";
-            this.panelEx4.Size = new System.Drawing.Size(1401, 64);
+            this.panelEx4.Size = new System.Drawing.Size(1433, 64);
             this.panelEx4.Style.Alignment = System.Drawing.StringAlignment.Center;
             this.panelEx4.Style.BackColor1.ColorSchemePart = DevComponents.DotNetBar.eColorSchemePart.PanelBackground;
             this.panelEx4.Style.BackColor2.ColorSchemePart = DevComponents.DotNetBar.eColorSchemePart.PanelBackground2;
@@ -391,7 +391,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1401, 656);
+            this.ClientSize = new System.Drawing.Size(1433, 672);
             this.Controls.Add(this.panelEx2);
             this.Controls.Add(this.panelEx1);
             this.DoubleBuffered = true;
