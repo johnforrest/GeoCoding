@@ -3239,7 +3239,8 @@ namespace ZJGISDataUpdating
         /// <param name="prgSub">当前进度条</param>
         /// <param name="stateLabel">状体提示信息</param>
         /// <returns>返回类型，布尔型</returns>
-        public bool DifScaleSearchChangedPolygonFeatures(IFeatureClass SrcFeatCls, IFeatureClass TarFeatCls, ITable resultTable, int buffer, double area, ProgressBar prgMain, ProgressBar prgSub, LabelX stateLabel)
+        public bool DifScaleSearchChangedPolygonFeatures(IFeatureClass SrcFeatCls, IFeatureClass TarFeatCls, ITable resultTable, 
+            int buffer, double area, ProgressBar prgMain, ProgressBar prgSub, LabelX stateLabel)
         {
 
             //源图层的要素个数

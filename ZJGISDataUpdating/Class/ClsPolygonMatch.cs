@@ -27,18 +27,18 @@ namespace ZJGISDataUpdating.Class
         /// <summary>
         /// 跨尺度匹配要素--算法核心-填充xxx_DifPyTable（面状）
         /// </summary>
-        /// <param name="TUFeatCls">源图层</param>
-        /// <param name="TEFeatCls">待匹配更新的图层</param>
+        /// <param name="sourceFeatureClass">源图层</param>
+        /// <param name="targetFeatureClass">待匹配更新的图层</param>
         /// <param name="resultTable">匹配结果表</param>
         /// <param name="buffer">缓冲区距离</param>
-        /// <param name="area">缓冲区面积</param>
+        /// <param name="minArea">缓冲区面积</param>
         /// <param name="prgMain">总进度条</param>
         /// <param name="prgSub">当前进度条</param>
         /// <param name="stateLabel">状体提示信息</param>
         /// <returns>返回类型，布尔型</returns>
-        public bool SearchChangedPolygonFeaturesDifScale(IFeatureClass SrcFeatCls, IFeatureClass TarFeatCls, ITable resultTable, int buffer, double area, ProgressBar prgMain, ProgressBar prgSub, LabelX stateLabel)
+        public bool SearchChangedPolygonFeaturesDifScale(IFeatureClass sourceFeatureClass, IFeatureClass targetFeatureClass, 
+            ITable resultTable, double buffer, double minArea, ProgressBar prgMain, ProgressBar prgSub, LabelX stateLabel)
         {
-
             //源图层的要素个数
             int srcFeatCount = 0;
             //源图层的游标
@@ -48,7 +48,7 @@ namespace ZJGISDataUpdating.Class
 
             //根据特定的控件过滤条件，源图层查询到的待匹配图层的游标
             IFeatureCursor tarFeatCursor = null;
-            bool functionReturnValue = false;
+            //bool functionReturnValue = false;
             //teFeat是根据游标查询出的待匹配的要素
             IFeature tarFeature = null;
 
@@ -84,8 +84,8 @@ namespace ZJGISDataUpdating.Class
                 workspaceEdit.StartEditing(true);
                 workspaceEdit.StartEditOperation();
                 //源图层的要素个数及游标
-                srcFeatCount = SrcFeatCls.FeatureCount(null);
-                srcFeatCursor = SrcFeatCls.Search(null, false);
+                srcFeatCount = sourceFeatureClass.FeatureCount(null);
+                srcFeatCursor = sourceFeatureClass.Search(null, false);
                 int featCount = 0;
                 // int targetFeatCount = 0;
 
@@ -132,7 +132,7 @@ namespace ZJGISDataUpdating.Class
                     {
                         //The number of features selected by the specified query.
                         //featureCount记录在特定的查询条件下，每个源图层要素查询得到的待匹配图层的要素个数
-                        featureCount = TarFeatCls.FeatureCount(spatialFilter);
+                        featureCount = targetFeatureClass.FeatureCount(spatialFilter);
                         //源图层一个要素对应0个目标图层要素（1对0关系）                        
                         if (featureCount == 0)
                         {
@@ -146,7 +146,7 @@ namespace ZJGISDataUpdating.Class
                         {
                             //Returns an object cursor that can be used to fetch feature objects selected by the specified query.
                             //teFeatCursor是根据特定的控件过滤条件，源图层查询到的待匹配图层的游标
-                            tarFeatCursor = TarFeatCls.Search(spatialFilter, false);
+                            tarFeatCursor = targetFeatureClass.Search(spatialFilter, false);
                             tarFeature = tarFeatCursor.NextFeature();
                             int oid = Convert.ToInt32(tarFeature.get_Value(fixoid));
 
@@ -154,7 +154,7 @@ namespace ZJGISDataUpdating.Class
                             revSpatialFilter = new SpatialFilterClass();
                             revSpatialFilter.Geometry = tarFeature.Shape;
                             revSpatialFilter.SpatialRel = esriSpatialRelEnum.esriSpatialRelIntersects;
-                            revSourFeatCount = SrcFeatCls.FeatureCount(revSpatialFilter);
+                            revSourFeatCount = sourceFeatureClass.FeatureCount(revSpatialFilter);
 
                             //反向查询也是一对一的关系
                             if (revSourFeatCount == 1)
@@ -185,7 +185,7 @@ namespace ZJGISDataUpdating.Class
                                 //20170522注释掉
                                 //rowBuffer = null;
 
-                                revFeatCursor = SrcFeatCls.Search(revSpatialFilter, false);
+                                revFeatCursor = sourceFeatureClass.Search(revSpatialFilter, false);
                                 revFeat = revFeatCursor.NextFeature();
 
                                 //记录待匹配图层与源图层在重叠关系下，源图层的个数
@@ -320,7 +320,7 @@ namespace ZJGISDataUpdating.Class
                         else if (featureCount > 1)
                         {
                             //teFeatCursor是根据空间关系找到的与源图层要素对应的一对多的所有要素集
-                            tarFeatCursor = TarFeatCls.Search(spatialFilter, false);
+                            tarFeatCursor = targetFeatureClass.Search(spatialFilter, false);
                             IPolygon tuPolygon = srcFeature.Shape as IPolygon;
                             IFeature maxAreaFeat = null;
                             double maxRadio = 0;
@@ -374,7 +374,7 @@ namespace ZJGISDataUpdating.Class
                         featCount = 0;
                     }
 
-                    stateLabel.Text = "图层" + SrcFeatCls.AliasName + "已匹配到" + prgMain.Value.ToString() + "(" + srcFeatCount.ToString() + ")" + "个要素";
+                    stateLabel.Text = "图层" + sourceFeatureClass.AliasName + "已匹配到" + prgMain.Value.ToString() + "(" + srcFeatCount.ToString() + ")" + "个要素";
                     stateLabel.Refresh();
                     srcFeature = srcFeatCursor.NextFeature();
                 }
@@ -396,10 +396,6 @@ namespace ZJGISDataUpdating.Class
                 rowCursor.Flush();
                 workspaceEdit.StopEditOperation();
                 workspaceEdit.StopEditing(true);
-
-                //MessageBoxEx.Show("匹配已完成！", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                //进度条
-
                 stateLabel.Text = "";
                 prgMain.Value = 0;
                 prgSub.Value = 0;
@@ -409,7 +405,9 @@ namespace ZJGISDataUpdating.Class
             {
                 MessageBox.Show(ex.Message);
             }
-            return functionReturnValue;
+            //return functionReturnValue;
+            return true;
+
         }
 
 

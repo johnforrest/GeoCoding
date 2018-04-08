@@ -243,16 +243,8 @@ namespace ZJGISDataUpdating.Class
                                             //两个图层的名称字段名称相同
                                             else
                                             {
-                                                //string pSrcStrName = pSrcFeature.get_Value(pSrcFeature.Fields.FindFieldByAliasName("名称")).ToString();
-                                                //string pSrcStrName = pSrcFeature.get_Value(pSrcFeature.Fields.FindField(ClsConfig.LayerConfigs[(pSrcFcls  as IDataset).Name].NameField)).ToString();
-                                                //string pSrcStrName = pSrcFeature.get_Value(pSrcFeature.Fields.FindFieldByAliasName(array[0])).ToString();
                                                 string pSrcfield = pSrcFeature.get_Value(pSrcFeature.Fields.FindField(array[k])).ToString();
-                                                //string pTarStrName = pTarFeature.get_Value(pTarFeature.Fields.FindFieldByAliasName("名称")).ToString();
-                                                //string pTarStrName = pTarFeature.get_Value(pTarFeature.Fields.FindField(ClsConfig.LayerConfigs[(pTarFcls as IDataset).Name].NameField)).ToString();
-                                                //string pTarStrName = pTarFeature.get_Value(pTarFeature.Fields.FindFieldByAliasName(array[0])).ToString();
                                                 string pTarfield = pTarFeature.get_Value(pTarFeature.Fields.FindField(array[k])).ToString();
-
-
 
                                                 //if (StringSameOrNot(pSrcStr, pTarStr) > 0)
                                                 if (pSrcfield.Length > 0 && pTarfield.Length > 0)
@@ -276,7 +268,6 @@ namespace ZJGISDataUpdating.Class
                                                     }
 
                                                     //设置表TRA_PT_I_PtTabl的（待匹配编码）字段的值——cell[5]
-                                                    //rowBuffer.set_Value(rowBuffer.Fields.FindField("源图层名称"), pSrcfield);
                                                     resultTableRowBuffer.set_Value(resultTableRowBuffer.Fields.FindField(tempSrc), pSrcfield);
                                                     double Similarity = ClsCosine.getSimilarity(pSrcfield, pTarfield);
 
@@ -285,7 +276,6 @@ namespace ZJGISDataUpdating.Class
                                                     if (Similarity > 0.7)
                                                     {
                                                         //设置表TRA_PT_I_PtTabl的（待匹配编码）字段的值——cell[5]
-                                                        //rowBuffer.set_Value(rowBuffer.Fields.FindField("待匹配图层名称"), pTarfield);
                                                         resultTableRowBuffer.set_Value(resultTableRowBuffer.Fields.FindField(tempTar), pTarfield);
                                                         //20170516注释掉
                                                         //if (MatchCode(pSrcFeature, pTarFeature))
@@ -336,78 +326,6 @@ namespace ZJGISDataUpdating.Class
                                                 }
                                             }
                                         }
-                                        #region 1126注释
-                                        ////tips:只有几何匹配
-                                        ////没有选择属性匹配，那么只是几何匹配，需要用到反向匹配
-                                        //else
-                                        //{
-                                        //    #region 形状相似度等
-                                        //    //ClsIndicatorFun clsMatching = new ClsIndicatorFun();
-                                        //    //clsMatching.SourceFeature = pSrcFeature;
-                                        //    //clsMatching.TargetFeature = pTarFeature;
-
-                                        //    //double matchedPoints = 0;
-                                        //    //double shape = 0;
-                                        //    //double polylineRadio = 0;
-
-                                        //    //int index = 0;
-                                        //    ////test
-                                        //    //string test3 = pTarFeature.get_Value(index).ToString();
-
-
-                                        //    ////20170518注释掉
-                                        //    ////形状相似度
-                                        //    //shape = clsMatching.PolylineShapeSimilarValue();
-                                        //    ////节点相似度
-                                        //    //matchedPoints = clsMatching.MatchedPointsSimilarValue(buffer);
-                                        //    ////综合相似度
-                                        //    //polylineRadio = shape * weight[0] + matchedPoints * weight[1];
-
-                                        //    //string shape1 = string.Format("{0:0.00000000}", shape);
-                                        //    //string matchedPoints1 = string.Format("{0:0.00000000}", matchedPoints);
-                                        //    //string polygonRatio1 = string.Format("{0:0.00000000}", polylineRadio);
-
-                                        //    //rowBuffer.set_Value(rowBuffer.Fields.FindField("形状相似度"), shape1);
-                                        //    //rowBuffer.set_Value(rowBuffer.Fields.FindField("节点相似度"), matchedPoints1);
-                                        //    //rowBuffer.set_Value(rowBuffer.Fields.FindField("综合相似度"), polygonRatio1);
-                                        //    #endregion
-
-                                        //    //if (polylineRadio > weight[2])
-                                        //    //{
-                                        //    //如果两个点之间的距离小于设置的综合相似度
-                                        //    //if (distance < weight[0] && MatchCode(pSrcFeature, pTarFeature))
-                                        //    //if (MatchCode(pSrcFeature, pTarFeature))
-                                        //    //{
-                                        //    int index = 0;
-
-                                        //    //设置表TRA_PT_I_PtTabl的（待匹配oid）字段的值为空——cell[2]
-                                        //    if (rowBuffer.get_Value(rowBuffer.Fields.FindField("待匹配OID")).ToString() == "")
-                                        //    {
-                                        //        //设置表TRA_PT_I_PtTabl的（待匹配oid）字段的值——cell[2]
-                                        //        rowBuffer.set_Value(rowBuffer.Fields.FindField("待匹配OID"), pTarFeature.get_Value(index));
-                                        //    }
-                                        //    else
-                                        //    {
-                                        //        string oids = rowBuffer.get_Value(rowBuffer.Fields.FindField("待匹配OID")).ToString() + ";" + pTarFeature.get_Value(index);
-                                        //        //设置表TRA_PT_I_PtTabl的（待匹配oid）字段的值——cell[2]
-                                        //        rowBuffer.set_Value(rowBuffer.Fields.FindField("待匹配OID"), oids);
-                                        //    }
-
-                                        //    //20170912
-                                        //    ////设置表TRA_PT_I_PtTabl的（待匹配编码）字段的值——cell[5]
-                                        //    //rowBuffer.set_Value(rowBuffer.Fields.FindField("源图层名称"), pSrcFeature.get_Value(pSrcFeature.Fields.FindFieldByAliasName(array[0])));
-                                        //    ////设置表TRA_PT_I_PtTabl的（待匹配编码）字段的值——cell[5]
-                                        //    //rowBuffer.set_Value(rowBuffer.Fields.FindField("待匹配图层名称"), pTarFeature.get_Value(pTarFeature.Fields.FindFieldByAliasName(array[0])));
-
-                                        //    if (!pDicCol.ContainsKey(lIdx))
-                                        //    {
-                                        //        pDicCol.Add(lIdx, pTarFeature);
-                                        //    }
-                                        //    lIdx = lIdx + 1;
-                                        //    //}
-
-                                        //}
-                                        #endregion
                                     }
                                 }
                                 else

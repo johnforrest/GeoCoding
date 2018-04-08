@@ -872,6 +872,8 @@ namespace ZJGISDataUpdating
 
                 this.dataGridViewX1[3, i].Tag = table;
                 IFeatureClass pTarFcls = featureWorkspace.OpenFeatureClass(this.dataGridViewX1.Rows[i].Cells[2].Value.ToString());
+                IDataset dataset = pTarFcls as IDataset;
+                string matchedFCName = dataset.Name;
 
                 ITable tableSetting = null;
                 int matchedMode = -1;
@@ -882,8 +884,7 @@ namespace ZJGISDataUpdating
                 double buffer = 0;
                 string fields = "";
 
-                IDataset dataset = pTarFcls as IDataset;
-                string matchedFCName = dataset.Name;
+
 
 
                 if (pTarFcls.ShapeType == esriGeometryType.esriGeometryPolyline)
@@ -1016,8 +1017,8 @@ namespace ZJGISDataUpdating
                 //几何匹配
                 else if (this.tabItemGeo.Visible == true)
                 {
-                    clsLineMatch.SearchChangedFeaturesGeo(pSrcFcls, pTarFcls, table, weight, buffer, fields, progressBarMain, progressBarSub, 
-                        labelXStatus, chkBoxLineIndicator,includeAngel,hausdorff);
+                    clsLineMatch.SearchChangedFeaturesGeo(pSrcFcls, pTarFcls, table, weight, buffer, fields, progressBarMain, progressBarSub,
+                        labelXStatus, chkBoxLineIndicator, includeAngel, hausdorff);
                     sw.Stop();
                     MessageBoxEx.Show("几何匹配已完成！总需要时间" + sw.ElapsedMilliseconds + "ms", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
@@ -1948,9 +1949,9 @@ namespace ZJGISDataUpdating
         }
         #endregion
 
-   
 
-    
+
+
 
     }
 }

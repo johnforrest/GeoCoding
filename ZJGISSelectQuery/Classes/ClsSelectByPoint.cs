@@ -26,9 +26,7 @@ namespace SelectQuery
         {
             // Required for ArcGIS Component Category Registrar support
             ArcGISCategoryRegistration(registerType);
-
             //
-            
             //
         }
 

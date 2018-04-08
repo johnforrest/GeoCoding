@@ -291,7 +291,7 @@ namespace ZJGIS
 
 
 
-        #region Basic tool
+        #region 基本工具
         /// <summary>
         /// 放大
         /// </summary>
@@ -406,7 +406,7 @@ namespace ZJGIS
             this.mapMain.Map.ClearSelection();
             pActiveView.PartialRefresh(esriViewDrawPhase.esriViewGeoSelection, mapMain.get_Layer(0), null);
         }
-        #region measure
+        #region 量算功能
         /// <summary>
         /// 量算
         /// </summary>
@@ -421,7 +421,7 @@ namespace ZJGIS
             toolMeasure.OnClick();
         }
         #endregion
-        #region QueryOperation
+        #region 条件模糊查询
 
         /// <summary>
         /// 条件查询
@@ -449,7 +449,7 @@ namespace ZJGIS
             toolFind.OnClick();
         }
         #endregion
-        #region selection
+        #region 选择查询
 
         /// <summary>
         /// 点选
@@ -522,10 +522,8 @@ namespace ZJGIS
         private void btnRectangleSel_Click(object sender, EventArgs e)
         {
             //使用自定义封装类ClsSelectByRectangle
-
             ClsSelectByRectangle toolSelectByRectangle = new ClsSelectByRectangle();
             toolSelectByRectangle.OnCreate(this.mapMain.Object);
-
             this.mapMain.CurrentTool = (ITool)toolSelectByRectangle;
         }
         /// <summary>
@@ -547,12 +545,10 @@ namespace ZJGIS
         /// <param name="e"></param>
         private void btnClearSel_Click(object sender, EventArgs e)
         {
-
             ClsClearFeatureSelection toolClearSelection = new ClsClearFeatureSelection();
             toolClearSelection.OnCreate(this.mapMain.Object);
             toolClearSelection.OnClick();
         }
-
         #endregion
 
         #endregion
@@ -2419,19 +2415,73 @@ namespace ZJGIS
         /// <param name="e"></param>
         private void buttonItemSelectFeat_Click(object sender, EventArgs e)
         {
-            pMouseOperate = "";
-            ESRI.ArcGIS.SystemUI.ICommand pCmd = new ControlsSelectFeaturesToolClass();
+            //使用自定义封装类ClsSelectByPoint
+            ClsSelectByPoint toolSelectByPoint = new ClsSelectByPoint();
             if (this.comboBoxItemToMapControl.SelectedItem.ToString() == "源图层")
             {
-                pCmd.OnCreate(this.MapFrom.Object);
-                pCmd.OnClick();
-                this.MapFrom.CurrentTool = pCmd as ESRI.ArcGIS.SystemUI.ITool;
+                toolSelectByPoint.OnCreate(this.MapFrom.Object);
+                MapFrom.CurrentTool = (ITool)toolSelectByPoint;
             }
             else if (this.comboBoxItemToMapControl.SelectedItem.ToString() == "待匹配图层")
             {
-                pCmd.OnCreate(this.MapTo.Object);
-                pCmd.OnClick();
-                this.MapTo.CurrentTool = pCmd as ESRI.ArcGIS.SystemUI.ITool;
+                toolSelectByPoint.OnCreate(this.MapTo.Object);
+                MapTo.CurrentTool = (ITool)toolSelectByPoint;
+            }
+
+
+            //pMouseOperate = "";
+            //ESRI.ArcGIS.SystemUI.ICommand pCmd = new ControlsSelectFeaturesToolClass();
+            //if (this.comboBoxItemToMapControl.SelectedItem.ToString() == "源图层")
+            //{
+            //    pCmd.OnCreate(this.MapFrom.Object);
+            //    pCmd.OnClick();
+            //    this.MapFrom.CurrentTool = pCmd as ESRI.ArcGIS.SystemUI.ITool;
+            //}
+            //else if (this.comboBoxItemToMapControl.SelectedItem.ToString() == "待匹配图层")
+            //{
+            //    pCmd.OnCreate(this.MapTo.Object);
+            //    pCmd.OnClick();
+            //    this.MapTo.CurrentTool = pCmd as ESRI.ArcGIS.SystemUI.ITool;
+            //}
+        }
+        /// <summary>
+        /// 分屏对比-矩形选择
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void buttonItemRectangleSele_Click(object sender, EventArgs e)
+        {
+            //使用自定义封装类ClsSelectByRectangle
+            ClsSelectByRectangle toolSelectByRectangle = new ClsSelectByRectangle();
+            if (this.comboBoxItemToMapControl.SelectedItem.ToString() == "源图层")
+            {
+                toolSelectByRectangle.OnCreate(this.MapFrom.Object);
+                this.MapFrom.CurrentTool = (ITool)toolSelectByRectangle;
+            }
+            else if (this.comboBoxItemToMapControl.SelectedItem.ToString() == "待匹配图层")
+            {
+                toolSelectByRectangle.OnCreate(this.MapTo.Object);
+                this.MapTo.CurrentTool = (ITool)toolSelectByRectangle;
+            }
+        }
+
+        /// <summary>
+        /// 分屏对比-清空选择
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void buttonItemClearSele_Click(object sender, EventArgs e)
+        {
+            ClsClearFeatureSelection toolClearSelection = new ClsClearFeatureSelection();
+            if (this.comboBoxItemToMapControl.SelectedItem.ToString() == "源图层")
+            {
+                toolClearSelection.OnCreate(this.MapFrom.Object);
+                toolClearSelection.OnClick();
+            }
+            else if (this.comboBoxItemToMapControl.SelectedItem.ToString() == "待匹配图层")
+            {
+                toolClearSelection.OnCreate(this.MapTo.Object);
+                toolClearSelection.OnClick();
             }
         }
         /// <summary>
@@ -2527,18 +2577,48 @@ namespace ZJGIS
         /// <param name="e"></param>
         private void btnOverlapSelectFeat_Click(object sender, EventArgs e)
         {
-            pMouseOperate = "";
-            ESRI.ArcGIS.SystemUI.ICommand pCmd = new ControlsSelectFeaturesToolClass();
-            //ESRI.ArcGIS.SystemUI.ICommand pCmd = new ClsSelectFeature();
-            pCmd.OnCreate(this.MapOverlapping.Object);
-            pCmd.OnClick();
-            this.MapOverlapping.CurrentTool = pCmd as ESRI.ArcGIS.SystemUI.ITool;
+            //使用自定义封装类ClsSelectByPoint
+            ClsSelectByPoint toolSelectByPoint = new ClsSelectByPoint();
+            toolSelectByPoint.OnCreate(this.MapOverlapping.Object);
+            MapOverlapping.CurrentTool = (ITool)toolSelectByPoint;
+
+            //pMouseOperate = "";
+            //ESRI.ArcGIS.SystemUI.ICommand pCmd = new ControlsSelectFeaturesToolClass();
+            ////ESRI.ArcGIS.SystemUI.ICommand pCmd = new ClsSelectFeature();
+            //pCmd.OnCreate(this.MapOverlapping.Object);
+            //pCmd.OnClick();
+            //this.MapOverlapping.CurrentTool = pCmd as ESRI.ArcGIS.SystemUI.ITool;
 
             this.btnOverlapZoomIn.Checked = false;
             this.btnOverlapZoomOut.Checked = false;
             this.btnOverlapPan.Checked = false;
             this.btnOverlapSelectFeat.Checked = true;
         }
+        /// <summary>
+        /// 叠加对比-矩形选择
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void btnOverlapRectangleSele_Click(object sender, EventArgs e)
+        {
+            //使用自定义封装类ClsSelectByRectangle
+            ClsSelectByRectangle toolSelectByRectangle = new ClsSelectByRectangle();
+            toolSelectByRectangle.OnCreate(this.MapOverlapping.Object);
+            this.MapOverlapping.CurrentTool = (ITool)toolSelectByRectangle;
+        }
+
+        /// <summary>
+        /// 叠加对比-清空选择
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void btnOverlapClearSele_Click(object sender, EventArgs e)
+        {
+            ClsClearFeatureSelection toolClearSelection = new ClsClearFeatureSelection();
+            toolClearSelection.OnCreate(this.MapOverlapping.Object);
+            toolClearSelection.OnClick();
+        }
+
         /// <summary>
         /// 叠加对比-全屏显示
         /// </summary>
@@ -2973,6 +3053,11 @@ namespace ZJGIS
 
             }
         }
+
+       
+     
+      
+       
 
      
 

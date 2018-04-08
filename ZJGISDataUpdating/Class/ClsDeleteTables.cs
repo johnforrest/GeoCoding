@@ -70,5 +70,32 @@ namespace ZJGISDataUpdating.Class
                 }
             }
         }
+        /// <summary>
+        /// 从工作空间中删除指定表
+        /// </summary>
+        /// <param name="pWorkspace"></param>
+        /// <param name="tableName"></param>
+        /// <returns></returns>
+        public static bool DeleteTable(IWorkspace pWorkspace, String tableName)
+        {
+            try
+            {
+                IFeatureWorkspace pFeatureworkspace = pWorkspace as IFeatureWorkspace;
+                IFeatureClass pFeatureClass = pFeatureworkspace.OpenFeatureClass(tableName);//存在删除
+                if (pFeatureClass != null)
+                {
+                    IDataset pDataset = pFeatureClass as IDataset;
+                    if (pDataset.CanDelete())
+                    {
+                        pDataset.Delete();
+                        return true;//删除成功
+                    }
+                }
+            }
+            catch
+            { }
+            return false;//删除失败
+        }
+  
     }
 }

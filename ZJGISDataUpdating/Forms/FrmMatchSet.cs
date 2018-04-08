@@ -247,8 +247,8 @@ namespace ZJGISDataUpdating
                             //string temStrF = strDic[ClsDeclare.strFrom];
                             //string temStrT = strDic[ClsDeclare.strTo];
                             //test
-                            string test = sourceDataAdd.InRowDic[0].Cells[1].Value.ToString();
-                            string test2 = targetDataAdd.OutRowDic[0].Cells[1].Value.ToString();
+                            //string test = sourceDataAdd.InRowDic[0].Cells[1].Value.ToString();
+                            //string test2 = targetDataAdd.OutRowDic[0].Cells[1].Value.ToString();
 
                             //////20170504 注释掉
                             //if (!sourceDataAdd.InRowDic[0].Cells[1].Value.ToString().Contains(temStrF))

@@ -1,4 +1,5 @@
-﻿using System;
+﻿#region
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -15,6 +16,7 @@ using DevComponents.DotNetBar;
 using ZJGISCommon;
 using ESRI.ArcGIS.Carto;
 using ZJGISDataUpdating.Class;
+#endregion
 //using System.Text.RegularExpressions;
 namespace ZJGISDataUpdating
 {
@@ -138,14 +140,14 @@ namespace ZJGISDataUpdating
 
             for (int j = 0; j < this.dataGridViewX1.RowCount; j++)
             {
-                IFeatureClass pTUFeatCls = this.dataGridViewX1.Rows[j].Cells[1].Tag as IFeatureClass;
+                IFeatureClass srcFeatCls = this.dataGridViewX1.Rows[j].Cells[1].Tag as IFeatureClass;
                 IFields fileds = null;
-                if (pTUFeatCls.ShapeType == esriGeometryType.esriGeometryPolygon)
+                if (srcFeatCls.ShapeType == esriGeometryType.esriGeometryPolygon)
                 {
                     //CreateMatchPolygonTFields函数返回了表xx的所有字段信息
                     fileds = CreateMatchPolygonTFields(pWorkspace);
                 }
-
+                //结果表xxx_DifPyTable存在，删除表再重现创建
                 ITable table = null;
                 if (pWorkspace.get_NameExists(esriDatasetType.esriDTTable, this.dataGridViewX1.Rows[j].Cells[3].Value.ToString()))
                 {
@@ -167,32 +169,106 @@ namespace ZJGISDataUpdating
                     //workspaceEdit.StopEditOperation();
                     //workspaceEdit.StopEditing(true);
                 }
+                //结果表xxx_DifPyTable不存在，创建表
                 else
                 {
-                    //生成匹配结果表xxx_DifPyTable
                     table = CreateTable(pWorkspace, this.dataGridViewX1.Rows[j].Cells[3].Value.ToString(), fileds);
                 }
                 //把生成匹配结果表xxx_DifPyTable(空表)存储到cell[3]的Tag属性中
                 this.dataGridViewX1[3, j].Tag = table;
                 //根据工作图层的名称（待更新图层的名称）来打开待更新图层数据（feature）
-                IFeatureClass pTEFeatCls = featureWorkspace.OpenFeatureClass(this.dataGridViewX1.Rows[j].Cells[2].Value.ToString());
-                double buffer = 0;
+                IFeatureClass tarFeatCls = featureWorkspace.OpenFeatureClass(this.dataGridViewX1.Rows[j].Cells[2].Value.ToString());
+                IDataset dataset = tarFeatCls as IDataset;
+                string matchedFcName = dataset.Name;
 
+                ITable tableSetting = null;
+
+                double buffer = 0;
+                double minArea = 0.0;
+                if (srcFeatCls.ShapeType == esriGeometryType.esriGeometryPolygon)
+                {
+                    tableSetting = featureWorkspace.OpenTable(ClsConstant.polygonSettingTable);
+                    if (tableSetting != null)
+                    {
+                        ICursor cursor = tableSetting.Search(null, false);
+                        IRow row = cursor.NextRow();
+                        while (row != null)
+                        {
+                            if (row.get_Value(row.Fields.FindField("MatchedFCName")).ToString() == matchedFcName)
+                            {
+                                //面积重叠比匹配
+                                if (this.tabItemAreaOverlap.Visible == true)
+                                {
+                                    string temp = row.get_Value(row.Fields.FindField("Buffer")).ToString();
+                                    if (temp.Contains("米"))
+                                    {
+                                        temp = temp.Substring(0, temp.LastIndexOf("米")).Trim();
+                                    }
+                                    buffer = Convert.ToDouble(temp);
+                                    minArea = Convert.ToDouble(row.get_Value(row.Fields.FindField("AreaNum")));
+                                }
+                                ////几何匹配
+                                //else if (this.tabItemGeo.Visible == true)
+                                //{
+                                //    fields = row.get_Value(row.Fields.FindField("MatchedFields")).ToString();
+                                //    matchedMay = 0;
+                                //    matchedMode = 10;
+                                //    weight[0] = Convert.ToDouble(row.get_Value(row.Fields.FindField("SP")));
+                                //    string temp = row.get_Value(row.Fields.FindField("MatchedPointsBuffer")).ToString();
+                                //    if (temp.Contains("米"))
+                                //    {
+                                //        temp = temp.Substring(0, temp.LastIndexOf("米")).Trim();
+                                //    }
+                                //    buffer = Convert.ToDouble(temp);
+
+                                //    weight[1] = Convert.ToDouble(row.get_Value(row.Fields.FindField("MatchedPoints")));
+                                //    weight[2] = Convert.ToDouble(row.get_Value(row.Fields.FindField("TotalNum")));
+
+                                //    includeAngel = Convert.ToDouble(row.get_Value(row.Fields.FindField("IncludeAngle")));
+                                //    hausdorff = Convert.ToDouble(row.get_Value(row.Fields.FindField("Hausdorff")));
+
+                                //}
+                                ////拓扑匹配
+                                ////if (row.get_Value(row.Fields.FindField("Top")).ToString() == "1")
+                                //else if (this.tabItemTopo.Visible == true)
+                                //{
+                                //    matchedMay = 1;
+                                //    matchedMode = -1;
+                                //    //weight = 0;
+                                //    string temp = row.get_Value(row.Fields.FindField("Buffer")).ToString();
+                                //    if (temp.Contains("米"))
+                                //    {
+                                //        temp = temp.Substring(0, temp.LastIndexOf("米")).Trim();
+                                //    }
+                                //    buffer = Convert.ToDouble(temp);
+                                //    fields = row.get_Value(row.Fields.FindField("MatchedFields")).ToString();
+
+                                //    break;
+                                //}
+                            }
+                            row = cursor.NextRow();
+                        }
+                    }
+                    else
+                    {
+                        MessageBox.Show("tableSetting为空！");
+                    }
+                }
 
                 //ClsCoreUpdateFun clsCoreUpdateFun = new ClsCoreUpdateFun();
                 ClsPolygonMatch clsPolygonMatch = new ClsPolygonMatch();
-                if (pTUFeatCls.ShapeType == esriGeometryType.esriGeometryPolygon)
+                //面积重叠比匹配
+                if (this.tabItemAreaOverlap.Visible)
                 {
                     //填充结果表xxx_DifPyTable
-                    clsPolygonMatch.SearchChangedPolygonFeaturesDifScale(pTUFeatCls, pTEFeatCls, table, 10, 13, progressBarMain, progressBarSub, labelXStatus);
+                    clsPolygonMatch.SearchChangedPolygonFeaturesDifScale(srcFeatCls, tarFeatCls, table, buffer, minArea, progressBarMain, progressBarSub, labelXStatus);
                     sw.Stop();
                     MessageBoxEx.Show("几何属性匹配已完成！总需要时间" + sw.ElapsedMilliseconds + "ms", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
-                //else if (pTUFeatCls.ShapeType == esriGeometryType.esriGeometryPolyline)
-                //{
-                //    //填充结果表xxx_DifPyTable
-                //    clsCoreUpdateFun.DifScaleSearchChangedPolylineFeatures(pTUFeatCls, pTEFeatCls, table, buffer, 13, progressBarMain, progressBarSub, labelXStatus);
-                //}
+                else
+                {
+
+                }
             }
             this.Cursor = System.Windows.Forms.Cursors.Default;
             this.Close();
@@ -265,8 +341,10 @@ namespace ZJGISDataUpdating
             fields = objectClassDescription.RequiredFields;
 
             //test
-            bool test = ClsDeclare.g_SameScaleMatch && !ClsDeclare.g_DifScaleMatch; //false
-            bool test2 = !ClsDeclare.g_SameScaleMatch && ClsDeclare.g_DifScaleMatch; //true
+            //false
+            bool test = ClsDeclare.g_SameScaleMatch && !ClsDeclare.g_DifScaleMatch;
+            //true
+            bool test2 = !ClsDeclare.g_SameScaleMatch && ClsDeclare.g_DifScaleMatch;
 
             //同一比例尺的匹配
             if (ClsDeclare.g_SameScaleMatch && !ClsDeclare.g_DifScaleMatch)
@@ -363,7 +441,7 @@ namespace ZJGISDataUpdating
                 fieldsEdit.AddField(field7);
             }
             //不同比例尺的匹配
-            else if (!ClsDeclare.g_SameScaleMatch && ClsDeclare.g_DifScaleMatch)  
+            else if (!ClsDeclare.g_SameScaleMatch && ClsDeclare.g_DifScaleMatch)
             {
                 IField field = new FieldClass();
                 IFieldEdit fieldEdit = field as IFieldEdit;
@@ -549,25 +627,7 @@ namespace ZJGISDataUpdating
 
                 if (sourceFeatCls.ShapeType == esriGeometryType.esriGeometryPolygon)
                 {
-                    if (workspace.get_NameExists(esriDatasetType.esriDTTable, ClsConstant.polygonSettingTable))
-                    {
-                        table = featureWorkspace.OpenTable(ClsConstant.polygonSettingTable);
-                    }
-                    else
-                    {
-                        //返回MatchedPolygonFCSettingDif的所有字段集
-                        fields = CreateMatchedPolygonFCSettingFields(workspace);
-                        UID uid = new UIDClass();
-                        uid.Value = "esriGeoDatabase.Object";
-                        IFieldChecker fieldChecker = new FieldCheckerClass();
-                        IEnumFieldError enumFieldError = null;
-                        IFields validatedFields = null;
-                        fieldChecker.ValidateWorkspace = (IWorkspace)workspace;
-                        fieldChecker.Validate(fields, out enumFieldError, out validatedFields);
-
-                        //创建表MatchedPolygonFCSettingDif
-                        table = featureWorkspace.CreateTable(ClsConstant.polygonSettingTable, validatedFields, uid, null, "");
-                    }
+                    table = TableExist(workspace, table, featureWorkspace);
 
                     IWorkspaceEdit pWorkspaceEdit = featureWorkspace as IWorkspaceEdit;
                     pWorkspaceEdit.StartEditing(true);
@@ -575,23 +635,23 @@ namespace ZJGISDataUpdating
 
                     Dictionary<string, int> pDic = new Dictionary<string, int>();
                     //查看是否MatchedFCName字段是否存在
-                    int index = table.FindField("MatchedFCName");
+                    int indexTargetFeatCls = table.FindField("MatchedFCName");
                     ICursor pCursor = table.Search(null, false);
                     IRow pRow = pCursor.NextRow();
                     while (pRow != null)
                     {
-                        if (pRow.get_Value(index).ToString() != "")
+                        if (pRow.get_Value(indexTargetFeatCls).ToString() != "")
                         {
-                            pDic.Add(pRow.get_Value(index).ToString(), pRow.OID);
+                            pDic.Add(pRow.get_Value(indexTargetFeatCls).ToString(), pRow.OID);
                         }
                         pRow = pCursor.NextRow();
                     }
 
                     //设置面积阈值
                     double minArea = 0;
-                    if (this.textBoxX1.Text != "")
+                    if (this.textBoxminArea.Text != "")
                     {
-                        string text = this.textBoxX1.Text;
+                        string text = this.textBoxminArea.Text;
                         if (text.Contains("平方米"))
                         {
                             text = text.Substring(0, text.LastIndexOf("平方米")).Trim();
@@ -602,38 +662,53 @@ namespace ZJGISDataUpdating
                         }
                         minArea = Convert.ToDouble(text);
                     }
-                    //填充表MatchedPolygonFCSettingDif
-                    if (!pDic.ContainsKey(targetFeatureName))
+                    //面积重叠比匹配
+                    if (this.tabItemAreaOverlap.Visible)
                     {
-                        IRow tempRow = table.CreateRow();
-                        tempRow.set_Value(index, targetFeatureName);
-                        tempRow.set_Value(tempRow.Fields.FindField("FCSettingID"), table.RowCount(null) - 1);
-                        tempRow.set_Value(tempRow.Fields.FindField("Voronoi"), 0);
-                        tempRow.set_Value(tempRow.Fields.FindField("MinArea"), minArea);
-                        IDataset dataset = sourceFeatCls as IDataset;
-                        if (ClsDeclare.g_SourceFeatClsPathDic.ContainsKey(dataset.Name))
+                        //表MatchedPolygonFCSettingDif不存在
+                        if (!pDic.ContainsKey(targetFeatureName))
                         {
-                            tempRow.set_Value(tempRow.Fields.FindField("SourceFCName"), dataset.Name);
-                            tempRow.set_Value(tempRow.Fields.FindField("SourcePath"), ClsDeclare.g_SourceFeatClsPathDic[dataset.Name]);
-                            tempRow.set_Value(tempRow.Fields.FindField("WorkspacePath"), ClsDeclare.g_WorkspacePath);
+                            IRow tempRow = table.CreateRow();
+                            tempRow.set_Value(indexTargetFeatCls, targetFeatureName);
+                            tempRow.set_Value(tempRow.Fields.FindField("FCSettingID"), table.RowCount(null) - 1);
+                            tempRow.set_Value(tempRow.Fields.FindField("Voronoi"), 0);
+                            tempRow.set_Value(tempRow.Fields.FindField("MinArea"), minArea);
+
+                            IDataset dataset = sourceFeatCls as IDataset;
+                            if (ClsDeclare.g_SourceFeatClsPathDic.ContainsKey(dataset.Name))
+                            {
+                                tempRow.set_Value(tempRow.Fields.FindField("SourceFCName"), dataset.Name);
+                                tempRow.set_Value(tempRow.Fields.FindField("SourcePath"), ClsDeclare.g_SourceFeatClsPathDic[dataset.Name]);
+                                tempRow.set_Value(tempRow.Fields.FindField("WorkspacePath"), ClsDeclare.g_WorkspacePath);
+                            }
+                            tempRow.set_Value(tempRow.Fields.FindField("Buffer"), Convert.ToDouble(this.labelBuffer.Text));
+                            tempRow.set_Value(tempRow.Fields.FindField("AreaNum"), Convert.ToDouble(this.labelArea.Text));
+
+
+
+                            tempRow.Store();
                         }
-                        tempRow.Store();
-                    }
-                    else
-                    {
-                        IRow tRow = table.GetRow(pDic[targetFeatureName]);
-                        tRow.set_Value(tRow.Fields.FindField("Voronoi"), 0);
-                        tRow.set_Value(tRow.Fields.FindField("MinArea"), minArea);
-                        IDataset dataset = sourceFeatCls as IDataset;
-                        if (ClsDeclare.g_SourceFeatClsPathDic.ContainsKey(dataset.Name))
+                        //表MatchedPolygonFCSettingDif存在
+                        else
                         {
+                            IRow tRow = table.GetRow(pDic[targetFeatureName]);
 
-                            tRow.set_Value(tRow.Fields.FindField("SourceFCName"), dataset.Name);
-                            tRow.set_Value(tRow.Fields.FindField("SourcePath"), ClsDeclare.g_SourceFeatClsPathDic[dataset.Name]);
-                            tRow.set_Value(tRow.Fields.FindField("WorkspacePath"), ClsDeclare.g_WorkspacePath);
+                            tRow.set_Value(tRow.Fields.FindField("Voronoi"), 0);
+                            tRow.set_Value(tRow.Fields.FindField("MinArea"), minArea);
+
+                            IDataset dataset = sourceFeatCls as IDataset;
+                            if (ClsDeclare.g_SourceFeatClsPathDic.ContainsKey(dataset.Name))
+                            {
+
+                                tRow.set_Value(tRow.Fields.FindField("SourceFCName"), dataset.Name);
+                                tRow.set_Value(tRow.Fields.FindField("SourcePath"), ClsDeclare.g_SourceFeatClsPathDic[dataset.Name]);
+                                tRow.set_Value(tRow.Fields.FindField("WorkspacePath"), ClsDeclare.g_WorkspacePath);
+                            }
+                            tRow.set_Value(tRow.Fields.FindField("Buffer"), Convert.ToDouble(this.labelBuffer.Text));
+                            tRow.set_Value(tRow.Fields.FindField("AreaNum"), Convert.ToDouble(this.labelArea.Text));
+
+                            tRow.Store();
                         }
-
-                        tRow.Store();
                     }
 
                     pWorkspaceEdit.StopEditOperation();
@@ -641,6 +716,65 @@ namespace ZJGISDataUpdating
                 }
             }
         }
+        /// <summary>
+        /// 对表MatchedPolygonFCSettingDif进行判断处理
+        /// </summary>
+        /// <param name="workspace"></param>
+        /// <param name="table"></param>
+        /// <param name="featureWorkspace"></param>
+        /// <returns></returns>
+        private ITable TableExist(IWorkspace2 workspace, ITable table, IFeatureWorkspace featureWorkspace)
+        {
+            IFields fields;
+            //匹配参数表是否存在，存在则打开表并删除相关记录
+            if (workspace.get_NameExists(esriDatasetType.esriDTTable, ClsConstant.polygonSettingTable))
+            {
+                table = featureWorkspace.OpenTable(ClsConstant.polygonSettingTable);
+                IWorkspaceEdit workspaceEdit = workspace as IWorkspaceEdit;
+                workspaceEdit.StartEditing(true);
+                workspaceEdit.StartEditOperation();
+
+                ICursor cursor = table.Search(null, false);
+                IRow r = cursor.NextRow();
+                while (r != null)
+                {
+                    r.Delete();
+                    r = cursor.NextRow();
+                }
+                workspaceEdit.StopEditOperation();
+                workspaceEdit.StopEditing(true);
+
+                //ClsDeleteTables.DeleteFeatureClass(gdbPath, ClsConstant.lineSettingTable);
+                //fields = CreateMatchedPolylineFCSettingFields(workspace);
+                //UID uid = new UIDClass();
+                //uid.Value = "esriGeoDatabase.Object";
+                //IFieldChecker fieldChecker = new FieldCheckerClass();
+                //IEnumFieldError enumFieldError = null;
+                //IFields validatedFields = null;
+                //fieldChecker.ValidateWorkspace = (IWorkspace)workspace;
+                //fieldChecker.Validate(fields, out enumFieldError, out validatedFields);
+
+                //table = featureWorkspace.CreateTable(ClsConstant.lineSettingTable, validatedFields, uid, null, "");
+            }
+            //匹配参数表是否存在，不存在则创建表
+            else
+            {
+                //返回MatchedPolygonFCSettingDif的所有字段集
+                fields = CreateMatchedPolygonFCSettingFields(workspace);
+                UID uid = new UIDClass();
+                uid.Value = "esriGeoDatabase.Object";
+                IFieldChecker fieldChecker = new FieldCheckerClass();
+                IEnumFieldError enumFieldError = null;
+                IFields validatedFields = null;
+                fieldChecker.ValidateWorkspace = (IWorkspace)workspace;
+                fieldChecker.Validate(fields, out enumFieldError, out validatedFields);
+
+                //创建表MatchedPolygonFCSettingDif
+                table = featureWorkspace.CreateTable(ClsConstant.polygonSettingTable, validatedFields, uid, null, "");
+            }
+            return table;
+        }
+
         /// <summary>
         /// 设置最后生成的表MatchedPolygonFCSettingDif的字段
         /// </summary>
@@ -683,7 +817,7 @@ namespace ZJGISDataUpdating
             fieldEdit1.Type_2 = esriFieldType.esriFieldTypeString;
             fieldEdit1.IsNullable_2 = false;
             //fieldEdit1.AliasName_2 = "更新图层名";
-            fieldEdit1.AliasName_2 = "待匹配图层名";
+            fieldEdit1.AliasName_2 = "待匹配图层名称";
             fieldsEdit.AddField(field1);
 
             IField field18 = new FieldClass();
@@ -719,13 +853,13 @@ namespace ZJGISDataUpdating
             fieldEdit4.IsNullable_2 = true;
             fieldsEdit.AddField(field4);
 
-            //IField field5 = new FieldClass();
-            //IFieldEdit fieldEdit5 = field5 as IFieldEdit;
-            //fieldEdit5.Name_2 = "CenterWT";
-            //fieldEdit5.Type_2 = esriFieldType.esriFieldTypeDouble;
-            //fieldEdit5.AliasName_2 = "重心点权重";
-            //fieldEdit5.IsNullable_2 = true;
-            //fieldsEdit.AddField(field5);
+            IField field25 = new FieldClass();
+            IFieldEdit fieldEdit25 = field25 as IFieldEdit;
+            fieldEdit25.Name_2 = "CenterWT";
+            fieldEdit25.Type_2 = esriFieldType.esriFieldTypeDouble;
+            fieldEdit25.AliasName_2 = "重心点权重";
+            fieldEdit25.IsNullable_2 = true;
+            fieldsEdit.AddField(field25);
 
             IField field6 = new FieldClass();
             IFieldEdit fieldEdit6 = field6 as IFieldEdit;
@@ -743,13 +877,13 @@ namespace ZJGISDataUpdating
             fieldEdit7.IsNullable_2 = true;
             fieldsEdit.AddField(field7);
 
-            //IField field8 = new FieldClass();
-            //IFieldEdit fieldEdit8 = field8 as IFieldEdit;
-            //fieldEdit8.Name_2 = "AreaWT";
-            //fieldEdit8.Type_2 = esriFieldType.esriFieldTypeDouble;
-            //fieldEdit8.AliasName_2 = "面积权重";
-            //fieldEdit8.IsNullable_2 = true;
-            //fieldsEdit.AddField(field8);
+            IField field8 = new FieldClass();
+            IFieldEdit fieldEdit8 = field8 as IFieldEdit;
+            fieldEdit8.Name_2 = "AreaWT";
+            fieldEdit8.Type_2 = esriFieldType.esriFieldTypeDouble;
+            fieldEdit8.AliasName_2 = "面积权重";
+            fieldEdit8.IsNullable_2 = true;
+            fieldsEdit.AddField(field8);
 
 
             IField field9 = new FieldClass();
@@ -768,13 +902,13 @@ namespace ZJGISDataUpdating
             fieldEdit10.IsNullable_2 = true;
             fieldsEdit.AddField(field10);
 
-            //IField field11 = new FieldClass();
-            //IFieldEdit fieldEdit11 = field11 as IFieldEdit;
-            //fieldEdit11.Name_2 = "SPWT";
-            //fieldEdit11.Type_2 = esriFieldType.esriFieldTypeDouble;
-            //fieldEdit11.AliasName_2 = "形状权重";
-            //fieldEdit11.IsNullable_2 = true;
-            //fieldsEdit.AddField(field11);
+            IField field11 = new FieldClass();
+            IFieldEdit fieldEdit11 = field11 as IFieldEdit;
+            fieldEdit11.Name_2 = "SPWT";
+            fieldEdit11.Type_2 = esriFieldType.esriFieldTypeDouble;
+            fieldEdit11.AliasName_2 = "形状权重";
+            fieldEdit11.IsNullable_2 = true;
+            fieldsEdit.AddField(field11);
 
             IField field12 = new FieldClass();
             IFieldEdit fieldEdit12 = field12 as IFieldEdit;
@@ -827,5 +961,27 @@ namespace ZJGISDataUpdating
             fields = fieldsEdit as IFieldsEdit;
             return fields;
         }
+        #region slider滑动事件
+        /// <summary>
+        /// 缓冲区半径
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void sliderBuffer_ValueChanged(object sender, EventArgs e)
+        {
+            this.labelBuffer.Text = (Convert.ToDouble(this.sliderBuffer.Value)).ToString();
+        }
+        /// <summary>
+        /// 面积值
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void sliderArea_ValueChanged(object sender, EventArgs e)
+        {
+            this.labelArea.Text = (Convert.ToDouble(this.sliderArea.Value)).ToString();
+        }
+        #endregion
+
+
     }
 }
