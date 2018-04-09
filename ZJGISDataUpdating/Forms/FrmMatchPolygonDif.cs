@@ -151,23 +151,22 @@ namespace ZJGISDataUpdating
                 ITable table = null;
                 if (pWorkspace.get_NameExists(esriDatasetType.esriDTTable, this.dataGridViewX1.Rows[j].Cells[3].Value.ToString()))
                 {
-                    ClsDeleteTables.DeleteFeatureClass(gdbPath, this.dataGridViewX1.Rows[j].Cells[3].Value.ToString());
-                    table = CreateTable(pWorkspace, this.dataGridViewX1.Rows[j].Cells[3].Value.ToString(), fileds);
+                    //ClsDeleteTables.DeleteFeatureClass(gdbPath, this.dataGridViewX1.Rows[j].Cells[3].Value.ToString());
+                    //table = CreateTable(pWorkspace, this.dataGridViewX1.Rows[j].Cells[3].Value.ToString(), fileds);
+                    table = featureWorkspace.OpenTable(this.dataGridViewX1.Rows[j].Cells[3].Value.ToString());
 
-                    //table = featureWorkspace.OpenTable(this.dataGridViewX1.Rows[j].Cells[3].Value.ToString());
-
-                    //IWorkspaceEdit workspaceEdit = pWorkspace as IWorkspaceEdit;
-                    //workspaceEdit.StartEditing(true);
-                    //workspaceEdit.StartEditOperation();
-                    //ICursor cursor = table.Search(null, false);
-                    //IRow r = cursor.NextRow();
-                    //while (r != null)
-                    //{
-                    //    r.Delete();
-                    //    r = cursor.NextRow();
-                    //}
-                    //workspaceEdit.StopEditOperation();
-                    //workspaceEdit.StopEditing(true);
+                    IWorkspaceEdit workspaceEdit = pWorkspace as IWorkspaceEdit;
+                    workspaceEdit.StartEditing(true);
+                    workspaceEdit.StartEditOperation();
+                    ICursor cursor = table.Search(null, false);
+                    IRow r = cursor.NextRow();
+                    while (r != null)
+                    {
+                        r.Delete();
+                        r = cursor.NextRow();
+                    }
+                    workspaceEdit.StopEditOperation();
+                    workspaceEdit.StopEditing(true);
                 }
                 //结果表xxx_DifPyTable不存在，创建表
                 else
@@ -263,7 +262,7 @@ namespace ZJGISDataUpdating
                     //填充结果表xxx_DifPyTable
                     clsPolygonMatch.SearchChangedPolygonFeaturesDifScale(srcFeatCls, tarFeatCls, table, buffer, minArea, progressBarMain, progressBarSub, labelXStatus);
                     sw.Stop();
-                    MessageBoxEx.Show("几何属性匹配已完成！总需要时间" + sw.ElapsedMilliseconds + "ms", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    MessageBoxEx.Show("面积重叠匹配已完成！总需要时间" + sw.ElapsedMilliseconds + "ms", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
                 else
                 {
@@ -978,7 +977,7 @@ namespace ZJGISDataUpdating
         /// <param name="e"></param>
         private void sliderArea_ValueChanged(object sender, EventArgs e)
         {
-            this.labelArea.Text = (Convert.ToDouble(this.sliderArea.Value)).ToString();
+            this.labelArea.Text = (Convert.ToDouble((this.sliderArea.Value/100.00))).ToString();
         }
         #endregion
 

@@ -149,7 +149,7 @@ namespace ZJGISDataUpdating.Class
                             //              (sourcePointCollection.get_Point(i).Y - targetPointCollection.get_Point(j).Y) *
                             //              (sourcePointCollection.get_Point(i).Y - targetPointCollection.get_Point(j).Y)));
                             listTarget.Add(ClsGeoEcluDistance.Distance(sourcePointCollection.get_Point(i).Y,
-                                sourcePointCollection.get_Point(i).X,targetPointCollection.get_Point(j).Y,
+                                sourcePointCollection.get_Point(i).X, targetPointCollection.get_Point(j).Y,
                                 targetPointCollection.get_Point(j).X));
 
                         }
@@ -244,6 +244,39 @@ namespace ZJGISDataUpdating.Class
 
             double similar = (targetLength + sourceLength - insertLength) / (targetLength + sourceLength);
             return similar;
+        }
+        /// <summary>
+        /// 相交面积与源要素面积比值
+        /// </summary>
+        /// <param name="srcFeature">源要素</param>
+        /// <param name="tarFeature">待匹配要素</param>
+        /// <returns></returns>
+        public static double AreaRatio(IFeature srcFeature, IFeature tarFeature)
+        {
+            if (srcFeature != null && tarFeature != null)
+            {
+                IPolygon sourcePolygon = srcFeature.Shape as IPolygon;
+                IPolygon targetPolygon = tarFeature.Shape as IPolygon;
+
+                IFeature maxAreaFeat = null;
+                double maxRadio = 0;
+
+                ITopologicalOperator sourceTopo = (ITopologicalOperator)sourcePolygon;
+                //求解源图层要素与待匹配要素的拓扑交集
+                IGeometry geoIntersect = sourceTopo.Intersect(targetPolygon, esriGeometryDimension.esriGeometry2Dimension);
+
+                IArea sourceArea = sourcePolygon as IArea;
+                IArea targetArea = targetPolygon as IArea;
+                IArea areaIntersect = geoIntersect as IArea;
+                //源要素面积和待匹配要素面积的交集面积 与源图层要素面积的比值
+                double ratio = areaIntersect.Area / sourceArea.Area;
+
+                return ratio;
+            }
+            else
+            {
+                return 0;
+            }
         }
         /// <summary>
         /// 面积相似值（相交面积与二者面积和比值的二倍）

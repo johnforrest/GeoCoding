@@ -10,9 +10,9 @@ using ESRI.ArcGIS.Geodatabase;
 
 namespace ZJGISDataUpdating.Forms
 {
-    public partial class FrmTwoAttri : Form
+    public partial class FrmAttriCompare : Form
     {
-        public FrmTwoAttri()
+        public FrmAttriCompare()
         {
             InitializeComponent();
             this.dataGridView1.RowHeadersVisible = false;

@@ -1,6 +1,6 @@
 ﻿namespace ZJGISDataUpdating.Forms
 {
-    partial class FrmTwoAttri
+    partial class FrmAttriCompare
     {
         /// <summary>
         /// Required designer variable.

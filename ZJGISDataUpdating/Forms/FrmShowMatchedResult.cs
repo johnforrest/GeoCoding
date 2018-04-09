@@ -67,7 +67,7 @@ namespace ZJGISDataUpdating
         bool m_bMoreToMore = false;
         bool m_bNew = false;
 
-        FrmTwoAttri two = new FrmTwoAttri();
+        FrmAttriCompare attriCompare = new FrmAttriCompare();
 
         public FrmShowMatchedResult()
         {
@@ -239,9 +239,8 @@ namespace ZJGISDataUpdating
             if (queryFilter == null)
             {
                 DataTable dt = ZJGISCommon.Classes.ClsITableDataTable.ToDataTable(table);
-                BindingSource bs = new BindingSource();
-                bs.DataSource = dt;
-                dataGridViewX1.DataSource = bs;
+                this.bindingSource1.DataSource = dt;
+                dataGridViewX1.DataSource = bindingSource1;
             }
             else
             {
@@ -328,6 +327,7 @@ namespace ZJGISDataUpdating
                 }
             }
         }
+        #region 对应关系
         /// <summary>
         /// 全部
         /// </summary>
@@ -577,6 +577,7 @@ namespace ZJGISDataUpdating
                 m_bOneToMore = false;
             }
         }
+        #endregion
         /// <summary>
         /// 跨尺度（新增要素）
         /// </summary>
@@ -948,34 +949,29 @@ namespace ZJGISDataUpdating
             ////不同尺度多边形匹配
             //else
             #endregion
-            //if (this.dataGridViewX1.SelectedRows.Count == 1 && this.dataGridViewX1.Columns.Count == 6)
             if (m_TableName.Contains("_DifPyTable") || m_TableName.Contains("_py") || m_TableName.Contains("_Py") || m_TableName.Contains("_pY"))
             {
 
                 //dgvFrom.Rows.Clear();
                 //dgvTo.Rows.Clear();
 
-                IFeatureLayer fromFeatLyr = m_MapControlFrom.get_Layer(0) as IFeatureLayer;
-                IFeatureClass fromFeatCls = fromFeatLyr.FeatureClass;
+                IFeatureLayer sourceFeatLyr = m_MapControlFrom.get_Layer(0) as IFeatureLayer;
+                IFeatureClass sourceFeatCls = sourceFeatLyr.FeatureClass;
 
-                IFeatureLayer toFeatLyr = m_MapControlTo.get_Layer(0) as IFeatureLayer;
-                IFeatureClass toFeatCls = toFeatLyr.FeatureClass;
+                IFeatureLayer targetFeatLyr = m_MapControlTo.get_Layer(0) as IFeatureLayer;
+                IFeatureClass targetFeatCls = targetFeatLyr.FeatureClass;
 
-                IRow rowfrom = null;
-                IRow rowto = null;
+                IRow sourceRow = null;
+                IRow targetRow = null;
 
-                int i = 0;
-                int j = 0;
-
-                //if (this.dataGridViewX1.SelectedRows[0].Cells["变化标记"].Value.ToString() == "新增要素")
                 if (this.dataGridViewX1.SelectedRows[0].Cells["变化标记"].Value.ToString() == ClsConstant.One2Zero)
                 {
                     int fromOID = Convert.ToInt32(this.dataGridViewX1.SelectedRows[0].Cells["源OID"].Value.ToString().Trim());
-                    IFeature fromFeature = fromFeatCls.GetFeature(fromOID);
-                    rowfrom = fromFeature as IRow;
+                    IFeature fromFeature = sourceFeatCls.GetFeature(fromOID);
+                    sourceRow = fromFeature as IRow;
 
-                    two.LoadData(rowfrom, null);
-                    two.Show();
+                    attriCompare.LoadData(sourceRow, null);
+                    attriCompare.Show();
 
                     #region 20171003注释掉
                     ////创建from列
@@ -1012,12 +1008,11 @@ namespace ZJGISDataUpdating
                     #endregion
 
                 }
-                //else if (this.dataGridViewX1.SelectedRows[0].Cells["变化标记"].Value.ToString() == "一对一")
                 else if (this.dataGridViewX1.SelectedRows[0].Cells["变化标记"].Value.ToString() == ClsConstant.One2One)
                 {
                     int fromOID = Convert.ToInt32(this.dataGridViewX1.SelectedRows[0].Cells["源OID"].Value.ToString().Trim());
-                    IFeature fromFeature = fromFeatCls.GetFeature(fromOID);
-                    rowfrom = fromFeature as IRow;
+                    IFeature fromFeature = sourceFeatCls.GetFeature(fromOID);
+                    sourceRow = fromFeature as IRow;
 
                     #region 20171003注释掉
                     ////创建from列
@@ -1059,12 +1054,12 @@ namespace ZJGISDataUpdating
                     //IFeatureCursor featureCursor = null;
                     //queryFilter.WhereClause = "FIXOID=" + toOID;
                     //featureCursor = toFeatCls.Search(queryFilter, false);
-                    IFeature toFeature = toFeatCls.GetFeature(Convert.ToInt32(toOID));//得到得更新图层选中要素
-                    rowto = toFeature as IRow;
+                    IFeature toFeature = targetFeatCls.GetFeature(Convert.ToInt32(toOID));//得到得更新图层选中要素
+                    targetRow = toFeature as IRow;
 
 
-                    two.LoadData(rowfrom, rowto);
-                    two.Show();
+                    attriCompare.LoadData(sourceRow, targetRow);
+                    attriCompare.Show();
 
                     #region 20171003注释掉
                     //if (dgvTo.Columns.Count == 0)
@@ -1100,125 +1095,133 @@ namespace ZJGISDataUpdating
                     #endregion
 
                 }
-                //else if (this.dataGridViewX1.SelectedRows[0].Cells["变化标记"].Value.ToString() == "多对一")
                 else if (this.dataGridViewX1.SelectedRows[0].Cells["变化标记"].Value.ToString() == ClsConstant.More2One)
                 {
                     //待匹配OID字段值
-                    string toOID = this.dataGridViewX1.SelectedRows[0].Cells["待匹配OID"].Value.ToString().Trim();
-
+                    string targetOID = this.dataGridViewX1.SelectedRows[0].Cells["待匹配OID"].Value.ToString().Trim();
 
                     //源图层字段
                     List<IRow> list = new List<IRow>();
 
-                    int Increase = e.RowIndex;
-                    int Decrease = e.RowIndex - 1;
+                    #region 20180409
+                    //int Increase = e.RowIndex;
+                    //int Decrease = e.RowIndex - 1;
 
-                    if (Decrease > -1)
+                    //if (Decrease > -1)
+                    //{
+                    //    //从当前行的前一行往前推导
+                    //    while (this.dataGridViewX1.Rows[Decrease].Cells["待匹配OID"].Value.ToString() == targetOID)
+                    //    {
+                    //        //此行的前一行也要选中
+                    //        this.dataGridViewX1.Rows[Decrease].Selected = true;
+
+                    //        int fromOID = Convert.ToInt32(this.dataGridViewX1.Rows[Decrease].Cells["源OID"].Value.ToString().Trim());
+                    //        IFeature fromFeature = sourceFeatCls.GetFeature(fromOID);
+                    //        sourceRow = fromFeature as IRow;
+                    //        list.Add(sourceRow);
+                    //        sourceRow = null;
+                    //        #region 20171003注释掉
+                    //        ////创建from列
+                    //        //if (dgvFrom.Columns.Count == 0)
+                    //        //{
+                    //        //    int fromColumn = fromFeature.Fields.FieldCount - 1;
+                    //        //    int fromCount = 0;
+                    //        //    for (i = 0; i < fromFeature.Fields.FieldCount; i++)
+                    //        //    {
+                    //        //        if (fromFeature.Fields.get_Field(i).Type != esriFieldType.esriFieldTypeGeometry)
+                    //        //        {
+                    //        //            //dgvFrom.Columns.Add(fromFeature.Fields.get_Field(i).Name, fromFeature.Fields.get_Field(i).AliasName);
+                    //        //            dgvFrom.Columns.Add(fromFeature.Fields.get_Field(i).Name, fromFeature.Fields.get_Field(i).Name);
+                    //        //            dgvFrom.Columns[fromCount].ReadOnly = true;
+                    //        //            dgvFrom.Columns[fromCount].Width = dgvFrom.Width / fromColumn;
+                    //        //            fromCount++;
+                    //        //        }
+                    //        //    }
+                    //        //}
+                    //        ////填充字段
+                    //        //DataGridViewRow dgvFromRow = new DataGridViewRow();
+                    //        //dgvFromRow = dgvFrom.Rows[dgvFrom.Rows.Add()];
+                    //        //for (i = 0; i < dgvFrom.Columns.Count; i++)
+                    //        //{
+                    //        //    for (j = 0; j < fromFeature.Fields.FieldCount; j++)
+                    //        //    {
+                    //        //        if (dgvFrom.Columns[i].Name == fromFeature.Fields.get_Field(j).Name)
+                    //        //        {
+                    //        //            dgvFromRow.Cells[i].Value = fromFeature.get_Value(j);
+                    //        //            break;
+                    //        //        }
+                    //        //    }
+                    //        //}
+                    //        #endregion
+                    //        //继续比较前面的一行
+                    //        Decrease--;
+                    //        if (Decrease <= -1)
+                    //        {
+                    //            break;
+                    //        }
+                    //    }
+                    //}
+                    ////从当前行往后推导
+                    //while (this.dataGridViewX1.Rows[Increase].Cells["待匹配OID"].Value.ToString() == targetOID)
+                    //{
+                    //    this.dataGridViewX1.Rows[Increase].Selected = true;
+
+                    //    int sourceOID = Convert.ToInt32(this.dataGridViewX1.Rows[Increase].Cells["源OID"].Value.ToString().Trim());
+                    //    IFeature fromFeature = sourceFeatCls.GetFeature(sourceOID);
+
+                    //    sourceRow = fromFeature as IRow;
+                    //    list.Add(sourceRow);
+                    //    sourceRow = null;
+                    //    #region 20171003注释掉
+                    //    ////创建from列
+                    //    //if (dgvFrom.Columns.Count == 0)
+                    //    //{
+                    //    //    int fromColumn = fromFeature.Fields.FieldCount - 1;
+                    //    //    int fromCount = 0;
+                    //    //    for (i = 0; i < fromFeature.Fields.FieldCount; i++)
+                    //    //    {
+                    //    //        if (fromFeature.Fields.get_Field(i).Type != esriFieldType.esriFieldTypeGeometry)
+                    //    //        {
+                    //    //            //dgvFrom.Columns.Add(fromFeature.Fields.get_Field(i).Name, fromFeature.Fields.get_Field(i).AliasName);
+                    //    //            dgvFrom.Columns.Add(fromFeature.Fields.get_Field(i).Name, fromFeature.Fields.get_Field(i).Name);
+                    //    //            dgvFrom.Columns[fromCount].ReadOnly = true;
+                    //    //            dgvFrom.Columns[fromCount].Width = dgvFrom.Width / fromColumn;
+                    //    //            fromCount++;
+                    //    //        }
+                    //    //    }
+                    //    //}
+                    //    ////填充此行
+                    //    //DataGridViewRow dgvFromRow = new DataGridViewRow();
+                    //    //dgvFromRow = dgvFrom.Rows[dgvFrom.Rows.Add()];
+                    //    //for (i = 0; i < dgvFrom.Columns.Count; i++)
+                    //    //{
+                    //    //    for (j = 0; j < fromFeature.Fields.FieldCount; j++)
+                    //    //    {
+                    //    //        if (dgvFrom.Columns[i].Name == fromFeature.Fields.get_Field(j).Name)
+                    //    //        {
+                    //    //            dgvFromRow.Cells[i].Value = fromFeature.get_Value(j);
+                    //    //            break;
+                    //    //        }
+                    //    //    }
+                    //    //}
+                    //    #endregion
+                    //    //往后推导
+                    //    Increase++;
+                    //    if (Increase >= this.dataGridViewX1.Rows.Count)
+                    //    {
+                    //        break;
+                    //    }
+                    //}
+                    #endregion
+
+                    string[] sourceOIDStr = this.dataGridViewX1.Rows[e.RowIndex].Cells["源OID"].Value.ToString().Split(';');
+                    for (int i=0;i<sourceOIDStr.Length;i++)
                     {
-                        //从当前行的前一行往前推导
-                        while (this.dataGridViewX1.Rows[Decrease].Cells["待匹配OID"].Value.ToString() == toOID)
-                        {
-                            //此行的前一行也要选中
-                            this.dataGridViewX1.Rows[Decrease].Selected = true;
-
-                            int fromOID = Convert.ToInt32(this.dataGridViewX1.Rows[Decrease].Cells["源OID"].Value.ToString().Trim());
-                            IFeature fromFeature = fromFeatCls.GetFeature(fromOID);
-                            rowfrom = fromFeature as IRow;
-                            list.Add(rowfrom);
-                            rowfrom = null;
-                            #region 20171003注释掉
-                            ////创建from列
-                            //if (dgvFrom.Columns.Count == 0)
-                            //{
-                            //    int fromColumn = fromFeature.Fields.FieldCount - 1;
-                            //    int fromCount = 0;
-                            //    for (i = 0; i < fromFeature.Fields.FieldCount; i++)
-                            //    {
-                            //        if (fromFeature.Fields.get_Field(i).Type != esriFieldType.esriFieldTypeGeometry)
-                            //        {
-                            //            //dgvFrom.Columns.Add(fromFeature.Fields.get_Field(i).Name, fromFeature.Fields.get_Field(i).AliasName);
-                            //            dgvFrom.Columns.Add(fromFeature.Fields.get_Field(i).Name, fromFeature.Fields.get_Field(i).Name);
-                            //            dgvFrom.Columns[fromCount].ReadOnly = true;
-                            //            dgvFrom.Columns[fromCount].Width = dgvFrom.Width / fromColumn;
-                            //            fromCount++;
-                            //        }
-                            //    }
-                            //}
-                            ////填充字段
-                            //DataGridViewRow dgvFromRow = new DataGridViewRow();
-                            //dgvFromRow = dgvFrom.Rows[dgvFrom.Rows.Add()];
-                            //for (i = 0; i < dgvFrom.Columns.Count; i++)
-                            //{
-                            //    for (j = 0; j < fromFeature.Fields.FieldCount; j++)
-                            //    {
-                            //        if (dgvFrom.Columns[i].Name == fromFeature.Fields.get_Field(j).Name)
-                            //        {
-                            //            dgvFromRow.Cells[i].Value = fromFeature.get_Value(j);
-                            //            break;
-                            //        }
-                            //    }
-                            //}
-                            #endregion
-                            //继续比较前面的一行
-                            Decrease--;
-                            if (Decrease <= -1)
-                            {
-                                break;
-                            }
-                        }
+                        IFeature sourceFeature = sourceFeatCls.GetFeature(Convert.ToInt32(sourceOIDStr[i]));
+                        sourceRow = sourceFeature as IRow;
+                        list.Add(sourceRow);
                     }
-                    //从当前行往后推导
-                    while (this.dataGridViewX1.Rows[Increase].Cells["待匹配OID"].Value.ToString() == toOID)
-                    {
-                        this.dataGridViewX1.Rows[Increase].Selected = true;
-
-                        int fromOID = Convert.ToInt32(this.dataGridViewX1.Rows[Increase].Cells["源OID"].Value.ToString().Trim());
-                        IFeature fromFeature = fromFeatCls.GetFeature(fromOID);
-
-                        rowfrom = fromFeature as IRow;
-                        list.Add(rowfrom);
-                        rowfrom = null;
-                        #region 20171003注释掉
-                        ////创建from列
-                        //if (dgvFrom.Columns.Count == 0)
-                        //{
-                        //    int fromColumn = fromFeature.Fields.FieldCount - 1;
-                        //    int fromCount = 0;
-                        //    for (i = 0; i < fromFeature.Fields.FieldCount; i++)
-                        //    {
-                        //        if (fromFeature.Fields.get_Field(i).Type != esriFieldType.esriFieldTypeGeometry)
-                        //        {
-                        //            //dgvFrom.Columns.Add(fromFeature.Fields.get_Field(i).Name, fromFeature.Fields.get_Field(i).AliasName);
-                        //            dgvFrom.Columns.Add(fromFeature.Fields.get_Field(i).Name, fromFeature.Fields.get_Field(i).Name);
-                        //            dgvFrom.Columns[fromCount].ReadOnly = true;
-                        //            dgvFrom.Columns[fromCount].Width = dgvFrom.Width / fromColumn;
-                        //            fromCount++;
-                        //        }
-                        //    }
-                        //}
-                        ////填充此行
-                        //DataGridViewRow dgvFromRow = new DataGridViewRow();
-                        //dgvFromRow = dgvFrom.Rows[dgvFrom.Rows.Add()];
-                        //for (i = 0; i < dgvFrom.Columns.Count; i++)
-                        //{
-                        //    for (j = 0; j < fromFeature.Fields.FieldCount; j++)
-                        //    {
-                        //        if (dgvFrom.Columns[i].Name == fromFeature.Fields.get_Field(j).Name)
-                        //        {
-                        //            dgvFromRow.Cells[i].Value = fromFeature.get_Value(j);
-                        //            break;
-                        //        }
-                        //    }
-                        //}
-                        #endregion
-                        //往后推导
-                        Increase++;
-                        if (Increase >= this.dataGridViewX1.Rows.Count)
-                        {
-                            break;
-                        }
-                    }
-
+                    
 
                     //待匹配字段
 
@@ -1227,11 +1230,11 @@ namespace ZJGISDataUpdating
                     //queryFilter.WhereClause = "FIXOID=" + toOID;
                     //featureCursor = toFeatCls.Search(queryFilter, false);
                     //IFeature toFeature = featureCursor.NextFeature();//得到得更新图层选中要素
-                    IFeature toFeature = toFeatCls.GetFeature(Convert.ToInt32(toOID));
-                    rowto = toFeature as IRow;
+                    IFeature targetFeature = targetFeatCls.GetFeature(Convert.ToInt32(targetOID));
+                    targetRow = targetFeature as IRow;
 
-                    two.LoadData(list, rowto);
-                    two.Show();
+                    attriCompare.LoadData(list, targetRow);
+                    attriCompare.Show();
 
                     #region 20171003注释掉
                     ////创建待匹配字段
@@ -1269,7 +1272,6 @@ namespace ZJGISDataUpdating
                 }
             }
             //不同尺度线匹配
-            //else if (this.dataGridViewX1.SelectedRows.Count == 1 && this.dataGridViewX1.Columns.Count == 9)
             else if (m_TableName.Contains("_DifLnTable") || m_TableName.Contains("_ln") || m_TableName.Contains("_Ln") || m_TableName.Contains("_lN"))
             {
                 //dgvFrom.Rows.Clear();
@@ -1394,8 +1396,8 @@ namespace ZJGISDataUpdating
 
 
                 }
-                two.LoadData(rowfrom, rowto);
-                two.Show();
+                attriCompare.LoadData(rowfrom, rowto);
+                attriCompare.Show();
             }
             //不同尺度点匹配
             else if (m_TableName.Contains("_PtTable") || m_TableName.Contains("_pt") || m_TableName.Contains("_Pt") || m_TableName.Contains("_pT"))
@@ -1535,8 +1537,8 @@ namespace ZJGISDataUpdating
 
                 }
 
-                two.LoadData(rowfrom, rowto);
-                two.Show();
+                attriCompare.LoadData(rowfrom, rowto);
+                attriCompare.Show();
             }
 
         }

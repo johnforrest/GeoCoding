@@ -820,7 +820,6 @@ namespace ZJGISDataUpdating.Class
                                         revSpatialFilter = new SpatialFilterClass();
                                         ITopologicalOperator top = tarFeature.Shape as ITopologicalOperator;
                                         revSpatialFilter.Geometry = top.Buffer(buffer) as IGeometry;
-                                        //revSpatialFilter.Geometry = tarFeature.Shape;
                                         revSpatialFilter.SpatialRel = esriSpatialRelEnum.esriSpatialRelIntersects;
                                         revSourFeatCount = pSrcFcls.FeatureCount(revSpatialFilter);
                                         pSourCursor = pSrcFcls.Search(revSpatialFilter, false);
