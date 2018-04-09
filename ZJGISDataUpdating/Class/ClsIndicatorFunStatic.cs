@@ -61,6 +61,46 @@ namespace ZJGISDataUpdating.Class
             double distance = Math.Abs(x2 - x1) + Math.Abs(y2 - y1);
             return distance;
         }
+        /// <summary>
+        /// 判断源要素的重心是否落在了目标要素内部
+        /// </summary>
+        /// <param name="srcFeature"></param>
+        /// <param name="tarFeature"></param>
+        /// <returns></returns>
+        public static bool PolygonContainsPoint(IFeature srcFeature,IFeature tarFeature)
+        {
+            bool flag = false;
+            IPoint point = GetCenterPoint(srcFeature);
+            IRelationalOperator pRelOpt = tarFeature.Shape as IRelationalOperator;
+            if (pRelOpt.Contains(point))
+            {
+                //表示面包含点
+                flag = true;
+            }
+            return flag;
+        }
+
+        public static IPoint GetCenterPoint(IFeature pFeature)
+        {
+            IPoint point = new PointClass();
+            IPoint pPoint = new PointClass();
+            //多边形获取的是中心节点的坐标
+            IPolygon pPolygon = pFeature.ShapeCopy as IPolygon;
+            IPointCollection pPolygonCollection = pPolygon as IPointCollection;
+
+            //求出点集的中心点
+            double PolygoncenterX = 0;
+            double PolygoncenterY = 0;
+            for (int i = 0; i < pPolygonCollection.PointCount; i++)
+            {
+                pPoint = pPolygonCollection.get_Point(i);
+                PolygoncenterX += pPoint.X;
+                PolygoncenterY += pPoint.Y;
+            }
+            point.X = PolygoncenterX / pPolygonCollection.PointCount;
+            point.Y = PolygoncenterY / pPolygonCollection.PointCount;
+            return point;
+        }
 
         /// <summary>
         /// 两条线之间的夹角，最后结果为角度（如60减30等于30）

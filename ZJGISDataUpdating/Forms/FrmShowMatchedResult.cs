@@ -707,7 +707,7 @@ namespace ZJGISDataUpdating
                         }
                         //}
                     }
-                    else if (fromOIDs!="")
+                    else if (fromOIDs != "")
                     {
                         if (fromOIDs.Contains(";"))
                         {
@@ -1011,89 +1011,20 @@ namespace ZJGISDataUpdating
                 else if (this.dataGridViewX1.SelectedRows[0].Cells["变化标记"].Value.ToString() == ClsConstant.One2One)
                 {
                     int fromOID = Convert.ToInt32(this.dataGridViewX1.SelectedRows[0].Cells["源OID"].Value.ToString().Trim());
+
                     IFeature fromFeature = sourceFeatCls.GetFeature(fromOID);
                     sourceRow = fromFeature as IRow;
 
-                    #region 20171003注释掉
-                    ////创建from列
-                    //if (dgvFrom.Columns.Count == 0)
-                    //{
-                    //    int fromColumn = fromFeature.Fields.FieldCount - 1;
-                    //    int fromCount = 0;
-                    //    for (i = 0; i < fromFeature.Fields.FieldCount; i++)
-                    //    {
-                    //        if (fromFeature.Fields.get_Field(i).Type != esriFieldType.esriFieldTypeGeometry)
-                    //        {
-                    //            //dgvFrom.Columns.Add(fromFeature.Fields.get_Field(i).Name, fromFeature.Fields.get_Field(i).AliasName);
-                    //            dgvFrom.Columns.Add(fromFeature.Fields.get_Field(i).Name, fromFeature.Fields.get_Field(i).Name);
-                    //            dgvFrom.Columns[fromCount].ReadOnly = true;
-                    //            dgvFrom.Columns[fromCount].Width = dgvFrom.Width / fromColumn;
-                    //            fromCount++;
-                    //        }
-                    //    }
-                    //}
-
-                    //DataGridViewRow dgvFromRow = new DataGridViewRow();
-                    //dgvFromRow = dgvFrom.Rows[dgvFrom.Rows.Add()];
-                    //for (i = 0; i < dgvFrom.Columns.Count; i++)
-                    //{
-                    //    for (j = 0; j < fromFeature.Fields.FieldCount; j++)
-                    //    {
-                    //        if (dgvFrom.Columns[i].Name == fromFeature.Fields.get_Field(j).Name)
-                    //        {
-                    //            dgvFromRow.Cells[i].Value = fromFeature.get_Value(j);
-                    //            break;
-                    //        }
-                    //    }
-                    //}
-                    #endregion
-
                     //待匹配图层
                     string toOID = this.dataGridViewX1.SelectedRows[0].Cells["待匹配OID"].Value.ToString().Trim();
-                    //IQueryFilter queryFilter = new QueryFilterClass();
-                    //IFeatureCursor featureCursor = null;
-                    //queryFilter.WhereClause = "FIXOID=" + toOID;
-                    //featureCursor = toFeatCls.Search(queryFilter, false);
-                    IFeature toFeature = targetFeatCls.GetFeature(Convert.ToInt32(toOID));//得到得更新图层选中要素
-                    targetRow = toFeature as IRow;
 
-
-                    attriCompare.LoadData(sourceRow, targetRow);
-                    attriCompare.Show();
-
-                    #region 20171003注释掉
-                    //if (dgvTo.Columns.Count == 0)
-                    //{
-                    //    int toColumn = toFeature.Fields.FieldCount - 1;
-                    //    int toCount = 0;
-                    //    for (i = 0; i < toFeature.Fields.FieldCount; i++)
-                    //    {
-                    //        if (toFeature.Fields.get_Field(i).Type != esriFieldType.esriFieldTypeGeometry)
-                    //        {
-                    //            //dgvTo.Columns.Add(toFeature.Fields.get_Field(i).Name, toFeature.Fields.get_Field(i).AliasName);
-                    //            dgvTo.Columns.Add(toFeature.Fields.get_Field(i).Name, toFeature.Fields.get_Field(i).Name);
-                    //            dgvTo.Columns[toCount].ReadOnly = true;
-                    //            dgvTo.Columns[toCount].Width = dgvTo.Width / toColumn;
-                    //            toCount++;
-                    //        }
-                    //    }
-                    //}
-
-                    //DataGridViewRow dgvToRow = new DataGridViewRow();
-                    //dgvToRow = dgvTo.Rows[dgvTo.Rows.Add()];
-                    //for (i = 0; i < dgvTo.Columns.Count; i++)
-                    //{
-                    //    for (j = 0; j < toFeature.Fields.FieldCount; j++)
-                    //    {
-                    //        if (dgvTo.Columns[i].Name == toFeature.Fields.get_Field(j).Name)
-                    //        {
-                    //            dgvToRow.Cells[i].Value = toFeature.get_Value(j);
-                    //            break;
-                    //        }
-                    //    }
-                    //}
-                    #endregion
-
+                    if (toOID != "")
+                    {
+                        IFeature targetFeature = targetFeatCls.GetFeature(Convert.ToInt32(toOID));
+                        targetRow = targetFeature as IRow;
+                        attriCompare.LoadData(sourceRow, targetRow);
+                        attriCompare.Show();
+                    }
                 }
                 else if (this.dataGridViewX1.SelectedRows[0].Cells["变化标记"].Value.ToString() == ClsConstant.More2One)
                 {
@@ -1215,13 +1146,13 @@ namespace ZJGISDataUpdating
                     #endregion
 
                     string[] sourceOIDStr = this.dataGridViewX1.Rows[e.RowIndex].Cells["源OID"].Value.ToString().Split(';');
-                    for (int i=0;i<sourceOIDStr.Length;i++)
+                    for (int i = 0; i < sourceOIDStr.Length; i++)
                     {
                         IFeature sourceFeature = sourceFeatCls.GetFeature(Convert.ToInt32(sourceOIDStr[i]));
                         sourceRow = sourceFeature as IRow;
                         list.Add(sourceRow);
                     }
-                    
+
 
                     //待匹配字段
 

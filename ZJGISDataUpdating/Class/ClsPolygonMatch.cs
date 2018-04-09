@@ -74,7 +74,7 @@ namespace ZJGISDataUpdating.Class
             Collection<int> revCol = new Collection<int>();
 
             List<IFeature> revListMore2More = null;
-            List<IFeature> revListMore2One = null;
+            Dictionary<IFeature, IFeature> revListMore2One = null;
             List<IFeature> revList = null;
 
             List<IFeature> revListOne2One = null;
@@ -188,6 +188,7 @@ namespace ZJGISDataUpdating.Class
                                     //double d = insertArea.Area / targetArea.Area;
                                     if (d > minArea)
                                     {
+                                        //TODO:添加的判断oid,对结果影响很大
                                         //if (revSourceFeature.OID == srcFeature.OID)
                                         //{
                                         if (!plistOverlap.Contains(revSourceFeature))
@@ -260,7 +261,7 @@ namespace ZJGISDataUpdating.Class
                     else if (featureCount > 1)
                     {
                         revListMore2More = new List<IFeature>();
-                        revListMore2One = new List<IFeature>();
+                        revListMore2One = new Dictionary<IFeature, IFeature>();
                         revList = new List<IFeature>();
 
                         tarFeatCursor = targetFeatureClass.Search(spatialFilter, false);
@@ -268,40 +269,66 @@ namespace ZJGISDataUpdating.Class
 
                         while (tarFeature != null)
                         {
-                            if (ClsIndicatorFunStatic.AreaRatio(revSourceFeature, tarFeature) > minArea)
+                            revList.Add(tarFeature);
+                            //TODO :反向查询：根据待匹配图层查询源图层
+                            revSpatialFilter = new SpatialFilterClass();
+                            revSpatialFilter.Geometry = tarFeature.Shape;
+                            revSpatialFilter.SpatialRel = esriSpatialRelEnum.esriSpatialRelIntersects;
+                            revSourFeatCount = sourceFeatureClass.FeatureCount(revSpatialFilter);
+
+                            revSourceFeatCursor = sourceFeatureClass.Search(revSpatialFilter, false);
+                            revSourceFeature = revSourceFeatCursor.NextFeature();
+
+                            //反向查询也是一对一的关系
+                            if (revSourFeatCount == 1)
                             {
-                                revList.Add(tarFeature);
-                                //TODO :反向查询：根据待匹配图层查询源图层
-                                revSpatialFilter = new SpatialFilterClass();
-                                revSpatialFilter.Geometry = tarFeature.Shape;
-                                revSpatialFilter.SpatialRel = esriSpatialRelEnum.esriSpatialRelIntersects;
-                                revSourFeatCount = sourceFeatureClass.FeatureCount(revSpatialFilter);
-
-                                revSourceFeatCursor = sourceFeatureClass.Search(revSpatialFilter, false);
-                                revSourceFeature = revSourceFeatCursor.NextFeature();
-
-                                //反向查询也是一对一的关系
-                                if (revSourFeatCount == 1)
+                                if (ClsIndicatorFunStatic.AreaRatio(revSourceFeature, tarFeature) > minArea)
                                 {
-                                    revListMore2One.Add(revSourceFeature);
-                                }
-                                else
-                                {
-
-                                    if (!revListMore2More.Contains(revSourceFeature))
+                                    if (!revListMore2One.ContainsValue(revSourceFeature))
                                     {
-                                        revListMore2More.Add(revSourceFeature);
+                                        revListMore2One.Add(tarFeature, revSourceFeature);
                                     }
-
                                 }
                             }
+                            else
+                            {
+
+                                while (revSourceFeature != null)
+                                {
+                                    //TODO:20180409要不要比较要素
+                                    //if (ClsIndicatorFunStatic.AreaRatio(revSourceFeature, tarFeature) > minArea)
+                                    if (ClsIndicatorFunStatic.AreaRatio(revSourceFeature, tarFeature) > minArea
+                                        && revSourceFeature.OID == srcFeature.OID)
+                                    {
+                                        if (!revListMore2More.Contains(revSourceFeature))
+                                        {
+                                            revListMore2More.Add(revSourceFeature);
+                                        }
+                                    }
+                                    revSourceFeature = revSourceFeatCursor.NextFeature();
+                                }
+
+                            }
+
                             tarFeature = tarFeatCursor.NextFeature();
                         }
-                        //一对一
+                        //一对0
                         if (revListMore2One.Count == 0 && revListMore2More.Count == 0)
                         {
                             rowBuffer.set_Value(changeIndex, ClsConstant.One2Zero);
-                            SetFcode(srcFeature, rowBuffer, sourceFcode, tarFeature, targetFcode);
+                            //SetFcode(srcFeature, rowBuffer, sourceFcode, tarFeature, targetFcode);
+                        }
+                        //一对一
+                        if (revListMore2One.Count == 1 && revListMore2More.Count == 0)
+                        {
+                            rowBuffer.set_Value(changeIndex, ClsConstant.One2One);
+                            IFeature tempFeature = null;
+                            foreach (IFeature key in revListMore2One.Keys)
+                            {
+                                tempFeature = key;
+                            }
+                            rowBuffer.set_Value(targetOID, tempFeature.OID);
+                            SetFcode(srcFeature, rowBuffer, sourceFcode, tempFeature, targetFcode);
                         }
                         //一对多
                         if (revListMore2One.Count > 1 && revListMore2More.Count == 0)

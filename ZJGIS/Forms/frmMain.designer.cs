@@ -292,15 +292,15 @@
             // 
             this.ribbonControl1.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
             this.ribbonControl1.CaptionVisible = true;
+            this.ribbonControl1.Controls.Add(this.ribbonPanel6);
+            this.ribbonControl1.Controls.Add(this.ribbonPanel9);
             this.ribbonControl1.Controls.Add(this.ribbonPanel1);
             this.ribbonControl1.Controls.Add(this.ribbonPanel4);
             this.ribbonControl1.Controls.Add(this.RibbonPanel3);
             this.ribbonControl1.Controls.Add(this.ribbonPanel10);
-            this.ribbonControl1.Controls.Add(this.ribbonPanel6);
             this.ribbonControl1.Controls.Add(this.ribbonPanel8);
             this.ribbonControl1.Controls.Add(this.ribbonPanel7);
             this.ribbonControl1.Controls.Add(this.ribbonPanel2);
-            this.ribbonControl1.Controls.Add(this.ribbonPanel9);
             this.ribbonControl1.Dock = System.Windows.Forms.DockStyle.Top;
             this.ribbonControl1.Items.AddRange(new DevComponents.DotNetBar.BaseItem[] {
             this.ribbonTabItemWJ,
@@ -368,6 +368,7 @@
             // 
             this.ribbonPanel1.StyleMouseOver.CornerType = DevComponents.DotNetBar.eCornerType.Square;
             this.ribbonPanel1.TabIndex = 1;
+            this.ribbonPanel1.Visible = false;
             // 
             // ribbonBar19
             // 
@@ -1246,7 +1247,6 @@
             // 
             this.ribbonPanel6.StyleMouseOver.CornerType = DevComponents.DotNetBar.eCornerType.Square;
             this.ribbonPanel6.TabIndex = 7;
-            this.ribbonPanel6.Visible = false;
             // 
             // ribbonBar11
             // 
@@ -1407,7 +1407,7 @@
             this.cbxCodeLayer.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
             this.cbxCodeLayer.FormattingEnabled = true;
             this.cbxCodeLayer.ItemHeight = 15;
-            this.cbxCodeLayer.Location = new System.Drawing.Point(6, 61);
+            this.cbxCodeLayer.Location = new System.Drawing.Point(6, 60);
             this.cbxCodeLayer.Margin = new System.Windows.Forms.Padding(4);
             this.cbxCodeLayer.Name = "cbxCodeLayer";
             this.cbxCodeLayer.Size = new System.Drawing.Size(160, 21);
@@ -1872,13 +1872,13 @@
             // 
             // ribbonTabItemXMLL
             // 
-            this.ribbonTabItemXMLL.Checked = true;
             this.ribbonTabItemXMLL.Name = "ribbonTabItemXMLL";
             this.ribbonTabItemXMLL.Panel = this.ribbonPanel1;
             this.ribbonTabItemXMLL.Text = "基本工具";
             // 
             // RibbonTabItemSTBM
             // 
+            this.RibbonTabItemSTBM.Checked = true;
             this.RibbonTabItemSTBM.Name = "RibbonTabItemSTBM";
             this.RibbonTabItemSTBM.Panel = this.ribbonPanel6;
             this.RibbonTabItemSTBM.Text = "实体编码";
