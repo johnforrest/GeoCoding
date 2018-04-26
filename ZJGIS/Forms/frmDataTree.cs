@@ -25,9 +25,11 @@ namespace ZJGIS
 
         //toc右键菜单
         private ClsTOCContextMenu m_tocContextMenu;
-      
 
-		private IMapControl4 m_MapMain;
+
+        private IMapControl4 m_MapMain;
+        private IMapControl4 m_MapFrom;
+        private IMapControl4 m_MapTo;
 		private object m_pBuddyControl;
         private Form FrmMain;
 
@@ -53,7 +55,28 @@ namespace ZJGIS
 				m_MapMain = value;
 			}
 		}
-		
+        public IMapControl4 MapFrom
+        {
+            get
+            {
+                return m_MapFrom;
+            }
+            set
+            {
+                m_MapFrom = value;
+            }
+        }
+        public IMapControl4 MapTo
+        {
+            get
+            {
+                return m_MapTo;
+            }
+            set
+            {
+                m_MapTo = value;
+            }
+        }
 		public object BuddyControl
 		{
             get
@@ -119,6 +142,7 @@ namespace ZJGIS
             object unk = null;
             object data = null;
             TOCLayer.HitTest(e.x, e.y, ref itemType, ref pBasicMap, ref pLayer, ref unk, ref data);
+
             if (e.button == 1)
             {
                 if (itemType == esriTOCControlItem.esriTOCControlItemLegendClass)
@@ -126,11 +150,21 @@ namespace ZJGIS
                     ILegendClass pLegendClass = ((ILegendGroup)unk).get_Class((int)data);
 
                     FrmSymbolSelect SymbolSelectorFrm = new FrmSymbolSelect(pLegendClass, pLayer);
+
                     if (SymbolSelectorFrm.ShowDialog() == DialogResult.OK)
                     {
                         m_MapMain.ActiveView.PartialRefresh(esriViewDrawPhase.esriViewGeography, null, null);
                         pLegendClass.Symbol = SymbolSelectorFrm.pSymbol;
                         m_MapMain.ActiveView.Refresh();
+
+                        //m_MapFrom.ActiveView.PartialRefresh(esriViewDrawPhase.esriViewGeography, null, null);
+                        //pLegendClass.Symbol = SymbolSelectorFrm.pSymbol;
+                        //m_MapFrom.ActiveView.Refresh();
+
+                        //m_MapTo.ActiveView.PartialRefresh(esriViewDrawPhase.esriViewGeography, null, null);
+                        //pLegendClass.Symbol = SymbolSelectorFrm.pSymbol;
+                        //m_MapTo.ActiveView.Refresh();
+
                         TOCLayer.Refresh();
                     }
                 }

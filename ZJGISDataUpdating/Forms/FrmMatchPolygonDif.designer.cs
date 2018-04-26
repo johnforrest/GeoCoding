@@ -29,9 +29,9 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle10 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle11 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle12 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
             this.panelEx1 = new DevComponents.DotNetBar.PanelEx();
             this.progressBarMain = new System.Windows.Forms.ProgressBar();
             this.progressBarSub = new System.Windows.Forms.ProgressBar();
@@ -54,6 +54,11 @@
             this.labelBuffer = new DevComponents.DotNetBar.LabelX();
             this.sliderBuffer = new DevComponents.DotNetBar.Controls.Slider();
             this.panelEx4 = new DevComponents.DotNetBar.PanelEx();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.radioButtonArea2 = new System.Windows.Forms.RadioButton();
+            this.radioButtonAreaDirec = new System.Windows.Forms.RadioButton();
+            this.radioButtonAreaNow = new System.Windows.Forms.RadioButton();
+            this.radioButtonAreaAgo = new System.Windows.Forms.RadioButton();
             this.labelX3 = new DevComponents.DotNetBar.LabelX();
             this.textBoxminArea = new DevComponents.DotNetBar.Controls.TextBoxX();
             this.labelX4 = new DevComponents.DotNetBar.LabelX();
@@ -73,6 +78,7 @@
             this.tabControlPanel1.SuspendLayout();
             this.panelEx3.SuspendLayout();
             this.panelEx4.SuspendLayout();
+            this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
             // panelEx1
@@ -87,10 +93,10 @@
             this.panelEx1.Controls.Add(this.labelX2);
             this.panelEx1.Controls.Add(this.labelX1);
             this.panelEx1.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panelEx1.Location = new System.Drawing.Point(0, 512);
+            this.panelEx1.Location = new System.Drawing.Point(0, 576);
             this.panelEx1.Margin = new System.Windows.Forms.Padding(4);
             this.panelEx1.Name = "panelEx1";
-            this.panelEx1.Size = new System.Drawing.Size(1238, 126);
+            this.panelEx1.Size = new System.Drawing.Size(1366, 126);
             this.panelEx1.Style.Alignment = System.Drawing.StringAlignment.Center;
             this.panelEx1.Style.BackColor1.ColorSchemePart = DevComponents.DotNetBar.eColorSchemePart.PanelBackground;
             this.panelEx1.Style.BackColor2.ColorSchemePart = DevComponents.DotNetBar.eColorSchemePart.PanelBackground2;
@@ -189,7 +195,7 @@
             this.panelEx2.Location = new System.Drawing.Point(0, 0);
             this.panelEx2.Margin = new System.Windows.Forms.Padding(4);
             this.panelEx2.Name = "panelEx2";
-            this.panelEx2.Size = new System.Drawing.Size(1238, 512);
+            this.panelEx2.Size = new System.Drawing.Size(1366, 576);
             this.panelEx2.Style.Alignment = System.Drawing.StringAlignment.Center;
             this.panelEx2.Style.BackColor1.ColorSchemePart = DevComponents.DotNetBar.eColorSchemePart.PanelBackground;
             this.panelEx2.Style.BackColor2.ColorSchemePart = DevComponents.DotNetBar.eColorSchemePart.PanelBackground2;
@@ -214,8 +220,8 @@
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.tabControl1);
-            this.splitContainer1.Size = new System.Drawing.Size(1238, 512);
-            this.splitContainer1.SplitterDistance = 76;
+            this.splitContainer1.Size = new System.Drawing.Size(1366, 576);
+            this.splitContainer1.SplitterDistance = 84;
             this.splitContainer1.SplitterWidth = 5;
             this.splitContainer1.TabIndex = 1;
             // 
@@ -223,39 +229,39 @@
             // 
             this.dataGridViewX1.AllowUserToAddRows = false;
             this.dataGridViewX1.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            dataGridViewCellStyle10.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle10.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle10.Font = new System.Drawing.Font("SimSun", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            dataGridViewCellStyle10.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle10.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle10.SelectionForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle10.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dataGridViewX1.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle10;
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("SimSun", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dataGridViewX1.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
             this.dataGridViewX1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridViewCellStyle11.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle11.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle11.Font = new System.Drawing.Font("SimSun", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            dataGridViewCellStyle11.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle11.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle11.SelectionForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(21)))), ((int)(((byte)(110)))));
-            dataGridViewCellStyle11.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.dataGridViewX1.DefaultCellStyle = dataGridViewCellStyle11;
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle2.Font = new System.Drawing.Font("SimSun", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(21)))), ((int)(((byte)(110)))));
+            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.dataGridViewX1.DefaultCellStyle = dataGridViewCellStyle2;
             this.dataGridViewX1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dataGridViewX1.EnableHeadersVisualStyles = false;
             this.dataGridViewX1.GridColor = System.Drawing.Color.FromArgb(((int)(((byte)(208)))), ((int)(((byte)(215)))), ((int)(((byte)(229)))));
             this.dataGridViewX1.Location = new System.Drawing.Point(0, 0);
             this.dataGridViewX1.Margin = new System.Windows.Forms.Padding(4);
             this.dataGridViewX1.Name = "dataGridViewX1";
-            dataGridViewCellStyle12.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle12.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle12.Font = new System.Drawing.Font("SimSun", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            dataGridViewCellStyle12.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle12.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle12.SelectionForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle12.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dataGridViewX1.RowHeadersDefaultCellStyle = dataGridViewCellStyle12;
+            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle3.Font = new System.Drawing.Font("SimSun", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            dataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dataGridViewX1.RowHeadersDefaultCellStyle = dataGridViewCellStyle3;
             this.dataGridViewX1.RowTemplate.Height = 23;
-            this.dataGridViewX1.Size = new System.Drawing.Size(1238, 76);
+            this.dataGridViewX1.Size = new System.Drawing.Size(1366, 84);
             this.dataGridViewX1.TabIndex = 1;
             // 
             // tabControl1
@@ -268,7 +274,7 @@
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedTabFont = new System.Drawing.Font("SimSun", 9F, System.Drawing.FontStyle.Bold);
             this.tabControl1.SelectedTabIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(1238, 431);
+            this.tabControl1.Size = new System.Drawing.Size(1366, 487);
             this.tabControl1.TabIndex = 2;
             this.tabControl1.TabLayoutType = DevComponents.DotNetBar.eTabLayoutType.FixedWithNavigationBox;
             this.tabControl1.Tabs.Add(this.tabItemAreaOverlap);
@@ -281,7 +287,7 @@
             this.tabControlPanel1.Location = new System.Drawing.Point(0, 28);
             this.tabControlPanel1.Name = "tabControlPanel1";
             this.tabControlPanel1.Padding = new System.Windows.Forms.Padding(1);
-            this.tabControlPanel1.Size = new System.Drawing.Size(1238, 403);
+            this.tabControlPanel1.Size = new System.Drawing.Size(1366, 459);
             this.tabControlPanel1.Style.BackColor1.Color = System.Drawing.Color.FromArgb(((int)(((byte)(142)))), ((int)(((byte)(179)))), ((int)(((byte)(231)))));
             this.tabControlPanel1.Style.BackColor2.Color = System.Drawing.Color.FromArgb(((int)(((byte)(223)))), ((int)(((byte)(237)))), ((int)(((byte)(254)))));
             this.tabControlPanel1.Style.Border = DevComponents.DotNetBar.eBorderType.SingleLine;
@@ -309,7 +315,7 @@
             this.panelEx3.Location = new System.Drawing.Point(1, 1);
             this.panelEx3.Margin = new System.Windows.Forms.Padding(4);
             this.panelEx3.Name = "panelEx3";
-            this.panelEx3.Size = new System.Drawing.Size(1236, 401);
+            this.panelEx3.Size = new System.Drawing.Size(1364, 457);
             this.panelEx3.Style.Alignment = System.Drawing.StringAlignment.Center;
             this.panelEx3.Style.BackColor1.ColorSchemePart = DevComponents.DotNetBar.eColorSchemePart.PanelBackground;
             this.panelEx3.Style.BackColor2.ColorSchemePart = DevComponents.DotNetBar.eColorSchemePart.PanelBackground2;
@@ -411,6 +417,7 @@
             // 
             this.panelEx4.CanvasColor = System.Drawing.SystemColors.Control;
             this.panelEx4.ColorSchemeStyle = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled;
+            this.panelEx4.Controls.Add(this.groupBox1);
             this.panelEx4.Controls.Add(this.labelX3);
             this.panelEx4.Controls.Add(this.textBoxminArea);
             this.panelEx4.Controls.Add(this.labelX4);
@@ -418,7 +425,7 @@
             this.panelEx4.Location = new System.Drawing.Point(0, 0);
             this.panelEx4.Margin = new System.Windows.Forms.Padding(4);
             this.panelEx4.Name = "panelEx4";
-            this.panelEx4.Size = new System.Drawing.Size(1236, 64);
+            this.panelEx4.Size = new System.Drawing.Size(1364, 64);
             this.panelEx4.Style.Alignment = System.Drawing.StringAlignment.Center;
             this.panelEx4.Style.BackColor1.ColorSchemePart = DevComponents.DotNetBar.eColorSchemePart.PanelBackground;
             this.panelEx4.Style.BackColor2.ColorSchemePart = DevComponents.DotNetBar.eColorSchemePart.PanelBackground2;
@@ -427,6 +434,60 @@
             this.panelEx4.Style.ForeColor.ColorSchemePart = DevComponents.DotNetBar.eColorSchemePart.PanelText;
             this.panelEx4.Style.GradientAngle = 90;
             this.panelEx4.TabIndex = 3;
+            // 
+            // groupBox1
+            // 
+            this.groupBox1.Controls.Add(this.radioButtonArea2);
+            this.groupBox1.Controls.Add(this.radioButtonAreaDirec);
+            this.groupBox1.Controls.Add(this.radioButtonAreaNow);
+            this.groupBox1.Controls.Add(this.radioButtonAreaAgo);
+            this.groupBox1.Location = new System.Drawing.Point(407, 3);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(862, 58);
+            this.groupBox1.TabIndex = 3;
+            this.groupBox1.TabStop = false;
+            // 
+            // radioButtonArea2
+            // 
+            this.radioButtonArea2.AutoSize = true;
+            this.radioButtonArea2.Location = new System.Drawing.Point(263, 28);
+            this.radioButtonArea2.Name = "radioButtonArea2";
+            this.radioButtonArea2.Size = new System.Drawing.Size(110, 22);
+            this.radioButtonArea2.TabIndex = 3;
+            this.radioButtonArea2.Text = "面积叠置2";
+            this.radioButtonArea2.UseVisualStyleBackColor = true;
+            // 
+            // radioButtonAreaDirec
+            // 
+            this.radioButtonAreaDirec.AutoSize = true;
+            this.radioButtonAreaDirec.Location = new System.Drawing.Point(377, 28);
+            this.radioButtonAreaDirec.Name = "radioButtonAreaDirec";
+            this.radioButtonAreaDirec.Size = new System.Drawing.Size(101, 22);
+            this.radioButtonAreaDirec.TabIndex = 2;
+            this.radioButtonAreaDirec.Text = "面积重心";
+            this.radioButtonAreaDirec.UseVisualStyleBackColor = true;
+            // 
+            // radioButtonAreaNow
+            // 
+            this.radioButtonAreaNow.AutoSize = true;
+            this.radioButtonAreaNow.Checked = true;
+            this.radioButtonAreaNow.Location = new System.Drawing.Point(147, 28);
+            this.radioButtonAreaNow.Name = "radioButtonAreaNow";
+            this.radioButtonAreaNow.Size = new System.Drawing.Size(110, 22);
+            this.radioButtonAreaNow.TabIndex = 1;
+            this.radioButtonAreaNow.TabStop = true;
+            this.radioButtonAreaNow.Text = "面积叠置2";
+            this.radioButtonAreaNow.UseVisualStyleBackColor = true;
+            // 
+            // radioButtonAreaAgo
+            // 
+            this.radioButtonAreaAgo.AutoSize = true;
+            this.radioButtonAreaAgo.Location = new System.Drawing.Point(27, 27);
+            this.radioButtonAreaAgo.Name = "radioButtonAreaAgo";
+            this.radioButtonAreaAgo.Size = new System.Drawing.Size(110, 22);
+            this.radioButtonAreaAgo.TabIndex = 0;
+            this.radioButtonAreaAgo.Text = "面积叠置1";
+            this.radioButtonAreaAgo.UseVisualStyleBackColor = true;
             // 
             // labelX3
             // 
@@ -494,7 +555,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1238, 638);
+            this.ClientSize = new System.Drawing.Size(1366, 702);
             this.Controls.Add(this.panelEx2);
             this.Controls.Add(this.panelEx1);
             this.DoubleBuffered = true;
@@ -517,6 +578,8 @@
             this.tabControlPanel1.ResumeLayout(false);
             this.panelEx3.ResumeLayout(false);
             this.panelEx4.ResumeLayout(false);
+            this.groupBox1.ResumeLayout(false);
+            this.groupBox1.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -538,7 +601,6 @@
         private DevComponents.DotNetBar.PanelEx panelEx4;
         private DevComponents.DotNetBar.LabelX labelX3;
         private DevComponents.DotNetBar.Controls.TextBoxX textBoxminArea;
-        private DevComponents.DotNetBar.LabelX labelX4;
         private DevComponents.DotNetBar.TabItem tabItem3;
         private DevComponents.DotNetBar.TabItem tabItem2;
         private DevComponents.DotNetBar.TabItem tabItem1;
@@ -552,5 +614,11 @@
         private DevComponents.DotNetBar.Controls.Slider sliderBuffer;
         private DevComponents.DotNetBar.LabelX labelX7;
         private DevComponents.DotNetBar.LabelX labelX6;
+        private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.RadioButton radioButtonAreaDirec;
+        private System.Windows.Forms.RadioButton radioButtonAreaNow;
+        private System.Windows.Forms.RadioButton radioButtonAreaAgo;
+        private DevComponents.DotNetBar.LabelX labelX4;
+        private System.Windows.Forms.RadioButton radioButtonArea2;
     }
 }

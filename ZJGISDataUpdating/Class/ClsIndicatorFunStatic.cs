@@ -67,7 +67,7 @@ namespace ZJGISDataUpdating.Class
         /// <param name="srcFeature"></param>
         /// <param name="tarFeature"></param>
         /// <returns></returns>
-        public static bool PolygonContainsPoint(IFeature srcFeature,IFeature tarFeature)
+        public static bool PolygonContainsPoint(IFeature srcFeature, IFeature tarFeature)
         {
             bool flag = false;
             IPoint point = GetCenterPoint(srcFeature);
@@ -78,6 +78,25 @@ namespace ZJGISDataUpdating.Class
                 flag = true;
             }
             return flag;
+        }
+        /// <summary>
+        /// 获取两个几何图形的距离
+        /// </summary>
+        /// <param name="pGeometryA">几何图形A</param>
+        /// <param name="pGeometryB">几何图形B</param>
+        /// <returns>两个几何图形的距离</returns>
+        public static double GetTwoGeometryDistance(IGeometry pGeometryA, IGeometry pGeometryB)
+        {
+            IProximityOperator pProOperator = pGeometryA as IProximityOperator;
+            if (pGeometryA != null || pGeometryB != null)
+            {
+                double distance = pProOperator.ReturnDistance(pGeometryB);
+                return distance;
+            }
+            else
+            {
+                return 0;
+            }
         }
 
         public static IPoint GetCenterPoint(IFeature pFeature)
@@ -286,13 +305,14 @@ namespace ZJGISDataUpdating.Class
             return similar;
         }
         /// <summary>
-        /// 相交面积与源要素面积比值
+        /// 相交面积与较小要素面积比值
         /// </summary>
         /// <param name="srcFeature">源要素</param>
         /// <param name="tarFeature">待匹配要素</param>
         /// <returns></returns>
         public static double AreaRatio(IFeature srcFeature, IFeature tarFeature)
         {
+            double ratio = 0.0;
             if (srcFeature != null && tarFeature != null)
             {
                 IPolygon sourcePolygon = srcFeature.Shape as IPolygon;
@@ -308,9 +328,14 @@ namespace ZJGISDataUpdating.Class
                 IArea sourceArea = sourcePolygon as IArea;
                 IArea targetArea = targetPolygon as IArea;
                 IArea areaIntersect = geoIntersect as IArea;
-                //源要素面积和待匹配要素面积的交集面积 与源图层要素面积的比值
-                double ratio = areaIntersect.Area / sourceArea.Area;
-
+                if (sourceArea.Area <= targetArea.Area)
+                {
+                    ratio = areaIntersect.Area / sourceArea.Area;
+                }
+                else 
+                {
+                    ratio = areaIntersect.Area / targetArea.Area;
+                }
                 return ratio;
             }
             else

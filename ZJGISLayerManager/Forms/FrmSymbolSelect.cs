@@ -52,14 +52,12 @@ namespace ZJGISLayerManager
             if (rk == null)
             {
                 return "";
-
             }
             return (string)rk.GetValue("InstallDir");
         }
 
         private void FrmSymbolSelect_Load(object sender, EventArgs e)
         {
-            //string sInstall = ReadRegistry("SOFTWARE\\ESRI\\Engine10.0\\CoreRuntime");
             string sInstall = ReadRegistry("SOFTWARE\\ESRI\\Engine10.2\\CoreRuntime");
             if (sInstall == null)
             {
@@ -131,7 +129,8 @@ namespace ZJGISLayerManager
         {
             this.pSymbol = pStyleGalleryItem.Item as ISymbol;
             this.pSymbolImage = this.ptnPreview.Image;
-            this.Close();//dialgresult默认设置为OK
+            this.Close();
+            //dialgresult默认设置为OK
         }
 
         private void btnCancle_Click(object sender, EventArgs e)

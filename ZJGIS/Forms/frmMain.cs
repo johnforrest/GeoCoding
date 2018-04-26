@@ -41,6 +41,8 @@ using ZJGISXMLOperation;
 using ZJGISXMLOperation.Forms;
 using ZJGIS.Class;
 using ZJGIS.Classes;
+using ZJGISLayerManager;
+
 namespace ZJGIS
 {
     public partial class frmMain
@@ -198,10 +200,16 @@ namespace ZJGIS
 
                 //控制鹰眼图、树图等
                 m_frmDataTree = new frmDataTree();
+
                 m_frmDataTree.BuddyControl = m_MapControl;
                 m_frmDataTree.FrmActive = this;
                 m_frmDataTree.MapMain = (IMapControl4)mapMain.Object;
+
+                m_frmDataTree.MapFrom = (IMapControl4)MapFrom.Object;
+                m_frmDataTree.MapTo = (IMapControl4)MapTo.Object;
+
                 this.pdcDataTree.Controls.Add(m_frmDataTree);
+
 
                 m_frmDataTree.Visible = true;
                 m_frmDataTree.Dock = DockStyle.Fill;
@@ -2505,6 +2513,60 @@ namespace ZJGIS
             }
         }
         /// <summary>
+        /// 分屏对比-符号化
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void buttonItemSymbol_Click(object sender, EventArgs e)
+        {
+            if (this.comboBoxItemToMapControl.SelectedItem.ToString() == "源图层")
+            {
+
+                if (this.MapFrom.LayerCount > 0)
+                {
+                    //中间通过一系列的接口查询把ILayer转为ILegendClass
+                    ILayer pLayer = this.MapFrom.get_Layer(0);
+
+                    IFeatureLayer pFeatureLayer = pLayer as IFeatureLayer;
+                    ILegendInfo lengendInfo = (ILegendInfo)pFeatureLayer;
+                    ILegendGroup legendGroup = lengendInfo.get_LegendGroup(0);
+                    ILegendClass pLegendClass = legendGroup.get_Class(0); //获取到LegendClass  
+                
+                    FrmSymbolSelect SymbolSelectorFrm = new FrmSymbolSelect(pLegendClass, pLayer);
+
+                    if (SymbolSelectorFrm.ShowDialog() == DialogResult.OK)
+                    {
+                        MapFrom.ActiveView.PartialRefresh(esriViewDrawPhase.esriViewGeography, null, null);
+                        pLegendClass.Symbol = SymbolSelectorFrm.pSymbol;
+                        MapFrom.ActiveView.Refresh();
+                    }
+                }
+
+            }
+            else if (this.comboBoxItemToMapControl.SelectedItem.ToString() == "待匹配图层")
+            {
+                if (this.MapTo.LayerCount > 0)
+                {
+                    //中间通过一系列的接口查询把ILayer转为ILegendClass
+                    ILayer pLayer = this.MapTo.get_Layer(0);
+                    IFeatureLayer pFeatureLayer = pLayer as IFeatureLayer;
+                    ILegendInfo lengendInfo = (ILegendInfo)pFeatureLayer;
+                    ILegendGroup legendGroup = lengendInfo.get_LegendGroup(0);
+                    ILegendClass pLegendClass = legendGroup.get_Class(0); //获取到LegendClass  
+
+                    FrmSymbolSelect SymbolSelectorFrm = new FrmSymbolSelect(pLegendClass, pLayer);
+
+                    if (SymbolSelectorFrm.ShowDialog() == DialogResult.OK)
+                    {
+                        MapFrom.ActiveView.PartialRefresh(esriViewDrawPhase.esriViewGeography, null, null);
+                        pLegendClass.Symbol = SymbolSelectorFrm.pSymbol;
+                        MapFrom.ActiveView.Refresh();
+                    }
+                }
+
+            }
+        }
+        /// <summary>
         /// 叠加对比-放大
         /// </summary>
         /// <param name="sender"></param>
@@ -2714,6 +2776,88 @@ namespace ZJGIS
                 }
             }
         }
+
+        private ContextMenuStrip contextMenuStrip = null;
+        /// <summary>
+        /// 添加右键菜单
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void MapFrom_OnMouseUp(object sender, IMapControlEvents2_OnMouseUpEvent e)
+        {
+            ////鼠标右键
+            //if (e.button == 2)
+            //{
+            //    // Create a new ContextMenuStrip control.
+            //    contextMenuStrip = new ContextMenuStrip();
+
+            //    // Attach an event handler for the 
+            //    // ContextMenuStrip control's Opening event.
+            //    //ContextMenuStrip.Opening += new System.ComponentModel.CancelEventHandler(cms_Opening);
+
+            //    // Create a new ToolStrip control.
+            //    ToolStrip ts = new ToolStrip();
+
+            //    // Create a ToolStripDropDownButton control and add it
+            //    // to the ToolStrip control's Items collections.
+            //    ToolStripDropDownButton fruitToolStripDropDownButton = new ToolStripDropDownButton("符号化", null, null, "符号化");
+            //    ts.Items.Add(fruitToolStripDropDownButton);
+
+            //    //// Dock the ToolStrip control to the top of the form.
+            //    ////ts.Dock = DockStyle.Top;
+
+            //    //// Assign the ContextMenuStrip control as the 
+            //    //// ToolStripDropDownButton control's DropDown menu.
+            //    fruitToolStripDropDownButton.DropDown = ContextMenuStrip;
+
+            //    //// Create a new MenuStrip control and add a ToolStripMenuItem.
+            //    //MenuStrip ms = new MenuStrip();
+            //    //ToolStripMenuItem fruitToolStripMenuItem = new ToolStripMenuItem("符号化", null, null, "符号化");
+            //    //ms.Items.Add(fruitToolStripMenuItem);
+
+            //    //// Dock the MenuStrip control to the top of the form.
+            //    ////ms.Dock = DockStyle.Top;
+
+            //    //// Assign the MenuStrip control as the 
+            //    //// ToolStripMenuItem's DropDown menu.
+            //    //fruitToolStripMenuItem.DropDown = ContextMenuStrip;
+
+            //    //// Assign the ContextMenuStrip to the form's 
+            //    //// ContextMenuStrip property.
+            //    //((Control)this).ContextMenuStrip = ContextMenuStrip;
+
+            //    //// Add the ToolStrip control to the Controls collection.
+            //    //this.MapFrom.Controls.Add(ts);
+
+            //    ////Add a button to the form and assign its ContextMenuStrip.
+            //    //Button b = new Button();
+            //    //b.Location = new System.Drawing.Point(60, 60);
+            //    //this.MapFrom.Controls.Add(b);
+            //    //b.ContextMenuStrip = ContextMenuStrip;
+
+            //    //// Add the MenuStrip control last.
+            //    //// This is important for correct placement in the z-order.
+            //    ////this.MapFrom.Controls.Add(ms);
+            //    contextMenuStrip.Show();
+            //    this.MapFrom.ContextMenuStrip = contextMenuStrip;
+            //}
+
+        }
+        /// <summary>
+        /// 添加右键菜单
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void MapTo_OnMouseUp(object sender, IMapControlEvents2_OnMouseUpEvent e)
+        {
+            //鼠标右键
+            if (e.button == 2)
+            {
+                //this.label1.Text = "您单击了鼠标右键！";
+            }
+        }
+
+
 
         private void MapOverlapping_OnMouseDown(object sender, IMapControlEvents2_OnMouseDownEvent e)
         {
@@ -3054,12 +3198,14 @@ namespace ZJGIS
             }
         }
 
-       
-     
-      
-       
 
-     
+
+
+
+
+
+
+
 
 
 

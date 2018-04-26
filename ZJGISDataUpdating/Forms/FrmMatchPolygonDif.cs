@@ -259,10 +259,35 @@ namespace ZJGISDataUpdating
                 //面积重叠比匹配
                 if (this.tabItemAreaOverlap.Visible)
                 {
-                    //填充结果表xxx_DifPyTable
-                    clsPolygonMatch.SearchChangedPolygonFeaturesDifScale(srcFeatCls, tarFeatCls, table, buffer, minArea, progressBarMain, progressBarSub, labelXStatus);
-                    sw.Stop();
-                    MessageBoxEx.Show("面积重叠匹配已完成！总需要时间" + sw.ElapsedMilliseconds + "ms", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    if (radioButtonAreaAgo.Checked)
+                    {
+                        //填充结果表xxx_DifPyTable
+                        clsPolygonMatch.DifScaleSearchChangedPolygonFeatures(srcFeatCls, tarFeatCls, table, buffer, minArea, progressBarMain, progressBarSub, labelXStatus);
+                        sw.Stop();
+                        MessageBoxEx.Show("面积重叠匹配已完成！总需要时间" + sw.ElapsedMilliseconds + "ms", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
+                    else if (radioButtonAreaNow.Checked)
+                    {
+                        //填充结果表xxx_DifPyTable
+                        clsPolygonMatch.SearchChangedPolygonFeaturesArea(srcFeatCls, tarFeatCls, table, buffer, minArea, progressBarMain, progressBarSub, labelXStatus);
+                        sw.Stop();
+                        MessageBoxEx.Show("面积重叠匹配已完成！总需要时间" + sw.ElapsedMilliseconds + "ms", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
+                    else if (radioButtonArea2.Checked)
+                    {
+                        //填充结果表xxx_DifPyTable
+                        clsPolygonMatch.SearchChangedPolygonFeaturesArea2(srcFeatCls, tarFeatCls, table, buffer, minArea, progressBarMain, progressBarSub, labelXStatus);
+                        sw.Stop();
+                        MessageBoxEx.Show("面积重叠匹配已完成！总需要时间" + sw.ElapsedMilliseconds + "ms", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
+                    else if (radioButtonAreaDirec.Checked)
+                    {
+                        //填充结果表xxx_DifPyTable
+                        clsPolygonMatch.SearchChangedPolygonFeaturesAreaDirec(srcFeatCls, tarFeatCls, table, buffer, minArea, progressBarMain, progressBarSub, labelXStatus);
+                        sw.Stop();
+                        MessageBoxEx.Show("面积重叠匹配已完成！总需要时间" + sw.ElapsedMilliseconds + "ms", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
+                   
                 }
                 else
                 {
@@ -977,7 +1002,7 @@ namespace ZJGISDataUpdating
         /// <param name="e"></param>
         private void sliderArea_ValueChanged(object sender, EventArgs e)
         {
-            this.labelArea.Text = (Convert.ToDouble((this.sliderArea.Value/100.00))).ToString();
+            this.labelArea.Text = (Convert.ToDouble((this.sliderArea.Value / 100.00))).ToString();
         }
         #endregion
 

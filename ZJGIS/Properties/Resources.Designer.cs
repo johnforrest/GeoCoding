@@ -683,6 +683,26 @@ namespace ZJGIS.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        public static System.Drawing.Bitmap symbol {
+            get {
+                object obj = ResourceManager.GetObject("symbol", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap symbol__2_ {
+            get {
+                object obj = ResourceManager.GetObject("symbol (2)", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         public static System.Drawing.Bitmap tableEnti {
             get {
                 object obj = ResourceManager.GetObject("tableEnti", resourceCulture);

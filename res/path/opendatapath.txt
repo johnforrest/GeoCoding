@@ -1,1 +1,1 @@
-D:\Atest0606\PTest4.gdb
+D:\ATestData\Atest0606\PTest4.gdb
