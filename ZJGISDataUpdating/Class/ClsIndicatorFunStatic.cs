@@ -24,7 +24,7 @@ namespace ZJGISDataUpdating.Class
     public static class ClsIndicatorFunStatic
     {
         /// <summary>
-        ///点与点之间的欧式距离（单位待定？）
+        ///平面之间-点与点之间的欧式距离（单位待定？）
         /// </summary>
         /// <returns></returns>
         public static double EuclideanMetricDistance(IFeature sourceFeature, IFeature targetFeature)
@@ -42,7 +42,7 @@ namespace ZJGISDataUpdating.Class
             return distance;
         }
         /// <summary>
-        ///曼哈顿距离
+        ///平面之间-曼哈顿距离
         /// </summary>
         /// <param name="sourceFeature"></param>
         /// <param name="targetFeature"></param>
@@ -189,7 +189,8 @@ namespace ZJGISDataUpdating.Class
                             //              (targetPointCollection.get_Point(i).X - sourcePointCollection.get_Point(j).X) +
                             //              (targetPointCollection.get_Point(i).Y - sourcePointCollection.get_Point(j).Y) *
                             //              (targetPointCollection.get_Point(i).Y - sourcePointCollection.get_Point(j).Y)));
-                            listSource.Add(ClsGeoEcluDistance.Distance(sourcePointCollection.get_Point(j).Y,
+
+                            listSource.Add(ClsGeoEcluDistance.GeoEcluDistanceDistance(sourcePointCollection.get_Point(j).Y,
                                 sourcePointCollection.get_Point(j).X, targetPointCollection.get_Point(i).Y,
                                 targetPointCollection.get_Point(i).X));
 
@@ -207,7 +208,8 @@ namespace ZJGISDataUpdating.Class
                             //              (sourcePointCollection.get_Point(i).X - targetPointCollection.get_Point(j).X) +
                             //              (sourcePointCollection.get_Point(i).Y - targetPointCollection.get_Point(j).Y) *
                             //              (sourcePointCollection.get_Point(i).Y - targetPointCollection.get_Point(j).Y)));
-                            listTarget.Add(ClsGeoEcluDistance.Distance(sourcePointCollection.get_Point(i).Y,
+
+                            listTarget.Add(ClsGeoEcluDistance.GeoEcluDistanceDistance(sourcePointCollection.get_Point(i).Y,
                                 sourcePointCollection.get_Point(i).X, targetPointCollection.get_Point(j).Y,
                                 targetPointCollection.get_Point(j).X));
 

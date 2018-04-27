@@ -26,7 +26,7 @@ namespace ZJGISDataUpdating.Class
         /// </summary>
         /// <param name="gdbPath">gdb路径</param>
         /// <param name="tableName">表名称</param>
-        public static void DeleteFeatureClass(string gdbPath,string tableName)
+        public static void DeleteFeatureClass(string gdbPath, string tableName)
         {
             IWorkspaceFactory worFact = new FileGDBWorkspaceFactory();
             IWorkspace workspace = worFact.OpenFromFile(gdbPath, 0);
@@ -46,13 +46,13 @@ namespace ZJGISDataUpdating.Class
                 }
             }
         }
-        
-               /// <summary>
+
+        /// <summary>
         /// 删除特定数据集下的表
         /// </summary>
         /// <param name="gdbPath">workspace</param>
         /// <param name="tableName">表名称</param>
-        public static void DeleteFeatureClass(IWorkspace workspace,string tableName)
+        public static void DeleteTable(IWorkspace workspace, string tableName)
         {
             IFeatureWorkspace featureWorkspace = workspace as IFeatureWorkspace;
             IFeatureWorkspaceManage featureWorkspaceMange = (IFeatureWorkspaceManage)featureWorkspace;
@@ -76,26 +76,19 @@ namespace ZJGISDataUpdating.Class
         /// <param name="pWorkspace"></param>
         /// <param name="tableName"></param>
         /// <returns></returns>
-        public static bool DeleteTable(IWorkspace pWorkspace, String tableName)
-        {
-            try
-            {
-                IFeatureWorkspace pFeatureworkspace = pWorkspace as IFeatureWorkspace;
-                IFeatureClass pFeatureClass = pFeatureworkspace.OpenFeatureClass(tableName);//存在删除
-                if (pFeatureClass != null)
-                {
-                    IDataset pDataset = pFeatureClass as IDataset;
-                    if (pDataset.CanDelete())
-                    {
-                        pDataset.Delete();
-                        return true;//删除成功
-                    }
-                }
-            }
-            catch
-            { }
-            return false;//删除失败
-        }
-  
+        //public static void DeleteTable(IFeatureWorkspace pFeatureworkspace, String tableName)
+        //{
+        //    //IFeatureWorkspace pFeatureworkspace = pWorkspace as IFeatureWorkspace;
+        //    IFeatureClass pFeatureClass = pFeatureworkspace.OpenFeatureClass(tableName);//存在删除
+        //    if (pFeatureClass != null)
+        //    {
+        //        IDataset pDataset = pFeatureClass as IDataset;
+        //        if (pDataset.CanDelete())
+        //        {
+        //            pDataset.Delete();
+        //        }
+        //    }
+        //}
+
     }
 }

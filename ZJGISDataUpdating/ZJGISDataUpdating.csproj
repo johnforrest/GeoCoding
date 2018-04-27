@@ -115,6 +115,7 @@
     <Compile Include="Class\ClsConstant.cs" />
     <Compile Include="Class\ClsDeleteTables.cs" />
     <Compile Include="Class\ClsGeoEcluDistance.cs" />
+    <Compile Include="Class\ClsGeoManhattanDistance.cs" />
     <Compile Include="Class\ClsIndicatorFunStatic.cs" />
     <Compile Include="Class\ClsLineMatch.cs" />
     <Compile Include="Class\ClsPointMatch.cs" />

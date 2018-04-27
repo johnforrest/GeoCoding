@@ -259,10 +259,16 @@ namespace ZJGIS
             string textFullPath = startPath + "\\..\\Res\\path\\openedPath.txt";
 
             ReadText(textFullPath);
-
+            InitSpatialContainer();
             //初试化时选择一个图层
             comboBoxItemToMapControl.SelectedIndex = 0;
         }
+
+        private void InitSpatialContainer()
+        {
+            this.splitContainer1.SplitterDistance = this.tabControlPanel2.Width / 2;
+        }
+
         private void m_MapEvent_AfterDraw(IDisplay Display, esriViewDrawPhase phase)
         {
             IEnvelope pRect;
@@ -2558,9 +2564,9 @@ namespace ZJGIS
 
                     if (SymbolSelectorFrm.ShowDialog() == DialogResult.OK)
                     {
-                        MapFrom.ActiveView.PartialRefresh(esriViewDrawPhase.esriViewGeography, null, null);
+                        MapTo.ActiveView.PartialRefresh(esriViewDrawPhase.esriViewGeography, null, null);
                         pLegendClass.Symbol = SymbolSelectorFrm.pSymbol;
-                        MapFrom.ActiveView.Refresh();
+                        MapTo.ActiveView.Refresh();
                     }
                 }
 
@@ -2850,11 +2856,7 @@ namespace ZJGIS
         /// <param name="e"></param>
         private void MapTo_OnMouseUp(object sender, IMapControlEvents2_OnMouseUpEvent e)
         {
-            //鼠标右键
-            if (e.button == 2)
-            {
-                //this.label1.Text = "您单击了鼠标右键！";
-            }
+
         }
 
 

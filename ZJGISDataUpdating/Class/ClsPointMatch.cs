@@ -54,8 +54,8 @@ namespace ZJGISDataUpdating.Class
         /// <param name="prgSub">子进度条</param>
         /// <param name="stateLabel">状态信息</param>
         /// <returns></returns>
-        public bool SearchChangedFeatures(IFeatureClass pSrcFcls, IFeatureClass pTarFcls, ITable resultTable, int matchedMode,
-            double[] weight, double buffer, string fields, ProgressBar prgMain, ProgressBar prgSub, LabelX stateLabel, CheckBox chkBoxPointIndicator)
+        public bool SearchChangedFeatures(IFeatureClass pSrcFcls, IFeatureClass pTarFcls, ITable resultTable, double[] weight,
+            double buffer, double manhattan, string fields, ProgressBar prgMain, ProgressBar prgSub, LabelX stateLabel, CheckBox chkBoxPointIndicator)
         {
             //bool functionReturnValue = false;
 
@@ -317,7 +317,7 @@ namespace ZJGISDataUpdating.Class
                                                         //    //设置表TRA_PT_I_PtTabl的（待匹配编码）字段的值——cell[5]
                                                         //    rowBuffer.set_Value(5, pTarFeature.get_Value(pTarFeature.Fields.FindField("GCode")));
                                                         //}
-                                                       
+
                                                         CalculatePointIndicators(chkBoxPointIndicator, pSrcFeature, pTarFeature, rowBuffer);
 
                                                         int index = 0;
@@ -355,23 +355,29 @@ namespace ZJGISDataUpdating.Class
                                 }
                                 else
                                 {
-
-                                    CalculatePointIndicators(chkBoxPointIndicator, pSrcFeature, pTarFeature, rowBuffer);
-
-                                    int index = 0;
-                                    if (rowBuffer.get_Value(rowBuffer.Fields.FindField("待匹配OID")).ToString() == "")
+                                    ClsGeoManhattanDistance manhattanDistance = new ClsGeoManhattanDistance();
+                             
+                                    double Distance = manhattanDistance.ManhattanDistance((pSrcFeature.Shape as IPoint).Y,
+                                        (pSrcFeature.Shape as IPoint).X,(pTarFeature.Shape as IPoint).Y, (pTarFeature.Shape as IPoint).X);
+                                    if (Distance <= manhattan)
                                     {
-                                        //设置表TRA_PT_I_PtTabl的（待匹配oid）字段的值——cell[2]
-                                        rowBuffer.set_Value(rowBuffer.Fields.FindField("待匹配OID"), pTarFeature.get_Value(index));
+                                        //CalculatePointIndicators(chkBoxPointIndicator, pSrcFeature, pTarFeature, rowBuffer);
+
+                                        int indexOID = 0;
+                                        if (rowBuffer.get_Value(rowBuffer.Fields.FindField("待匹配OID")).ToString() == "")
+                                        {
+                                            //设置表TRA_PT_I_PtTabl的（待匹配oid）字段的值——cell[2]
+                                            rowBuffer.set_Value(rowBuffer.Fields.FindField("待匹配OID"), pTarFeature.get_Value(indexOID));
+                                        }
+                                        else
+                                        {
+                                            string oids = rowBuffer.get_Value(rowBuffer.Fields.FindField("待匹配OID")).ToString() + ";" + pTarFeature.get_Value(indexOID);
+                                            //设置表TRA_PT_I_PtTabl的（待匹配oid）字段的值——cell[2]
+                                            rowBuffer.set_Value(rowBuffer.Fields.FindField("待匹配OID"), oids);
+                                        }
+                                        pDicCol.Add(lIdx, pTarFeature);
+                                        lIdx = lIdx + 1;
                                     }
-                                    else
-                                    {
-                                        string oids = rowBuffer.get_Value(rowBuffer.Fields.FindField("待匹配OID")).ToString() + ";" + pTarFeature.get_Value(index);
-                                        //设置表TRA_PT_I_PtTabl的（待匹配oid）字段的值——cell[2]
-                                        rowBuffer.set_Value(rowBuffer.Fields.FindField("待匹配OID"), oids);
-                                    }
-                                    pDicCol.Add(lIdx, pTarFeature);
-                                    lIdx = lIdx + 1;
                                 }
                             }
                         }

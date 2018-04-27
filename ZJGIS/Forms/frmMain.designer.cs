@@ -2443,7 +2443,6 @@
             // 
             this.splitContainer1.BackColor = System.Drawing.SystemColors.Control;
             this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitContainer1.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
             this.splitContainer1.Location = new System.Drawing.Point(1, 33);
             this.splitContainer1.Margin = new System.Windows.Forms.Padding(4);
             this.splitContainer1.Name = "splitContainer1";
@@ -2451,12 +2450,14 @@
             // splitContainer1.Panel1
             // 
             this.splitContainer1.Panel1.Controls.Add(this.groupBox3);
+            this.splitContainer1.Panel1MinSize = 0;
             // 
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.groupBox4);
+            this.splitContainer1.Panel2MinSize = 0;
             this.splitContainer1.Size = new System.Drawing.Size(1266, 329);
-            this.splitContainer1.SplitterDistance = 615;
+            this.splitContainer1.SplitterDistance = 633;
             this.splitContainer1.SplitterWidth = 5;
             this.splitContainer1.TabIndex = 1;
             // 
@@ -2469,7 +2470,7 @@
             this.groupBox3.Margin = new System.Windows.Forms.Padding(4);
             this.groupBox3.Name = "groupBox3";
             this.groupBox3.Padding = new System.Windows.Forms.Padding(4);
-            this.groupBox3.Size = new System.Drawing.Size(615, 329);
+            this.groupBox3.Size = new System.Drawing.Size(633, 329);
             this.groupBox3.TabIndex = 0;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "源图层";
@@ -2481,10 +2482,9 @@
             this.MapFrom.Margin = new System.Windows.Forms.Padding(4);
             this.MapFrom.Name = "MapFrom";
             this.MapFrom.OcxState = ((System.Windows.Forms.AxHost.State)(resources.GetObject("MapFrom.OcxState")));
-            this.MapFrom.Size = new System.Drawing.Size(607, 298);
+            this.MapFrom.Size = new System.Drawing.Size(625, 298);
             this.MapFrom.TabIndex = 8;
             this.MapFrom.OnMouseDown += new ESRI.ArcGIS.Controls.IMapControlEvents2_Ax_OnMouseDownEventHandler(this.MapFrom_OnMouseDown);
-            this.MapFrom.OnMouseUp += new ESRI.ArcGIS.Controls.IMapControlEvents2_Ax_OnMouseUpEventHandler(this.MapFrom_OnMouseUp);
             this.MapFrom.OnMouseMove += new ESRI.ArcGIS.Controls.IMapControlEvents2_Ax_OnMouseMoveEventHandler(this.MapFrom_OnMouseMove);
             this.MapFrom.OnViewRefreshed += new ESRI.ArcGIS.Controls.IMapControlEvents2_Ax_OnViewRefreshedEventHandler(this.MapFrom_OnViewRefreshed);
             // 
@@ -2497,7 +2497,7 @@
             this.groupBox4.Margin = new System.Windows.Forms.Padding(4);
             this.groupBox4.Name = "groupBox4";
             this.groupBox4.Padding = new System.Windows.Forms.Padding(4);
-            this.groupBox4.Size = new System.Drawing.Size(646, 329);
+            this.groupBox4.Size = new System.Drawing.Size(628, 329);
             this.groupBox4.TabIndex = 0;
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "待匹配图层";
@@ -2509,10 +2509,9 @@
             this.MapTo.Margin = new System.Windows.Forms.Padding(4);
             this.MapTo.Name = "MapTo";
             this.MapTo.OcxState = ((System.Windows.Forms.AxHost.State)(resources.GetObject("MapTo.OcxState")));
-            this.MapTo.Size = new System.Drawing.Size(638, 298);
+            this.MapTo.Size = new System.Drawing.Size(620, 298);
             this.MapTo.TabIndex = 10;
             this.MapTo.OnMouseDown += new ESRI.ArcGIS.Controls.IMapControlEvents2_Ax_OnMouseDownEventHandler(this.MapTo_OnMouseDown);
-            this.MapTo.OnMouseUp += new ESRI.ArcGIS.Controls.IMapControlEvents2_Ax_OnMouseUpEventHandler(this.MapTo_OnMouseUp);
             this.MapTo.OnMouseMove += new ESRI.ArcGIS.Controls.IMapControlEvents2_Ax_OnMouseMoveEventHandler(this.MapTo_OnMouseMove);
             this.MapTo.OnViewRefreshed += new ESRI.ArcGIS.Controls.IMapControlEvents2_Ax_OnViewRefreshedEventHandler(this.MapTo_OnViewRefreshed);
             // 

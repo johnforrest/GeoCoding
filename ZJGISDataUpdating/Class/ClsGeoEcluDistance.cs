@@ -20,26 +20,18 @@ namespace ZJGISDataUpdating.Class
 {
     public static class ClsGeoEcluDistance
     {
-        public static double HaverSin(double theta)
-        {
-            var v = Math.Sin(theta / 2);
-            return v * v;
-        }
-
-
         static double EARTH_RADIUS = 6371.0;//km 地球半径 平均值，千米
 
         /// <summary>
-        /// 给定经纬度计算其距离
+        /// 给定经纬度计算其欧式距离（用haversine公式计算球面两点间的距离。）
         /// </summary>
         /// <param name="lat1">纬度1</param>
         /// <param name="lon1">经度1</param>
         /// <param name="lat2">纬度2</param>
         /// <param name="lon2">经度2</param>
         /// <returns>返回米</returns>
-        public static double Distance(double lat1, double lon1, double lat2, double lon2)
+        public static double GeoEcluDistanceDistance(double lat1, double lon1, double lat2, double lon2)
         {
-            //用haversine公式计算球面两点间的距离。
             //经纬度转换成弧度
             lat1 = ConvertDegreesToRadians(lat1);
             lon1 = ConvertDegreesToRadians(lon1);
@@ -55,8 +47,16 @@ namespace ZJGISDataUpdating.Class
 
             double distance = 2 * EARTH_RADIUS * Math.Asin(Math.Sqrt(h));
             distance = Math.Round(distance * 10000) / 10000;
+
             return distance*1000.0;
         }
+
+        public static double HaverSin(double theta)
+        {
+            var v = Math.Sin(theta / 2);
+            return v * v;
+        }
+
 
         /// <summary>
         /// 将角度换算为弧度。

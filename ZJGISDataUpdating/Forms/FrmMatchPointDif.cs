@@ -483,7 +483,7 @@ namespace ZJGISDataUpdating
             //StopWatch类计时
             Stopwatch sw = new Stopwatch();
             sw.Start();
-            
+
             this.Cursor = System.Windows.Forms.Cursors.WaitCursor;
 
             IWorkspaceFactory2 pWorkspaceFactory = new FileGDBWorkspaceFactoryClass() as IWorkspaceFactory2;
@@ -539,7 +539,6 @@ namespace ZJGISDataUpdating
                 {
                     //table = featureWorkspace.OpenTable(this.dataGridViewX1.Rows[i].Cells[3].Value.ToString());
                     ClsDeleteTables.DeleteFeatureClass(gdbPath, this.dataGridViewX1.Rows[i].Cells[3].Value.ToString());
-                    table = CreateTable(pWorkspace, this.dataGridViewX1.Rows[i].Cells[3].Value.ToString(), fileds);
                     //IWorkspaceEdit workspaceEdit = pWorkspace as IWorkspaceEdit;
                     //workspaceEdit.StartEditing(true);
                     //workspaceEdit.StartEditOperation();
@@ -554,178 +553,21 @@ namespace ZJGISDataUpdating
                     //workspaceEdit.StopEditOperation();
                     //workspaceEdit.StopEditing(true);
                 }
-                //如果表不存在，就创建表
-                else
-                {
-                    table = CreateTable(pWorkspace, this.dataGridViewX1.Rows[i].Cells[3].Value.ToString(), fileds);
-                }
+                table = CreateTable(pWorkspace, this.dataGridViewX1.Rows[i].Cells[3].Value.ToString(), fileds);
 
                 this.dataGridViewX1[3, i].Tag = table;
                 //待匹配图层的FeatureClass——pTEFeatCls
                 IFeatureClass pTargetFeatCls = featureWorkspace.OpenFeatureClass(this.dataGridViewX1.Rows[i].Cells[2].Value.ToString());
                 ITable tableSetting = null;
-                int matchedMode = -1;
-                int matchedMay = -1;
+        
                 double[] weight = new double[4];
                 double buffer = 0;
+                double manhattan = 0;
                 string fields = "";
-
-                #region 原有的匹配选择方式
-
-                //IDataset dataset = pTargetFeatCls as IDataset;
-                //string matchedFCName = dataset.Name;
-
-                ////设置匹配选择方式，matchedMay为0 代表几何匹配  为1代表拓扑匹配  为2代表属性匹配 
-                ////如果为点匹配
-                //if (pTargetFeatCls.ShapeType == esriGeometryType.esriGeometryPoint)
-                //{
-                //    tableSetting = featureWorkspace.OpenTable(ClsConstant.pointSettingTable);
-                //    ICursor cursor = tableSetting.Search(null, false);
-                //    IRow row = cursor.NextRow();
-                //    while (row != null)
-                //    {
-                //        //如果表MatchedPointFCSetting中的字段（待匹配图层名）等于待匹配的图层名
-                //        if (row.get_Value(row.Fields.FindField("MatchedFCName")).ToString() == matchedFCName)
-                //        {
-                //            //如果表MatchedPointFCSetting中的字段（拓扑匹配）等于1
-                //            //即代表拓扑匹配
-                //            if (row.get_Value(row.Fields.FindField("Top")).ToString() == "1")
-                //            {
-                //                //matchedMay为1 代表拓扑匹配
-                //                matchedMay = 1;
-                //                matchedMode = -1;
-
-                //                //把表MatchedPointFCSetting中的（拓扑缓冲区半径）字段值 付给buffer变量
-                //                string temp = row.get_Value(row.Fields.FindField("Buffer")).ToString();
-                //                if (temp.Contains("米"))
-                //                {
-                //                    temp = temp.Substring(0, temp.LastIndexOf("米")).Trim();
-                //                }
-                //                buffer = Convert.ToDouble(temp);
-
-                //                //表MatchedPointFCSetting中的（匹配属性）字段值
-                //                fields = row.get_Value(row.Fields.FindField("MatchedFields")).ToString();
-
-                //                break;
-                //            }
-                //            //如果表MatchedPointFCSetting中的字段（拓扑匹配）不等于1
-                //            //即代表属性匹配
-                //            else
-                //            {
-                //                //matchedMay为0 代表几何匹配
-                //                matchedMay = 0;
-                //                matchedMode = 20;
-
-                //                //表MatchedPointFCSetting中的（综合相似度阈值）字段值
-                //                weight[0] = Convert.ToDouble(row.get_Value(row.Fields.FindField("TotalNum")));
-
-                //                //把表MatchedPointFCSetting中的（搜索半径）字段值 付给buffer变量
-                //                string temp = row.get_Value(row.Fields.FindField("SearchedRadius")).ToString();
-                //                if (temp.Contains("米"))
-                //                {
-                //                    temp = temp.Substring(0, temp.LastIndexOf("米")).Trim();
-                //                }
-                //                buffer = Convert.ToDouble(temp);
-
-                //                //表MatchedPointFCSetting中的（匹配属性）字段值
-                //                fields = row.get_Value(row.Fields.FindField("MatchedFields")).ToString();
-
-                //            }
-                //        }
-                //        row = cursor.NextRow();
-                //    }
-                //}
-
-                //ClsCoreUpdateFun clsCoreUpdateFun = new ClsCoreUpdateFun();
-
-                ////matchedMay为1 代表拓扑匹配
-                //if (matchedMay == 1)
-                //{
-                //    clsCoreUpdateFun.SearchChangedFeaturesByTop(pSourceFeatCls, pTargetFeatCls, table, buffer, fields, progressBarMain, progressBarSub, labelXStatus);
-                //    MessageBoxEx.Show("匹配已完成！", "提示");
-                //}
-                ////matchedMay为0 代表几何匹配
-                //else if (matchedMay == 0)
-                //{
-                //    clsCoreUpdateFun.SearchChangedFeatures(pSourceFeatCls, pTargetFeatCls, table, matchedMode, weight, buffer, fields, progressBarMain, progressBarSub, labelXStatus);
-                //    MessageBoxEx.Show("匹配已完成！", "提示");
-                //}
-                #endregion
-
-                #region  20170911注释
-                //if (this.comboBoxExMatchType.Text == "几何匹配")
-                //{
-                //    if (pTEFeatCls.ShapeType == esriGeometryType.esriGeometryPoint)
-                //    {
-                //        tableSetting = featureWorkspace.OpenTable(ClsConstant.pointSettingTable);
-                //        ICursor cursor = tableSetting.Search(null, false);
-                //        IRow row = cursor.NextRow();
-                //        while (row != null)
-                //        {
-                //            //表MatchedPointFCSetting中的（匹配属性）字段值
-                //            fields = row.get_Value(row.Fields.FindField("MatchedFields")).ToString();
-                //            ////matchedMay为0 代表几何匹配
-                //            //matchedMay = 0;
-                //            matchedMode = 20;
-                //            //把表MatchedPointFCSetting中的（搜索半径）字段值 付给buffer变量
-                //            string temp = row.get_Value(row.Fields.FindField("SearchedRadius")).ToString();
-                //            if (temp.Contains("米"))
-                //            {
-                //                temp = temp.Substring(0, temp.LastIndexOf("米")).Trim();
-                //            }
-                //            buffer = Convert.ToDouble(temp);
-                //            //表MatchedPointFCSetting中的（综合相似度阈值）字段值
-                //            weight[0] = Convert.ToDouble(row.get_Value(row.Fields.FindField("TotalNum")));
-
-
-                //            row = cursor.NextRow();
-
-                //        }
-                //    }
-                //    clsCoreUpdateFun.SearchChangedFeatures(pTUFeatCls, pTEFeatCls, table, matchedMode, weight, buffer, fields, progressBarMain, progressBarSub, labelXStatus);
-                //    MessageBoxEx.Show("匹配已完成！", "提示");
-
-                //}
-                //else if (this.comboBoxExMatchType.Text == "拓扑匹配")
-                //{
-                //    if (pTEFeatCls.ShapeType == esriGeometryType.esriGeometryPoint)
-                //    {
-                //        tableSetting = featureWorkspace.OpenTable(ClsConstant.pointSettingTable);
-                //        ICursor cursor = tableSetting.Search(null, false);
-                //        IRow row = cursor.NextRow();
-                //        while (row != null)
-                //        {
-                //            ////matchedMay为1 代表拓扑匹配
-                //            //matchedMay = 1;
-                //            matchedMode = -1;
-                //            //把表MatchedPointFCSetting中的（拓扑缓冲区半径）字段值 付给buffer变量
-                //            string temp = row.get_Value(row.Fields.FindField("Buffer")).ToString();
-                //            if (temp.Contains("米"))
-                //            {
-                //                temp = temp.Substring(0, temp.LastIndexOf("米")).Trim();
-                //            }
-                //            buffer = Convert.ToDouble(temp);
-                //            //表MatchedPointFCSetting中的（匹配属性）字段值
-                //            fields = row.get_Value(row.Fields.FindField("MatchedFields")).ToString();
-
-                //            row = cursor.NextRow();
-
-                //        }
-                //    }
-
-                //    clsCoreUpdateFun.SearchChangedFeaturesByTop(pTUFeatCls, pTEFeatCls, table, buffer, fields, progressBarMain, progressBarSub, labelXStatus);
-
-                //}
-                //else if (this.comboBoxExMatchType.Text == "属性匹配")
-                //{
-
-                //}
-                #endregion
 
                 IDataset dataset = pTargetFeatCls as IDataset;
                 string matchedFCName = dataset.Name;
 
-                //设置匹配选择方式，matchedMay为0 代表几何匹配  为1代表拓扑匹配  为2代表属性匹配 
                 //如果为点匹配
                 if (pTargetFeatCls.ShapeType == esriGeometryType.esriGeometryPoint)
                 {
@@ -737,15 +579,9 @@ namespace ZJGISDataUpdating
                         //如果表MatchedPointFCSetting中的字段（待匹配图层名）等于待匹配的图层名
                         if (row.get_Value(row.Fields.FindField("MatchedFCName")).ToString() == matchedFCName)
                         {
-                            //如果表MatchedPointFCSetting中的字段（拓扑匹配）等于1
-                            //即代表拓扑匹配
-                            //if (row.get_Value(row.Fields.FindField("Top")).ToString() == "1")
+                            // 拓扑匹配
                             if (this.tabControl1.Tabs[1].Visible == true)
                             {
-                                //matchedMay为1 代表拓扑匹配
-                                matchedMay = 1;
-                                matchedMode = -1;
-
                                 //把表MatchedPointFCSetting中的（拓扑缓冲区半径）字段值 付给buffer变量
                                 string temp = row.get_Value(row.Fields.FindField("Buffer")).ToString();
                                 if (temp.Contains("米"))
@@ -759,17 +595,13 @@ namespace ZJGISDataUpdating
 
                                 break;
                             }
-                            //如果表MatchedPointFCSetting中的字段（拓扑匹配）不等于1
-                            //即代表属性匹配
+                            //几何匹配
                             else if (this.tabControl1.Tabs[0].Visible == true)
                             {
-                                //matchedMay为0 代表几何匹配
-                                matchedMay = 0;
-                                matchedMode = 20;
-
+                          
                                 //表MatchedPointFCSetting中的（综合相似度阈值）字段值
                                 weight[0] = Convert.ToDouble(row.get_Value(row.Fields.FindField("TotalNum")));
-
+                                manhattan = Convert.ToDouble(row.get_Value(row.Fields.FindField("ManhattanDis")));
                                 //把表MatchedPointFCSetting中的（搜索半径）字段值 付给buffer变量
                                 string temp = row.get_Value(row.Fields.FindField("SearchedRadius")).ToString();
                                 if (temp.Contains("米"))
@@ -789,17 +621,15 @@ namespace ZJGISDataUpdating
 
                 ClsPointMatch clsPointMatch = new ClsPointMatch();
 
-                //matchedMay为0 代表几何匹配
-                //else if (matchedMay == 0)
+                //几何匹配
                 if (this.tabControl1.Tabs[0].Visible == true)
                 {
-                    clsPointMatch.SearchChangedFeatures(pSourceFeatCls, pTargetFeatCls, table, matchedMode, weight, buffer, fields, progressBarMain, progressBarSub, labelXStatus,chkBoxPointIndicator);
+                    clsPointMatch.SearchChangedFeatures(pSourceFeatCls, pTargetFeatCls, table, weight, buffer, manhattan,fields, progressBarMain, progressBarSub, labelXStatus, chkBoxPointIndicator);
                     sw.Stop();
                     //Console.WriteLine("Stopwatch 时间精度：{0}ms", sw.ElapsedMilliseconds);
-                    MessageBoxEx.Show("几何匹配已完成！总需要时间" + sw.ElapsedMilliseconds+"ms", "提示");
+                    MessageBoxEx.Show("几何匹配已完成！总需要时间" + sw.ElapsedMilliseconds + "ms", "提示");
                 }
-                //matchedMay为1 代表拓扑匹配
-                //if (matchedMay == 1)
+                //拓扑匹配
                 else if (this.tabControl1.Tabs[1].Visible == true)
                 {
                     clsPointMatch.SearchChangedFeaturesByTop(pSourceFeatCls, pTargetFeatCls, table, buffer, fields, progressBarMain, progressBarSub, labelXStatus);
@@ -833,11 +663,11 @@ namespace ZJGISDataUpdating
             }
         }
         /// <summary>
-        /// 设置匹配参数
+        /// 创建表MatchedPointFCSetting字段
         /// </summary>
         /// <param name="workspace">保存路径</param>
         /// <returns></returns>
-        private IFields CreateMatchedPointFCSettingFields(IWorkspace2 workspace)
+        private IFields CreateMatchedPointFCSettingFields()
         {
             IObjectClassDescription objectClassDescription = new ObjectClassDescriptionClass();
             IFields fields = new FieldsClass();
@@ -954,77 +784,49 @@ namespace ZJGISDataUpdating
             fieldEdit15.IsNullable_2 = true;
             fieldsEdit.AddField(field15);
 
+            IField field20 = new FieldClass();
+            IFieldEdit fieldEdit20 = field20 as IFieldEdit;
+            fieldEdit20.Name_2 = "ManhattanDis";
+            fieldEdit20.Type_2 = esriFieldType.esriFieldTypeString;
+            fieldEdit20.AliasName_2 = "曼哈顿距离";
+            fieldEdit20.IsNullable_2 = true;
+            fieldsEdit.AddField(field20);
+
             fields = fieldsEdit as IFieldsEdit;
             return fields;
 
         }
+        #region 滑块滑动事件
         /// <summary>
-        /// 匹配类型下拉菜单
+        /// 缓冲区半径
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void comboBoxExMatchType_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            //20170911
-
-            //if (this.comboBoxExMatchType.Text != "")
-            //{
-            //    if (this.comboBoxExMatchType.Text == "几何匹配")
-            //    {
-            //        //if (!this.tabControl1.Tabs[0].Visible)
-            //        //{
-            //        //    this.tabControl1.Tabs[0].Visible = true;
-            //        //}
-            //        //this.tabControl1.Tabs[1].Visible = false;
-            //        if (!this.tabItem1.Visible)
-            //        {
-            //            this.tabItem1.Visible = true;
-            //        }
-            //        this.tabItem2.Visible = false;
-            //        this.tabItem3.Visible = false;
-
-            //    }
-            //    else if (this.comboBoxExMatchType.Text == "拓扑匹配")
-            //    {
-            //        //if (!this.tabControl1.Tabs[1].Visible)
-            //        //{
-            //        //    this.tabControl1.Tabs[1].Visible = true;
-            //        //}
-            //        //this.tabControl1.Tabs[0].Visible = false;
-            //        if (!this.tabItem2.Visible)
-            //        {
-            //            this.tabItem2.Visible = true;
-            //        }
-            //        this.tabItem1.Visible = false;
-            //        this.tabItem3.Visible = false;
-
-            //    }
-            //    else if (this.comboBoxExMatchType.Text == "属性匹配")
-            //    {
-            //        if (!this.tabItem3.Visible)
-            //        {
-            //            this.tabItem3.Visible = true;
-            //        }
-            //        this.tabItem1.Visible = false;
-            //        this.tabItem2.Visible = false;
-            //    }
-
-            //}
-        }
-
-
         private void Weightslider_ValueChanged(object sender, EventArgs e)
         {
             //滑块的最大值设为1000，除以10之后就是100，这样设置可以更加明显看出滑块的移动
-            this.labelBuffer.Text = Convert.ToDouble((WeightsliderBuffer.Value) / 10.0).ToString();
-
+            this.labelBuffer.Text = Convert.ToDouble((Buffer.Value) / 10.0).ToString();
         }
 
-
+        /// <summary>
+        /// 综合相似度
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Weightslider4_ValueChanged(object sender, EventArgs e)
         {
             this.labelTotalNum.Text = Convert.ToDouble((WeightsliderTotal.Value) / 20.0).ToString();
         }
+        /// <summary>
+        /// 曼哈顿距离
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void WeightsliderManhattan_ValueChanged(object sender, EventArgs e)
+        {
+            this.labelManhattan.Text = Convert.ToDouble(WeightsliderTotal.Value).ToString();
+        }
+        #endregion
         /// <summary>
         /// 加载匹配参数
         /// </summary>
@@ -1056,33 +858,35 @@ namespace ZJGISDataUpdating
 
                 //创建表MatchedPointFCSetting
                 IWorkspaceFactory pWorkspaceFactory = new FileGDBWorkspaceFactory();
-                IWorkspace2 workspace = pWorkspaceFactory.OpenFromFile(gdbPath, 0) as IWorkspace2;
-                IFeatureWorkspace featureWorkspace = workspace as IFeatureWorkspace;
+                IWorkspace workspace = pWorkspaceFactory.OpenFromFile(gdbPath, 0) as IWorkspace;
+                IWorkspace2 workspace2 = pWorkspaceFactory.OpenFromFile(gdbPath, 0) as IWorkspace2;
+                IFeatureWorkspace featureWorkspace = workspace2 as IFeatureWorkspace;
                 ITable table = null;
                 IFields fields = null;
 
                 if (sourceFeatCls.ShapeType == esriGeometryType.esriGeometryPoint)
                 {
                     //表MatchedPointFCSetting是否存在，存在就打开表
-                    if (workspace.get_NameExists(esriDatasetType.esriDTTable, ClsConstant.pointSettingTable))
+                    if (workspace2.get_NameExists(esriDatasetType.esriDTTable, ClsConstant.pointSettingTable))
                     {
-                        table = featureWorkspace.OpenTable(ClsConstant.pointSettingTable);
-                    }
-                    else
-                    {
-                        //表MatchedPointFCSetting是否存在，不存在就创建表
-                        //创建13个字段
-                        fields = CreateMatchedPointFCSettingFields(workspace);
-                        UID uid = new UIDClass();
-                        uid.Value = "esriGeoDatabase.Object";
-                        IFieldChecker fieldChecker = new FieldCheckerClass();
-                        IEnumFieldError enumFieldError = null;
-                        IFields validatedFields = null;
-                        fieldChecker.ValidateWorkspace = (IWorkspace)workspace;
-                        fieldChecker.Validate(fields, out enumFieldError, out validatedFields);
 
-                        table = featureWorkspace.CreateTable(ClsConstant.pointSettingTable, validatedFields, uid, null, "");
+                        ClsDeleteTables.DeleteTable(workspace, ClsConstant.pointSettingTable);
+                        //table = featureWorkspace.OpenTable(ClsConstant.pointSettingTable);
                     }
+                    //表MatchedPointFCSetting是否存在，不存在就创建表
+                    //创建13个字段
+                    fields = CreateMatchedPointFCSettingFields();
+                    UID uid = new UIDClass();
+                    uid.Value = "esriGeoDatabase.Object";
+                    IFieldChecker fieldChecker = new FieldCheckerClass();
+                    IEnumFieldError enumFieldError = null;
+                    IFields validatedFields = null;
+                    fieldChecker.ValidateWorkspace = (IWorkspace)workspace;
+                    fieldChecker.Validate(fields, out enumFieldError, out validatedFields);
+
+                    table = featureWorkspace.CreateTable(ClsConstant.pointSettingTable, validatedFields, uid, null, "");
+
+                    //table = CreatTable(workspace2, table, featureWorkspace);
                 }
                 else
                 {
@@ -1141,6 +945,7 @@ namespace ZJGISDataUpdating
                         tempRow.set_Value(tempRow.Fields.FindField("FCSettingID"), table.RowCount(null) - 1);
                         //由labelBuffer设置位置相似度——cell[6]
                         tempRow.set_Value(tempRow.Fields.FindField("Center"), Convert.ToDouble(labelBuffer.Text));
+                        tempRow.set_Value(tempRow.Fields.FindField("ManhattanDis"), Convert.ToDouble(labelManhattan.Text));
 
                         //由labelTotalNum设置综合相似度阈值——cell[7]
                         //根据源图层的坐标系统，把平面坐标的距离转化为源图层下的度数
@@ -1267,6 +1072,7 @@ namespace ZJGISDataUpdating
                         //由labelTotalNum设置综合相似度阈值——cell[7]
                         //根据源图层的坐标系统，把平面坐标的距离转化为源图层下的度数
                         tRow.set_Value(tRow.Fields.FindField("TotalNum"), Convert.ToDouble(labelTotalNum.Text));
+                        tRow.set_Value(tRow.Fields.FindField("ManhattanDis"), Convert.ToDouble(labelManhattan.Text));
 
                         //由labelBuffer设置搜索半径——cell[9]
                         //根据源图层的坐标系统，把平面坐标的距离转化为源图层下的度数
@@ -1289,9 +1095,6 @@ namespace ZJGISDataUpdating
                             MessageBoxEx.Show("请选择缓冲区半径！");
                             return;
                         }
-
-
-
 
                         //由labelBuffer设置搜索半径——cell[10]
                         //根据源图层的坐标系统，把平面坐标的距离转化为源图层下的度数
@@ -1355,11 +1158,9 @@ namespace ZJGISDataUpdating
 
         }
 
-        private void tabItem3_Click(object sender, EventArgs e)
-        {
-            //this.labelXAttriShow.Visible = true;
-        }
+  
 
+        #region checkbox事件
         private void checkBoxXGeoAttr_Click(object sender, EventArgs e)
         {
             this.tabControl1.Tabs[0].Visible = true;
@@ -1393,5 +1194,7 @@ namespace ZJGISDataUpdating
                 checkBoxXTopo.Checked = true;
             }
         }
+
+        #endregion
     }
 }
