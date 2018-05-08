@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ConnetInfo>
-  <OracleConnect DataSource="orcl" password="lgq" UserID="sde">
-  </OracleConnect>
-  <SdeConnect SERVER="192.168.202.198" SERVICE="5151" USER="sde" PASSWORD="lgq" VERSION="SDE.DEFAULT">
+  <!-- <OracleConnect DataSource="orcl" password="lgq" UserID="sde"> -->
+  <!-- </OracleConnect> -->
+  <SdeConnect SERVER="johnforrest" SERVICE="sde:sqlserver:johnforrest" DATABASE="sde" USER="sa" PASSWORD="hello123" VERSION="DBO.DEFAULT" AUTHENTICATION_MODE="DBMS">
   </SdeConnect>
 </ConnetInfo>

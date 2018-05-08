@@ -271,6 +271,7 @@ namespace ZJGISOpenData.Forms
                 comboBoxExFileType.Items.Add("File GeoDataBase (.gdb)");
                 comboBoxExFileType.Items.Add("dbf文件(.dbf)");
                 comboBoxExFileType.Items.Add("Shapefile  (.shp)");
+                comboBoxExFileType.Items.Add("SDE数据库");
             }
         }
 
@@ -565,14 +566,12 @@ namespace ZJGISOpenData.Forms
             {
                 advTreeFiles.Enabled = false;
                 FrmSDE pFrmSDE = new FrmSDE();
-
                 if (pFrmSDE.ShowDialog() == DialogResult.OK)
                 {
                     if (pFrmSDE.m_pSDEWorkspace != null)
                     {
                         m_pSDEWorkspace = pFrmSDE.m_pSDEWorkspace;
                         LoadDatasetToList(pFrmSDE.m_pSDEWorkspace);
-                        //cmbSDEList.Text = "Connect to SDE " + pFrmSDE.m_SDEPropertSet.GetProperty("Server");
                     }
                 }
             }
@@ -1158,7 +1157,8 @@ namespace ZJGISOpenData.Forms
                                     featureLayer.FeatureClass = featureClass;
                                     if (targetMap != null)
                                     {
-                                        ClsMapLayer.AddLyrToBasicMap(targetMap, (ILayer)featureLayer);
+                                        //TODO:2018年5月8日16:43:45 打开SQL Server数据库时重复添加
+                                        //ClsMapLayer.AddLyrToBasicMap(targetMap, (ILayer)featureLayer);
                                     }
                                     this.DialogResult = DialogResult.OK;
                                 }
@@ -1477,6 +1477,10 @@ namespace ZJGISOpenData.Forms
         }
 
         #endregion
+        /// <summary>
+        /// 加载sde数据库中的数据到list中
+        /// </summary>
+        /// <param name="datasetWorkSpace"></param>
         private void LoadDatasetToList(IWorkspace datasetWorkSpace)
         {
             listViewExFiles.Items.Clear();
@@ -1486,18 +1490,21 @@ namespace ZJGISOpenData.Forms
             ListViewItem listItemFile;
             int shpType;
 
+            //添加数据集
             IEnumDatasetName enumDatasetName = datasetWorkSpace.get_DatasetNames(esriDatasetType.esriDTFeatureDataset);
             while ((datasetName = enumDatasetName.Next()) != null)
             {
+                
                 listItemFile = listViewExFiles.Items.Add(datasetName.Name, "Dataset");
                 listItemFile.Tag = datasetName;
             }
-
+            //添加矢量数据
             IEnumDatasetName enumDatasetNameFeature = datasetWorkSpace.get_DatasetNames(esriDatasetType.esriDTFeatureClass);
             datasetName = null;
 
             while ((datasetName = enumDatasetNameFeature.Next()) != null)
             {
+                //Featureclass要素图层
                 if (datasetName.Type == esriDatasetType.esriDTFeatureClass)
                 {
                     featureclassName = datasetName as IFeatureClassName;
@@ -1556,7 +1563,8 @@ namespace ZJGISOpenData.Forms
                     }
                 }
             }
-
+            
+            //添加栅格数据
             IEnumDatasetName enumDatasetNameRaster = datasetWorkSpace.get_DatasetNames(esriDatasetType.esriDTRasterDataset);
             datasetName = null;
 

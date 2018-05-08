@@ -118,7 +118,6 @@ namespace ZJGISCommon
             return str;
         }
 
-        /**/
         /// <summary>
         /// 功能:
         /// 读取指定节点的指定属性值

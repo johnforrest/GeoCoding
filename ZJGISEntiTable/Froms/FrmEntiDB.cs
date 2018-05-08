@@ -90,46 +90,47 @@ namespace ZJGISEntiTable.Froms
         /// <param name="e"></param>
         private void btnOpenVersionPath_Click(object sender, EventArgs e)
         {
-            //OpenFileDialog oFD = new OpenFileDialog();
-            //oFD.Title = "数据版本记录表路径";//对话框标题
-            //oFD.Filter = "dbf文件(*.dbf)|*.dbf|所有文件(*.*)|*.*";//设置文件名筛选器
-            //oFD.Multiselect = true;//是否可以多选文件
-            //if (oFD.ShowDialog() == DialogResult.OK)
-            //{
-            //    txbVersionPath.Text = oFD.FileName;
-            //}
+            OpenFileDialog oFD = new OpenFileDialog();
+            oFD.Title = "数据版本记录表路径";//对话框标题
+            oFD.Filter = "dbf文件(*.dbf)|*.dbf|所有文件(*.*)|*.*";//设置文件名筛选器
+            oFD.Multiselect = true;//是否可以多选文件
+            if (oFD.ShowDialog() == DialogResult.OK)
+            {
+                this.txbVersionPath.Text = oFD.FileName;
+            }
 
-            string tempResultTablePath = null;
-            ZJGISOpenData.Forms.FrmOpenData frmOpenData = new ZJGISOpenData.Forms.FrmOpenData();
-            frmOpenData.IsShowTable = true;
-            if (frmOpenData.ShowDialog() == DialogResult.Cancel)
-            {
-                return;
-            }
-            Collection<object> tableCol = new Collection<object>();
-            tableCol = frmOpenData.TableCollection;
-            IDataset dataset = null;
-            if (tableCol.Count > 1)
-            {
-                dataset = tableCol[0] as IDataset;
-            }
-            else
-            {
-                MessageBoxEx.Show("请加载数据源", "提示", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
-            }
-            if (dataset == null)
-            {
-                MessageBoxEx.Show("请加载匹配结果表！", "提示", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
-            }
-            tempResultTablePath = frmOpenData.PathName + @"\" + dataset.Name;
-            if (string.IsNullOrEmpty(tempResultTablePath))
-            {
-                return;
-            }
-            this.txbVersionPath.Text = tempResultTablePath;
-            //this._entityTable = this.OpenEntityTable(dataset.Name, frmOpenData.PathName);
+            //string tempResultTablePath = null;
+            //ZJGISOpenData.Forms.FrmOpenData frmOpenData = new ZJGISOpenData.Forms.FrmOpenData();
+            //frmOpenData.IsShowTable = true;
+            //if (frmOpenData.ShowDialog() == DialogResult.Cancel)
+            //{
+            //    return;
+            //}
+            //Collection<object> tableCol = new Collection<object>();
+            //tableCol = frmOpenData.TableCollection;
+            //IDataset dataset = null;
+            //if (tableCol.Count > 1)
+            //{
+            //    dataset = tableCol[0] as IDataset;
+            //}
+            //else
+            //{
+            //    MessageBoxEx.Show("请加载数据源", "提示", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            //    return;
+            //}
+            //if (dataset == null)
+            //{
+            //    MessageBoxEx.Show("请加载匹配结果表！", "提示", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            //    return;
+            //}
+            //tempResultTablePath = frmOpenData.PathName + @"\" + dataset.Name;
+            //if (string.IsNullOrEmpty(tempResultTablePath))
+            //{
+            //    return;
+            //}
+            //this.txbVersionPath.Text = tempResultTablePath;
+
+            ////this._entityTable = this.OpenEntityTable(dataset.Name, frmOpenData.PathName);
         }
 
         /// <summary>

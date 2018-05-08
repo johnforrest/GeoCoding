@@ -12,6 +12,11 @@ namespace ZJGISCommon
 {
     class ClsSDE
     {
+        /// <summary>
+        /// 得到IPropertySet对象
+        /// </summary>
+        /// <param name="pStrProp"></param>
+        /// <returns></returns>
         public static IPropertySet GetPropSetFromArr(string[] pStrProp)
         {
             IPropertySet propertySet = new PropertySetClass();
@@ -21,9 +26,15 @@ namespace ZJGISCommon
             propertySet.SetProperty("user", pStrProp[3]);
             propertySet.SetProperty("password", pStrProp[4]);
             propertySet.SetProperty("version", pStrProp[5]);
+            propertySet.SetProperty("AUTHENTICATION_MODE", pStrProp[6]);
+
             return propertySet;
         }
-
+        /// <summary>
+        /// 检查IPropertySet对象
+        /// </summary>
+        /// <param name="pStrProp"></param>
+        /// <returns></returns>
         public static bool CheckTxtComplete(string[] pStrProp)
         {
             for (int i = 0; i < pStrProp.Length; i++)
@@ -37,6 +48,11 @@ namespace ZJGISCommon
             return true;
         }
 
+        /// <summary>
+        /// 测试连接状态
+        /// </summary>
+        /// <param name="pPropertSet"></param>
+        /// <returns></returns>
         public static IWorkspace TestSDELinkState(IPropertySet pPropertSet)
         {
             IWorkspaceFactory workspaceFactory = new SdeWorkspaceFactoryClass();
@@ -51,7 +67,10 @@ namespace ZJGISCommon
             else
                 return workspace;
         }
-
+        /// <summary>
+        /// 保存上次的数据库连接设置
+        /// </summary>
+        /// <param name="pStrProp"></param>
         public static void SavePropSetting(string[] pStrProp)
         {
             //保存数据库连接设置
@@ -59,6 +78,8 @@ namespace ZJGISCommon
             Interaction.SaveSetting(Application.CompanyName, "SDESeting", "Instance", pStrProp[1]);
             Interaction.SaveSetting(Application.CompanyName, "SDESeting", "Database", pStrProp[2]);
             Interaction.SaveSetting(Application.CompanyName, "SDESeting", "user", pStrProp[3]);
+            Interaction.SaveSetting(Application.CompanyName, "SDESeting", "password", pStrProp[4]);
+            Interaction.SaveSetting(Application.CompanyName, "SDESeting", "Version", pStrProp[5]);
 
         }
     }

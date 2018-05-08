@@ -583,7 +583,7 @@
             this.cbxCodeLayer.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
             this.cbxCodeLayer.FormattingEnabled = true;
             this.cbxCodeLayer.ItemHeight = 15;
-            this.cbxCodeLayer.Location = new System.Drawing.Point(6, 60);
+            this.cbxCodeLayer.Location = new System.Drawing.Point(6, 61);
             this.cbxCodeLayer.Margin = new System.Windows.Forms.Padding(4);
             this.cbxCodeLayer.Name = "cbxCodeLayer";
             this.cbxCodeLayer.Size = new System.Drawing.Size(160, 21);
@@ -2410,7 +2410,6 @@
             // styleManager
             // 
             this.styleManager.ManagerStyle = DevComponents.DotNetBar.eStyle.Office2007Blue;
-            this.styleManager.MetroColorParameters = new DevComponents.DotNetBar.Metro.ColorTables.MetroColorGeneratorParameters(System.Drawing.Color.White, System.Drawing.Color.FromArgb(((int)(((byte)(43)))), ((int)(((byte)(87)))), ((int)(((byte)(154))))));
             // 
             // comboBoxEx1
             // 

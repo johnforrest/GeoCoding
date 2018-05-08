@@ -16,8 +16,15 @@ namespace ZJGISCommon
         private string service;
         private string user;
         private string password;
+        private string database;
         private string version;
         private string datasource;
+        private string authenication_mode;
+        public string Authenication_mode
+        {
+            get { return authenication_mode; }
+            set { authenication_mode = value; }
+        }
         private Collection<object> collection;
         string m_strFile;
 
@@ -39,7 +46,11 @@ namespace ZJGISCommon
                 oUser = value;
             }
         }
-
+        public string Database
+        {
+            get { return database; }
+            set { database = value; }
+        }
         public string OPass
         {
             get
@@ -293,14 +304,19 @@ namespace ZJGISCommon
         public void GetInfoFromXml()
         {
             string strXML = System.Windows.Forms.Application.StartupPath + "\\..\\Res\\xml\\DBConfig.xml";
-            datasource = ClsXml.GetXmlNodeAttribute(strXML, "ConnetInfo//OracleConnect", "DataSource");
-            oUser = ClsXml.GetXmlNodeAttribute(strXML, "ConnetInfo//OracleConnect", "UserID");
-            oPass = ClsXml.GetXmlNodeAttribute(strXML, "ConnetInfo//OracleConnect", "password");
+
+            //TODO: yjw 20180508
+            //datasource = ClsXml.GetXmlNodeAttribute(strXML, "ConnetInfo//OracleConnect", "DataSource");
+            //oUser = ClsXml.GetXmlNodeAttribute(strXML, "ConnetInfo//OracleConnect", "UserID");
+            //oPass = ClsXml.GetXmlNodeAttribute(strXML, "ConnetInfo//OracleConnect", "password");
+
             server = ClsXml.GetXmlNodeAttribute(strXML, "ConnetInfo//SdeConnect", "SERVER");
             service = ClsXml.GetXmlNodeAttribute(strXML, "ConnetInfo//SdeConnect", "SERVICE");
+            database = ClsXml.GetXmlNodeAttribute(strXML, "ConnetInfo//SdeConnect", "DATABASE");
             user = ClsXml.GetXmlNodeAttribute(strXML, "ConnetInfo//SdeConnect", "USER");
             password = ClsXml.GetXmlNodeAttribute(strXML, "ConnetInfo//SdeConnect", "PASSWORD");
             version = ClsXml.GetXmlNodeAttribute(strXML, "ConnetInfo//SdeConnect", "VERSION");
+            authenication_mode = ClsXml.GetXmlNodeAttribute(strXML, "ConnetInfo//SdeConnect", "AUTHENTICATION_MODE");
         }
 
         private void ReadParaFromXmlToDic()
