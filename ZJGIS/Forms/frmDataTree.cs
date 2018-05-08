@@ -128,7 +128,7 @@ namespace ZJGIS
             }
 				
 		}
-		
+       
 		
 		private void TOCLayer_OnDoubleClick(object sender, ITOCControlEvents_OnDoubleClickEvent e)
 		{
@@ -156,15 +156,6 @@ namespace ZJGIS
                         m_MapMain.ActiveView.PartialRefresh(esriViewDrawPhase.esriViewGeography, null, null);
                         pLegendClass.Symbol = SymbolSelectorFrm.pSymbol;
                         m_MapMain.ActiveView.Refresh();
-
-                        //m_MapFrom.ActiveView.PartialRefresh(esriViewDrawPhase.esriViewGeography, null, null);
-                        //pLegendClass.Symbol = SymbolSelectorFrm.pSymbol;
-                        //m_MapFrom.ActiveView.Refresh();
-
-                        //m_MapTo.ActiveView.PartialRefresh(esriViewDrawPhase.esriViewGeography, null, null);
-                        //pLegendClass.Symbol = SymbolSelectorFrm.pSymbol;
-                        //m_MapTo.ActiveView.Refresh();
-
                         TOCLayer.Refresh();
                     }
                 }

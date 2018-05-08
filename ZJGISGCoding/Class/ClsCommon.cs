@@ -16,7 +16,7 @@ namespace ZJGISGCoding.Class
         /// </summary>
         /// <param name="pFeatureLayer">待检查的图层</param>
         /// <param name="strField">格网字段的NameField</param>
-        public void CheckGridField(IFeatureLayer pFeatureLayer,string strField)
+        public void CheckGridField(IFeatureLayer pFeatureLayer, string strField)
         {
             IClass pTable = pFeatureLayer.FeatureClass as IClass;
             try
@@ -307,6 +307,106 @@ namespace ZJGISGCoding.Class
             return SecondGridCode;
         }
 
+        public string GetGeoHashCode(IFeature pFeature)
+        {
+            string geoHashGrid = "";
+            double centroidX = 0;
+            double centroidY = 0;
+            IPoint pPoint = null;
+            IPoint pPointEverrage = new PointClass();
+            IPoint pPointNearest = new PointClass();
+
+            IPoint pPointEverrage1 = new PointClass();
+            IPoint pPointNearest1 = new PointClass();
+            if (pFeature != null)
+            {
+                //求要素的质量中心
+                switch (pFeature.Shape.GeometryType)
+                {
+                    case esriGeometryType.esriGeometryPoint:
+                        pPoint = pFeature.ShapeCopy as IPoint;
+                        centroidX = pPoint.X;
+                        centroidY = pPoint.Y;
+                      
+                        break;
+                    case esriGeometryType.esriGeometryPolyline:
+                        IPolyline pPolyline = pFeature.ShapeCopy as IPolyline;
+                        IPointCollection pPointCollection = pPolyline as IPointCollection;
+
+                        //20170607 先求出点集的中心点，然后再算出中心点到polyline的最近的点，之后用改点来替代整个polyline，保证了该点在改地理实体上
+                        IProximityOperator proOperator = pPolyline as IProximityOperator;
+
+                        double centerX = 0;
+                        double centerY = 0;
+                        for (int i = 0; i < pPointCollection.PointCount; i++)
+                        {
+                            pPoint = pPointCollection.get_Point(i);
+                            centerX += pPoint.X;
+                            centerY += pPoint.Y;
+                        }
+                        centroidX = centerX / pPointCollection.PointCount;
+                        centroidY = centerY / pPointCollection.PointCount;
+
+                        //20170607
+                        pPointEverrage.X = centroidX;
+                        pPointEverrage.Y = centroidY;
+                        if (pPointEverrage != null)
+                        {
+                            pPointNearest = proOperator.ReturnNearestPoint(pPointEverrage, esriSegmentExtension.esriNoExtension);
+                        }
+                        centroidX = pPointNearest.X;
+                        centroidY = pPointNearest.Y;
+                     
+                        break;
+
+                    case esriGeometryType.esriGeometryPolygon:
+                        //多边形获取的是中心节点的坐标
+                        IPolygon pPolygon = pFeature.ShapeCopy as IPolygon;
+                        IPointCollection pPolygonCollection = pPolygon as IPointCollection;
+
+                        //20170607 先求出点集的中心点，然后再算出中心点到polyline的最近的点，之后用改点来替代整个polyline，保证了该点在改地理实体上
+                        IProximityOperator pOperator = pPolygon as IProximityOperator;
+
+                        double PolygoncenterX = 0;
+                        double PolygoncenterY = 0;
+                        for (int i = 0; i < pPolygonCollection.PointCount; i++)
+                        {
+                            pPoint = pPolygonCollection.get_Point(i);
+                            PolygoncenterX += pPoint.X;
+                            PolygoncenterY += pPoint.Y;
+                        }
+                        centroidX = PolygoncenterX / pPolygonCollection.PointCount;
+                        centroidY = PolygoncenterY / pPolygonCollection.PointCount;
+
+                        //20170607
+                        pPointEverrage1.X = centroidX;
+                        pPointEverrage1.Y = centroidY;
+                        if (pPointEverrage != null)
+                        {
+                            pPointNearest1 = pOperator.ReturnNearestPoint(pPointEverrage1, esriSegmentExtension.esriNoExtension);
+                        }
+                        centroidX = pPointNearest1.X;
+                        centroidY = pPointNearest1.Y;
+                        break;
+                }
+                try
+                {
+                    //生成四级GeoHash格网
+                    geoHashGrid = ClsGeoHash.Encode(centroidX, centroidY, 4);
+                    geoHashGrid = geoHashGrid.ToUpper();
+                }
+                catch (Exception ex)
+                {
+                    ClsLog.WriteFile(ex, pFeature.OID.ToString());
+                    return "";
+                }
+            }
+            else
+            {
+                MessageBox.Show("要素为空！");
+            }
+            return geoHashGrid;
+        }
 
     }
 }

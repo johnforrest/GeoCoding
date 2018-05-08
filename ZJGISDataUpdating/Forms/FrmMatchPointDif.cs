@@ -824,7 +824,7 @@ namespace ZJGISDataUpdating
         /// <param name="e"></param>
         private void WeightsliderManhattan_ValueChanged(object sender, EventArgs e)
         {
-            this.labelManhattan.Text = Convert.ToDouble(WeightsliderTotal.Value).ToString();
+            this.labelManhattan.Text = Convert.ToDouble(WeightsliderManhattan.Value).ToString();
         }
         #endregion
         /// <summary>

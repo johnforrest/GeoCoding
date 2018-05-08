@@ -1071,7 +1071,38 @@ namespace ZJGIS
             }
 
         }
+        /// <summary>
+        /// GeoHash格网
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void btnGeoHash_Click(object sender, EventArgs e)
+        {
+            IFeatureLayer pFeatureLayer = (IFeatureLayer)pClsCom.GetLayerByName(this.mapMain.Map, this.cbxCodeLayer.Text);
 
+            if (pFeatureLayer != null)
+            {
+                if (pFeatureLayer.FeatureClass.ShapeType == esriGeometryType.esriGeometryPoint)
+                {
+                    ClsGeoHashCode pGeoHashCode = new ClsGeoHashCode();
+                    pGeoHashCode.CreatGridCode(mapMain.Map, cbxCodeLayer);
+                }
+                else if (pFeatureLayer.FeatureClass.ShapeType == esriGeometryType.esriGeometryPolyline)
+                {
+                    ClsGeoHashCode pRoadEnti = new ClsGeoHashCode();
+                    pRoadEnti.CreatGridCodeRoad(mapMain.Map, cbxCodeLayer);
+                }
+                else if (pFeatureLayer.FeatureClass.ShapeType == esriGeometryType.esriGeometryPolygon)
+                {
+                    ClsGeoHashCode pResEnti = new ClsGeoHashCode();
+                    pResEnti.CreatGridCodeRES(mapMain.Map, cbxCodeLayer);
+                }
+            }
+            else
+            {
+                MessageBox.Show("没有选中任何图层，请选择图层！");
+            }
+        }
 
         /// <summary>
         /// 实体编码
@@ -1105,6 +1136,38 @@ namespace ZJGIS
             }
 
         }
+        /// <summary>
+        /// GeoHash编码
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void btnGeoHashCode_Click(object sender, EventArgs e)
+        {
+            IFeatureLayer pFeatureLayer = (IFeatureLayer)pClsCom.GetLayerByName(this.mapMain.Map, this.cbxCodeLayer.Text);
+            if (pFeatureLayer != null)
+            {
+                if (pFeatureLayer.FeatureClass.ShapeType == esriGeometryType.esriGeometryPoint)
+                {
+                    ClsCommonEnti pcommonEnti = new ClsCommonEnti();
+                    pcommonEnti.CommonEntiCode(mapMain.Map, cbxCodeLayer);
+                }
+                else if (pFeatureLayer.FeatureClass.ShapeType == esriGeometryType.esriGeometryPolyline)
+                {
+                    ClsRoadEnti pRoadEnti = new ClsRoadEnti();
+                    pRoadEnti.RoadCode(mapMain.Map, cbxCodeLayer);
+                }
+                else if (pFeatureLayer.FeatureClass.ShapeType == esriGeometryType.esriGeometryPolygon)
+                {
+                    ClsResEnti pResEnti = new ClsResEnti();
+                    pResEnti.RESCode(mapMain.Map, cbxCodeLayer);
+                }
+            }
+            else
+            {
+                MessageBox.Show("没有选中任何图层，请选择图层！");
+            }
+        }
+
         /// <summary>
         /// 补充格网
         /// </summary>
@@ -3199,6 +3262,9 @@ namespace ZJGIS
 
             }
         }
+
+       
+        
 
 
 

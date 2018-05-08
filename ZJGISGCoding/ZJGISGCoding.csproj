@@ -108,6 +108,8 @@
     <Compile Include="Class\ClsCommonEnti.cs" />
     <Compile Include="Class\ClsDeclare.cs" />
     <Compile Include="Class\ClsDictionary.cs" />
+    <Compile Include="Class\ClsGeoHash.cs" />
+    <Compile Include="Class\ClsGeoHashCode.cs" />
     <Compile Include="Class\ClsLog.cs" />
     <Compile Include="Class\ClsPOIEnti.cs" />
     <Compile Include="Class\ClsResEnti.cs" />

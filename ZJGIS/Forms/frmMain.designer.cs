@@ -33,6 +33,9 @@
             this.RibbonTabItemGroup1 = new DevComponents.DotNetBar.RibbonTabItemGroup();
             this.ribbonControl1 = new DevComponents.DotNetBar.RibbonControl();
             this.ribbonPanel6 = new DevComponents.DotNetBar.RibbonPanel();
+            this.ribbonBar1 = new DevComponents.DotNetBar.RibbonBar();
+            this.btnGeoHash = new DevComponents.DotNetBar.ButtonItem();
+            this.btnGeoHashCode = new DevComponents.DotNetBar.ButtonItem();
             this.ribbonBar11 = new DevComponents.DotNetBar.RibbonBar();
             this.itemContainer23 = new DevComponents.DotNetBar.ItemContainer();
             this.itemContainer20 = new DevComponents.DotNetBar.ItemContainer();
@@ -173,6 +176,9 @@
             this.comboItem6 = new DevComponents.Editors.ComboItem();
             this.comboItem7 = new DevComponents.Editors.ComboItem();
             this.tabControlMain = new DevComponents.DotNetBar.TabControl();
+            this.tabControlPanel1 = new DevComponents.DotNetBar.TabControlPanel();
+            this.mapMain = new ESRI.ArcGIS.Controls.AxMapControl();
+            this.tabItem1 = new DevComponents.DotNetBar.TabItem(this.components);
             this.tabControlPanel2 = new DevComponents.DotNetBar.TabControlPanel();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
@@ -193,9 +199,6 @@
             this.comboItem4 = new DevComponents.Editors.ComboItem();
             this.comboItem5 = new DevComponents.Editors.ComboItem();
             this.tabItem2 = new DevComponents.DotNetBar.TabItem(this.components);
-            this.tabControlPanel1 = new DevComponents.DotNetBar.TabControlPanel();
-            this.mapMain = new ESRI.ArcGIS.Controls.AxMapControl();
-            this.tabItem1 = new DevComponents.DotNetBar.TabItem(this.components);
             this.tabControlPanel3 = new DevComponents.DotNetBar.TabControlPanel();
             this.MapOverlapping = new ESRI.ArcGIS.Controls.AxMapControl();
             this.panelEx2 = new DevComponents.DotNetBar.PanelEx();
@@ -240,6 +243,8 @@
             this.GroupPanelXmView.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.tabControlMain)).BeginInit();
             this.tabControlMain.SuspendLayout();
+            this.tabControlPanel1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.mapMain)).BeginInit();
             this.tabControlPanel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -251,8 +256,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.MapTo)).BeginInit();
             this.panelEx1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.bar1)).BeginInit();
-            this.tabControlPanel1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.mapMain)).BeginInit();
             this.tabControlPanel3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.MapOverlapping)).BeginInit();
             this.panelEx2.SuspendLayout();
@@ -346,6 +349,7 @@
             // ribbonPanel6
             // 
             this.ribbonPanel6.ColorSchemeStyle = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled;
+            this.ribbonPanel6.Controls.Add(this.ribbonBar1);
             this.ribbonPanel6.Controls.Add(this.ribbonBar11);
             this.ribbonPanel6.Controls.Add(this.ribbonBar14);
             this.ribbonPanel6.Controls.Add(this.ribbonBar8);
@@ -368,6 +372,57 @@
             // 
             this.ribbonPanel6.StyleMouseOver.CornerType = DevComponents.DotNetBar.eCornerType.Square;
             this.ribbonPanel6.TabIndex = 7;
+            // 
+            // ribbonBar1
+            // 
+            this.ribbonBar1.AutoOverflowEnabled = true;
+            // 
+            // 
+            // 
+            this.ribbonBar1.BackgroundMouseOverStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
+            // 
+            // 
+            // 
+            this.ribbonBar1.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
+            this.ribbonBar1.ContainerControlProcessDialogKey = true;
+            this.ribbonBar1.Dock = System.Windows.Forms.DockStyle.Left;
+            this.ribbonBar1.Items.AddRange(new DevComponents.DotNetBar.BaseItem[] {
+            this.btnGeoHash,
+            this.btnGeoHashCode});
+            this.ribbonBar1.Location = new System.Drawing.Point(837, 0);
+            this.ribbonBar1.Name = "ribbonBar1";
+            this.ribbonBar1.Size = new System.Drawing.Size(359, 134);
+            this.ribbonBar1.Style = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled;
+            this.ribbonBar1.TabIndex = 6;
+            this.ribbonBar1.Text = "GeoHash编码";
+            // 
+            // 
+            // 
+            this.ribbonBar1.TitleStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
+            // 
+            // 
+            // 
+            this.ribbonBar1.TitleStyleMouseOver.CornerType = DevComponents.DotNetBar.eCornerType.Square;
+            // 
+            // btnGeoHash
+            // 
+            this.btnGeoHash.ButtonStyle = DevComponents.DotNetBar.eButtonStyle.ImageAndText;
+            this.btnGeoHash.Image = global::ZJGIS.Properties.Resources.btnGrid8;
+            this.btnGeoHash.ImagePosition = DevComponents.DotNetBar.eImagePosition.Top;
+            this.btnGeoHash.Name = "btnGeoHash";
+            this.btnGeoHash.SubItemsExpandWidth = 14;
+            this.btnGeoHash.Text = "Geohash格网";
+            this.btnGeoHash.Click += new System.EventHandler(this.btnGeoHash_Click);
+            // 
+            // btnGeoHashCode
+            // 
+            this.btnGeoHashCode.ButtonStyle = DevComponents.DotNetBar.eButtonStyle.ImageAndText;
+            this.btnGeoHashCode.Image = global::ZJGIS.Properties.Resources.Code;
+            this.btnGeoHashCode.ImagePosition = DevComponents.DotNetBar.eImagePosition.Top;
+            this.btnGeoHashCode.Name = "btnGeoHashCode";
+            this.btnGeoHashCode.SubItemsExpandWidth = 14;
+            this.btnGeoHashCode.Text = "GeoHash编码";
+            this.btnGeoHashCode.Click += new System.EventHandler(this.btnGeoHashCode_Click);
             // 
             // ribbonBar11
             // 
@@ -2400,8 +2455,8 @@
             // 
             this.tabControlMain.BackColor = System.Drawing.Color.Transparent;
             this.tabControlMain.CanReorderTabs = true;
-            this.tabControlMain.Controls.Add(this.tabControlPanel2);
             this.tabControlMain.Controls.Add(this.tabControlPanel1);
+            this.tabControlMain.Controls.Add(this.tabControlPanel2);
             this.tabControlMain.Controls.Add(this.tabControlPanel3);
             this.tabControlMain.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabControlMain.Location = new System.Drawing.Point(306, 200);
@@ -2418,6 +2473,41 @@
             this.tabControlMain.Tabs.Add(this.tabItem2);
             this.tabControlMain.Tabs.Add(this.tabItem3);
             this.tabControlMain.Text = "tabControl1";
+            // 
+            // tabControlPanel1
+            // 
+            this.tabControlPanel1.Controls.Add(this.mapMain);
+            this.tabControlPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tabControlPanel1.Location = new System.Drawing.Point(0, 0);
+            this.tabControlPanel1.Margin = new System.Windows.Forms.Padding(4);
+            this.tabControlPanel1.Name = "tabControlPanel1";
+            this.tabControlPanel1.Padding = new System.Windows.Forms.Padding(1);
+            this.tabControlPanel1.Size = new System.Drawing.Size(1268, 363);
+            this.tabControlPanel1.Style.BackColor1.Color = System.Drawing.Color.FromArgb(((int)(((byte)(253)))), ((int)(((byte)(253)))), ((int)(((byte)(254)))));
+            this.tabControlPanel1.Style.BackColor2.Color = System.Drawing.Color.FromArgb(((int)(((byte)(157)))), ((int)(((byte)(188)))), ((int)(((byte)(227)))));
+            this.tabControlPanel1.Style.Border = DevComponents.DotNetBar.eBorderType.SingleLine;
+            this.tabControlPanel1.Style.BorderColor.Color = System.Drawing.Color.FromArgb(((int)(((byte)(146)))), ((int)(((byte)(165)))), ((int)(((byte)(199)))));
+            this.tabControlPanel1.Style.BorderSide = ((DevComponents.DotNetBar.eBorderSide)(((DevComponents.DotNetBar.eBorderSide.Left | DevComponents.DotNetBar.eBorderSide.Right) 
+            | DevComponents.DotNetBar.eBorderSide.Top)));
+            this.tabControlPanel1.Style.GradientAngle = -90;
+            this.tabControlPanel1.TabIndex = 1;
+            this.tabControlPanel1.TabItem = this.tabItem1;
+            // 
+            // mapMain
+            // 
+            this.mapMain.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.mapMain.Location = new System.Drawing.Point(1, 1);
+            this.mapMain.Margin = new System.Windows.Forms.Padding(4);
+            this.mapMain.Name = "mapMain";
+            this.mapMain.OcxState = ((System.Windows.Forms.AxHost.State)(resources.GetObject("mapMain.OcxState")));
+            this.mapMain.Size = new System.Drawing.Size(1266, 361);
+            this.mapMain.TabIndex = 1;
+            // 
+            // tabItem1
+            // 
+            this.tabItem1.AttachedControl = this.tabControlPanel1;
+            this.tabItem1.Name = "tabItem1";
+            this.tabItem1.Text = "数据视图";
             // 
             // tabControlPanel2
             // 
@@ -2648,41 +2738,6 @@
             this.tabItem2.Name = "tabItem2";
             this.tabItem2.Text = "匹配要素分屏对比";
             this.tabItem2.Visible = false;
-            // 
-            // tabControlPanel1
-            // 
-            this.tabControlPanel1.Controls.Add(this.mapMain);
-            this.tabControlPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tabControlPanel1.Location = new System.Drawing.Point(0, 0);
-            this.tabControlPanel1.Margin = new System.Windows.Forms.Padding(4);
-            this.tabControlPanel1.Name = "tabControlPanel1";
-            this.tabControlPanel1.Padding = new System.Windows.Forms.Padding(1);
-            this.tabControlPanel1.Size = new System.Drawing.Size(1268, 363);
-            this.tabControlPanel1.Style.BackColor1.Color = System.Drawing.Color.FromArgb(((int)(((byte)(253)))), ((int)(((byte)(253)))), ((int)(((byte)(254)))));
-            this.tabControlPanel1.Style.BackColor2.Color = System.Drawing.Color.FromArgb(((int)(((byte)(157)))), ((int)(((byte)(188)))), ((int)(((byte)(227)))));
-            this.tabControlPanel1.Style.Border = DevComponents.DotNetBar.eBorderType.SingleLine;
-            this.tabControlPanel1.Style.BorderColor.Color = System.Drawing.Color.FromArgb(((int)(((byte)(146)))), ((int)(((byte)(165)))), ((int)(((byte)(199)))));
-            this.tabControlPanel1.Style.BorderSide = ((DevComponents.DotNetBar.eBorderSide)(((DevComponents.DotNetBar.eBorderSide.Left | DevComponents.DotNetBar.eBorderSide.Right) 
-            | DevComponents.DotNetBar.eBorderSide.Top)));
-            this.tabControlPanel1.Style.GradientAngle = -90;
-            this.tabControlPanel1.TabIndex = 1;
-            this.tabControlPanel1.TabItem = this.tabItem1;
-            // 
-            // mapMain
-            // 
-            this.mapMain.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.mapMain.Location = new System.Drawing.Point(1, 1);
-            this.mapMain.Margin = new System.Windows.Forms.Padding(4);
-            this.mapMain.Name = "mapMain";
-            this.mapMain.OcxState = ((System.Windows.Forms.AxHost.State)(resources.GetObject("mapMain.OcxState")));
-            this.mapMain.Size = new System.Drawing.Size(1266, 361);
-            this.mapMain.TabIndex = 1;
-            // 
-            // tabItem1
-            // 
-            this.tabItem1.AttachedControl = this.tabControlPanel1;
-            this.tabItem1.Name = "tabItem1";
-            this.tabItem1.Text = "数据视图";
             // 
             // tabControlPanel3
             // 
@@ -3023,6 +3078,8 @@
             this.GroupPanelXmView.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.tabControlMain)).EndInit();
             this.tabControlMain.ResumeLayout(false);
+            this.tabControlPanel1.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.mapMain)).EndInit();
             this.tabControlPanel2.ResumeLayout(false);
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
@@ -3034,8 +3091,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.MapTo)).EndInit();
             this.panelEx1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.bar1)).EndInit();
-            this.tabControlPanel1.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.mapMain)).EndInit();
             this.tabControlPanel3.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.MapOverlapping)).EndInit();
             this.panelEx2.ResumeLayout(false);
@@ -3240,5 +3295,8 @@
         private DevComponents.DotNetBar.ButtonItem btnOverlapRectangleSele;
         private DevComponents.DotNetBar.ButtonItem buttonItemRectangleSele;
         private DevComponents.DotNetBar.ButtonItem buttonItemSymbol;
+        private DevComponents.DotNetBar.RibbonBar ribbonBar1;
+        private DevComponents.DotNetBar.ButtonItem btnGeoHash;
+        private DevComponents.DotNetBar.ButtonItem btnGeoHashCode;
     }
 }
