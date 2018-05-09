@@ -307,7 +307,13 @@ namespace ZJGISGCoding.Class
             return SecondGridCode;
         }
 
-        public string GetGeoHashCode(IFeature pFeature)
+        /// <summary>
+        /// 生成指定精度的GeoHash编码
+        /// </summary>
+        /// <param name="pFeature"></param>
+        /// <param name="precision"></param>
+        /// <returns></returns>
+        public string GetGeoHashCode(IFeature pFeature,int precision)
         {
             string geoHashGrid = "";
             double centroidX = 0;
@@ -392,7 +398,7 @@ namespace ZJGISGCoding.Class
                 try
                 {
                     //生成四级GeoHash格网
-                    geoHashGrid = ClsGeoHash.Encode(centroidX, centroidY, 4);
+                    geoHashGrid = ClsGeoHash.Encode(centroidX, centroidY, precision);
                     geoHashGrid = geoHashGrid.ToUpper();
                 }
                 catch (Exception ex)

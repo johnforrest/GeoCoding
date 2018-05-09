@@ -1158,7 +1158,7 @@ namespace ZJGISOpenData.Forms
                                     if (targetMap != null)
                                     {
                                         //TODO:2018年5月8日16:43:45 打开SQL Server数据库时重复添加
-                                        //ClsMapLayer.AddLyrToBasicMap(targetMap, (ILayer)featureLayer);
+                                        ClsMapLayer.AddLyrToBasicMap(targetMap, (ILayer)featureLayer);
                                     }
                                     this.DialogResult = DialogResult.OK;
                                 }

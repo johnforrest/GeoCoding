@@ -1082,20 +1082,19 @@ namespace ZJGIS
 
             if (pFeatureLayer != null)
             {
+                ClsGeoHashCode pGeoHashCode = new ClsGeoHashCode();
+                pGeoHashCode.Precision = Convert.ToInt32(this.tBxPrecision.Text.ToString().Trim());
                 if (pFeatureLayer.FeatureClass.ShapeType == esriGeometryType.esriGeometryPoint)
                 {
-                    ClsGeoHashCode pGeoHashCode = new ClsGeoHashCode();
                     pGeoHashCode.CreatGridCode(mapMain.Map, cbxCodeLayer);
                 }
                 else if (pFeatureLayer.FeatureClass.ShapeType == esriGeometryType.esriGeometryPolyline)
                 {
-                    ClsGeoHashCode pRoadEnti = new ClsGeoHashCode();
-                    pRoadEnti.CreatGridCodeRoad(mapMain.Map, cbxCodeLayer);
+                    pGeoHashCode.CreatGridCodeRoad(mapMain.Map, cbxCodeLayer);
                 }
                 else if (pFeatureLayer.FeatureClass.ShapeType == esriGeometryType.esriGeometryPolygon)
                 {
-                    ClsGeoHashCode pResEnti = new ClsGeoHashCode();
-                    pResEnti.CreatGridCodeRES(mapMain.Map, cbxCodeLayer);
+                    pGeoHashCode.CreatGridCodeRES(mapMain.Map, cbxCodeLayer);
                 }
             }
             else
@@ -2600,7 +2599,7 @@ namespace ZJGIS
                     ILegendInfo lengendInfo = (ILegendInfo)pFeatureLayer;
                     ILegendGroup legendGroup = lengendInfo.get_LegendGroup(0);
                     ILegendClass pLegendClass = legendGroup.get_Class(0); //获取到LegendClass  
-                
+
                     FrmSymbolSelect SymbolSelectorFrm = new FrmSymbolSelect(pLegendClass, pLayer);
 
                     if (SymbolSelectorFrm.ShowDialog() == DialogResult.OK)
@@ -3263,8 +3262,8 @@ namespace ZJGIS
             }
         }
 
-       
-        
+
+
 
 
 

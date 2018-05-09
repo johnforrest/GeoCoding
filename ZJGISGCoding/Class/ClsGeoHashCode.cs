@@ -31,6 +31,8 @@ namespace ZJGISGCoding.Class
         ClsCommon pClsCom = new ClsCommon();
         FrmProgressBar progressbar = null;
 
+        public int Precision { get; set; }
+
         /// <summary>
         /// 生成格网码
         /// </summary>
@@ -91,7 +93,7 @@ namespace ZJGISGCoding.Class
                             {
                                 //获取格网信息
                                 //string GridCode = pClsCom.GetCodeString(pFeature);
-                                string GridCode = pClsCom.GetGeoHashCode(pFeature);
+                                string GridCode = pClsCom.GetGeoHashCode(pFeature,Precision);
                                 if (GridCode != "")
                                 {
                                     pFeature.set_Value(pFeature.Fields.FindField(strField), GridCode);
@@ -263,7 +265,7 @@ namespace ZJGISGCoding.Class
                                 {
                                     //获取格网信息
                                     //string pGridCode3 = pClsCom.GetCodeString(pFeature);
-                                    string pGridCode3 = pClsCom.GetGeoHashCode(pFeature);
+                                    string pGridCode3 = pClsCom.GetGeoHashCode(pFeature,Precision);
                                     if (pGridCode3 != "")
                                     {
                                         pFeature.set_Value(pFeature.Fields.FindField(strField), pGridCode3);
@@ -344,7 +346,7 @@ namespace ZJGISGCoding.Class
                                 {
                                     //获取格网信息
                                     //string pGridCode2 = pClsCom.GetCodeString(pFeature);
-                                    string pGridCode2 = pClsCom.GetGeoHashCode(pFeature);
+                                    string pGridCode2 = pClsCom.GetGeoHashCode(pFeature,Precision);
                                     if (pGridCode2 != "")
                                     {
                                         pFeature.set_Value(pFeature.Fields.FindField(strField), pGridCode2);
@@ -426,7 +428,7 @@ namespace ZJGISGCoding.Class
         public void CreatGridCodeComm(IFeature pFeature, IFeature pFeature2, string pGridCode)
         {
             //获取格网信息
-            string GridCode = pClsCom.GetGeoHashCode(pFeature2);
+            string GridCode = pClsCom.GetGeoHashCode(pFeature2,Precision);
 
             if (GridCode != "")
             {
@@ -496,7 +498,7 @@ namespace ZJGISGCoding.Class
 
                             //获取格网信息
                             //string GridCode = pClsCom.GetCodeString(pFeature);
-                            string GridCode = pClsCom.GetGeoHashCode(pFeature);
+                            string GridCode = pClsCom.GetGeoHashCode(pFeature,Precision);
                             if (GridCode != "")
                             {
                                 pFeature.set_Value(pFeature.Fields.FindField(gridField), GridCode);

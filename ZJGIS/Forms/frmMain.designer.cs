@@ -227,6 +227,9 @@
             this.itemContainer18 = new DevComponents.DotNetBar.ItemContainer();
             this.buttonItem14 = new DevComponents.DotNetBar.ButtonItem();
             this.btnExit = new DevComponents.DotNetBar.ButtonItem();
+            this.comboItem8 = new DevComponents.Editors.ComboItem();
+            this.tBxPrecision = new DevComponents.DotNetBar.TextBoxItem();
+            this.labelItem3 = new DevComponents.DotNetBar.LabelItem();
             this.ribbonControl1.SuspendLayout();
             this.ribbonPanel6.SuspendLayout();
             this.ribbonBar8.SuspendLayout();
@@ -388,7 +391,9 @@
             this.ribbonBar1.Dock = System.Windows.Forms.DockStyle.Left;
             this.ribbonBar1.Items.AddRange(new DevComponents.DotNetBar.BaseItem[] {
             this.btnGeoHash,
-            this.btnGeoHashCode});
+            this.btnGeoHashCode,
+            this.labelItem3,
+            this.tBxPrecision});
             this.ribbonBar1.Location = new System.Drawing.Point(837, 0);
             this.ribbonBar1.Name = "ribbonBar1";
             this.ribbonBar1.Size = new System.Drawing.Size(359, 134);
@@ -583,7 +588,7 @@
             this.cbxCodeLayer.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
             this.cbxCodeLayer.FormattingEnabled = true;
             this.cbxCodeLayer.ItemHeight = 15;
-            this.cbxCodeLayer.Location = new System.Drawing.Point(6, 61);
+            this.cbxCodeLayer.Location = new System.Drawing.Point(6, 60);
             this.cbxCodeLayer.Margin = new System.Windows.Forms.Padding(4);
             this.cbxCodeLayer.Name = "cbxCodeLayer";
             this.cbxCodeLayer.Size = new System.Drawing.Size(160, 21);
@@ -2410,6 +2415,7 @@
             // styleManager
             // 
             this.styleManager.ManagerStyle = DevComponents.DotNetBar.eStyle.Office2007Blue;
+            this.styleManager.MetroColorParameters = new DevComponents.DotNetBar.Metro.ColorTables.MetroColorGeneratorParameters(System.Drawing.Color.White, System.Drawing.Color.FromArgb(((int)(((byte)(43)))), ((int)(((byte)(87)))), ((int)(((byte)(154))))));
             // 
             // comboBoxEx1
             // 
@@ -3046,6 +3052,21 @@
             this.btnExit.SubItemsExpandWidth = 24;
             this.btnExit.Text = "E&xit";
             // 
+            // comboItem8
+            // 
+            this.comboItem8.Text = "4";
+            // 
+            // tBxPrecision
+            // 
+            this.tBxPrecision.Name = "tBxPrecision";
+            this.tBxPrecision.Text = "4";
+            this.tBxPrecision.WatermarkColor = System.Drawing.SystemColors.GrayText;
+            // 
+            // labelItem3
+            // 
+            this.labelItem3.Name = "labelItem3";
+            this.labelItem3.Text = "精度：";
+            // 
             // frmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
@@ -3297,5 +3318,8 @@
         private DevComponents.DotNetBar.RibbonBar ribbonBar1;
         private DevComponents.DotNetBar.ButtonItem btnGeoHash;
         private DevComponents.DotNetBar.ButtonItem btnGeoHashCode;
+        private DevComponents.DotNetBar.LabelItem labelItem3;
+        private DevComponents.DotNetBar.TextBoxItem tBxPrecision;
+        private DevComponents.Editors.ComboItem comboItem8;
     }
 }
